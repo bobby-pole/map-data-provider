@@ -1,0 +1,150 @@
+{
+  "type": "FeatureCollection",
+  "name": "rybnik_60km_power_seed_nodes",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "seed_id": "seed_se_wielopole",
+        "name": "SE Wielopole",
+        "seed_type": "substation",
+        "role": "anchor",
+        "voltage_estimate": 400000,
+        "importance": "high",
+        "source": "manual_seed",
+        "source_reference": "OSM power layer and KIUT visual reference",
+        "confidence": "high",
+        "synthetic_allowed": true,
+        "not_authoritative": true,
+        "notes": "Transmission anchor for synthetic demo topology; not authoritative GESUT data."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.541636,
+          50.122467
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "seed_id": "seed_gpz_nowiny",
+        "name": "GPZ Rybnik Nowiny",
+        "seed_type": "substation",
+        "role": "anchor",
+        "voltage_estimate": 110000,
+        "importance": "high",
+        "source": "manual_seed",
+        "source_reference": "OSM power layer and KIUT visual reference",
+        "confidence": "high",
+        "synthetic_allowed": true,
+        "not_authoritative": true,
+        "notes": "Distribution anchor for synthetic demo topology; not authoritative GESUT data."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.512443,
+          50.09865
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "seed_id": "seed_gpz_paruszowiec",
+        "name": "GPZ Paruszowiec",
+        "seed_type": "substation",
+        "role": "anchor",
+        "voltage_estimate": 110000,
+        "importance": "high",
+        "source": "manual_seed",
+        "source_reference": "OSM power layer and KIUT visual reference",
+        "confidence": "high",
+        "synthetic_allowed": true,
+        "not_authoritative": true,
+        "notes": "Distribution anchor for synthetic demo topology; not authoritative GESUT data."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.558035,
+          50.091704
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "seed_id": "seed_huta_silesia",
+        "name": "Huta Silesia",
+        "seed_type": "substation",
+        "role": "anchor",
+        "voltage_estimate": 110000,
+        "importance": "medium",
+        "source": "manual_seed",
+        "source_reference": "OSM power layer and KIUT visual reference",
+        "confidence": "medium",
+        "synthetic_allowed": true,
+        "not_authoritative": true,
+        "notes": "Industrial power anchor for synthetic demo topology; not authoritative GESUT data."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.563412,
+          50.097418
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "seed_id": "seed_podstacja_trakcyjna_rybnik",
+        "name": "Podstacja trakcyjna Rybnik",
+        "seed_type": "traction_substation",
+        "role": "anchor",
+        "voltage_estimate": 20000,
+        "importance": "medium",
+        "source": "manual_seed",
+        "source_reference": "OSM power layer and KIUT visual reference",
+        "confidence": "medium",
+        "synthetic_allowed": true,
+        "not_authoritative": true,
+        "notes": "Traction power anchor for synthetic demo topology; not authoritative GESUT data."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.539181,
+          50.080879
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "seed_id": "seed_candidate_rybnik_polnoc",
+        "name": "Rybnik Polnoc candidate node",
+        "seed_type": "grid_node",
+        "role": "candidate",
+        "voltage_estimate": 20000,
+        "importance": "medium",
+        "source": "manual_seed",
+        "source_reference": "Manual seed for demo coverage gap in OSM",
+        "confidence": "low",
+        "synthetic_allowed": true,
+        "not_authoritative": true,
+        "notes": "Candidate node to improve synthetic topology coverage in northern Rybnik; replace after QGIS review."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5469,
+          50.1089
+        ]
+      }
+    }
+  ]
+}

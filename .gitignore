@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# Node
+node_modules/
+dist/
+.vite/
+
+# Local env / secrets
+.env
+.env.*
+!.env.example
+
+# Generated/cache data
+backend/cache/
+backend/data/previews/
+
+# OS/editor
+.DS_Store
+.idea/
+.vscode/
+
+# Local Codex/project docs
+.codex/
+docs/

@@ -1,0 +1,476 @@
+{
+  "aoi": {
+    "name": "rybnik_60km",
+    "center_lat": 50.102174,
+    "center_lon": 18.546285,
+    "radius_m": 60000
+  },
+  "status": "pass",
+  "layers": {
+    "power_lines": {
+      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_lines_clipped.geojson",
+      "exists": true,
+      "readable": true,
+      "feature_count": 16505,
+      "crs": "EPSG:4326",
+      "geometry_types": {
+        "LineString": 16500,
+        "MultiLineString": 5
+      },
+      "empty_geometries": 0,
+      "invalid_geometries": 0,
+      "unexpected_geometry_types": [],
+      "outside_aoi": 0,
+      "bbox": {
+        "min_lon": 17.70726479223589,
+        "min_lat": 49.56438045591735,
+        "max_lon": 19.385156904556155,
+        "max_lat": 50.64107166831461
+      },
+      "status": "pass",
+      "errors": [],
+      "warnings": []
+    },
+    "power_nodes": {
+      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_nodes_clipped.geojson",
+      "exists": true,
+      "readable": true,
+      "feature_count": 136394,
+      "crs": "EPSG:4326",
+      "geometry_types": {
+        "Point": 131495,
+        "Polygon": 4891,
+        "MultiPolygon": 8
+      },
+      "empty_geometries": 0,
+      "invalid_geometries": 0,
+      "unexpected_geometry_types": [],
+      "outside_aoi": 0,
+      "bbox": {
+        "min_lon": 17.7073564,
+        "min_lat": 49.5655783,
+        "max_lon": 19.3843809,
+        "max_lat": 50.6408633
+      },
+      "status": "pass",
+      "errors": [],
+      "warnings": []
+    },
+    "power_node_points": {
+      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_node_points_clipped.geojson",
+      "exists": true,
+      "readable": true,
+      "feature_count": 136391,
+      "crs": "EPSG:4326",
+      "geometry_types": {
+        "Point": 136391
+      },
+      "empty_geometries": 0,
+      "invalid_geometries": 0,
+      "unexpected_geometry_types": [],
+      "outside_aoi": 0,
+      "bbox": {
+        "min_lon": 17.7073564,
+        "min_lat": 49.5655783,
+        "max_lon": 19.3843809,
+        "max_lat": 50.6408633
+      },
+      "status": "pass",
+      "errors": [],
+      "warnings": []
+    },
+    "power_major_lines": {
+      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_major_lines_clipped.geojson",
+      "exists": true,
+      "readable": true,
+      "feature_count": 2787,
+      "crs": "EPSG:4326",
+      "geometry_types": {
+        "LineString": 2786,
+        "MultiLineString": 1
+      },
+      "empty_geometries": 0,
+      "invalid_geometries": 0,
+      "unexpected_geometry_types": [],
+      "outside_aoi": 0,
+      "bbox": {
+        "min_lon": 17.716745848742878,
+        "min_lat": 49.57631813194908,
+        "max_lon": 19.3845916769553,
+        "max_lat": 50.64107166831461
+      },
+      "status": "pass",
+      "errors": [],
+      "warnings": []
+    },
+    "power_minor_lines": {
+      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_minor_lines_clipped.geojson",
+      "exists": true,
+      "readable": true,
+      "feature_count": 11699,
+      "crs": "EPSG:4326",
+      "geometry_types": {
+        "LineString": 11695,
+        "MultiLineString": 4
+      },
+      "empty_geometries": 0,
+      "invalid_geometries": 0,
+      "unexpected_geometry_types": [],
+      "outside_aoi": 0,
+      "bbox": {
+        "min_lon": 17.70726479223589,
+        "min_lat": 49.56438045591735,
+        "max_lon": 19.38464522451092,
+        "max_lat": 50.63611494121951
+      },
+      "status": "pass",
+      "errors": [],
+      "warnings": []
+    },
+    "power_cables": {
+      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_cables_clipped.geojson",
+      "exists": true,
+      "readable": true,
+      "feature_count": 2019,
+      "crs": "EPSG:4326",
+      "geometry_types": {
+        "LineString": 2019
+      },
+      "empty_geometries": 0,
+      "invalid_geometries": 0,
+      "unexpected_geometry_types": [],
+      "outside_aoi": 0,
+      "bbox": {
+        "min_lon": 17.7537093,
+        "min_lat": 49.5934402,
+        "max_lon": 19.385156904556155,
+        "max_lat": 50.63971378227106
+      },
+      "status": "pass",
+      "errors": [],
+      "warnings": []
+    },
+    "power_substations": {
+      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_substations_clipped.geojson",
+      "exists": true,
+      "readable": true,
+      "feature_count": 4211,
+      "crs": "EPSG:4326",
+      "geometry_types": {
+        "Polygon": 3844,
+        "Point": 364,
+        "MultiPolygon": 3
+      },
+      "empty_geometries": 0,
+      "invalid_geometries": 0,
+      "unexpected_geometry_types": [],
+      "outside_aoi": 0,
+      "bbox": {
+        "min_lon": 17.7163692,
+        "min_lat": 49.578777,
+        "max_lon": 19.3820064,
+        "max_lat": 50.61818250000001
+      },
+      "status": "pass",
+      "errors": [],
+      "warnings": []
+    },
+    "power_transformers": {
+      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_transformers_clipped.geojson",
+      "exists": true,
+      "readable": true,
+      "feature_count": 811,
+      "crs": "EPSG:4326",
+      "geometry_types": {
+        "Point": 757,
+        "Polygon": 54
+      },
+      "empty_geometries": 0,
+      "invalid_geometries": 0,
+      "unexpected_geometry_types": [],
+      "outside_aoi": 0,
+      "bbox": {
+        "min_lon": 17.8270756,
+        "min_lat": 49.5834544,
+        "max_lon": 19.3797899,
+        "max_lat": 50.6301752
+      },
+      "status": "pass",
+      "errors": [],
+      "warnings": []
+    },
+    "power_plants": {
+      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_plants_clipped.geojson",
+      "exists": true,
+      "readable": true,
+      "feature_count": 159,
+      "crs": "EPSG:4326",
+      "geometry_types": {
+        "Polygon": 155,
+        "MultiPolygon": 4
+      },
+      "empty_geometries": 0,
+      "invalid_geometries": 0,
+      "unexpected_geometry_types": [],
+      "outside_aoi": 0,
+      "bbox": {
+        "min_lon": 17.7499863,
+        "min_lat": 49.682895,
+        "max_lon": 19.2906048,
+        "max_lat": 50.6021656
+      },
+      "status": "pass",
+      "errors": [],
+      "warnings": []
+    },
+    "power_generators": {
+      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_generators_clipped.geojson",
+      "exists": true,
+      "readable": true,
+      "feature_count": 11313,
+      "crs": "EPSG:4326",
+      "geometry_types": {
+        "Point": 10477,
+        "Polygon": 835,
+        "MultiPolygon": 1
+      },
+      "empty_geometries": 0,
+      "invalid_geometries": 0,
+      "unexpected_geometry_types": [],
+      "outside_aoi": 0,
+      "bbox": {
+        "min_lon": 17.7500191,
+        "min_lat": 49.5817802,
+        "max_lon": 19.3830512,
+        "max_lat": 50.5508848
+      },
+      "status": "pass",
+      "errors": [],
+      "warnings": []
+    },
+    "power_supports": {
+      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_supports_clipped.geojson",
+      "exists": true,
+      "readable": true,
+      "feature_count": 117991,
+      "crs": "EPSG:4326",
+      "geometry_types": {
+        "Point": 117990,
+        "Polygon": 1
+      },
+      "empty_geometries": 0,
+      "invalid_geometries": 0,
+      "unexpected_geometry_types": [],
+      "outside_aoi": 0,
+      "bbox": {
+        "min_lon": 17.7073564,
+        "min_lat": 49.5655783,
+        "max_lon": 19.3843809,
+        "max_lat": 50.6408633
+      },
+      "status": "pass",
+      "errors": [],
+      "warnings": []
+    },
+    "power_switchgear": {
+      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_switchgear_clipped.geojson",
+      "exists": true,
+      "readable": true,
+      "feature_count": 1909,
+      "crs": "EPSG:4326",
+      "geometry_types": {
+        "Point": 1907,
+        "Polygon": 2
+      },
+      "empty_geometries": 0,
+      "invalid_geometries": 0,
+      "unexpected_geometry_types": [],
+      "outside_aoi": 0,
+      "bbox": {
+        "min_lon": 17.716393,
+        "min_lat": 49.5961154,
+        "max_lon": 19.3481449,
+        "max_lat": 50.6088952
+      },
+      "status": "pass",
+      "errors": [],
+      "warnings": []
+    },
+    "power_substations_points": {
+      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_substations_points_clipped.geojson",
+      "exists": true,
+      "readable": true,
+      "feature_count": 4209,
+      "crs": "EPSG:4326",
+      "geometry_types": {
+        "Point": 4209
+      },
+      "empty_geometries": 0,
+      "invalid_geometries": 0,
+      "unexpected_geometry_types": [],
+      "outside_aoi": 0,
+      "bbox": {
+        "min_lon": 17.716396687416108,
+        "min_lat": 49.578793549999986,
+        "max_lon": 19.3819706038488,
+        "max_lat": 50.61815745
+      },
+      "status": "pass",
+      "errors": [],
+      "warnings": []
+    },
+    "power_transformers_points": {
+      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_transformers_points_clipped.geojson",
+      "exists": true,
+      "readable": true,
+      "feature_count": 811,
+      "crs": "EPSG:4326",
+      "geometry_types": {
+        "Point": 811
+      },
+      "empty_geometries": 0,
+      "invalid_geometries": 0,
+      "unexpected_geometry_types": [],
+      "outside_aoi": 0,
+      "bbox": {
+        "min_lon": 17.8270756,
+        "min_lat": 49.5834544,
+        "max_lon": 19.379774591902574,
+        "max_lat": 50.6301752
+      },
+      "status": "pass",
+      "errors": [],
+      "warnings": []
+    },
+    "power_plants_points": {
+      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_plants_points_clipped.geojson",
+      "exists": true,
+      "readable": true,
+      "feature_count": 158,
+      "crs": "EPSG:4326",
+      "geometry_types": {
+        "Point": 158
+      },
+      "empty_geometries": 0,
+      "invalid_geometries": 0,
+      "unexpected_geometry_types": [],
+      "outside_aoi": 0,
+      "bbox": {
+        "min_lon": 17.750020146287703,
+        "min_lat": 49.68457585,
+        "max_lon": 19.290386560048823,
+        "max_lat": 50.6021121
+      },
+      "status": "pass",
+      "errors": [],
+      "warnings": []
+    },
+    "power_generators_points": {
+      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_generators_points_clipped.geojson",
+      "exists": true,
+      "readable": true,
+      "feature_count": 11313,
+      "crs": "EPSG:4326",
+      "geometry_types": {
+        "Point": 11313
+      },
+      "empty_geometries": 0,
+      "invalid_geometries": 0,
+      "unexpected_geometry_types": [],
+      "outside_aoi": 0,
+      "bbox": {
+        "min_lon": 17.7500191,
+        "min_lat": 49.5828608,
+        "max_lon": 19.3830512,
+        "max_lat": 50.5508848
+      },
+      "status": "pass",
+      "errors": [],
+      "warnings": []
+    },
+    "power_supports_points": {
+      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_supports_points_clipped.geojson",
+      "exists": true,
+      "readable": true,
+      "feature_count": 117991,
+      "crs": "EPSG:4326",
+      "geometry_types": {
+        "Point": 117991
+      },
+      "empty_geometries": 0,
+      "invalid_geometries": 0,
+      "unexpected_geometry_types": [],
+      "outside_aoi": 0,
+      "bbox": {
+        "min_lon": 17.7073564,
+        "min_lat": 49.5655783,
+        "max_lon": 19.3843809,
+        "max_lat": 50.6408633
+      },
+      "status": "pass",
+      "errors": [],
+      "warnings": []
+    },
+    "power_switchgear_points": {
+      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_switchgear_points_clipped.geojson",
+      "exists": true,
+      "readable": true,
+      "feature_count": 1909,
+      "crs": "EPSG:4326",
+      "geometry_types": {
+        "Point": 1909
+      },
+      "empty_geometries": 0,
+      "invalid_geometries": 0,
+      "unexpected_geometry_types": [],
+      "outside_aoi": 0,
+      "bbox": {
+        "min_lon": 17.716393,
+        "min_lat": 49.5961154,
+        "max_lon": 19.3481449,
+        "max_lat": 50.6088952
+      },
+      "status": "pass",
+      "errors": [],
+      "warnings": []
+    },
+    "power_node_points_display": {
+      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_node_points_display_clipped.geojson",
+      "exists": true,
+      "readable": true,
+      "feature_count": 7087,
+      "crs": "EPSG:4326",
+      "geometry_types": {
+        "Point": 7087
+      },
+      "empty_geometries": 0,
+      "invalid_geometries": 0,
+      "unexpected_geometry_types": [],
+      "outside_aoi": 0,
+      "bbox": {
+        "min_lon": 17.716393,
+        "min_lat": 49.578793549999986,
+        "max_lon": 19.3819706038488,
+        "max_lat": 50.6301752
+      },
+      "status": "pass",
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "domain_quality": {
+    "has_power_lines": true,
+    "has_power_nodes": true,
+    "has_distribution_candidates": true,
+    "likely_missing_distribution_grid": true,
+    "category_counts": {
+      "lines": 16505,
+      "nodes": 136391
+    },
+    "notes": [
+      "OSM power data usually represents visible/high-voltage infrastructure better than low-voltage distribution.",
+      "power=minor_line, power=cable, transformers and poles improve distribution context, but OSM coverage is still uneven.",
+      "Use this validation as a quality gate, not as proof of complete grid coverage."
+    ]
+  }
+}

@@ -103,7 +103,7 @@ Python geospatial worker
 
 This split is intentional. Node/Express/TypeScript owns REST APIs, cache orchestration, request validation and TypeScript contracts. Python remains the processing layer because the OSM/geospatial ecosystem around OSMnx, GeoPandas and Shapely is stronger for extraction, clipping and geometry validation.
 
-See [ARCHITECTURE.md](./ARCHITECTURE.md) for decisions and the implementation plan.
+See [the architecture documentation](./docs/architecture.md) for decisions and the implementation plan.
 
 ## Product scope
 

@@ -24,6 +24,6 @@ backend/data/previews/
 .idea/
 .vscode/
 
-# Local Codex/project docs
+# Local Codex configuration and project context
 .codex/
-docs/
+docs/local/

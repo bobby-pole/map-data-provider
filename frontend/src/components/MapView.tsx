@@ -1,54 +1,31 @@
 import { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import type { CachedLayer, ProviderFeature } from "../types/api";
 
-const API_BASE = "http://localhost:8000";
+function escapeHtml(value: string): string { return value.replace(/[&<>'"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[character] ?? character); }
+function popup(feature: ProviderFeature): string {
+  const props = feature.properties;
+  return `<strong>${escapeHtml(props.asset_type)}</strong><br/>Source: ${escapeHtml(props.source)}<br/>Confidence: ${escapeHtml(props.confidence)}<br/>Missing fields: ${escapeHtml(props.missing_fields.join(", ") || "none")}<br/>Limitations: ${escapeHtml(props.limitations.join("; ") || "none")}`;
+}
 
-export function MapView() {
+export function MapView({ layer }: { layer: CachedLayer | null }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
-
+  const providerLayerRef = useRef<L.GeoJSON | null>(null);
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
-
-    const map = L.map(containerRef.current).setView([50.102174, 18.546285], 10);
-    mapRef.current = map;
-
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: "© OpenStreetMap contributors",
-      maxZoom: 19,
-    }).addTo(map);
-
-    const lineLayer = L.geoJSON(undefined, {
-      style: { color: "#f59e0b", weight: 2, opacity: 0.85 },
-      onEachFeature: (feature, layer) => {
-        const props = feature.properties ?? {};
-        layer.bindPopup(`<strong>Power line</strong><br/>OSM id: ${props.id ?? "unknown"}<br/>Voltage: ${props.voltage ?? "missing"}`);
-      },
-    }).addTo(map);
-
-    const nodeLayer = L.geoJSON(undefined, {
-      pointToLayer: (_feature, latlng) => L.circleMarker(latlng, {
-        radius: 5,
-        color: "#38bdf8",
-        fillColor: "#38bdf8",
-        fillOpacity: 0.8,
-        weight: 1,
-      }),
-      onEachFeature: (feature, layer) => {
-        const props = feature.properties ?? {};
-        layer.bindPopup(`<strong>${props.ss_power_label ?? "Power node"}</strong><br/>OSM id: ${props.id ?? "unknown"}<br/>Source: OSM`);
-      },
-    }).addTo(map);
-
-    void fetch(`${API_BASE}/api/geodata/power/lines`).then((r) => r.json()).then((data) => lineLayer.addData(data));
-    void fetch(`${API_BASE}/api/geodata/power/nodes`).then((r) => r.json()).then((data) => nodeLayer.addData(data));
-
-    return () => {
-      map.remove();
-      mapRef.current = null;
-    };
+    const map = L.map(containerRef.current).setView([50.102174, 18.546285], 10); mapRef.current = map;
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution: "© OpenStreetMap contributors", maxZoom: 19 }).addTo(map);
+    return () => { map.remove(); mapRef.current = null; };
   }, []);
-
+  useEffect(() => {
+    const map = mapRef.current; if (!map || !layer) return;
+    providerLayerRef.current?.remove();
+    const geoJson = L.geoJSON(layer as GeoJSON.GeoJsonObject, { style: { color: "#f59e0b", weight: 2, opacity: 0.85 }, onEachFeature: (feature, leafletLayer) => leafletLayer.bindPopup(popup(feature as ProviderFeature)) }).addTo(map);
+    providerLayerRef.current = geoJson;
+    const bounds = geoJson.getBounds(); if (bounds.isValid()) map.fitBounds(bounds, { padding: [20, 20] });
+    return () => { geoJson.remove(); };
+  }, [layer]);
   return <div className="map" ref={containerRef} />;
 }

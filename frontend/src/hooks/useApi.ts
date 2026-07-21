@@ -1,43 +1,36 @@
 import { useEffect, useState } from "react";
-import type { DataQualityIssue, DataQualityMetrics, LayerCatalogEntry } from "../types/api";
-
-const API_BASE = "http://localhost:8000";
+import type { CachedLayer, CachedMetadata, ReadinessRecord } from "../types/api";
 
 async function fetchJson<T>(path: string): Promise<T> {
-  const response = await fetch(`${API_BASE}${path}`);
+  const response = await fetch(path);
   if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
   return response.json() as Promise<T>;
 }
 
-export function useDataQuality() {
-  const [layers, setLayers] = useState<LayerCatalogEntry[]>([]);
-  const [issues, setIssues] = useState<DataQualityIssue[]>([]);
-  const [metrics, setMetrics] = useState<DataQualityMetrics | null>(null);
+export function useProviderPreview() {
+  const [layer, setLayer] = useState<CachedLayer | null>(null);
+  const [metadata, setMetadata] = useState<CachedMetadata | null>(null);
+  const [readiness, setReadiness] = useState<ReadinessRecord | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    async function load() {
-      try {
-        const [layerData, issueData, metricData] = await Promise.all([
-          fetchJson<LayerCatalogEntry[]>("/api/layers/catalog"),
-          fetchJson<DataQualityIssue[]>("/api/data-quality/issues"),
-          fetchJson<DataQualityMetrics>("/api/data-quality/metrics"),
-        ]);
-        if (!cancelled) {
-          setLayers(layerData);
-          setIssues(issueData);
-          setMetrics(metricData);
-        }
-      } catch (err) {
-        if (!cancelled) setError(err instanceof Error ? err.message : String(err));
-      }
-    }
-    void load();
-    return () => {
-      cancelled = true;
-    };
+    void Promise.all([
+      fetchJson<CachedLayer>("/api/aoi/rybnik_60km/layers/power"),
+      fetchJson<{ aoi_id: string; layers: CachedMetadata[] }>("/api/aoi/rybnik_60km/layers"),
+      fetchJson<{ aoi_id: string; readiness: ReadinessRecord[] }>("/api/aoi/rybnik_60km/readiness"),
+    ])
+      .then(([layerData, layers, readinessData]) => {
+        if (cancelled) return;
+        setLayer(layerData);
+        setMetadata(layers.layers.find((item) => item.domain === "power") ?? null);
+        setReadiness(readinessData.readiness.find((item) => item.domain === "power") ?? null);
+      })
+      .catch((reason: unknown) => {
+        if (!cancelled) setError(reason instanceof Error ? reason.message : String(reason));
+      });
+    return () => { cancelled = true; };
   }, []);
 
-  return { layers, issues, metrics, error };
+  return { layer, metadata, readiness, error };
 }

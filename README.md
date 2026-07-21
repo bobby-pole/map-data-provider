@@ -50,7 +50,7 @@ The intended contract is that Steel Sentinel can request infrastructure layers f
 
 ## Provider demo flow
 
-1. Start the provider API, using the current FastAPI prototype or the target Express API once implemented.
+1. Start the Node/Express provider API; FastAPI remains a prototype for the Python pipeline only.
 2. Request an AOI/domain layer package, starting with `Rybnik + 60 km` and `power`.
 3. The provider checks cached OSM-derived artifacts before running new extraction work.
 4. If cache is missing or stale, the provider triggers the Python geospatial worker.
@@ -76,7 +76,7 @@ This is intentionally a provider scenario. Simulation, operator decisions and ca
 
 - Provider API target: Node.js, Express, TypeScript
 - Geospatial worker: Python 3.14, OSMnx, GeoPandas, Shapely
-- Current prototype API: FastAPI
+- Python-pipeline prototype API: FastAPI
 - Frontend: React, TypeScript, Vite, Leaflet dev-preview
 - Geospatial data: OSM-derived GeoJSON artifacts, cached snapshots and reference overlays
 - Data tooling: layer catalog, data-quality issues, validation reports, source metadata, confidence and readiness model
@@ -157,7 +157,15 @@ npm run dev
 
 Open `http://localhost:5173`.
 
-## Current endpoints
+## Node provider endpoints
+
+- `GET /api/health`
+- `GET /api/aoi/{aoi_id}/layers`
+- `GET /api/aoi/{aoi_id}/layers/{domain}`
+- `GET /api/aoi/{aoi_id}/readiness`
+- `GET /api/aoi/{aoi_id}/sources`
+
+## FastAPI prototype endpoints
 
 - `GET /api/health`
 - `GET /api/layers/catalog`
@@ -168,13 +176,9 @@ Open `http://localhost:5173`.
 - `GET /api/geodata/power/manual-seeds`
 - `GET /api/geodata/power/hexes/{level}`
 
-Planned provider endpoints:
+Future Node provider endpoints:
 
 - `POST /api/aoi/requests`
-- `GET /api/aoi/{aoi_id}/layers`
-- `GET /api/aoi/{aoi_id}/layers/{domain}`
-- `GET /api/aoi/{aoi_id}/readiness`
-- `GET /api/aoi/{aoi_id}/sources`
 - `GET /api/aoi/{aoi_id}/exports/steel-sentinel-pack`
 
 ## Verification

@@ -15,6 +15,11 @@ PROCESSED_DIR = DATA_DIR / "processed"
 REPORTS_DIR = DATA_DIR / "reports"
 MANUAL_DIR = DATA_DIR / "manual"
 
+PASSING_VALIDATION_STATUSES = frozenset({"pass", "ok", "success", "valid"})
+WARNING_VALIDATION_STATUSES = frozenset({"warn", "warning"})
+FAILING_VALIDATION_STATUSES = frozenset({"fail", "failed", "error", "invalid"})
+QUALITY_STATUSES = frozenset({"passed", "warning", "failed", "unknown"})
+
 app = FastAPI(title="Map Data Quality Lab API")
 app.add_middleware(
     CORSMiddleware,
@@ -37,11 +42,48 @@ def _feature_count(path: Path) -> int:
     return len(data.get("features") or [])
 
 
-def _quality_status(report_path: Path) -> str:
-    if not report_path.exists():
+def normalize_validation_status(value: object | None) -> str:
+    """Map report-specific validation spellings to provider-facing quality states."""
+    if value is None:
         return "unknown"
+
+    status = str(value).strip().casefold().replace("-", "_").replace(" ", "_")
+    if status in PASSING_VALIDATION_STATUSES:
+        return "passed"
+    if status in WARNING_VALIDATION_STATUSES:
+        return "warning"
+    if status in FAILING_VALIDATION_STATUSES:
+        return "failed"
+    return "unknown"
+
+
+def derive_readiness(*, quality_status: str, feature_count: int, source: str) -> str:
+    """Derive conservative provider readiness without changing source metadata contracts."""
+    if quality_status not in QUALITY_STATUSES:
+        quality_status = "unknown"
+
+    if feature_count == 0 or quality_status == "failed":
+        return "not_usable"
+
+    source_key = source.strip().casefold()
+    if source_key in {"reference_overlay", "reference_only", "kiut_wms", "gesut_wms"} or "wms" in source_key:
+        return "needs_source"
+    if quality_status == "unknown":
+        return "needs_source"
+    if source_key == "manual_seed":
+        return "usable_with_limitations"
+    if quality_status == "warning":
+        return "usable_with_limitations"
+    return "ready"
+
+
+def _report_status(report_path: Path) -> tuple[str | None, str]:
+    if not report_path.exists():
+        return None, "unknown"
     report = _read_json(report_path)
-    return str(report.get("status") or report.get("validation_status") or "unknown")
+    raw_status = report.get("status") or report.get("validation_status")
+    raw_value = str(raw_status) if raw_status is not None else None
+    return raw_value, normalize_validation_status(raw_status)
 
 
 def _catalog() -> list[dict[str, Any]]:
@@ -99,11 +141,19 @@ def _catalog() -> list[dict[str, Any]]:
     for layer in layers:
         path = layer.pop("path")
         report = layer.pop("report")
+        raw_status, quality_status = _report_status(report)
+        feature_count = _feature_count(path)
         result.append(
             {
                 **layer,
-                "feature_count": _feature_count(path),
-                "quality_status": _quality_status(report),
+                "feature_count": feature_count,
+                "quality_status": quality_status,
+                "validation_status_raw": raw_status,
+                "readiness": derive_readiness(
+                    quality_status=quality_status,
+                    feature_count=feature_count,
+                    source=layer["source"],
+                ),
                 "artifact": str(path.relative_to(ROOT)),
                 "validation_report": str(report.relative_to(ROOT)),
             }
@@ -130,7 +180,7 @@ def _issues() -> list[dict[str, Any]]:
                     "status": "open",
                 }
             )
-        if layer["quality_status"] not in {"ok", "success", "valid"}:
+        if layer["quality_status"] != "passed":
             issues.append(
                 {
                     "id": f"DQ-{layer['id'].replace('.', '-').upper()}-QUALITY",
@@ -138,7 +188,7 @@ def _issues() -> list[dict[str, Any]]:
                     "severity": "medium",
                     "category": "quality_status",
                     "title": f"{layer['label']} quality status is {layer['quality_status']}",
-                    "evidence": f"Validation report status: {layer['quality_status']}.",
+                    "evidence": f"Validation report status: {layer['validation_status_raw'] or 'missing'}.",
                     "recommendation": "Inspect validation report and document source limitations before using this layer analytically.",
                     "status": "open",
                 }
@@ -192,12 +242,15 @@ def data_quality_issues() -> list[dict[str, Any]]:
 @app.get("/api/data-quality/metrics")
 def data_quality_metrics() -> dict[str, Any]:
     issues = _issues()
+    catalog = _catalog()
     return {
         "total_issues": len(issues),
         "open_issues": sum(1 for issue in issues if issue["status"] == "open"),
         "issues_by_severity": dict(Counter(issue["severity"] for issue in issues)),
         "issues_by_category": dict(Counter(issue["category"] for issue in issues)),
-        "layers": len(_catalog()),
+        "layers": len(catalog),
+        "layers_by_quality_status": dict(Counter(layer["quality_status"] for layer in catalog)),
+        "layers_by_readiness": dict(Counter(layer["readiness"] for layer in catalog)),
     }
 
 

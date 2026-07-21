@@ -31,6 +31,16 @@ assert all(
     layer["readiness"] in {"ready", "usable_with_limitations", "needs_source", "not_usable"}
     for layer in catalog
 )
+assert all(
+    {"source_type", "confidence", "limitations", "not_authoritative", "usable_for_simulation"}
+    <= set(layer)
+    for layer in catalog
+)
+assert {layer["source_type"] for layer in catalog} == {
+    "analytical_vector",
+    "manual_seed",
+    "reference_overlay",
+}
 assert metrics["layers_by_quality_status"], "Metrics should summarize normalized quality statuses"
 assert metrics["layers_by_readiness"], "Metrics should summarize readiness values"
 

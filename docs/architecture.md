@@ -185,6 +185,8 @@ KIUT/GESUT is an OGC WMS visual reference service. Its rendered images are not p
 
 The Node/Express/TypeScript provider now serves typed, read-only local artifacts through `GET /api/health`, `GET /api/aoi/:aoiId/layers`, `GET /api/aoi/:aoiId/layers/:domain`, `GET /api/aoi/:aoiId/readiness` and `GET /api/aoi/:aoiId/sources`. These routes validate identifiers and file contracts, return 422 for malformed input and 404 for a missing cache, and do not invoke Python, Overpass or WMS.
 
+`POST /api/aoi/requests` currently supports only `rybnik_60km/power`, whose registered boundary reference uses EPSG:4326. The provider treats a cache as fresh for 24 hours after `snapshot_at`; a missing or stale cache invokes the Python worker fixture path and returns whether the artifact came from cache or refresh.
+
 Initial Node/Express provider endpoints:
 
 - `GET /api/health`

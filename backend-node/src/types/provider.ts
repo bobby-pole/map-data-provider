@@ -4,7 +4,7 @@ export const providerIdentifierSchema = z.string().regex(/^[a-z0-9_]+$/);
 export const sourceTypeSchema = z.enum(["analytical_vector", "manual_seed", "reference_overlay"]);
 
 export const providerErrorSchema = z.object({
-  error: z.enum(["invalid_request", "not_found"]),
+  error: z.enum(["invalid_request", "not_found", "worker_failed"]),
   message: z.string(),
 });
 
@@ -123,6 +123,24 @@ export const sourceListResponseSchema = z.object({
   aoi_id: providerIdentifierSchema,
   registry_version: z.literal("source_registry/v1"),
   sources: z.array(sourceRegistryEntrySchema),
+});
+
+export const aoiRequestSchema = z.object({
+  aoi_id: providerIdentifierSchema,
+  domain: providerIdentifierSchema,
+});
+
+export const aoiRequestResponseSchema = z.object({
+  aoi: z.object({
+    id: z.literal("rybnik_60km"),
+    boundary_reference: z.string(),
+    crs: z.literal("EPSG:4326"),
+    allowed_domains: z.array(z.literal("power")),
+  }),
+  domain: z.literal("power"),
+  cache_status: z.enum(["fresh", "refreshed"]),
+  result: z.enum(["cache", "refresh"]),
+  metadata: cachedMetadataSchema,
 });
 
 export type CachedMetadata = z.infer<typeof cachedMetadataSchema>;

@@ -178,7 +178,7 @@ Open `http://localhost:5173`.
 
 Future Node provider endpoints:
 
-- `GET /api/aoi/{aoi_id}/exports/steel-sentinel-pack`
+The implemented `GET /api/aoi/{aoi_id}/exports/steel-sentinel-pack` response is `steel_sentinel_pack/v1`: it bundles cached GeoJSON, metadata, readiness and the source registry without refreshing data.
 
 `POST /api/aoi/requests` is implemented for `rybnik_60km/power`. A cache is fresh for 24 hours from `snapshot_at`; a missing or stale cache invokes the Python worker with its offline fixture input and reports whether the result came from cache or refresh.
 

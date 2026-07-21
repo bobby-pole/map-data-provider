@@ -187,6 +187,8 @@ The Node/Express/TypeScript provider now serves typed, read-only local artifacts
 
 `POST /api/aoi/requests` currently supports only `rybnik_60km/power`, whose registered boundary reference uses EPSG:4326. The provider treats a cache as fresh for 24 hours after `snapshot_at`; a missing or stale cache invokes the Python worker fixture path and returns whether the artifact came from cache or refresh.
 
+`GET /api/aoi/:aoiId/exports/steel-sentinel-pack` returns `steel_sentinel_pack/v1`: the selected cached GeoJSON layer, cache metadata, readiness and the complete source registry in one read-only response. The pack preserves the `analytical_vector`, `manual_seed` and `reference_overlay` distinctions.
+
 Initial Node/Express provider endpoints:
 
 - `GET /api/health`

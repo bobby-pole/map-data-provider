@@ -8,6 +8,7 @@ import {
   getSourcesForAoi,
 } from "../services/providerDataService.js";
 import { requestAoi } from "../services/aoiRequestService.js";
+import { buildSteelSentinelPack } from "../services/exportService.js";
 import {
   layerListResponseSchema,
   providerErrorSchema,
@@ -15,9 +16,18 @@ import {
   sourceListResponseSchema,
   aoiRequestResponseSchema,
   aoiRequestSchema,
+  steelSentinelPackSchema,
 } from "../types/provider.js";
 
 export const aoiRouter = Router();
+
+aoiRouter.get("/:aoiId/exports/steel-sentinel-pack", async (request, response) => {
+  try {
+    response.status(200).json(steelSentinelPackSchema.parse(await buildSteelSentinelPack(request.params.aoiId)));
+  } catch (error) {
+    respondWithProviderError(response, error);
+  }
+});
 
 aoiRouter.post("/requests", async (request, response) => {
   try {

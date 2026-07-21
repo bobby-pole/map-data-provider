@@ -143,6 +143,20 @@ export const aoiRequestResponseSchema = z.object({
   metadata: cachedMetadataSchema,
 });
 
+export const steelSentinelPackSchema = z.object({
+  contract_version: z.literal("steel_sentinel_pack/v1"),
+  aoi_id: providerIdentifierSchema,
+  domains: z.array(z.literal("power")),
+  layers: z.object({
+    power: z.object({
+      layer: providerLayerResponseSchema,
+      metadata: cachedMetadataSchema,
+      readiness: readinessRecordSchema,
+    }),
+  }),
+  sources: sourceRegistrySchema,
+});
+
 export type CachedMetadata = z.infer<typeof cachedMetadataSchema>;
 export type ProviderLayerResponse = z.infer<typeof providerLayerResponseSchema>;
 export type ReadinessRecord = z.infer<typeof readinessRecordSchema>;

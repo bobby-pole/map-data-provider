@@ -16,8 +16,8 @@ describe("GET /api/health", () => {
     });
   });
 
-  it("does not claim unimplemented provider endpoints", async () => {
-    const response = await request(createApp()).get("/api/aoi/rybnik_60km/layers/power");
+  it("does not fabricate a cache for an unknown AOI", async () => {
+    const response = await request(createApp()).get("/api/aoi/missing_aoi/layers/power");
 
     expect(response.status).toBe(404);
   });

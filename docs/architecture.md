@@ -183,7 +183,7 @@ KIUT/GESUT is an OGC WMS visual reference service. Its rendered images are not p
 
 ## Planned API
 
-The Node/Express/TypeScript provider scaffold is implemented with a typed `GET /api/health` endpoint. Cache-backed layer and readiness routes remain deliberately deferred until their dedicated API-contract ticket.
+The Node/Express/TypeScript provider now serves typed, read-only local artifacts through `GET /api/health`, `GET /api/aoi/:aoiId/layers`, `GET /api/aoi/:aoiId/layers/:domain`, `GET /api/aoi/:aoiId/readiness` and `GET /api/aoi/:aoiId/sources`. These routes validate identifiers and file contracts, return 422 for malformed input and 404 for a missing cache, and do not invoke Python, Overpass or WMS.
 
 Initial Node/Express provider endpoints:
 

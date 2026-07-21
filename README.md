@@ -178,8 +178,9 @@ Open `http://localhost:5173`.
 
 Future Node provider endpoints:
 
-- `POST /api/aoi/requests`
 - `GET /api/aoi/{aoi_id}/exports/steel-sentinel-pack`
+
+`POST /api/aoi/requests` is implemented for `rybnik_60km/power`. A cache is fresh for 24 hours from `snapshot_at`; a missing or stale cache invokes the Python worker with its offline fixture input and reports whether the result came from cache or refresh.
 
 ## Verification
 

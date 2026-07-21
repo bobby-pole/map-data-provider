@@ -20,7 +20,7 @@ const registryPath = path.join(projectRoot, "backend", "data", "sources", "regis
 
 export class ProviderDataError extends Error {
   constructor(
-    readonly kind: "invalid_request" | "not_found",
+    readonly kind: "invalid_request" | "not_found" | "worker_failed",
     message: string,
   ) {
     super(message);

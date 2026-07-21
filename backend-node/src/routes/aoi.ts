@@ -7,14 +7,30 @@ import {
   getCachedReadiness,
   getSourcesForAoi,
 } from "../services/providerDataService.js";
+import { requestAoi } from "../services/aoiRequestService.js";
 import {
   layerListResponseSchema,
   providerErrorSchema,
   readinessListResponseSchema,
   sourceListResponseSchema,
+  aoiRequestResponseSchema,
+  aoiRequestSchema,
 } from "../types/provider.js";
 
 export const aoiRouter = Router();
+
+aoiRouter.post("/requests", async (request, response) => {
+  try {
+    const body = aoiRequestSchema.parse(request.body);
+    response.status(200).json(aoiRequestResponseSchema.parse(await requestAoi(body.aoi_id, body.domain)));
+  } catch (error) {
+    if (error instanceof Error && error.name === "ZodError") {
+      respondWithProviderError(response, new ProviderDataError("invalid_request", "Malformed AOI request."));
+      return;
+    }
+    respondWithProviderError(response, error);
+  }
+});
 
 aoiRouter.get("/:aoiId/layers", async (request, response) => {
   try {
@@ -59,7 +75,7 @@ aoiRouter.get("/:aoiId/sources", async (request, response) => {
 
 function respondWithProviderError(response: Response, error: unknown): void {
   if (error instanceof ProviderDataError) {
-    response.status(error.kind === "invalid_request" ? 422 : 404).json(
+    response.status(error.kind === "invalid_request" ? 422 : error.kind === "not_found" ? 404 : 502).json(
       providerErrorSchema.parse({
         error: error.kind,
         message: error.message,

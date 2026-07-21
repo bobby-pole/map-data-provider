@@ -139,11 +139,11 @@ uv sync
 uv run uvicorn app.main:app --reload
 ```
 
-Target provider API:
+Node provider scaffold (currently `GET /api/health` only):
 
 ```bash
 cd backend-node
-npm install
+npm install --package-lock=false
 npm run dev
 ```
 
@@ -186,12 +186,13 @@ cd backend
 uv run python tests/smoke_check.py
 ```
 
-Target Node/Express checks:
+Node/Express scaffold checks:
 
 ```bash
 cd backend-node
 npm run build
 npm test
+npm run lint
 ```
 
 Frontend checks:

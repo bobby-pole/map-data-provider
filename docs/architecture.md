@@ -175,6 +175,8 @@ backend/data/cache/{aoi_id}/{domain}/
 
 ## Planned API
 
+The Node/Express/TypeScript provider scaffold is implemented with a typed `GET /api/health` endpoint. Cache-backed layer and readiness routes remain deliberately deferred until their dedicated API-contract ticket.
+
 Initial Node/Express provider endpoints:
 
 - `GET /api/health`

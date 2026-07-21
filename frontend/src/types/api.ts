@@ -1,16 +1,28 @@
+export type LayerSourceType = "analytical_vector" | "manual_seed" | "reference_overlay";
+export type LayerConfidence = "high" | "medium" | "low" | "not_applicable";
+export type LayerQualityStatus = "passed" | "warning" | "failed" | "unknown";
+export type LayerReadiness = "ready" | "usable_with_limitations" | "needs_source" | "not_usable";
+
 export type LayerCatalogEntry = {
   id: string;
   label: string;
   domain: string;
   source: string;
+  source_type: LayerSourceType;
+  confidence: LayerConfidence;
+  limitations: string[];
+  not_authoritative: boolean;
+  usable_for_simulation: boolean;
   access: string;
   geometry: string;
   endpoint: string;
   analytical_use: string;
   feature_count: number;
-  quality_status: string;
-  artifact: string;
-  validation_report: string;
+  quality_status: LayerQualityStatus;
+  validation_status_raw: string | null;
+  readiness: LayerReadiness;
+  artifact: string | null;
+  validation_report: string | null;
 };
 
 export type DataQualityIssue = {
@@ -30,4 +42,6 @@ export type DataQualityMetrics = {
   issues_by_severity: Record<string, number>;
   issues_by_category: Record<string, number>;
   layers: number;
+  layers_by_quality_status: Partial<Record<LayerQualityStatus, number>>;
+  layers_by_readiness: Partial<Record<LayerReadiness, number>>;
 };

@@ -19,6 +19,8 @@ PASSING_VALIDATION_STATUSES = frozenset({"pass", "ok", "success", "valid"})
 WARNING_VALIDATION_STATUSES = frozenset({"warn", "warning"})
 FAILING_VALIDATION_STATUSES = frozenset({"fail", "failed", "error", "invalid"})
 QUALITY_STATUSES = frozenset({"passed", "warning", "failed", "unknown"})
+SOURCE_TYPES = frozenset({"analytical_vector", "manual_seed", "reference_overlay"})
+CONFIDENCE_LEVELS = frozenset({"high", "medium", "low", "not_applicable"})
 
 app = FastAPI(title="Map Data Quality Lab API")
 app.add_middleware(
@@ -57,28 +59,29 @@ def normalize_validation_status(value: object | None) -> str:
     return "unknown"
 
 
-def derive_readiness(*, quality_status: str, feature_count: int, source: str) -> str:
+def derive_readiness(*, quality_status: str, feature_count: int, source_type: str) -> str:
     """Derive conservative provider readiness without changing source metadata contracts."""
     if quality_status not in QUALITY_STATUSES:
         quality_status = "unknown"
 
+    if source_type not in SOURCE_TYPES:
+        source_type = "reference_overlay"
+
+    if source_type == "reference_overlay":
+        return "needs_source"
     if feature_count == 0 or quality_status == "failed":
         return "not_usable"
-
-    source_key = source.strip().casefold()
-    if source_key in {"reference_overlay", "reference_only", "kiut_wms", "gesut_wms"} or "wms" in source_key:
-        return "needs_source"
     if quality_status == "unknown":
         return "needs_source"
-    if source_key == "manual_seed":
+    if source_type == "manual_seed":
         return "usable_with_limitations"
     if quality_status == "warning":
         return "usable_with_limitations"
     return "ready"
 
 
-def _report_status(report_path: Path) -> tuple[str | None, str]:
-    if not report_path.exists():
+def _report_status(report_path: Path | None) -> tuple[str | None, str]:
+    if report_path is None or not report_path.exists():
         return None, "unknown"
     report = _read_json(report_path)
     raw_status = report.get("status") or report.get("validation_status")
@@ -93,6 +96,14 @@ def _catalog() -> list[dict[str, Any]]:
             "label": "Power lines",
             "domain": "power",
             "source": "OpenStreetMap",
+            "source_type": "analytical_vector",
+            "confidence": "medium",
+            "limitations": [
+                "OSM completeness varies by area and asset type.",
+                "Passed validation does not prove complete real-world infrastructure coverage.",
+            ],
+            "not_authoritative": False,
+            "usable_for_simulation": True,
             "access": "public",
             "geometry": "LineString/MultiLineString",
             "endpoint": "/api/geodata/power/lines",
@@ -105,6 +116,14 @@ def _catalog() -> list[dict[str, Any]]:
             "label": "Power nodes display",
             "domain": "power",
             "source": "OpenStreetMap",
+            "source_type": "analytical_vector",
+            "confidence": "medium",
+            "limitations": [
+                "Display nodes are a provider-selected subset of available OSM power objects.",
+                "Passed validation does not prove complete real-world infrastructure coverage.",
+            ],
+            "not_authoritative": False,
+            "usable_for_simulation": True,
             "access": "public",
             "geometry": "Point/MultiPoint",
             "endpoint": "/api/geodata/power/nodes",
@@ -117,6 +136,14 @@ def _catalog() -> list[dict[str, Any]]:
             "label": "Manual power seed nodes",
             "domain": "power",
             "source": "manual_seed",
+            "source_type": "manual_seed",
+            "confidence": "low",
+            "limitations": [
+                "Manual seeds are non-authoritative review inputs.",
+                "Manual seed geometry must not replace OSM or authoritative utility data.",
+            ],
+            "not_authoritative": True,
+            "usable_for_simulation": False,
             "access": "review_only",
             "geometry": "Point",
             "endpoint": "/api/geodata/power/manual-seeds",
@@ -128,7 +155,15 @@ def _catalog() -> list[dict[str, Any]]:
             "id": "power.hexes.regional",
             "label": "Power hexes regional",
             "domain": "power",
-            "source": "derived_from_osm",
+            "source": "OpenStreetMap-derived",
+            "source_type": "analytical_vector",
+            "confidence": "low",
+            "limitations": [
+                "No normalized validation result is available for the current aggregated report.",
+                "Aggregated quality signals inherit OSM coverage limitations.",
+            ],
+            "not_authoritative": False,
+            "usable_for_simulation": False,
             "access": "public",
             "geometry": "Polygon",
             "endpoint": "/api/geodata/power/hexes/regional",
@@ -136,13 +171,38 @@ def _catalog() -> list[dict[str, Any]]:
             "report": REPORTS_DIR / "rybnik_60km_power_hexes_report.json",
             "analytical_use": "aggregated_quality_signal",
         },
+        {
+            "id": "external.kiut_wms",
+            "label": "KIUT/GESUT WMS reference overlay",
+            "domain": "power",
+            "source": "KIUT/GESUT WMS",
+            "source_type": "reference_overlay",
+            "confidence": "not_applicable",
+            "limitations": [
+                "WMS tiles are raster images, not analytical vector geometry.",
+                "The overlay may be unavailable or incomplete and is not a source-of-truth simulation input.",
+            ],
+            "not_authoritative": True,
+            "usable_for_simulation": False,
+            "access": "reference_only",
+            "geometry": "Raster WMS",
+            "endpoint": "https://integracja.gugik.gov.pl/cgi-bin/KrajowaIntegracjaUzbrojeniaTerenu",
+            "path": None,
+            "report": None,
+            "analytical_use": "visual_reference_only",
+        },
     ]
     result = []
     for layer in layers:
+        if layer["source_type"] not in SOURCE_TYPES:
+            raise ValueError(f"Unsupported source type for {layer['id']}: {layer['source_type']}")
+        if layer["confidence"] not in CONFIDENCE_LEVELS:
+            raise ValueError(f"Unsupported confidence for {layer['id']}: {layer['confidence']}")
+
         path = layer.pop("path")
         report = layer.pop("report")
         raw_status, quality_status = _report_status(report)
-        feature_count = _feature_count(path)
+        feature_count = _feature_count(path) if path is not None else 0
         result.append(
             {
                 **layer,
@@ -152,10 +212,10 @@ def _catalog() -> list[dict[str, Any]]:
                 "readiness": derive_readiness(
                     quality_status=quality_status,
                     feature_count=feature_count,
-                    source=layer["source"],
+                    source_type=layer["source_type"],
                 ),
-                "artifact": str(path.relative_to(ROOT)),
-                "validation_report": str(report.relative_to(ROOT)),
+                "artifact": str(path.relative_to(ROOT)) if path is not None else None,
+                "validation_report": str(report.relative_to(ROOT)) if report is not None else None,
             }
         )
     return result
@@ -167,6 +227,8 @@ def _issues() -> list[dict[str, Any]]:
     by_id = {layer["id"]: layer for layer in catalog}
 
     for layer in catalog:
+        if layer["source_type"] == "reference_overlay":
+            continue
         if layer["feature_count"] == 0:
             issues.append(
                 {

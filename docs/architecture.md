@@ -84,6 +84,23 @@ Each feature should expose provider-owned fields in `properties`:
 }
 ```
 
+### Layer catalog provenance metadata
+
+Every catalog entry makes its source and simulation suitability explicit:
+
+```json
+{
+  "source": "OpenStreetMap",
+  "source_type": "analytical_vector",
+  "confidence": "medium",
+  "limitations": ["OSM completeness varies by area and asset type."],
+  "not_authoritative": false,
+  "usable_for_simulation": true
+}
+```
+
+`source_type` is one of `analytical_vector`, `manual_seed` or `reference_overlay`. Confidence is a layer-level provider assessment (`high`, `medium`, `low` or `not_applicable`), not a claim of ground truth. `not_authoritative` is `true` for manual seeds and reference overlays. Manual seeds are never simulation inputs, and KIUT/GESUT WMS is catalogued as a `reference_overlay` with no GeoJSON artifact or validation report.
+
 ### Validation and readiness semantics
 
 Provider validation statuses are normalized to `passed`, `warning`, `failed` or `unknown`. Readiness is derived separately as `ready`, `usable_with_limitations`, `needs_source` or `not_usable`.

@@ -124,6 +124,42 @@ Provider validation statuses are normalized to `passed`, `warning`, `failed` or 
 - `needs_source` means validation evidence or an analytical source is missing; reference-only WMS overlays fall in this category.
 - `not_usable` means the artifact is empty or validation failed.
 
+### Data-quality rule and issue contract
+
+Provider rules use version `1.0` and return one of `passed`, `triggered` or `not_applicable`. Applicability is explicit: analytical vectors are evaluated for empty output, invalid or unsupported geometry, missing required attributes, suspicious duplicates, source metadata and validation status; manual seeds receive geometry, empty-layer, source-metadata and manual-review rules; reference overlays receive only source-metadata and reference-only rules. A WMS/reference overlay is therefore never reported as an empty or invalid analytical GeoJSON layer.
+
+| Rule ID | Applies to | Severity when triggered | Trigger |
+| --- | --- | --- | --- |
+| `layer.empty` | analytical vector, manual seed | high | Feature count is zero. |
+| `geometry.invalid` | analytical vector, manual seed | high | Validation reports invalid geometries. |
+| `attributes.missing_required` | analytical vector | medium | Required normalized attributes are missing. |
+| `features.duplicates` | analytical vector | medium | Validation reports suspicious duplicate features. |
+| `geometry.unsupported` | analytical vector, manual seed | medium | Unsupported geometry types are present. |
+| `source.inconsistent` | every source type | high | Provider source metadata is invalid or inconsistent. |
+| `validation.status` | analytical vector, manual seed | medium | Normalized validation status is not `passed`. |
+| `manual.non_authoritative` | manual seed | medium | Non-empty manual review input is present. |
+| `reference.overlay` | reference overlay | medium | Raster/reference-only overlay is present. |
+
+Every triggered rule produces a source-aware issue:
+
+```json
+{
+  "id": "DQ-POWER-HEXES-REGIONAL-QUALITY",
+  "rule_id": "validation.status",
+  "rule_version": "1.0",
+  "severity": "medium",
+  "source_type": "analytical_vector",
+  "domain": "power",
+  "layer_id": "power.hexes.regional",
+  "affected_object": {"type": "layer", "id": "power.hexes.regional"},
+  "evidence": "Validation report status: missing (normalized: unknown).",
+  "recommendation": "Inspect validation evidence and document limitations before analytical use.",
+  "status": "open"
+}
+```
+
+`rule_id` and `rule_version` are stable machine-facing identifiers. Severity is `low`, `medium` or `high`; readiness consumes the highest applicable severity directly, never issue title or recommendation text. `status` remains the generated initial state; persistent reviewer decisions are introduced separately by the issue-review workflow.
+
 ## Planned API
 
 Initial Node/Express provider endpoints:

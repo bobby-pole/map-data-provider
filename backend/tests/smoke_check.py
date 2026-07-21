@@ -41,6 +41,21 @@ assert {layer["source_type"] for layer in catalog} == {
     "manual_seed",
     "reference_overlay",
 }
+assert all(
+    {
+        "rule_id",
+        "rule_version",
+        "severity",
+        "source_type",
+        "domain",
+        "layer_id",
+        "affected_object",
+        "evidence",
+        "recommendation",
+    }
+    <= set(issue)
+    for issue in issues
+)
 assert metrics["layers_by_quality_status"], "Metrics should summarize normalized quality statuses"
 assert metrics["layers_by_readiness"], "Metrics should summarize readiness values"
 

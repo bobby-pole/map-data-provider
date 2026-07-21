@@ -79,6 +79,27 @@ def test_readiness_is_derived_conservatively(
     )
 
 
+def test_readiness_consumes_structured_issue_severity() -> None:
+    assert (
+        derive_readiness(
+            quality_status="passed",
+            feature_count=1,
+            source_type="analytical_vector",
+            issue_severity="medium",
+        )
+        == "usable_with_limitations"
+    )
+    assert (
+        derive_readiness(
+            quality_status="passed",
+            feature_count=1,
+            source_type="analytical_vector",
+            issue_severity="high",
+        )
+        == "not_usable"
+    )
+
+
 def test_catalog_exposes_required_source_metadata_contract() -> None:
     response = client.get("/api/layers/catalog")
 
@@ -156,6 +177,28 @@ def test_passing_reports_do_not_create_false_positive_issues() -> None:
     )
     assert any(issue["id"] == "DQ-MANUAL-SEEDS-NON-AUTHORITATIVE" for issue in issues)
     assert any(issue["id"] == "DQ-KIUT-WMS-REFERENCE-ONLY" for issue in issues)
+
+
+def test_issues_expose_versioned_source_aware_rule_contract() -> None:
+    issues = client.get("/api/data-quality/issues").json()
+    required_fields = {
+        "rule_id",
+        "rule_version",
+        "severity",
+        "source_type",
+        "domain",
+        "layer_id",
+        "affected_object",
+        "evidence",
+        "recommendation",
+    }
+
+    assert all(required_fields <= set(issue) for issue in issues)
+    by_rule = {issue["rule_id"]: issue for issue in issues}
+    assert by_rule["validation.status"]["layer_id"] == "power.hexes.regional"
+    assert by_rule["manual.non_authoritative"]["source_type"] == "manual_seed"
+    assert by_rule["reference.overlay"]["source_type"] == "reference_overlay"
+    assert all(issue["rule_version"] == "1.0" for issue in issues)
 
 
 @pytest.mark.parametrize(

@@ -9,6 +9,8 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 
+from geo_pipeline.quality_rules import highest_issue_severity, triggered_issues
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 PROCESSED_DIR = DATA_DIR / "processed"
@@ -59,7 +61,9 @@ def normalize_validation_status(value: object | None) -> str:
     return "unknown"
 
 
-def derive_readiness(*, quality_status: str, feature_count: int, source_type: str) -> str:
+def derive_readiness(
+    *, quality_status: str, feature_count: int, source_type: str, issue_severity: str | None = None
+) -> str:
     """Derive conservative provider readiness without changing source metadata contracts."""
     if quality_status not in QUALITY_STATUSES:
         quality_status = "unknown"
@@ -69,13 +73,15 @@ def derive_readiness(*, quality_status: str, feature_count: int, source_type: st
 
     if source_type == "reference_overlay":
         return "needs_source"
+    if issue_severity == "high":
+        return "not_usable"
     if feature_count == 0 or quality_status == "failed":
         return "not_usable"
     if quality_status == "unknown":
         return "needs_source"
     if source_type == "manual_seed":
         return "usable_with_limitations"
-    if quality_status == "warning":
+    if quality_status == "warning" or issue_severity in {"low", "medium"}:
         return "usable_with_limitations"
     return "ready"
 
@@ -89,7 +95,7 @@ def _report_status(report_path: Path | None) -> tuple[str | None, str]:
     return raw_value, normalize_validation_status(raw_status)
 
 
-def _catalog() -> list[dict[str, Any]]:
+def _catalog_base() -> list[dict[str, Any]]:
     layers = [
         {
             "id": "power.lines",
@@ -221,69 +227,26 @@ def _catalog() -> list[dict[str, Any]]:
     return result
 
 
-def _issues() -> list[dict[str, Any]]:
-    issues: list[dict[str, Any]] = []
-    catalog = _catalog()
-    by_id = {layer["id"]: layer for layer in catalog}
-
+def _catalog_and_issues() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    catalog = _catalog_base()
+    issues_by_layer = {layer["id"]: triggered_issues(layer) for layer in catalog}
     for layer in catalog:
-        if layer["source_type"] == "reference_overlay":
-            continue
-        if layer["feature_count"] == 0:
-            issues.append(
-                {
-                    "id": f"DQ-{layer['id'].replace('.', '-').upper()}-EMPTY",
-                    "layer_id": layer["id"],
-                    "severity": "high",
-                    "category": "empty_layer",
-                    "title": f"{layer['label']} has no features",
-                    "evidence": "Layer artifact exists but contains zero GeoJSON features.",
-                    "recommendation": "Verify extraction, AOI clipping and source availability.",
-                    "status": "open",
-                }
-            )
-        if layer["quality_status"] != "passed":
-            issues.append(
-                {
-                    "id": f"DQ-{layer['id'].replace('.', '-').upper()}-QUALITY",
-                    "layer_id": layer["id"],
-                    "severity": "medium",
-                    "category": "quality_status",
-                    "title": f"{layer['label']} quality status is {layer['quality_status']}",
-                    "evidence": f"Validation report status: {layer['validation_status_raw'] or 'missing'}.",
-                    "recommendation": "Inspect validation report and document source limitations before using this layer analytically.",
-                    "status": "open",
-                }
-            )
-
-    manual = by_id.get("manual.power.seeds")
-    if manual and manual["feature_count"] > 0:
-        issues.append(
-            {
-                "id": "DQ-MANUAL-SEEDS-NON-AUTHORITATIVE",
-                "layer_id": "manual.power.seeds",
-                "severity": "medium",
-                "category": "manual_source",
-                "title": "Manual seed nodes are not authoritative infrastructure data",
-                "evidence": "Manual seed layer is intended for review/synthetic topology experiments only.",
-                "recommendation": "Keep manual seeds visually distinct from OSM-derived data and exclude them from source-of-truth analytics.",
-                "status": "open",
-            }
+        layer_issues = issues_by_layer[layer["id"]]
+        layer["readiness"] = derive_readiness(
+            quality_status=layer["quality_status"],
+            feature_count=layer["feature_count"],
+            source_type=layer["source_type"],
+            issue_severity=highest_issue_severity(layer_issues),
         )
+    return catalog, [issue for layer_issues in issues_by_layer.values() for issue in layer_issues]
 
-    issues.append(
-        {
-            "id": "DQ-KIUT-WMS-REFERENCE-ONLY",
-            "layer_id": "external.kiut_wms",
-            "severity": "medium",
-            "category": "wms_reference_only",
-            "title": "KIUT/GESUT WMS must remain visual reference only",
-            "evidence": "WMS tiles are rendered images, not analytical vector geometry.",
-            "recommendation": "Use OSM/GeoJSON vectors for analytics and document WMS as a visual comparison layer only.",
-            "status": "open",
-        }
-    )
-    return issues
+
+def _catalog() -> list[dict[str, Any]]:
+    return _catalog_and_issues()[0]
+
+
+def _issues() -> list[dict[str, Any]]:
+    return _catalog_and_issues()[1]
 
 
 @app.get("/api/health")
@@ -303,8 +266,7 @@ def data_quality_issues() -> list[dict[str, Any]]:
 
 @app.get("/api/data-quality/metrics")
 def data_quality_metrics() -> dict[str, Any]:
-    issues = _issues()
-    catalog = _catalog()
+    catalog, issues = _catalog_and_issues()
     return {
         "total_issues": len(issues),
         "open_issues": sum(1 for issue in issues if issue["status"] == "open"),

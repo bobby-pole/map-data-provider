@@ -84,6 +84,15 @@ Each feature should expose provider-owned fields in `properties`:
 }
 ```
 
+### Validation and readiness semantics
+
+Provider validation statuses are normalized to `passed`, `warning`, `failed` or `unknown`. Readiness is derived separately as `ready`, `usable_with_limitations`, `needs_source` or `not_usable`.
+
+- `ready` means the layer passed the current automated provider checks; it does not claim complete real-world coverage.
+- `usable_with_limitations` keeps source or validation caveats visible, including non-authoritative manual seeds.
+- `needs_source` means validation evidence or an analytical source is missing; reference-only WMS overlays fall in this category.
+- `not_usable` means the artifact is empty or validation failed.
+
 ## Planned API
 
 Initial Node/Express provider endpoints:

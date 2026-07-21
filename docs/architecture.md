@@ -52,24 +52,32 @@ Node/Express provider
 
 ## Data Contract
 
-The primary provider output is GeoJSON with explicit metadata.
+### Steel Sentinel GeoJSON Layer Contract v1
+
+The primary provider output is a GeoJSON `FeatureCollection` with provider-owned metadata. Version 1 is `steel_sentinel_geojson/v1`; consumers integrate with the fields below rather than with raw Overpass or OSM tag conventions.
 
 ```json
 {
   "type": "FeatureCollection",
   "metadata": {
+    "contract_version": "steel_sentinel_geojson/v1",
     "aoi_id": "rybnik_60km",
     "domain": "power",
-    "source": "osm",
+    "layer_id": "power.lines",
+    "source": "OpenStreetMap",
+    "source_type": "analytical_vector",
     "snapshot_at": "2026-07-06T10:00:00Z",
     "feature_count": 16505,
-    "readiness": "usable_with_limitations"
+    "readiness": "usable_with_limitations",
+    "confidence": "medium",
+    "limitations": ["OSM completeness varies by area and asset type."],
+    "usable_for_simulation": true
   },
   "features": []
 }
 ```
 
-Each feature should expose provider-owned fields in `properties`:
+Each feature exposes these required provider-owned fields in `properties`:
 
 ```json
 {
@@ -83,6 +91,12 @@ Each feature should expose provider-owned fields in `properties`:
   "usable_for_simulation": true
 }
 ```
+
+Required root metadata is `contract_version`, `aoi_id`, `domain`, `layer_id`, `source`, `source_type`, `snapshot_at`, `feature_count`, `readiness`, `confidence`, `limitations` and `usable_for_simulation`. `snapshot_at` is an ISO-8601 timestamp with a timezone. `feature_count` must equal the number of GeoJSON features. `source_type` is one of `analytical_vector`, `manual_seed` or `reference_overlay`; `confidence` is one of `high`, `medium`, `low` or `not_applicable`; and readiness uses the documented provider vocabulary.
+
+Required feature fields are `source`, `source_id`, `domain`, `asset_type`, `confidence`, `missing_fields`, `limitations` and `usable_for_simulation`. `source_id` is a stable provider identifier such as `way/32043840`; `asset_type` is a provider-normalized role such as `line`, not a raw-tag dependency. `missing_fields` is derived feature-level evidence, while limitations and simulation suitability are explicit provider assessments.
+
+`osm_tags` is optional. It preserves useful source values such as `power`, `voltage`, `operator` or an original OSM `source` tag for inspection, but Steel Sentinel must not require it. A representative offline fixture lives at `backend/data/cache/rybnik_60km/power/contract-sample.geojson`; it is a contract sample, not the complete cache layout. `MDQ-004` introduces the canonical cache artifacts and metadata/readiness files.
 
 ### Layer catalog provenance metadata
 

@@ -207,6 +207,14 @@ cd backend
 uv run --offline python -m geo_pipeline.worker --aoi rybnik_60km --domain power --input fixture
 ```
 
+Full offline provider verification:
+
+```bash
+./scripts/verify_provider.sh
+```
+
+This checks the fixture-to-cache Python path, cache/GeoJSON/source contracts, Node API and layer-pack export tests, then the dev-preview build and lint checks without querying Overpass.
+
 Frontend checks:
 
 ```bash

@@ -8,6 +8,7 @@ import {
   providerLayerResponseSchema,
   readinessListResponseSchema,
   sourceListResponseSchema,
+  steelSentinelPackSchema,
 } from "../types/provider.js";
 
 describe("read-only AOI provider routes", () => {
@@ -50,6 +51,24 @@ describe("read-only AOI provider routes", () => {
         expect.objectContaining({ id: "kiut_gesut_wms", source_type: "reference_overlay", usable_for_simulation: false }),
       ]),
     );
+  });
+
+  it("exports a complete Steel Sentinel layer pack", async () => {
+    const response = await request(createApp()).get("/api/aoi/rybnik_60km/exports/steel-sentinel-pack");
+
+    expect(response.status).toBe(200);
+    const pack = steelSentinelPackSchema.parse(response.body);
+    expect(pack.layers.power.layer.metadata.feature_count).toBe(16_505);
+    expect(pack.layers.power.metadata.domain).toBe("power");
+    expect(pack.layers.power.readiness.readiness).toBe("usable_with_limitations");
+    expect(pack.sources.sources).toEqual(expect.arrayContaining([expect.objectContaining({ source_type: "reference_overlay" })]));
+  });
+
+  it("does not fabricate a pack for missing cache", async () => {
+    const response = await request(createApp()).get("/api/aoi/missing_aoi/exports/steel-sentinel-pack");
+
+    expect(response.status).toBe(404);
+    expect(providerErrorSchema.parse(response.body)).toMatchObject({ error: "not_found" });
   });
 
   it("returns 404 for a missing cached domain", async () => {

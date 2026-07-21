@@ -2,6 +2,7 @@ export type LayerSourceType = "analytical_vector" | "manual_seed" | "reference_o
 export type LayerConfidence = "high" | "medium" | "low" | "not_applicable";
 export type LayerQualityStatus = "passed" | "warning" | "failed" | "unknown";
 export type LayerReadiness = "ready" | "usable_with_limitations" | "needs_source" | "not_usable";
+export type IssueSeverity = "low" | "medium" | "high";
 
 export type LayerCatalogEntry = {
   id: string;
@@ -27,8 +28,13 @@ export type LayerCatalogEntry = {
 
 export type DataQualityIssue = {
   id: string;
+  rule_id: string;
+  rule_version: string;
+  source_type: LayerSourceType;
+  domain: string;
   layer_id: string;
-  severity: "low" | "medium" | "high";
+  affected_object: { type: "layer" | "feature"; id: string };
+  severity: IssueSeverity;
   category: string;
   title: string;
   evidence: string;

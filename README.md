@@ -199,6 +199,13 @@ npm test
 npm run lint
 ```
 
+Python worker CLI (offline fixture refresh):
+
+```bash
+cd backend
+uv run --offline python -m geo_pipeline.worker --aoi rybnik_60km --domain power --input fixture
+```
+
 Frontend checks:
 
 ```bash

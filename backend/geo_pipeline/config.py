@@ -29,8 +29,9 @@ PROCESSED_DIR = DATA_DIR / "processed"
 GEOJSON_DIR = DATA_DIR / "geojson"
 PREVIEWS_DIR = DATA_DIR / "previews"
 REPORTS_DIR = DATA_DIR / "reports"
+CACHE_DIR = DATA_DIR / "cache"
 
 
 def ensure_data_dirs() -> None:
-    for path in (RAW_DIR, MANUAL_DIR, PROCESSED_DIR, GEOJSON_DIR, PREVIEWS_DIR, REPORTS_DIR):
+    for path in (RAW_DIR, MANUAL_DIR, PROCESSED_DIR, GEOJSON_DIR, PREVIEWS_DIR, REPORTS_DIR, CACHE_DIR):
         path.mkdir(parents=True, exist_ok=True)

@@ -68,7 +68,7 @@ def test_validate_geojson_reports_missing_file_without_network(tmp_path: Path) -
 
 
 def test_contract_sample_matches_the_steel_sentinel_geojson_schema() -> None:
-    sample_path = Path(__file__).resolve().parents[1] / "data/cache/rybnik_60km/power/contract-sample.geojson"
+    sample_path = Path(__file__).resolve().parents[1] / "data/fixtures/rybnik_60km/power/contract-sample.geojson"
     sample = json.loads(sample_path.read_text(encoding="utf-8"))
 
     assert validate_steel_sentinel_geojson(sample) == []
@@ -92,7 +92,7 @@ def test_contract_validator_reports_missing_metadata_and_feature_fields() -> Non
 
 
 def test_contract_validator_rejects_invalid_timestamp_boolean_count_and_geometry() -> None:
-    sample_path = Path(__file__).resolve().parents[1] / "data/cache/rybnik_60km/power/contract-sample.geojson"
+    sample_path = Path(__file__).resolve().parents[1] / "data/fixtures/rybnik_60km/power/contract-sample.geojson"
     invalid = json.loads(sample_path.read_text(encoding="utf-8"))
     invalid["metadata"]["snapshot_at"] = "not-a-timestamp"
     invalid["metadata"]["feature_count"] = True

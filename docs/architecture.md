@@ -96,7 +96,7 @@ Required root metadata is `contract_version`, `aoi_id`, `domain`, `layer_id`, `s
 
 Required feature fields are `source`, `source_id`, `domain`, `asset_type`, `confidence`, `missing_fields`, `limitations` and `usable_for_simulation`. `source_id` is a stable provider identifier such as `way/32043840`; `asset_type` is a provider-normalized role such as `line`, not a raw-tag dependency. `missing_fields` is derived feature-level evidence, while limitations and simulation suitability are explicit provider assessments.
 
-`osm_tags` is optional. It preserves useful source values such as `power`, `voltage`, `operator` or an original OSM `source` tag for inspection, but Steel Sentinel must not require it. A representative offline fixture lives at `backend/data/cache/rybnik_60km/power/contract-sample.geojson`; it is a contract sample, not the complete cache layout. `MDQ-004` introduces the canonical cache artifacts and metadata/readiness files.
+`osm_tags` is optional. It preserves useful source values such as `power`, `voltage`, `operator` or an original OSM `source` tag for inspection, but Steel Sentinel must not require it. A representative offline fixture lives at `backend/data/fixtures/rybnik_60km/power/contract-sample.geojson`; it is a contract sample, not the complete cache layout. `MDQ-004` introduces the canonical cache artifacts and metadata/readiness files.
 
 ### Layer catalog provenance metadata
 
@@ -159,6 +159,19 @@ Every triggered rule produces a source-aware issue:
 ```
 
 `rule_id` and `rule_version` are stable machine-facing identifiers. Severity is `low`, `medium` or `high`; readiness consumes the highest applicable severity directly, never issue title or recommendation text. `status` remains the generated initial state; persistent reviewer decisions are introduced separately by the issue-review workflow.
+
+### Cache-first AOI/domain layout
+
+The canonical analytical-vector cache is file based and keyed by AOI and domain:
+
+```text
+backend/data/cache/{aoi_id}/{domain}/
+  layer.geojson
+  metadata.json
+  readiness.json
+```
+
+`layer.geojson` is the complete `steel_sentinel_geojson/v1` provider layer. `metadata.json` records the cache-layout and GeoJSON contract versions, AOI, domain, source query, snapshot timestamp, feature count, normalized validation status, confidence and limitations. `readiness.json` records the bounded readiness decision, quality status, highest applicable issue severity, count and evaluation timestamp. The initial committed snapshot is `rybnik_60km/power`, built from the existing OSM-derived power-lines artifact; it is read and validated locally without invoking Overpass extraction. Existing processed artifacts remain available to the FastAPI prototype during this migration.
 
 ## Planned API
 

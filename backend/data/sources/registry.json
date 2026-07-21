@@ -1,0 +1,80 @@
+{
+  "registry_version": "source_registry/v1",
+  "sources": [
+    {
+      "id": "openstreetmap",
+      "name": "OpenStreetMap",
+      "source_type": "analytical_vector",
+      "role": "OSM-derived infrastructure vectors used as provider analytical evidence.",
+      "access": "public_query",
+      "not_authoritative": false,
+      "usable_for_simulation": true,
+      "source_url": "https://overpass-api.de/api/interpreter",
+      "attribution": "© OpenStreetMap contributors",
+      "license": "ODbL-1.0",
+      "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
+      "distribution_guidance": "Keep OpenStreetMap attribution with distributed provider output and follow ODbL obligations for any distributed database or derivative database.",
+      "availability_caveats": [
+        "Overpass availability and query limits can vary.",
+        "OSM coverage and attribute completeness vary by area and asset type."
+      ],
+      "limitations": [
+        "Passing validation does not prove complete real-world infrastructure coverage."
+      ],
+      "analytical_cache_provenance": {
+        "required_fields": [
+          "source_registry_id",
+          "source_url",
+          "source_query",
+          "snapshot_at",
+          "pipeline_version",
+          "query_version"
+        ]
+      }
+    },
+    {
+      "id": "manual_power_seed",
+      "name": "Rybnik power seed nodes",
+      "source_type": "manual_seed",
+      "role": "Local non-authoritative review input for the provider demo.",
+      "access": "local_review_input",
+      "not_authoritative": true,
+      "usable_for_simulation": false,
+      "source_url": "backend/data/manual/rybnik_60km_power_seed_nodes.geojson",
+      "attribution": "Map Data Quality Lab manual seed input",
+      "license": "Project-maintained demo input",
+      "license_url": null,
+      "distribution_guidance": "Keep the manual-seed label, non-authoritative flag and source reference when this input is displayed or exported.",
+      "availability_caveats": [
+        "The seed file is local demo data and is not a public infrastructure registry."
+      ],
+      "limitations": [
+        "Manual seed geometry must not replace OSM or authoritative utility data."
+      ]
+    },
+    {
+      "id": "kiut_gesut_wms",
+      "name": "Krajowa Integracja Uzbrojenia Terenu (KIUT/GESUT) WMS",
+      "source_type": "reference_overlay",
+      "role": "Remote visual reference overlay for comparing provider output with published WMS imagery.",
+      "access": "remote_wms_reference",
+      "not_authoritative": true,
+      "usable_for_simulation": false,
+      "source_url": "https://integracja.gugik.gov.pl/cgi-bin/KrajowaIntegracjaUzbrojeniaTerenu",
+      "capabilities_url": "https://integracja.gugik.gov.pl/cgi-bin/KrajowaIntegracjaUzbrojeniaTerenu?SERVICE=WMS&REQUEST=GetCapabilities",
+      "service_type": "OGC WMS",
+      "attribution": "Źródło: Główny Urząd Geodezji i Kartografii (GUGiK), KIUT/GESUT WMS",
+      "license": "Verify current GUGiK service terms and metadata before redistributing rendered imagery or derivative output.",
+      "license_url": null,
+      "distribution_guidance": "Retain GUGiK/KIUT attribution when the overlay is shown. The current provider does not redistribute WMS imagery; any future redistribution requires a fresh terms and metadata review.",
+      "availability_caveats": [
+        "Remote WMS availability, coverage and published layers can change.",
+        "The provider does not assume public WFS/vector access for this service."
+      ],
+      "limitations": [
+        "WMS responses are rendered raster/reference imagery, not provider analytical vector geometry.",
+        "Do not convert WMS imagery to GeoJSON or use it as simulation input by default."
+      ]
+    }
+  ]
+}

@@ -209,6 +209,12 @@ Production map data is incomplete, heterogeneous, source-dependent and uneven ac
 
 The key product value is portability. Steel Sentinel can be pointed at a new AOI and request infrastructure layers, while the provider exposes whether OSM data is usable, incomplete or unsuitable for simulation.
 
+## Data attribution and reference overlays
+
+Distributed OSM-derived layers must retain the attribution **© OpenStreetMap contributors** and follow the [Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/1-0/) obligations recorded in the provider source registry. Every analytical cache snapshot records its OSM query endpoint, query version, pipeline version and snapshot timestamp alongside the layer.
+
+KIUT/GESUT is kept as an OGC WMS visual reference overlay. WMS imagery is not converted to GeoJSON or used as analytical/simulation input by default. If a future product displays or redistributes the overlay, it must retain GUGiK/KIUT attribution and verify the current service metadata and distribution terms first.
+
 ## QGIS interoperability
 
 The generated GeoJSON artifacts under `backend/data/processed/` can be opened in QGIS for manual inspection of geometries, attributes, CRS behavior, and layer completeness. QGIS is used as a GIS validation reference, while the product itself remains a web-based data tooling app.

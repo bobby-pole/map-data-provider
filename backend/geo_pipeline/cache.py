@@ -16,6 +16,7 @@ from geo_pipeline.contracts import (
 )
 from geo_pipeline.quality_rules import highest_issue_severity, triggered_issues
 from geo_pipeline.readiness import derive_readiness
+from geo_pipeline.source_registry import validate_analytical_cache_provenance
 
 CACHE_LAYOUT_VERSION = "provider_cache/v1"
 POWER_LINES_SOURCE = Path(__file__).resolve().parents[1] / "data/processed/rybnik_60km_power_lines_clipped.geojson"
@@ -25,6 +26,9 @@ POWER_LIMITATIONS = [
     "Passed validation does not prove complete real-world infrastructure coverage.",
 ]
 POWER_SOURCE_QUERY = "OSMnx features_from_point: power and man_made=utility_pole tags for Rybnik 60 km AOI."
+POWER_SOURCE_URL = "https://overpass-api.de/api/interpreter"
+POWER_PIPELINE_VERSION = "geo_pipeline/cache/v1"
+POWER_QUERY_VERSION = "power-osmnx/v1"
 
 
 @dataclass(frozen=True)
@@ -58,8 +62,12 @@ def build_rybnik_power_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
         "layer_id": "power.lines",
         "source": "OpenStreetMap",
         "source_type": "analytical_vector",
+        "source_registry_id": "openstreetmap",
+        "source_url": POWER_SOURCE_URL,
         "source_query": POWER_SOURCE_QUERY,
         "snapshot_at": "2026-07-22T00:00:00Z",
+        "pipeline_version": POWER_PIPELINE_VERSION,
+        "query_version": POWER_QUERY_VERSION,
         "validation_status_raw": validation_report.get("status"),
         "quality_status": quality_status,
         "confidence": "medium",
@@ -142,7 +150,6 @@ def _validate_cache_records(*, layer: dict[str, Any], metadata: dict[str, Any], 
         "layer_id",
         "source",
         "source_type",
-        "source_query",
         "snapshot_at",
         "feature_count",
         "validation_status_raw",
@@ -161,6 +168,7 @@ def _validate_cache_records(*, layer: dict[str, Any], metadata: dict[str, Any], 
         raise ValueError("Cached metadata feature count does not match layer")
     if metadata["source_type"] != "analytical_vector":
         raise ValueError("This cache layout is reserved for analytical vector layers")
+    validate_analytical_cache_provenance(metadata)
     required_readiness = {
         "cache_layout_version",
         "aoi_id",

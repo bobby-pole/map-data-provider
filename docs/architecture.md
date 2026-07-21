@@ -173,6 +173,14 @@ backend/data/cache/{aoi_id}/{domain}/
 
 `layer.geojson` is the complete `steel_sentinel_geojson/v1` provider layer. `metadata.json` records the cache-layout and GeoJSON contract versions, AOI, domain, source query, snapshot timestamp, feature count, normalized validation status, confidence and limitations. `readiness.json` records the bounded readiness decision, quality status, highest applicable issue severity, count and evaluation timestamp. The initial committed snapshot is `rybnik_60km/power`, built from the existing OSM-derived power-lines artifact; it is read and validated locally without invoking Overpass extraction. Existing processed artifacts remain available to the FastAPI prototype during this migration.
 
+## Source Registry and Attribution
+
+`backend/data/sources/registry.json` is the portable `source_registry/v1` contract shared by the Python worker, future Node API and exports. It registers OpenStreetMap as an `analytical_vector`, local manual seeds as `manual_seed`, and KIUT/GESUT as a `reference_overlay`. The registry carries source endpoints, attribution, distribution guidance, availability caveats, limitations and simulation suitability.
+
+Every analytical cache record references its registry ID and retains `source_url`, `source_query`, `snapshot_at`, `pipeline_version` and `query_version`. Distributed OSM-derived output must retain **© OpenStreetMap contributors** attribution and comply with ODbL obligations.
+
+KIUT/GESUT is an OGC WMS visual reference service. Its rendered images are not provider GeoJSON and must not be converted into analytical vectors or default simulation inputs. The provider does not redistribute WMS imagery; a future redistribution must retain GUGiK/KIUT attribution and verify the current service terms and metadata.
+
 ## Planned API
 
 The Node/Express/TypeScript provider scaffold is implemented with a typed `GET /api/health` endpoint. Cache-backed layer and readiness routes remain deliberately deferred until their dedicated API-contract ticket.

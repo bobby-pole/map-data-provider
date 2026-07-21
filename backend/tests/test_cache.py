@@ -41,8 +41,12 @@ def _write_valid_cache(root: Path) -> Path:
         "layer_id": "power.lines",
         "source": "OpenStreetMap",
         "source_type": "analytical_vector",
+        "source_registry_id": "openstreetmap",
+        "source_url": "https://overpass-api.de/api/interpreter",
         "source_query": "fixture query",
         "snapshot_at": "2026-07-22T00:00:00Z",
+        "pipeline_version": "geo_pipeline/cache/v1",
+        "query_version": "power-osmnx/v1",
         "feature_count": 1,
         "validation_status_raw": "pass",
         "quality_status": "passed",
@@ -116,7 +120,9 @@ def test_committed_rybnik_power_cache_is_complete_and_source_aware() -> None:
 
     assert cache["metadata"]["source"] == "OpenStreetMap"
     assert cache["metadata"]["source_type"] == "analytical_vector"
+    assert cache["metadata"]["source_registry_id"] == "openstreetmap"
     assert cache["metadata"]["source_query"]
+    assert cache["metadata"]["pipeline_version"] == "geo_pipeline/cache/v1"
     assert cache["metadata"]["feature_count"] == 16_505
     assert cache["readiness"]["readiness"] == "usable_with_limitations"
     assert cache["readiness"]["highest_issue_severity"] == "medium"

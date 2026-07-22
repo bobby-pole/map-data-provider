@@ -30,6 +30,8 @@ GeoJSON and JSON reports are the contract between them.
 
 ## Target Flow
 
+This is the target consumer flow. The provider side is implemented in this repository; loading its export inside Steel Sentinel remains external integration work.
+
 ```text
 Steel Sentinel
   -> GET /api/aoi/{aoi_id}/layers/{domain}
@@ -191,7 +193,7 @@ The Node/Express/TypeScript provider now serves typed, read-only local artifacts
 
 `GET /api/aoi/:aoiId/exports/steel-sentinel-pack` returns `steel_sentinel_pack/v1`: the selected cached GeoJSON layer, cache metadata, readiness and the complete source registry in one read-only response. The pack preserves the `analytical_vector`, `manual_seed` and `reference_overlay` distinctions.
 
-Initial Node/Express provider endpoints:
+Implemented Node/Express provider endpoints:
 
 - `GET /api/health`
 - `POST /api/aoi/requests`
@@ -211,6 +213,8 @@ Domain: power
 Output: cached OSM-derived GeoJSON + metadata + readiness report
 Consumer: Steel Sentinel
 ```
+
+The current release implements the provider side of this slice: a cache-first Rybnik power request, one normalized OSM-derived power layer, source/readiness/issue contracts, durable review state, `steel_sentinel_pack/v1` export, dev-preview inspection and a shared local/CI verification gate. It does not claim a completed Steel Sentinel client. Consumer-side loading remains a separate repository task.
 
 ## Repository Plan
 

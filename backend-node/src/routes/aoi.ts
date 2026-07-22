@@ -9,6 +9,7 @@ import {
 } from "../services/providerDataService.js";
 import { requestAoi } from "../services/aoiRequestService.js";
 import { buildSteelSentinelPack } from "../services/exportService.js";
+import { getReviewedIssues, updateIssueReview, type IssueStorePaths } from "../services/issueReviewService.js";
 import {
   layerListResponseSchema,
   providerErrorSchema,
@@ -17,9 +18,12 @@ import {
   aoiRequestResponseSchema,
   aoiRequestSchema,
   steelSentinelPackSchema,
+  issueListResponseSchema,
+  issueReviewUpdateSchema,
 } from "../types/provider.js";
 
-export const aoiRouter = Router();
+export function createAoiRouter(options?: { issueStorePaths?: IssueStorePaths }) {
+  const aoiRouter = Router();
 
 aoiRouter.get("/:aoiId/exports/steel-sentinel-pack", async (request, response) => {
   try {
@@ -83,9 +87,36 @@ aoiRouter.get("/:aoiId/sources", async (request, response) => {
   }
 });
 
+aoiRouter.get("/:aoiId/issues", async (request, response) => {
+  try {
+    response.status(200).json(issueListResponseSchema.parse({
+      aoi_id: request.params.aoiId,
+      issues: await getReviewedIssues(request.params.aoiId, options?.issueStorePaths),
+    }));
+  } catch (error) {
+    respondWithProviderError(response, error);
+  }
+});
+
+aoiRouter.patch("/:aoiId/issues/:issueId/review", async (request, response) => {
+  try {
+    const update = issueReviewUpdateSchema.parse(request.body);
+    response.status(200).json(await updateIssueReview(request.params.aoiId, request.params.issueId, update, options?.issueStorePaths));
+  } catch (error) {
+    if (error instanceof Error && error.name === "ZodError") {
+      respondWithProviderError(response, new ProviderDataError("invalid_request", "Malformed issue review update."));
+      return;
+    }
+    respondWithProviderError(response, error);
+  }
+});
+
+  return aoiRouter;
+}
+
 function respondWithProviderError(response: Response, error: unknown): void {
   if (error instanceof ProviderDataError) {
-    response.status(error.kind === "invalid_request" ? 422 : error.kind === "not_found" ? 404 : 502).json(
+    response.status(error.kind === "invalid_request" ? 422 : error.kind === "not_found" ? 404 : error.kind === "conflict" ? 409 : 502).json(
       providerErrorSchema.parse({
         error: error.kind,
         message: error.message,

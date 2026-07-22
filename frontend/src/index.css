@@ -5,7 +5,7 @@
 }
 
 body { margin: 0; }
-button, select { font: inherit; }
+button, select, textarea { font: inherit; }
 .layout { min-height: 100vh; padding: 24px; box-sizing: border-box; }
 .hero { display: flex; justify-content: space-between; gap: 24px; align-items: flex-end; margin-bottom: 20px; }
 .hero h1 { margin: 4px 0 8px; font-size: 42px; }
@@ -22,11 +22,16 @@ button, select { font: inherit; }
 .sidePanel h2 { margin-top: 0; }
 label { display: grid; gap: 6px; color: #9fb0c7; font-size: 13px; }
 select { background: #07111f; color: #e5edf7; border: 1px solid #1e3555; border-radius: 10px; padding: 10px; }
+textarea { min-height: 58px; resize: vertical; background: #07111f; color: #e5edf7; border: 1px solid #1e3555; border-radius: 10px; padding: 8px; }
+button { background: #0369a1; color: #f0f9ff; border: 0; border-radius: 10px; padding: 9px 12px; cursor: pointer; }
+button:disabled { cursor: not-allowed; opacity: .55; }
 .issueList { display: grid; gap: 10px; margin-top: 16px; }
 .issue { text-align: left; background: #102039; color: #e5edf7; border: 1px solid #1e3555; border-radius: 12px; padding: 12px; cursor: pointer; }
 .issue:hover { border-color: #38bdf8; }
 .issue strong, .issue small { display: block; margin-top: 6px; }
 .issue small { color: #9fb0c7; }
+.issue p { color: #cbd5e1; font-size: 13px; }
+.reviewPanel { margin-top: 22px; border-top: 1px solid #1e3555; padding-top: 18px; }
 .severity { display: inline-block; font-size: 11px; text-transform: uppercase; font-weight: 800; border-radius: 999px; padding: 3px 8px; }
 .severity-high { background: #7f1d1d; color: #fecaca; }
 .severity-medium { background: #78350f; color: #fde68a; }

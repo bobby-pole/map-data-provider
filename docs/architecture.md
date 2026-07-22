@@ -158,7 +158,9 @@ Every triggered rule produces a source-aware issue:
 }
 ```
 
-`rule_id` and `rule_version` are stable machine-facing identifiers. Severity is `low`, `medium` or `high`; readiness consumes the highest applicable severity directly, never issue title or recommendation text. `status` remains the generated initial state; persistent reviewer decisions are introduced separately by the issue-review workflow.
+`rule_id` and `rule_version` are stable machine-facing identifiers. Severity is `low`, `medium` or `high`; readiness consumes the highest applicable severity directly, never issue title or recommendation text. `status` remains the generated initial state. The Node review workflow stores the human decision separately and joins it only when AOI, issue ID, rule ID, rule version and layer ID still match.
+
+`GET /api/aoi/:aoiId/issues` returns the generated evidence plus a review object. `PATCH /api/aoi/:aoiId/issues/:issueId/review` applies `open -> acknowledged -> resolved | accepted | ignored`, an optional note and optimistic concurrency through `expected_updated_at`. Invalid payloads or transitions return `422`; a stale update returns `409`. JSON replacement is atomic and writes are serialized in the local Node process. The MVP store is restart-safe but intentionally not a multi-instance database.
 
 ### Cache-first AOI/domain layout
 
@@ -197,6 +199,8 @@ Initial Node/Express provider endpoints:
 - `GET /api/aoi/:aoiId/layers/:domain`
 - `GET /api/aoi/:aoiId/readiness`
 - `GET /api/aoi/:aoiId/sources`
+- `GET /api/aoi/:aoiId/issues`
+- `PATCH /api/aoi/:aoiId/issues/:issueId/review`
 - `GET /api/aoi/:aoiId/exports/steel-sentinel-pack`
 
 The first vertical slice is:

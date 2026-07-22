@@ -50,13 +50,14 @@ The intended contract is that Steel Sentinel can request infrastructure layers f
 
 ## Provider demo flow
 
-1. Start the Node/Express provider API; FastAPI remains a prototype for the Python pipeline only.
-2. Request an AOI/domain layer package, starting with `Rybnik + 60 km` and `power`.
-3. The provider checks cached OSM-derived artifacts before running new extraction work.
-4. If cache is missing or stale, the provider triggers the Python geospatial worker.
-5. Inspect the layer catalog, cached artifacts and validation reports.
-6. Review confidence/readiness metrics and known source limitations.
-7. Export or consume the prepared GeoJSON layer pack through Steel Sentinel.
+1. Run the offline provider verification and start the Node/Express API.
+2. Request `rybnik_60km/power` through the read-only cached-layer endpoint.
+3. Inspect the cached OSM-derived GeoJSON, metadata and readiness record.
+4. Compare analytical, manual and reference-only source classifications.
+5. Inspect generated issue evidence, human review state and feature metadata in the dev-preview.
+6. Export `steel_sentinel_pack/v1` for a Steel Sentinel-compatible client.
+
+Follow the [3–5 minute provider demo](./docs/demo.md) for exact commands and representative output.
 
 ## Demo scenario
 
@@ -64,17 +65,17 @@ The intended contract is that Steel Sentinel can request infrastructure layers f
 Scenario: a Steel Sentinel-compatible client requests a power infrastructure layer
 
 A compatible client requests the `power` domain for the Rybnik AOI.
-Map Data Quality Lab returns cached OSM-derived lines, nodes, manual seed metadata and quality hexes.
-The provider exposes source attribution, feature counts, validation status, confidence and known limitations.
-KIUT/GESUT layers are documented as visual reference overlays, not analytical vectors.
-The returned layer pack is ready for later Steel Sentinel map rendering and simulation integration.
+Map Data Quality Lab returns one cached, normalized OSM-derived power layer with its metadata and readiness record.
+The provider exposes source attribution, feature count, validation status, confidence and known limitations.
+Its source registry keeps manual inputs and KIUT/GESUT WMS references distinct from analytical vectors.
+The returned layer pack is ready for a Steel Sentinel-compatible client; actual Steel Sentinel consumption remains external integration work.
 ```
 
 This is intentionally a provider scenario. Simulation, operator decisions and cascading effects happen in Steel Sentinel.
 
 ## Tech stack
 
-- Provider API target: Node.js, Express, TypeScript
+- Provider API: Node.js, Express, TypeScript
 - Geospatial worker: Python 3.14, OSMnx, GeoPandas, Shapely
 - Python-pipeline prototype API: FastAPI
 - Frontend: React, TypeScript, Vite, Leaflet dev-preview
@@ -86,8 +87,8 @@ This is intentionally a provider scenario. Simulation, operator decisions and ca
 The provider uses a hybrid service architecture:
 
 ```text
-Steel Sentinel
-  -> consumes REST/GeoJSON from the provider
+Steel Sentinel-compatible consumers
+  -> can consume REST/GeoJSON from the provider
 
 Node.js / Express / TypeScript provider API
   -> exposes AOI, layer, readiness, source and export endpoints
@@ -104,6 +105,12 @@ Python geospatial worker
 This split is intentional. Node/Express/TypeScript owns REST APIs, cache orchestration, request validation and TypeScript contracts. Python remains the processing layer because the OSM/geospatial ecosystem around OSMnx, GeoPandas and Shapely is stronger for extraction, clipping and geometry validation.
 
 See [the architecture documentation](./docs/architecture.md) for decisions and the implementation plan.
+
+## Why this is not an OpenInfraMap clone
+
+[OpenInfraMap](https://openinframap.org/about) is a view of infrastructure mapped in OpenStreetMap. This repository solves a different problem: it prepares an AOI-scoped downstream data product. It normalizes OSM features into a versioned provider contract, preserves provenance, validates data quality, records confidence/readiness and review decisions, and exports a reproducible layer pack for another application.
+
+The dev-preview is an inspection surface for that provider workflow, not an attempt to reproduce a global infrastructure basemap or OpenInfraMap's cartographic experience.
 
 ## Product scope
 
@@ -151,7 +158,7 @@ Frontend:
 
 ```bash
 cd frontend
-npm install
+npm install --package-lock=false
 npm run dev
 ```
 

@@ -188,43 +188,37 @@ The implemented `GET /api/aoi/{aoi_id}/exports/steel-sentinel-pack` response is 
 
 ## Verification
 
-Current Python/FastAPI smoke check:
+Install the supported dependencies once:
 
 ```bash
-cd backend
-uv run python tests/smoke_check.py
+(cd backend && uv sync --locked --dev)
+(cd backend-node && npm install --package-lock=false)
+(cd frontend && npm install --package-lock=false)
 ```
 
-Node/Express scaffold checks:
-
-```bash
-cd backend-node
-npm run build
-npm test
-npm run lint
-```
-
-Python worker CLI (offline fixture refresh):
-
-```bash
-cd backend
-uv run --offline python -m geo_pipeline.worker --aoi rybnik_60km --domain power --input fixture
-```
-
-Full offline provider verification:
+Then run the canonical offline quality gate from the repository root:
 
 ```bash
 ./scripts/verify_provider.sh
 ```
 
-This checks the fixture-to-cache Python path, cache/GeoJSON/source contracts, Node API and layer-pack export tests, then the dev-preview build and lint checks without querying Overpass.
+The same script runs in GitHub Actions for every pull request and push to `main`. It covers Python pipeline stages and contracts, the FastAPI smoke check, Node API/build/lint, the layer-pack export, issue-review persistence and conflicts, plus frontend review tests/build/lint. It does not query live Overpass or WMS services.
 
-Frontend checks:
+The gate also runs a controlled negative probe and confirms that an intentionally invalid issue-snapshot contract makes its pytest command fail. A probe that unexpectedly passes fails the overall gate.
+
+Component-level commands are available for diagnosis:
 
 ```bash
-cd frontend
-npm run build
-npm run lint
+(cd backend && uv run --offline pytest -q -W error && uv run --offline python tests/smoke_check.py)
+(cd backend-node && npm run build && npm test && npm run lint)
+(cd frontend && npm test && npm run build && npm run lint)
+```
+
+The Python worker can also be exercised directly with its offline fixture:
+
+```bash
+cd backend
+uv run --offline python -m geo_pipeline.worker --aoi rybnik_60km --domain power --input fixture
 ```
 
 ## Why this matters for map data tooling

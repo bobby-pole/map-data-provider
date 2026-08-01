@@ -181,6 +181,8 @@ backend/data/cache/{aoi_id}/{domain}/
 
 `MDQ-020` defines `provider_aoi/v1` before generic adapter or API work. A bounded circle request records its EPSG:4326 boundary, source CRS, radius/area limits and request provenance; an approved administrative reference records its PRG identifier and offline fixture/snapshot provenance without claiming a live WFS read. The provider derives canonical AOI identity from normalized geometry, contract version and identity-relevant provenance. Cache paths accept only validated provider identifiers; `rybnik_60km` remains a compatibility alias and v1 cache key for the committed power snapshot while retaining its derived geometry identity.
 
+`MDQ-022` introduces a Python adapter catalog and versioned OSM query catalog. The worker resolves an approved AOI/domain adapter before creating paths, returns its source registry ID and query version, and stages the v1 compatibility cache with its v2 domain pack before atomic replacement. The first registered adapter remains `rybnik_60km/power`; no other domain acquisition is implied by the generic interface.
+
 ## Source Registry and Attribution
 
 `backend/data/sources/registry.json` is the portable `source_registry/v2` contract shared by Python, Node and later exports. Each record keeps independent `data_kind`, `format`, `authority`, `access_method`, `usage_role`, `qualification` and `distribution` fields, plus endpoint/reference, attribution, licence, availability caveats and limitations. This prevents an official source, a vector format and public access from being mistaken for the same property.

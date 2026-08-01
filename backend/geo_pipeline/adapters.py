@@ -1,0 +1,54 @@
+"""Registered AOI/domain adapters used by the refresh worker."""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Callable
+
+from geo_pipeline.cache import build_rybnik_power_cache
+from geo_pipeline.domain_pack import build_rybnik_power_domain_pack
+from geo_pipeline.query_catalog import OsmQueryDefinition, POWER_OSM_QUERY
+
+
+class AdapterError(ValueError):
+    """A deterministic adapter-catalog error."""
+
+
+@dataclass(frozen=True)
+class DomainAdapter:
+    aoi_alias: str
+    domain: str
+    query: OsmQueryDefinition
+    build_fixture: Callable[[Path], dict]
+    run_live: Callable[[], None]
+    build_domain_pack: Callable[[Path], dict]
+
+
+def _power_live() -> None:
+    from geo_pipeline.layers.power import extract_power_grid
+
+    extract_power_grid(write_preview=False)
+
+
+POWER_ADAPTER = DomainAdapter(
+    aoi_alias="rybnik_60km",
+    domain="power",
+    query=POWER_OSM_QUERY,
+    build_fixture=lambda root: build_rybnik_power_cache(root=root),
+    run_live=_power_live,
+    build_domain_pack=lambda root: build_rybnik_power_domain_pack(root=root),
+)
+
+_ADAPTERS = {(POWER_ADAPTER.aoi_alias, POWER_ADAPTER.domain): POWER_ADAPTER}
+
+
+def resolve_adapter(aoi_alias: str, domain: str) -> DomainAdapter:
+    try:
+        return _ADAPTERS[(aoi_alias, domain)]
+    except KeyError as error:
+        raise AdapterError(f"Unsupported registered AOI/domain target: {aoi_alias}/{domain}") from error
+
+
+def registered_adapters() -> tuple[DomainAdapter, ...]:
+    return tuple(_ADAPTERS.values())

@@ -7,6 +7,7 @@ import {
   isPublicExportEligible,
   sourceRegistryV2Schema,
   validateOrderedSourceProvenance,
+  domainPackV2Schema,
 } from "./provider.js";
 
 const fixtureRoot = new URL("../../../backend/data/fixtures/source_registry/", import.meta.url);
@@ -48,5 +49,15 @@ describe("source_registry/v2 contract", () => {
       { source_id: "openstreetmap", contribution_role: "primary" },
       { source_id: "openstreetmap", contribution_role: "supplementary" },
     ], registry, false)).toThrow(/must be unique/);
+  });
+
+  it("validates role-named domain-pack artifacts without changing v1 route schemas", () => {
+    const pack = domainPackV2Schema.parse({
+      domain_pack_version: "provider_domain_pack/v2", aoi_id: "fixture_aoi", domain: "power",
+      source_provenance: [{ source_id: "openstreetmap", contribution_role: "primary" }],
+      artifacts: [{ id: "power.lines", kind: "processed_vector", format: "geojson", path: "layers/power.lines.geojson", sha256: "a".repeat(64), feature_count: 1, source_provenance: [{ source_id: "openstreetmap", contribution_role: "primary" }], public_export: true }],
+      validation: { path: "validation/report.json" }, readiness: { path: "readiness/report.json" },
+    });
+    expect(pack.artifacts[0]?.id).toBe("power.lines");
   });
 });

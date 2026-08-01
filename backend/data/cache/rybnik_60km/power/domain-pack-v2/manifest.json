@@ -1,0 +1,61 @@
+{
+  "domain_pack_version": "provider_domain_pack/v2",
+  "aoi_id": "rybnik_60km",
+  "domain": "power",
+  "source_provenance": [
+    {
+      "source_id": "openstreetmap",
+      "contribution_role": "primary"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "power.lines",
+      "kind": "processed_vector",
+      "format": "geojson",
+      "path": "layers/power.lines.geojson",
+      "sha256": "5099b2ec6c2f0fe7175936e8f2294cb07f7c50c77444ccc7ea29c8432bf84029",
+      "feature_count": 16505,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "power.representative_points",
+      "kind": "representative_points",
+      "format": "geojson",
+      "not_applicable_reason": "Representative points are deferred until multi-layer power classification.",
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": false
+    },
+    {
+      "id": "power.source_metadata",
+      "kind": "native_vector",
+      "format": "json",
+      "path": "native/metadata.json",
+      "sha256": "3ce2f1144594e4beef03348d037f5657739ca09b2cb4b5aa29852a00d626b297",
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": false
+    }
+  ],
+  "validation": {
+    "path": "validation/metadata.json"
+  },
+  "readiness": {
+    "path": "readiness/readiness.json"
+  }
+}

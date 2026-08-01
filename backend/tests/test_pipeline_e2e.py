@@ -15,5 +15,5 @@ def test_offline_fixture_pipeline_produces_a_complete_provider_contract(tmp_path
     assert validate_steel_sentinel_geojson(cache["layer"]) == []
     assert cache["metadata"]["feature_count"] == cache["readiness"]["feature_count"]
     assert cache["metadata"]["source_type"] == "analytical_vector"
-    assert any(source["source_type"] == "manual_seed" for source in sources)
-    assert any(source["source_type"] == "reference_overlay" for source in sources)
+    assert any(source["usage_role"] == "review" and source["data_kind"] == "vector" for source in sources)
+    assert any(source["usage_role"] == "reference" and source["format"] == "wms" for source in sources)

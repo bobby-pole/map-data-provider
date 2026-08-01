@@ -1,0 +1,76 @@
+{
+  "registry_version": "source_registry/v1",
+  "sources": [
+    {
+      "id": "openstreetmap",
+      "name": "OpenStreetMap",
+      "source_type": "analytical_vector",
+      "role": "OSM-derived infrastructure vectors used as provider analytical evidence.",
+      "access": "public_query",
+      "not_authoritative": false,
+      "usable_for_simulation": true,
+      "source_url": "https://overpass-api.de/api/interpreter",
+      "attribution": "© OpenStreetMap contributors",
+      "license": "ODbL-1.0",
+      "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
+      "distribution_guidance": "Keep OpenStreetMap attribution with distributed provider output and follow ODbL obligations.",
+      "availability_caveats": [
+        "Overpass availability and query limits can vary."
+      ],
+      "limitations": [
+        "OSM coverage varies."
+      ],
+      "analytical_cache_provenance": {
+        "required_fields": [
+          "source_registry_id",
+          "source_url",
+          "source_query",
+          "snapshot_at",
+          "pipeline_version",
+          "query_version"
+        ]
+      }
+    },
+    {
+      "id": "manual_power_seed",
+      "name": "Rybnik power seed nodes",
+      "source_type": "manual_seed",
+      "role": "Local non-authoritative review input.",
+      "access": "local_review_input",
+      "not_authoritative": true,
+      "usable_for_simulation": false,
+      "source_url": "backend/data/manual/rybnik_60km_power_seed_nodes.geojson",
+      "attribution": "Map Data Quality Lab manual seed input",
+      "license": "Project-maintained demo input",
+      "license_url": null,
+      "distribution_guidance": "Keep the non-authoritative label.",
+      "availability_caveats": [
+        "Local demo data."
+      ],
+      "limitations": [
+        "Not a public infrastructure registry."
+      ]
+    },
+    {
+      "id": "kiut_gesut_wms",
+      "name": "KIUT/GESUT WMS",
+      "source_type": "reference_overlay",
+      "role": "Remote visual reference overlay.",
+      "access": "remote_wms_reference",
+      "not_authoritative": true,
+      "usable_for_simulation": false,
+      "source_url": "https://integracja.gugik.gov.pl/cgi-bin/KrajowaIntegracjaUzbrojeniaTerenu",
+      "attribution": "GUGiK, KIUT/GESUT WMS",
+      "license": "Verify current terms.",
+      "license_url": null,
+      "distribution_guidance": "Do not redistribute imagery by default.",
+      "availability_caveats": [
+        "Availability can change."
+      ],
+      "limitations": [
+        "Rendered imagery is not vector data."
+      ],
+      "service_type": "OGC WMS"
+    }
+  ]
+}

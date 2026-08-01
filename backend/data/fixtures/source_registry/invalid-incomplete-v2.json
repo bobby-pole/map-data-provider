@@ -18,10 +18,6 @@
       "access_method": "public_query",
       "usage_role": "analytical",
       "qualification": "qualified_free",
-      "distribution": {
-        "public_export": "allowed",
-        "reason": "ODbL attribution and obligations remain with distributed analytical output."
-      },
       "not_authoritative": false,
       "usable_for_simulation": true,
       "source_url": "https://overpass-api.de/api/interpreter",

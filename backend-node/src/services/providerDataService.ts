@@ -8,10 +8,12 @@ import {
   providerLayerResponseSchema,
   readinessRecordSchema,
   sourceRegistrySchema,
+  sourceRegistryV2Schema,
   type CachedMetadata,
   type ProviderLayerResponse,
   type ReadinessRecord,
   type SourceRegistry,
+  type SourceRegistryV2,
 } from "../types/provider.js";
 
 const projectRoot = path.resolve(fileURLToPath(new URL("../../../", import.meta.url)));
@@ -60,7 +62,39 @@ export async function getCachedReadiness(aoiId: string): Promise<ReadinessRecord
 export async function getSourcesForAoi(aoiId: string): Promise<SourceRegistry> {
   await getCachedLayers(aoiId);
   const registry = await readJson(registryPath, "source registry");
-  return sourceRegistrySchema.parse(registry);
+  return toV1SourceRegistry(sourceRegistryV2Schema.parse(registry));
+}
+
+function toV1SourceRegistry(registry: SourceRegistryV2): SourceRegistry {
+  const legacySourceIds = ["openstreetmap", "manual_power_seed", "kiut_gesut_wms"];
+  const sources = legacySourceIds.map((sourceId) => {
+    const source = registry.sources.find((candidate) => candidate.id === sourceId);
+    if (!source) throw new Error(`source_registry/v2 is missing v1 compatibility source '${sourceId}'.`);
+    const sourceType = source.usage_role === "analytical"
+      ? "analytical_vector"
+      : source.usage_role === "review"
+        ? "manual_seed"
+        : "reference_overlay";
+    return {
+      id: source.id,
+      name: source.name,
+      source_type: sourceType,
+      role: `${source.usage_role} ${source.data_kind} source.`,
+      access: source.access_method,
+      not_authoritative: source.not_authoritative,
+      usable_for_simulation: source.usable_for_simulation,
+      source_url: source.source_url,
+      attribution: source.attribution,
+      license: source.license,
+      license_url: source.license_url,
+      distribution_guidance: `${source.distribution.public_export}: ${source.distribution.reason}`,
+      availability_caveats: source.availability_caveats,
+      limitations: source.limitations,
+      ...(source.cache_provenance ? { analytical_cache_provenance: source.cache_provenance } : {}),
+      ...(source.format === "wms" ? { service_type: "OGC WMS" } : {}),
+    };
+  });
+  return sourceRegistrySchema.parse({ registry_version: "source_registry/v1", sources });
 }
 
 async function getCachedMetadata(aoiId: string, domain: string): Promise<CachedMetadata> {

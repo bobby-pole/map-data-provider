@@ -132,14 +132,14 @@
       "format": "wms",
       "authority": "official",
       "access_method": "public_service",
-      "usage_role": "reference",
+      "usage_role": "analytical",
       "qualification": "qualified_free",
       "distribution": {
-        "public_export": "prohibited",
-        "reason": "Rendered WMS imagery is reference-only and needs a fresh terms review before redistribution."
+        "public_export": "allowed",
+        "reason": "invalid test fixture"
       },
       "not_authoritative": true,
-      "usable_for_simulation": false,
+      "usable_for_simulation": true,
       "source_url": "https://integracja.gugik.gov.pl/cgi-bin/KrajowaIntegracjaUzbrojeniaTerenu",
       "attribution": "Źródło: Główny Urząd Geodezji i Kartografii (GUGiK), KIUT/GESUT WMS",
       "license": "Verify current GUGiK service terms and metadata before redistributing rendered imagery."

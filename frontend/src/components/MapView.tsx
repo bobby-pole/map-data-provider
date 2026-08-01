@@ -1,18 +1,19 @@
 import { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import type { CachedLayer, ProviderFeature } from "../types/api";
+import { popupDetails, type PreviewLayer } from "../previewCatalog";
+import type { ProviderFeature } from "../types/api";
 
 function escapeHtml(value: string): string { return value.replace(/[&<>'"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[character] ?? character); }
-function popup(feature: ProviderFeature): string {
-  const props = feature.properties;
-  return `<strong>${escapeHtml(props.asset_type)}</strong><br/>Source: ${escapeHtml(props.source)}<br/>Confidence: ${escapeHtml(props.confidence)}<br/>Missing fields: ${escapeHtml(props.missing_fields.join(", ") || "none")}<br/>Limitations: ${escapeHtml(props.limitations.join("; ") || "none")}`;
+function popup(feature: ProviderFeature, layer: PreviewLayer): string {
+  const details = popupDetails(feature, layer);
+  return `<strong>${escapeHtml(details.title)}</strong><br/>Source: ${escapeHtml(details.source)}<br/>Confidence: ${escapeHtml(details.confidence)}<br/>Readiness: ${escapeHtml(details.readiness)}<br/>Limitations: ${escapeHtml(details.limitations.join("; ") || "none")}`;
 }
 
-export function MapView({ layer }: { layer: CachedLayer | null }) {
+export function MapView({ layers }: { layers: PreviewLayer[] }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
-  const providerLayerRef = useRef<L.GeoJSON | null>(null);
+  const providerLayerRef = useRef<L.FeatureGroup | null>(null);
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
     const map = L.map(containerRef.current).setView([50.102174, 18.546285], 10); mapRef.current = map;
@@ -20,12 +21,19 @@ export function MapView({ layer }: { layer: CachedLayer | null }) {
     return () => { map.remove(); mapRef.current = null; };
   }, []);
   useEffect(() => {
-    const map = mapRef.current; if (!map || !layer) return;
+    const map = mapRef.current; if (!map) return;
     providerLayerRef.current?.remove();
-    const geoJson = L.geoJSON(layer as GeoJSON.GeoJsonObject, { style: { color: "#f59e0b", weight: 2, opacity: 0.85 }, onEachFeature: (feature, leafletLayer) => leafletLayer.bindPopup(popup(feature as ProviderFeature)) }).addTo(map);
-    providerLayerRef.current = geoJson;
-    const bounds = geoJson.getBounds(); if (bounds.isValid()) map.fitBounds(bounds, { padding: [20, 20] });
-    return () => { geoJson.remove(); };
-  }, [layer]);
+    const group = L.featureGroup().addTo(map);
+    const colors = ["#f59e0b", "#38bdf8", "#a78bfa", "#34d399"];
+    layers.forEach((layer, index) => {
+      L.geoJSON(layer.layer as GeoJSON.GeoJsonObject, {
+        style: { color: colors[index % colors.length], weight: 2, opacity: 0.85 },
+        onEachFeature: (feature, leafletLayer) => leafletLayer.bindPopup(popup(feature as ProviderFeature, layer)),
+      }).addTo(group);
+    });
+    providerLayerRef.current = group;
+    const bounds = group.getBounds(); if (bounds.isValid()) map.fitBounds(bounds, { padding: [20, 20] });
+    return () => { group.remove(); };
+  }, [layers]);
   return <div className="map" ref={containerRef} />;
 }

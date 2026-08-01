@@ -401,11 +401,60 @@ export const steelSentinelPackSchema = z.object({
   sources: sourceRegistrySchema,
 });
 
+const analyticalDomainPackArtifactSchema = domainPackArtifactSchema
+  .extend({
+    kind: z.enum(["processed_vector", "derived_vector", "representative_points"]),
+    format: z.literal("geojson"),
+    path: z.string().min(1),
+    sha256: z.string().regex(/^[a-f0-9]{64}$/),
+    public_export: z.literal(true),
+  })
+  .strict();
+
+export const domainPackLayerSchema = z
+  .object({
+    artifact: analyticalDomainPackArtifactSchema,
+    layer: providerLayerResponseSchema,
+  })
+  .strict();
+
+export const domainPackReadResponseSchema = z
+  .object({
+    response_version: z.literal("provider_domain_pack_read/v2"),
+    aoi_id: providerIdentifierSchema,
+    domain: providerIdentifierSchema,
+    source_provenance: z.array(sourceProvenanceSchema).min(1),
+    validation: cachedMetadataSchema,
+    readiness: readinessRecordSchema,
+    layers: z.array(domainPackLayerSchema),
+    sources: z.array(sourceRegistryV2EntrySchema),
+  })
+  .strict();
+
+export const domainPackListResponseSchema = z
+  .object({
+    response_version: z.literal("provider_domain_pack_list/v2"),
+    aoi_id: providerIdentifierSchema,
+    domain_packs: z.array(domainPackReadResponseSchema),
+  })
+  .strict();
+
+export const steelSentinelPackV2Schema = z
+  .object({
+    contract_version: z.literal("steel_sentinel_pack/v2"),
+    aoi_id: providerIdentifierSchema,
+    domain_packs: z.array(domainPackReadResponseSchema),
+    sources: z.array(sourceRegistryV2EntrySchema),
+  })
+  .strict();
+
 export type CachedMetadata = z.infer<typeof cachedMetadataSchema>;
 export type ProviderLayerResponse = z.infer<typeof providerLayerResponseSchema>;
 export type ReadinessRecord = z.infer<typeof readinessRecordSchema>;
 export type SourceRegistry = z.infer<typeof sourceRegistrySchema>;
 export type SourceRegistryV2 = z.infer<typeof sourceRegistryV2Schema>;
+export type DomainPackReadResponse = z.infer<typeof domainPackReadResponseSchema>;
+export type DomainPackLayer = z.infer<typeof domainPackLayerSchema>;
 export type GeneratedIssue = z.infer<typeof generatedIssueSchema>;
 export type IssueReviewRecord = z.infer<typeof issueReviewRecordSchema>;
 export type ReviewedIssue = z.infer<typeof reviewedIssueSchema>;

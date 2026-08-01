@@ -14,11 +14,55 @@ export type ReadinessRecord = {
 
 export type ProviderFeature = {
   type: "Feature";
-  properties: { source: string; source_id: string; asset_type: string; confidence: LayerConfidence; missing_fields: string[]; limitations: string[]; usable_for_simulation: boolean };
+  properties: Record<string, unknown>;
   geometry: GeoJSON.Geometry;
 };
 
 export type CachedLayer = { type: "FeatureCollection"; metadata: CachedMetadata; features: ProviderFeature[] };
+
+export type SourceProvenance = {
+  source_id: string;
+  contribution_role: "primary" | "supplementary" | "validation_reference" | "derived_context";
+};
+
+export type SourceRegistryV2Entry = {
+  id: string;
+  name: string;
+  attribution: string;
+  usage_role: "analytical" | "reference" | "review";
+  distribution: { public_export: "allowed" | "prohibited"; reason: string };
+  limitations: string[];
+};
+
+export type DomainPackArtifact = {
+  id: string;
+  kind: "processed_vector" | "derived_vector" | "representative_points";
+  format: "geojson";
+  feature_count?: number;
+  source_provenance: SourceProvenance[];
+  public_export: true;
+};
+
+export type DomainPackLayer = {
+  artifact: DomainPackArtifact;
+  layer: CachedLayer;
+};
+
+export type DomainPack = {
+  response_version: "provider_domain_pack_read/v2";
+  aoi_id: string;
+  domain: string;
+  source_provenance: SourceProvenance[];
+  readiness: ReadinessRecord;
+  layers: DomainPackLayer[];
+  sources: SourceRegistryV2Entry[];
+};
+
+export type DomainPackListResponse = {
+  response_version: "provider_domain_pack_list/v2";
+  aoi_id: string;
+  domain_packs: DomainPack[];
+};
 
 export type IssueReviewStatus = "open" | "acknowledged" | "resolved" | "accepted" | "ignored";
 

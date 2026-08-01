@@ -288,6 +288,36 @@ export function validateOrderedSourceProvenance(
   }
 }
 
+export const domainPackArtifactSchema = z.object({
+  id: z.string().min(1),
+  kind: z.enum(["native_vector", "native_raster", "remote_service", "processed_vector", "derived_vector", "representative_points"]),
+  format: z.string().min(1),
+  path: z.string().min(1).optional(),
+  sha256: z.string().regex(/^[a-f0-9]{64}$/).optional(),
+  feature_count: z.number().int().nonnegative().optional(),
+  source_provenance: z.array(sourceProvenanceSchema).min(1),
+  public_export: z.boolean(),
+  not_applicable_reason: z.string().min(1).optional(),
+}).strict();
+
+export const domainPackV2Schema = z.object({
+  domain_pack_version: z.literal("provider_domain_pack/v2"),
+  aoi_id: providerIdentifierSchema,
+  domain: providerIdentifierSchema,
+  source_provenance: z.array(sourceProvenanceSchema).min(1),
+  artifacts: z.array(domainPackArtifactSchema).min(1),
+  validation: z.object({ path: z.string().min(1) }).strict(),
+  readiness: z.object({ path: z.string().min(1) }).strict(),
+}).strict().superRefine((pack, context) => {
+  const ids = pack.artifacts.map((artifact) => artifact.id);
+  if (new Set(ids).size !== ids.length) context.addIssue({ code: "custom", message: "Domain-pack artifact IDs must be unique." });
+  for (const artifact of pack.artifacts) {
+    if (artifact.kind !== "remote_service" && !artifact.path && !artifact.not_applicable_reason) {
+      context.addIssue({ code: "custom", message: "File-backed artifact requires a path or not-applicable reason." });
+    }
+  }
+});
+
 export const layerListResponseSchema = z.object({
   aoi_id: providerIdentifierSchema,
   layers: z.array(cachedMetadataSchema),

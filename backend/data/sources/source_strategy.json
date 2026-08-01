@@ -1,0 +1,110 @@
+{
+  "strategy_version": "source_strategy/v1",
+  "verified_at": "2026-08-01",
+  "scope": "MDQ-021 source-family qualification only; no adapter or live acquisition is enabled by this record.",
+  "candidates": [
+    {
+      "id": "openstreetmap",
+      "decision": "adopt",
+      "role": "community analytical vector",
+      "service_or_format": "Overpass-compatible OSM query / vector",
+      "coverage": "Global; completeness varies by AOI and feature class.",
+      "access_terms": "Public data under ODbL-1.0 with attribution and share-alike obligations.",
+      "redistribution": "Allowed only with ODbL attribution and applicable licence obligations.",
+      "update_cadence": "Contributor-driven; record a snapshot timestamp for every extraction.",
+      "aoi_method": "Bounded Overpass query followed by provider clipping.",
+      "known_gaps": ["No official completeness guarantee", "Utility-line tags vary by area"],
+      "evidence": [{"title": "OpenStreetMap Copyright and Licence", "url": "https://www.openstreetmap.org/copyright", "checked_at": "2026-08-01"}]
+    },
+    {
+      "id": "prg_wfs",
+      "decision": "adopt",
+      "role": "official analytical vector for administrative AOI and address/boundary context",
+      "service_or_format": "OGC WFS 2.0 / GML; WMS is a separate viewing service",
+      "coverage": "Poland; territorial boundaries and address data.",
+      "access_terms": "Free and reusable published PRG data; GUGiK reuse conditions still require attribution/provenance retention.",
+      "redistribution": "Allowed for the published vector data with source attribution and current terms recorded per snapshot.",
+      "update_cadence": "Administrative boundaries annually as at 1 January; address data continuously with municipal changes.",
+      "aoi_method": "WFS feature request bounded by AOI; retain GML and service-capability evidence.",
+      "known_gaps": ["Not a national emergency-facility registry", "Live schema and capability must be rechecked by MDQ-024"],
+      "evidence": [{"title": "PRG product and WFS description", "url": "https://www.geoportal.gov.pl/pl/dane/panstwowy-rejestr-granic-prg/", "checked_at": "2026-08-01"}, {"title": "PRG WFS GetCapabilities", "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?SERVICE=WFS&REQUEST=GetCapabilities", "checked_at": "2026-08-01"}]
+    },
+    {
+      "id": "bdot10k",
+      "decision": "adopt",
+      "role": "official analytical vector for topographic context",
+      "service_or_format": "Static class/package download in GPKG or GeoParquet; WMS GetFeatureInfo discovers download links and is not a feature API",
+      "coverage": "Poland; package granularity depends on the published county, voivodeship, country or class download.",
+      "access_terms": "Published BDOT10k downloads are free and reusable.",
+      "redistribution": "Allowed for acquired vector packages with GUGiK attribution, terms and snapshot metadata retained.",
+      "update_cadence": "Discover current package/snapshot before acquisition; package and class availability can change.",
+      "aoi_method": "Discover a bounded class/package, read selected columns or row groups, then transform and clip locally.",
+      "known_gaps": ["Building and context geometry does not prove facility semantics", "No direct WFS feature acquisition is assumed"],
+      "evidence": [{"title": "BDOT10k product and package downloads", "url": "https://www.geoportal.gov.pl/pl/dane/baza-danych-obiektow-topograficznych-bdot10k/", "checked_at": "2026-08-01"}, {"title": "BDOT10k GPKG and GeoParquet announcement", "url": "https://www.geoportal.gov.pl/aktualnosci/nowe-formaty-bdot10k-do-pobierania-w-serwisie-www-geoportal-gov-pl/", "checked_at": "2026-08-01"}, {"title": "BDOT10k WMS GetCapabilities", "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT/WMS/PobieranieBDOT10k?SERVICE=WMS&REQUEST=GetCapabilities", "checked_at": "2026-08-01"}]
+    },
+    {
+      "id": "kiut_gesut_wms",
+      "decision": "reference_only",
+      "role": "official rendered utility-network reference and coverage evidence",
+      "service_or_format": "OGC WMS 1.3.0 rendered imagery",
+      "coverage": "Published national aggregate WMS; layer availability and local detail must be reported as coverage evidence.",
+      "access_terms": "Public viewing service; this provider does not assume vector download or image redistribution rights.",
+      "redistribution": "Prohibited from analytical GeoJSON and public imagery export pending a separate terms decision.",
+      "update_cadence": "Remote service; recheck capabilities and visible coverage when a pack is refreshed.",
+      "aoi_method": "GetCapabilities then bounded WMS request or visual coverage report only.",
+      "known_gaps": ["Rendered WMS is not analytical vector geometry", "No public WFS/vector feed is assumed"],
+      "evidence": [{"title": "KIUT/GESUT product page", "url": "https://www.geoportal.gov.pl/pl/dane/uzbrojenie-terenu-gesut/", "checked_at": "2026-08-01"}, {"title": "KIUT WMS GetCapabilities", "url": "https://integracja.gugik.gov.pl/cgi-bin/KrajowaIntegracjaUzbrojeniaTerenu?SERVICE=WMS&REQUEST=GetCapabilities", "checked_at": "2026-08-01"}]
+    },
+    {
+      "id": "geoportal_orthophoto",
+      "decision": "reference_only",
+      "role": "official visual reference imagery",
+      "service_or_format": "OGC WMS/WMTS rendered imagery and separate downloads",
+      "coverage": "Poland with resolution and acquisition-date variability.",
+      "access_terms": "Product page states downloads are free and reusable; provider policy still excludes imagery from analytical-vector export.",
+      "redistribution": "Not exported by the provider until a raster/image distribution contract is explicitly defined.",
+      "update_cadence": "Urban imagery is described with a two-year cycle and non-urban imagery with a five-year cycle; inspect per-scene metadata.",
+      "aoi_method": "Bounded WMS/WMTS viewing or download metadata; never derive object vectors by default.",
+      "known_gaps": ["Imagery date and resolution vary", "Visual interpretation is not an analytical object claim"],
+      "evidence": [{"title": "Geoportal orthophoto product and services", "url": "https://www.geoportal.gov.pl/pl/dane/ortofotomapa-orto/", "checked_at": "2026-08-01"}]
+    },
+    {
+      "id": "nmt_nmpt",
+      "decision": "adopt",
+      "role": "official analytical raster for explicitly defined derived terrain context",
+      "service_or_format": "NMT/NMPT raster download; ASCII GRID and later native raster artifacts",
+      "coverage": "Poland; product resolution and availability must be recorded per acquired sheet.",
+      "access_terms": "GUGiK publishes public-sector information for reuse without charge; use only a documented published product path.",
+      "redistribution": "No generic public raster export in this provider until MDQ-028 defines the derived-product and distribution contract.",
+      "update_cadence": "Dataset metadata and product coverage must be checked per acquisition.",
+      "aoi_method": "Select intersecting source sheets or bounded download, preserve native raster and derive only documented outputs.",
+      "known_gaps": ["Raster cannot create object vectors", "Elevation alone does not establish flood risk or utility attributes"],
+      "evidence": [{"title": "GUGiK NMT 5 m service and ASCII GRID publication", "url": "https://www.gov.pl/web/gugik/nowa-usluga-wms-umozliwiajaca-pobieranie-nmt-o-interwale-siatki-5-m", "checked_at": "2026-08-01"}, {"title": "GUGiK reuse information", "url": "https://www.gov.pl/web/gugik/ponowne-wykorzystanie-informacji-sektora-publicznego", "checked_at": "2026-08-01"}]
+    },
+    {
+      "id": "unverified_specialist_registry",
+      "decision": "reject",
+      "role": "placeholder for a claimed national specialist feed without dated primary access and reuse evidence",
+      "service_or_format": "unverified",
+      "coverage": "unverified",
+      "access_terms": "unverified",
+      "redistribution": "prohibited",
+      "update_cadence": "unverified",
+      "aoi_method": "none",
+      "known_gaps": ["Cannot enter registry, acquisition, cache or public export without dated primary evidence"],
+      "evidence": []
+    }
+  ],
+  "domains": [
+    {"id": "emergency", "analytical_sources": ["openstreetmap"], "reference_sources": [], "fallback": "Retain OSM source limitations; no official national facility registry is enabled.", "source_gaps": ["Official emergency-service feature coverage is not qualified."]},
+    {"id": "public_services", "analytical_sources": ["openstreetmap", "prg_wfs", "bdot10k"], "reference_sources": ["geoportal_orthophoto"], "fallback": "Keep facility semantics only where a source supplies them; BDOT10k building context is not facility classification.", "source_gaps": []},
+    {"id": "transport", "analytical_sources": ["openstreetmap", "bdot10k"], "reference_sources": ["geoportal_orthophoto"], "fallback": "Use OSM when a bounded BDOT10k class is unavailable and retain source identity.", "source_gaps": []},
+    {"id": "bridges", "analytical_sources": ["openstreetmap", "bdot10k"], "reference_sources": ["geoportal_orthophoto"], "fallback": "Report missing bridge class coverage instead of inferring crossings from imagery.", "source_gaps": []},
+    {"id": "water", "analytical_sources": ["openstreetmap", "bdot10k", "nmt_nmpt"], "reference_sources": ["kiut_gesut_wms", "geoportal_orthophoto"], "fallback": "Keep missing utility pipeline vectors as a source gap; KIUT remains visual evidence.", "source_gaps": ["No qualified official analytical water-network vector feed."]},
+    {"id": "gas", "analytical_sources": ["openstreetmap"], "reference_sources": ["kiut_gesut_wms", "geoportal_orthophoto"], "fallback": "Require explicit OSM gas semantics; do not turn KIUT imagery into lines.", "source_gaps": ["No qualified official analytical gas-network vector feed."]},
+    {"id": "sewer", "analytical_sources": ["openstreetmap"], "reference_sources": ["kiut_gesut_wms", "geoportal_orthophoto"], "fallback": "Require explicit wastewater semantics; retain absent network geometry as a gap.", "source_gaps": ["No qualified official analytical sewer-network vector feed."]},
+    {"id": "industrial", "analytical_sources": ["openstreetmap", "bdot10k"], "reference_sources": ["geoportal_orthophoto"], "fallback": "Do not infer industrial function from imagery or a building footprint alone.", "source_gaps": []},
+    {"id": "telecom", "analytical_sources": ["openstreetmap"], "reference_sources": ["kiut_gesut_wms"], "fallback": "Telecom remains optional and only uses explicit OSM semantics; KIUT is reference-only.", "source_gaps": ["No qualified official analytical telecom-network vector feed."]},
+    {"id": "district_heating", "analytical_sources": ["openstreetmap"], "reference_sources": ["kiut_gesut_wms"], "fallback": "District heating remains optional and only uses explicit OSM semantics; KIUT is reference-only.", "source_gaps": ["No qualified official analytical district-heating-network vector feed."]}
+  ]
+}

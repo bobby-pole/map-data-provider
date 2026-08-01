@@ -79,16 +79,26 @@
       "authority": "official",
       "access_method": "public_service",
       "usage_role": "analytical",
-      "qualification": "pending_qualification",
+      "qualification": "qualified_free",
       "distribution": {
-        "public_export": "prohibited",
-        "reason": "MDQ-021 must verify current endpoint, coverage and redistribution terms before acquisition or export."
+        "public_export": "allowed",
+        "reason": "Published PRG vectors are free and reusable; preserve GUGiK attribution, service evidence and snapshot provenance."
       },
       "not_authoritative": false,
       "usable_for_simulation": false,
       "source_url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
       "attribution": "Główny Urząd Geodezji i Kartografii (GUGiK), PRG",
-      "license": "Pending source qualification"
+      "license": "Free reuse of published PRG data; verify current product terms per acquisition.",
+      "cache_provenance": {
+        "required_fields": [
+          "source_registry_id",
+          "source_url",
+          "source_query",
+          "snapshot_at",
+          "pipeline_version",
+          "query_version"
+        ]
+      }
     },
     {
       "license_url": null,
@@ -105,16 +115,26 @@
       "authority": "official",
       "access_method": "public_download",
       "usage_role": "analytical",
-      "qualification": "pending_qualification",
+      "qualification": "qualified_free",
       "distribution": {
-        "public_export": "prohibited",
-        "reason": "MDQ-021 must verify current class packages and redistribution terms before acquisition or export."
+        "public_export": "allowed",
+        "reason": "Published BDOT10k packages are free and reusable; retain GUGiK attribution, package checksum and snapshot provenance."
       },
       "not_authoritative": false,
       "usable_for_simulation": false,
-      "source_url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT/WFS/PobieranieBDOT10k",
+      "source_url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT/WMS/PobieranieBDOT10k",
       "attribution": "Główny Urząd Geodezji i Kartografii (GUGiK), BDOT10k",
-      "license": "Pending source qualification"
+      "license": "Free reuse of published BDOT10k packages; verify current product terms per acquisition.",
+      "cache_provenance": {
+        "required_fields": [
+          "source_registry_id",
+          "source_url",
+          "source_query",
+          "snapshot_at",
+          "pipeline_version",
+          "query_version"
+        ]
+      }
     },
     {
       "license_url": null,
@@ -159,16 +179,16 @@
       "authority": "official",
       "access_method": "public_service",
       "usage_role": "reference",
-      "qualification": "pending_qualification",
+      "qualification": "qualified_free",
       "distribution": {
         "public_export": "prohibited",
-        "reason": "MDQ-021 must verify imagery service metadata and redistribution terms before any use."
+        "reason": "The provider uses orthophoto only as visual reference evidence and does not export imagery."
       },
       "not_authoritative": true,
       "usable_for_simulation": false,
       "source_url": "https://mapy.geoportal.gov.pl",
       "attribution": "Główny Urząd Geodezji i Kartografii (GUGiK), orthophoto",
-      "license": "Pending source qualification"
+      "license": "Published orthophoto downloads are free and reusable; provider imagery export remains out of scope."
     },
     {
       "license_url": null,
@@ -185,16 +205,16 @@
       "authority": "official",
       "access_method": "public_download",
       "usage_role": "analytical",
-      "qualification": "pending_qualification",
+      "qualification": "qualified_free",
       "distribution": {
         "public_export": "prohibited",
-        "reason": "MDQ-021 must qualify source access and redistribution before raster acquisition or export."
+        "reason": "NMT/NMPT may enter a later native raster pack, but generic public raster export is not defined."
       },
       "not_authoritative": false,
       "usable_for_simulation": false,
       "source_url": "https://www.geoportal.gov.pl/dane/numeryczny-model-terenu",
       "attribution": "Główny Urząd Geodezji i Kartografii (GUGiK), NMT/NMPT",
-      "license": "Pending source qualification"
+      "license": "GUGiK public-sector information is reusable without charge; retain source and product evidence."
     }
   ]
 }

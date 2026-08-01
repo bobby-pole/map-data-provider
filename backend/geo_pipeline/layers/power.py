@@ -15,31 +15,10 @@ from geo_pipeline.extract import (
     write_metadata,
 )
 from geo_pipeline.preview import write_power_preview
+from geo_pipeline.query_catalog import POWER_OSM_QUERY
 from geo_pipeline.validate import validate_power_outputs, write_validation_report
 
-POWER_VALUES = [
-    "line",
-    "minor_line",
-    "cable",
-    "substation",
-    "transformer",
-    "plant",
-    "generator",
-    "tower",
-    "pole",
-    "portal",
-    "switch",
-    "terminal",
-    "converter",
-    "compensator",
-    "busbar",
-    "bay",
-]
-
-POWER_TAGS = {
-    "power": POWER_VALUES,
-    "man_made": ["utility_pole"],
-}
+POWER_TAGS = POWER_OSM_QUERY.tags
 
 LINE_TYPES = {"LineString", "MultiLineString"}
 NODE_TYPES = {"Point", "MultiPoint", "Polygon", "MultiPolygon"}

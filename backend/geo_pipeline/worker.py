@@ -10,34 +10,36 @@ import uuid
 from pathlib import Path
 from typing import Any
 
-from geo_pipeline.cache import build_rybnik_power_cache, cache_paths, read_cached_layer
-from geo_pipeline.config import CACHE_DIR, RYBNIK_AOI
+from geo_pipeline.adapters import AdapterError, resolve_adapter
+from geo_pipeline.cache import cache_paths, read_cached_layer
+from geo_pipeline.config import CACHE_DIR
 
 EXIT_INVALID_REQUEST = 2
 EXIT_WORKER_FAILURE = 3
 
 
 def run_worker(*, aoi: str, domain: str, input_mode: str, cache_root: Path) -> dict[str, Any]:
-    if aoi != RYBNIK_AOI.name or domain != "power":
-        raise WorkerError(EXIT_INVALID_REQUEST, "unsupported_target", "Only rybnik_60km/power is supported.")
+    try:
+        adapter = resolve_adapter(aoi, domain)
+    except AdapterError as error:
+        raise WorkerError(EXIT_INVALID_REQUEST, "unsupported_target", str(error)) from error
 
-    target = cache_paths(aoi, domain, root=cache_root)
+    target = cache_paths(adapter.aoi_alias, adapter.domain, root=cache_root)
     if input_mode == "cache":
         cache = read_cached_layer(target)
-        return _success(aoi, domain, input_mode, cache, refreshed=False)
+        return _success(adapter, input_mode, cache, refreshed=False)
     if input_mode not in {"fixture", "live"}:
         raise WorkerError(EXIT_INVALID_REQUEST, "unsupported_input", f"Unsupported input mode: {input_mode}")
 
     if input_mode == "live":
-        from geo_pipeline.layers.power import extract_power_grid
-
-        extract_power_grid(write_preview=False)
+        adapter.run_live()
 
     staging_root = cache_root.parent / f".{cache_root.name}-worker-{uuid.uuid4().hex}"
     try:
-        staged_cache = build_rybnik_power_cache(root=staging_root)
-        _replace_cache(target.root, cache_paths(aoi, domain, root=staging_root).root)
-        return _success(aoi, domain, input_mode, staged_cache, refreshed=True)
+        staged_cache = adapter.build_fixture(staging_root)
+        adapter.build_domain_pack(staging_root)
+        _replace_cache(target.root, cache_paths(adapter.aoi_alias, adapter.domain, root=staging_root).root)
+        return _success(adapter, input_mode, staged_cache, refreshed=True)
     except WorkerError:
         raise
     except Exception as error:
@@ -64,13 +66,15 @@ def _replace_cache(target: Path, staged: Path) -> None:
             shutil.rmtree(backup, ignore_errors=True)
 
 
-def _success(aoi: str, domain: str, input_mode: str, cache: dict[str, Any], *, refreshed: bool) -> dict[str, Any]:
+def _success(adapter: Any, input_mode: str, cache: dict[str, Any], *, refreshed: bool) -> dict[str, Any]:
     return {
         "status": "ok",
-        "aoi_id": aoi,
-        "domain": domain,
+        "aoi_id": adapter.aoi_alias,
+        "domain": adapter.domain,
         "input": input_mode,
         "refreshed": refreshed,
+        "source_registry_id": adapter.query.source_registry_id,
+        "query_version": adapter.query.query_version,
         "feature_count": cache["metadata"]["feature_count"],
         "readiness": cache["readiness"]["readiness"],
     }

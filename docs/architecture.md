@@ -189,15 +189,17 @@ backend/data/cache/{aoi_id}/{domain}/
 | --- | --- | --- |
 | OpenStreetMap | vector / `osm_query` | Qualified free analytical evidence; public export is allowed with ODbL attribution. |
 | Local manual seed | vector / `geojson` | Non-authoritative review input; excluded from analytical export. |
-| PRG | vector / `wfs_gml` | Official candidate pending `MDQ-021` qualification; acquisition and export are prohibited. |
-| BDOT10k | vector / `gpkg_geoparquet` | Official download candidate pending qualification; not treated as a direct feature WFS API. |
+| PRG | vector / `wfs_gml` | Qualified free official boundary/address vector; WFS/GML is distinct from its viewing WMS. |
+| BDOT10k | vector / `gpkg_geoparquet` | Qualified free official package download; WMS GetFeatureInfo discovers packages and is not a direct feature API. |
 | KIUT/GESUT | rendered imagery / `wms` | Official reference-only overlay; rendered imagery is excluded from analytical GeoJSON and public export. |
-| Geoportal orthophoto | rendered imagery / `wmts` | Pending reference candidate; imagery is excluded from object-vector export. |
-| NMT/NMPT | raster / `geotiff_ascii_grid` | Pending analytical-raster candidate; it cannot be served by vector-only endpoints. |
+| Geoportal orthophoto | rendered imagery / `wmts` | Qualified free visual reference; imagery remains excluded from object-vector export. |
+| NMT/NMPT | raster / `geotiff_ascii_grid` | Qualified free raster input for later bounded derived products; it cannot be served by vector-only endpoints. |
 
 Every analytical cache record references its registry ID and retains `source_url`, `source_query`, `snapshot_at`, `pipeline_version` and `query_version`. The existing `rybnik_60km/power` cache keeps its v1 provenance shape and resolves it through the v2 OpenStreetMap record. A later domain pack may retain ordered source-provenance records without merging source identities; a public export accepts only sources that are qualified free, analytical, non-rendered and explicitly allowed by their distribution policy.
 
 KIUT/GESUT is an OGC WMS visual reference service. Its rendered images are not provider GeoJSON and must not be converted into analytical vectors or default simulation inputs. The provider does not redistribute WMS imagery; a future redistribution must retain GUGiK/KIUT attribution and verify the current service terms and metadata. The current Node `/sources` and v1 pack responses serialize the three legacy source classes during migration; generic v2 source and export responses belong to later tickets.
+
+`backend/data/sources/source_strategy.json` is the dated `source_strategy/v1` decision matrix. It maps every planned domain to adopted analytical evidence and reference-only context, or records a visible source gap. It assigns PRG to administrative AOI/boundary work, BDOT10k to bounded topographic classes, KIUT to utility coverage/visual reference, orthophoto to visual reference and NMT/NMPT to later explicitly defined raster-derived context. It does not authorize adapters or convert WMS/WMTS imagery into vectors.
 
 ## Planned API
 

@@ -34,7 +34,8 @@ def test_source_registry_v2_registers_required_source_families_and_dimensions() 
     assert sources["nmt_nmpt"]["data_kind"] == "raster"
     assert is_public_export_eligible(sources["openstreetmap"])
     assert not is_public_export_eligible(sources["kiut_gesut_wms"])
-    assert not is_public_export_eligible(sources["prg_wfs"])
+    assert is_public_export_eligible(sources["prg_wfs"])
+    assert is_public_export_eligible(sources["bdot10k"])
 
 
 def test_source_registry_accepts_v1_fixture_for_migration_only() -> None:
@@ -61,14 +62,13 @@ def test_source_registry_rejects_incomplete_or_contradictory_v2_fixtures(fixture
         validate_source_registry(_fixture(fixture_name))
 
 
-def test_public_export_provenance_rejects_reference_pending_and_duplicate_sources() -> None:
+def test_public_export_provenance_rejects_reference_and_duplicate_sources() -> None:
     registry = load_source_registry()
     validate_ordered_provenance([{ "source_id": "openstreetmap", "contribution_role": "primary" }], registry, public_export=True)
 
     with pytest.raises(ValueError, match="not eligible for public export"):
         validate_ordered_provenance([{ "source_id": "kiut_gesut_wms", "contribution_role": "validation_reference" }], registry, public_export=True)
-    with pytest.raises(ValueError, match="not eligible for public export"):
-        validate_ordered_provenance([{ "source_id": "prg_wfs", "contribution_role": "primary" }], registry, public_export=True)
+    validate_ordered_provenance([{ "source_id": "prg_wfs", "contribution_role": "primary" }], registry, public_export=True)
     with pytest.raises(ValueError, match="must be unique"):
         validate_ordered_provenance(
             [

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { CachedLayer, CachedMetadata, IssueReviewStatus, ProviderIssue, ReadinessRecord } from "../types/api";
+import type { DomainPack, DomainPackListResponse, IssueReviewStatus, ProviderIssue } from "../types/api";
 
 async function fetchJson<T>(path: string): Promise<T> {
   const response = await fetch(path);
@@ -7,37 +7,33 @@ async function fetchJson<T>(path: string): Promise<T> {
   return response.json() as Promise<T>;
 }
 
-export function useProviderPreview() {
-  const [layer, setLayer] = useState<CachedLayer | null>(null);
-  const [metadata, setMetadata] = useState<CachedMetadata | null>(null);
-  const [readiness, setReadiness] = useState<ReadinessRecord | null>(null);
+const defaultPreviewAoiId = import.meta.env.VITE_PROVIDER_PREVIEW_AOI ?? "rybnik_60km";
+
+export function useProviderPreview(aoiId = defaultPreviewAoiId) {
+  const [domainPacks, setDomainPacks] = useState<DomainPack[]>([]);
   const [issues, setIssues] = useState<ProviderIssue[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     void Promise.all([
-      fetchJson<CachedLayer>("/api/aoi/rybnik_60km/layers/power"),
-      fetchJson<{ aoi_id: string; layers: CachedMetadata[] }>("/api/aoi/rybnik_60km/layers"),
-      fetchJson<{ aoi_id: string; readiness: ReadinessRecord[] }>("/api/aoi/rybnik_60km/readiness"),
-      fetchJson<{ aoi_id: string; issues: ProviderIssue[] }>("/api/aoi/rybnik_60km/issues"),
+      fetchJson<DomainPackListResponse>(`/api/aoi/${encodeURIComponent(aoiId)}/domain-packs`),
+      fetchJson<{ aoi_id: string; issues: ProviderIssue[] }>(`/api/aoi/${encodeURIComponent(aoiId)}/issues`),
     ])
-      .then(([layerData, layers, readinessData, issueData]) => {
+      .then(([domainPackData, issueData]) => {
         if (cancelled) return;
-        setLayer(layerData);
-        setMetadata(layers.layers.find((item) => item.domain === "power") ?? null);
-        setReadiness(readinessData.readiness.find((item) => item.domain === "power") ?? null);
+        setDomainPacks(domainPackData.domain_packs);
         setIssues(issueData.issues);
       })
       .catch((reason: unknown) => {
         if (!cancelled) setError(reason instanceof Error ? reason.message : String(reason));
       });
     return () => { cancelled = true; };
-  }, []);
+  }, [aoiId]);
 
   async function updateReview(issue: ProviderIssue, status: Exclude<IssueReviewStatus, "open">, note: string): Promise<void> {
     try {
-      const response = await fetch(`/api/aoi/rybnik_60km/issues/${encodeURIComponent(issue.id)}/review`, {
+      const response = await fetch(`/api/aoi/${encodeURIComponent(aoiId)}/issues/${encodeURIComponent(issue.id)}/review`, {
         method: "PATCH",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ status, note: note || null, expected_updated_at: issue.review.updated_at }),
@@ -52,5 +48,5 @@ export function useProviderPreview() {
     }
   }
 
-  return { layer, metadata, readiness, issues, updateReview, error };
+  return { aoiId, domainPacks, issues, updateReview, error };
 }

@@ -1,17 +1,22 @@
 import { useState } from "react";
 import { MapView } from "./components/MapView";
 import { useProviderPreview } from "./hooks/useApi";
+import { configuredPreviewLayers, previewLayerKey, sourceAttribution } from "./previewCatalog";
 import { filterIssuesByReviewState, isFinalReviewState, nextReviewStates, reviewStatuses } from "./reviewWorkflow";
 import type { IssueReviewStatus, ProviderIssue } from "./types/api";
 import "./index.css";
 
 export default function App() {
-  const { layer, metadata, readiness, issues, updateReview, error } = useProviderPreview();
+  const { aoiId, domainPacks, issues, updateReview, error } = useProviderPreview();
   const [filter, setFilter] = useState<IssueReviewStatus | "all">("all");
+  const [enabledLayers, setEnabledLayers] = useState<Record<string, boolean>>({});
   const [draftStates, setDraftStates] = useState<Record<string, Exclude<IssueReviewStatus, "open">>>({});
   const [draftNotes, setDraftNotes] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState<string | null>(null);
   const visibleIssues = filterIssuesByReviewState(issues, filter);
+  const catalog = configuredPreviewLayers(domainPacks);
+  const visibleLayers = catalog.filter((layer) => enabledLayers[previewLayerKey(layer)] ?? true);
+  const featureCount = visibleLayers.reduce((total, layer) => total + layer.layer.features.length, 0);
 
   async function saveReview(issue: ProviderIssue) {
     const status = draftStates[issue.id];
@@ -34,21 +39,27 @@ export default function App() {
         <div>
           <p className="eyebrow">Provider dev-preview</p>
           <h1>Map Data Quality Lab</h1>
-          <p>Inspect the cached, source-aware provider contract for the Rybnik power layer. This preview explains data readiness; it is not an operational or simulation interface.</p>
+          <p>Inspect cached, source-aware domain packs for AOI {aoiId}. This preview explains data readiness; it is not an operational or simulation interface.</p>
         </div>
-        {metadata && <div className="metrics"><div><strong>{metadata.feature_count}</strong><span>features</span></div><div><strong>{readiness?.readiness ?? "unknown"}</strong><span>readiness</span></div></div>}
+        <div className="metrics"><div><strong>{featureCount}</strong><span>visible features</span></div><div><strong>{domainPacks.length}</strong><span>domain packs</span></div></div>
       </section>
       {error && <div className="error">Provider API error: {error}</div>}
       <section className="content">
-        <div className="mapPanel"><MapView layer={layer} /></div>
+        <div className="mapPanel"><MapView layers={visibleLayers} /></div>
         <aside className="sidePanel">
-          <h2>Cached layer inspection</h2>
-          {metadata ? <dl>
-            <dt>source</dt><dd>{metadata.source}</dd><dt>source type</dt><dd>{metadata.source_type}</dd>
-            <dt>confidence</dt><dd>{metadata.confidence}</dd><dt>snapshot</dt><dd>{metadata.snapshot_at}</dd>
-            <dt>quality</dt><dd>{readiness?.quality_status ?? "unknown"}</dd><dt>highest issue</dt><dd>{readiness?.highest_issue_severity ?? "none"}</dd>
-          </dl> : <p className="muted">Loading provider cache metadata…</p>}
-          {metadata && <><h3>Known limitations</h3><ul>{metadata.limitations.map((item) => <li key={item}>{item}</li>)}</ul><p className="muted">Source query: {metadata.source_query}</p></>}
+          <h2>Manifest layer catalog</h2>
+          {catalog.length > 0 ? <div className="layerCatalog">{catalog.map((layer) => {
+            const key = previewLayerKey(layer);
+            return <article className="layerCard" key={key}>
+              <label className="toggle"><input type="checkbox" checked={enabledLayers[key] ?? true} onChange={(event) => setEnabledLayers((current) => ({ ...current, [key]: event.target.checked }))} /><span>{layer.artifact.id}</span></label>
+              <dl>
+                <dt>domain</dt><dd>{layer.domain}</dd><dt>features</dt><dd>{layer.layer.features.length}</dd>
+                <dt>readiness</dt><dd>{layer.readiness.readiness}</dd><dt>confidence</dt><dd>{layer.layer.metadata.confidence}</dd>
+              </dl>
+              <p className="muted">Source: {sourceAttribution(layer)}</p>
+              <ul>{layer.layer.metadata.limitations.map((item) => <li key={item}>{item}</li>)}</ul>
+            </article>;
+          })}</div> : <p className="muted">Loading registered domain-pack manifests…</p>}
           <section className="reviewPanel">
             <h3>Issue review</h3>
             <p className="muted">Human review is separate from generated evidence and does not alter readiness.</p>

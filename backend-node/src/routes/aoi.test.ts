@@ -1,4 +1,5 @@
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import os from "node:os";
 import path from "node:path";
 
@@ -13,6 +14,9 @@ import {
   readinessListResponseSchema,
   sourceListResponseSchema,
   steelSentinelPackSchema,
+  steelSentinelPackV2Schema,
+  domainPackListResponseSchema,
+  domainPackReadResponseSchema,
   issueListResponseSchema,
 } from "../types/provider.js";
 
@@ -32,6 +36,103 @@ describe("read-only AOI provider routes", () => {
 
   function appWithReviewStore() {
     return createApp({ issueStorePaths: { reviewsPath: reviewStorePath } });
+  }
+
+  async function writeFixtureDomainPack(options?: { sourceId?: string; publicExport?: boolean }) {
+    const aoiId = "fixture_aoi";
+    const domain = "water";
+    const artifactId = "water.main";
+    const packRoot = path.join(temporaryDirectory, aoiId, domain, "domain-pack-v2");
+    await mkdir(path.join(packRoot, "layers"), { recursive: true });
+    await mkdir(path.join(packRoot, "validation"), { recursive: true });
+    await mkdir(path.join(packRoot, "readiness"), { recursive: true });
+    const metadata = {
+      cache_layout_version: "provider_cache/v1",
+      geojson_contract_version: "steel_sentinel_geojson/v1",
+      contract_version: "steel_sentinel_geojson/v1",
+      aoi_id: aoiId,
+      domain,
+      layer_id: artifactId,
+      source: "Fixture source",
+      source_type: "analytical_vector",
+      source_query: "fixture query",
+      snapshot_at: "2026-08-01T00:00:00Z",
+      validation_status_raw: "pass",
+      quality_status: "passed",
+      confidence: "medium",
+      limitations: ["Fixture limitations are visible in the preview."],
+      usable_for_simulation: false,
+      readiness: "usable_with_limitations",
+      feature_count: 1,
+    };
+    const layer = {
+      type: "FeatureCollection",
+      metadata,
+      features: [{
+        type: "Feature",
+        properties: {
+          asset_type: "fixture main",
+          source: "Fixture source",
+          confidence: "medium",
+          limitations: ["Fixture limitations are visible in the preview."],
+        },
+        geometry: { type: "Point", coordinates: [18.5, 50.1] },
+      }],
+    };
+    const layerPayload = Buffer.from(JSON.stringify(layer));
+    const sourceId = options?.sourceId ?? "openstreetmap";
+    const publicExport = options?.publicExport ?? true;
+    const sourceProvenance = [{ source_id: sourceId, contribution_role: "primary" }];
+    const cacheMetadata = { ...metadata };
+    delete (cacheMetadata as Record<string, unknown>).contract_version;
+    const validation = {
+      ...cacheMetadata,
+      source_registry_id: sourceId,
+      source_url: "https://example.test/source",
+      pipeline_version: "fixture/v1",
+      query_version: "fixture-query/v1",
+    };
+    await writeFile(path.join(packRoot, "layers", "water.main.geojson"), layerPayload);
+    await writeFile(path.join(packRoot, "validation", "metadata.json"), JSON.stringify(validation));
+    await writeFile(path.join(packRoot, "readiness", "readiness.json"), JSON.stringify({
+      cache_layout_version: "provider_cache/v1",
+      aoi_id: aoiId,
+      domain,
+      layer_id: artifactId,
+      readiness: "usable_with_limitations",
+      quality_status: "passed",
+      highest_issue_severity: null,
+      feature_count: 1,
+      evaluated_at: "2026-08-01T00:00:00Z",
+    }));
+    await writeFile(path.join(packRoot, "manifest.json"), JSON.stringify({
+      domain_pack_version: "provider_domain_pack/v2",
+      aoi_id: aoiId,
+      domain,
+      source_provenance: sourceProvenance,
+      artifacts: [
+        {
+          id: artifactId,
+          kind: "processed_vector",
+          format: "geojson",
+          path: "layers/water.main.geojson",
+          sha256: createHash("sha256").update(layerPayload).digest("hex"),
+          feature_count: 1,
+          source_provenance: sourceProvenance,
+          public_export: publicExport,
+        },
+        {
+          id: "water.reference",
+          kind: "remote_service",
+          format: "wms",
+          source_provenance: [{ source_id: "kiut_gesut_wms", contribution_role: "validation_reference" }],
+          public_export: false,
+        },
+      ],
+      validation: { path: "validation/metadata.json" },
+      readiness: { path: "readiness/readiness.json" },
+    }));
+    return { aoiId, domain, app: createApp({ providerDataPaths: { cacheRoot: temporaryDirectory } }) };
   }
 
   it("lists cached Rybnik layers", async () => {
@@ -84,6 +185,48 @@ describe("read-only AOI provider routes", () => {
     expect(pack.layers.power.metadata.domain).toBe("power");
     expect(pack.layers.power.readiness.readiness).toBe("usable_with_limitations");
     expect(pack.sources.sources).toEqual(expect.arrayContaining([expect.objectContaining({ source_type: "reference_overlay" })]));
+  });
+
+  it("serves a v2 domain pack and v2 export from the manifest without domain-specific route code", async () => {
+    const response = await request(createApp()).get("/api/aoi/rybnik_60km/domain-packs/power");
+    expect(response.status).toBe(200);
+    const pack = domainPackReadResponseSchema.parse(response.body);
+    expect(pack.layers).toEqual([
+      expect.objectContaining({
+        artifact: expect.objectContaining({ id: "power.lines", public_export: true }),
+        layer: expect.objectContaining({ metadata: expect.objectContaining({ domain: "power" }) }),
+      }),
+    ]);
+    expect(pack.layers.map((layer) => layer.artifact.kind)).toEqual(["processed_vector"]);
+
+    const exported = await request(createApp()).get("/api/aoi/rybnik_60km/exports/steel-sentinel-pack-v2");
+    expect(exported.status).toBe(200);
+    expect(steelSentinelPackV2Schema.parse(exported.body).domain_packs[0]?.layers[0]?.artifact.id).toBe("power.lines");
+  });
+
+  it("discovers a fixture domain solely from its v2 manifest", async () => {
+    const fixture = await writeFixtureDomainPack();
+    const listed = await request(fixture.app).get(`/api/aoi/${fixture.aoiId}/domain-packs`);
+    expect(listed.status).toBe(200);
+    expect(domainPackListResponseSchema.parse(listed.body).domain_packs).toEqual([
+      expect.objectContaining({ domain: fixture.domain, layers: [expect.objectContaining({ artifact: expect.objectContaining({ id: "water.main" }) })] }),
+    ]);
+    const read = await request(fixture.app).get(`/api/aoi/${fixture.aoiId}/domain-packs/${fixture.domain}`);
+    expect(read.status).toBe(200);
+    expect(domainPackReadResponseSchema.parse(read.body).layers[0]?.layer.metadata.limitations).toContain("Fixture limitations are visible in the preview.");
+  });
+
+  it("rejects a public analytical artifact whose provenance is reference-only", async () => {
+    const fixture = await writeFixtureDomainPack({ sourceId: "kiut_gesut_wms" });
+    const response = await request(fixture.app).get(`/api/aoi/${fixture.aoiId}/domain-packs/${fixture.domain}`);
+    expect(response.status).toBe(404);
+    expect(providerErrorSchema.parse(response.body).message).toMatch(/not eligible for public export/i);
+    expect(response.body.layers).toBeUndefined();
+
+    const exported = await request(fixture.app).get(`/api/aoi/${fixture.aoiId}/exports/steel-sentinel-pack-v2`);
+    expect(exported.status).toBe(404);
+    expect(providerErrorSchema.parse(exported.body).message).toMatch(/not eligible for public export/i);
+    expect(exported.body.domain_packs).toBeUndefined();
   });
 
   it("does not fabricate a pack for missing cache", async () => {

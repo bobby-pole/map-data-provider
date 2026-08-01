@@ -1,0 +1,13 @@
+{
+  "type": "Feature",
+  "properties": {
+    "reference_id": "prg_gmina_rybnik",
+    "source_crs": "EPSG:4326",
+    "snapshot_id": "prg-fixture-2026-08-01",
+    "note": "Bounded offline contract fixture; it is not a live PRG WFS result."
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[[18.49, 50.06], [18.64, 50.06], [18.64, 50.16], [18.49, 50.16], [18.49, 50.06]]]
+  }
+}

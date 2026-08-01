@@ -10,6 +10,7 @@ import uuid
 from pathlib import Path
 from typing import Any
 
+from geo_pipeline.aoi import validate_cache_key
 from geo_pipeline.cache import cache_paths, read_cached_layer
 from geo_pipeline.source_registry import load_source_registry, validate_ordered_provenance
 
@@ -20,7 +21,7 @@ FILE_KINDS = {"native_vector", "native_raster", "processed_vector", "derived_vec
 
 
 def domain_pack_root(aoi_id: str, domain: str, *, root: Path) -> Path:
-    return root / aoi_id / domain / PACK_DIRNAME
+    return root / validate_cache_key(aoi_id) / domain / PACK_DIRNAME
 
 
 def read_domain_pack(aoi_id: str, domain: str, *, root: Path, public_export: bool = False) -> dict[str, Any]:

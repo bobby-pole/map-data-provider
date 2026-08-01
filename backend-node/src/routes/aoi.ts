@@ -5,10 +5,13 @@ import {
   getCachedLayer,
   getCachedLayers,
   getCachedReadiness,
+  getDomainPack,
+  getDomainPacks,
   getSourcesForAoi,
+  type ProviderDataPaths,
 } from "../services/providerDataService.js";
 import { requestAoi } from "../services/aoiRequestService.js";
-import { buildSteelSentinelPack } from "../services/exportService.js";
+import { buildSteelSentinelPack, buildSteelSentinelPackV2 } from "../services/exportService.js";
 import { getReviewedIssues, updateIssueReview, type IssueStorePaths } from "../services/issueReviewService.js";
 import {
   layerListResponseSchema,
@@ -18,16 +21,51 @@ import {
   aoiRequestResponseSchema,
   aoiRequestSchema,
   steelSentinelPackSchema,
+  steelSentinelPackV2Schema,
+  domainPackListResponseSchema,
+  domainPackReadResponseSchema,
   issueListResponseSchema,
   issueReviewUpdateSchema,
 } from "../types/provider.js";
 
-export function createAoiRouter(options?: { issueStorePaths?: IssueStorePaths }) {
+export function createAoiRouter(options?: { issueStorePaths?: IssueStorePaths; providerDataPaths?: ProviderDataPaths }) {
   const aoiRouter = Router();
+
+aoiRouter.get("/:aoiId/exports/steel-sentinel-pack-v2", async (request, response) => {
+  try {
+    response.status(200).json(steelSentinelPackV2Schema.parse(await buildSteelSentinelPackV2(request.params.aoiId, options?.providerDataPaths)));
+  } catch (error) {
+    respondWithProviderError(response, error);
+  }
+});
 
 aoiRouter.get("/:aoiId/exports/steel-sentinel-pack", async (request, response) => {
   try {
     response.status(200).json(steelSentinelPackSchema.parse(await buildSteelSentinelPack(request.params.aoiId)));
+  } catch (error) {
+    respondWithProviderError(response, error);
+  }
+});
+
+aoiRouter.get("/:aoiId/domain-packs", async (request, response) => {
+  try {
+    response.status(200).json(domainPackListResponseSchema.parse({
+      response_version: "provider_domain_pack_list/v2",
+      aoi_id: request.params.aoiId,
+      domain_packs: await getDomainPacks(request.params.aoiId, options?.providerDataPaths),
+    }));
+  } catch (error) {
+    respondWithProviderError(response, error);
+  }
+});
+
+aoiRouter.get("/:aoiId/domain-packs/:domain", async (request, response) => {
+  try {
+    response.status(200).json(domainPackReadResponseSchema.parse(await getDomainPack(
+      request.params.aoiId,
+      request.params.domain,
+      options?.providerDataPaths,
+    )));
   } catch (error) {
     respondWithProviderError(response, error);
   }

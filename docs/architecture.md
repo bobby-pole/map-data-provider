@@ -177,7 +177,7 @@ backend/data/cache/{aoi_id}/{domain}/
 
 `layer.geojson` is the complete `steel_sentinel_geojson/v1` provider layer. `metadata.json` records the cache-layout and GeoJSON contract versions, AOI, domain, source query, snapshot timestamp, feature count, normalized validation status, confidence and limitations. `readiness.json` records the bounded readiness decision, quality status, highest applicable issue severity, count and evaluation timestamp. The initial committed snapshot is `rybnik_60km/power`, built from the existing OSM-derived power-lines artifact; it is read and validated locally without invoking Overpass extraction. Existing processed artifacts remain available to the FastAPI prototype during this migration.
 
-`MDQ-019` adds an additive `domain-pack-v2/manifest.json` under the same AOI/domain root. `provider_domain_pack/v2` can retain multiple role-named processed or derived vector layers, native vector/raster artifacts, remote-service records, validation/readiness files and ordered source provenance. File artifacts are constrained to the pack root and validated for existence, SHA-256 integrity and GeoJSON feature counts. Public-export selection admits only artifacts whose source provenance is qualified, analytical and distributable under `source_registry/v2`; WMS/WMTS reference imagery and pending or rejected candidates remain in the pack as evidence but are excluded. The committed Rybnik power v2 pack is generated from the v1 snapshot, so existing v1 readers and Node routes remain compatible until the generic v2 API work.
+`MDQ-019` adds an additive `domain-pack-v2/manifest.json` under the same AOI/domain root. `provider_domain_pack/v2` can retain multiple role-named processed or derived vector layers, native vector/raster artifacts, remote-service records, validation/readiness files and ordered source provenance. File artifacts are constrained to the pack root and validated for existence, SHA-256 integrity and GeoJSON feature counts. Public-export selection admits only artifacts whose source provenance is qualified, analytical and distributable under `source_registry/v2`; WMS/WMTS reference imagery and pending or rejected candidates remain in the pack as evidence but are excluded. The committed Rybnik power v2 pack is generated from the v1 snapshot, so existing v1 readers remain compatible while the manifest is the generic v2 read source.
 
 `MDQ-020` defines `provider_aoi/v1` before generic adapter or API work. A bounded circle request records its EPSG:4326 boundary, source CRS, radius/area limits and request provenance; an approved administrative reference records its PRG identifier and offline fixture/snapshot provenance without claiming a live WFS read. The provider derives canonical AOI identity from normalized geometry, contract version and identity-relevant provenance. Cache paths accept only validated provider identifiers; `rybnik_60km` remains a compatibility alias and v1 cache key for the committed power snapshot while retaining its derived geometry identity.
 
@@ -199,7 +199,7 @@ backend/data/cache/{aoi_id}/{domain}/
 
 Every analytical cache record references its registry ID and retains `source_url`, `source_query`, `snapshot_at`, `pipeline_version` and `query_version`. The existing `rybnik_60km/power` cache keeps its v1 provenance shape and resolves it through the v2 OpenStreetMap record. A later domain pack may retain ordered source-provenance records without merging source identities; a public export accepts only sources that are qualified free, analytical, non-rendered and explicitly allowed by their distribution policy.
 
-KIUT/GESUT is an OGC WMS visual reference service. Its rendered images are not provider GeoJSON and must not be converted into analytical vectors or default simulation inputs. The provider does not redistribute WMS imagery; a future redistribution must retain GUGiK/KIUT attribution and verify the current service terms and metadata. The current Node `/sources` and v1 pack responses serialize the three legacy source classes during migration; generic v2 source and export responses belong to later tickets.
+KIUT/GESUT is an OGC WMS visual reference service. Its rendered images are not provider GeoJSON and must not be converted into analytical vectors or default simulation inputs. The provider does not redistribute WMS imagery; a future redistribution must retain GUGiK/KIUT attribution and verify the current service terms and metadata. The current Node `/sources` and v1 pack responses serialize the three legacy source classes during migration. Generic v2 reads and exports return only source records actually used by public analytical artifacts.
 
 `backend/data/sources/source_strategy.json` is the dated `source_strategy/v1` decision matrix. It maps every planned domain to adopted analytical evidence and reference-only context, or records a visible source gap. It assigns PRG to administrative AOI/boundary work, BDOT10k to bounded topographic classes, KIUT to utility coverage/visual reference, orthophoto to visual reference and NMT/NMPT to later explicitly defined raster-derived context. It does not authorize adapters or convert WMS/WMTS imagery into vectors.
 
@@ -209,7 +209,11 @@ The Node/Express/TypeScript provider now serves typed, read-only local artifacts
 
 `POST /api/aoi/requests` currently supports only `rybnik_60km/power`, whose registered boundary reference uses EPSG:4326. The provider treats a cache as fresh for 24 hours after `snapshot_at`; a missing or stale cache invokes the Python worker fixture path and returns whether the artifact came from cache or refresh.
 
-`GET /api/aoi/:aoiId/exports/steel-sentinel-pack` returns `steel_sentinel_pack/v1`: the selected cached GeoJSON layer, cache metadata, readiness and the complete source registry in one read-only response. The pack preserves the `analytical_vector`, `manual_seed` and `reference_overlay` distinctions.
+`GET /api/aoi/:aoiId/exports/steel-sentinel-pack` returns `steel_sentinel_pack/v1`: the selected cached GeoJSON layer, cache metadata, readiness and the complete source registry in one read-only response. The pack preserves the `analytical_vector`, `manual_seed` and `reference_overlay` distinctions for the bounded power compatibility path.
+
+`GET /api/aoi/:aoiId/domain-packs` and `GET /api/aoi/:aoiId/domain-packs/:domain` provide read-only `provider_domain_pack_read/v2` responses from registered manifests. Node validates request and manifest identity, pack-relative paths, source provenance, SHA-256 checksums, feature counts and provider GeoJSON metadata before returning any layer. The response exposes only explicitly public processed, derived or representative-point GeoJSON vectors. Native artifacts, rasters, remote services and reference-only records remain inside the cache as provenance evidence and cannot enter an analytical endpoint.
+
+`GET /api/aoi/:aoiId/exports/steel-sentinel-pack-v2` aggregates those validated public analytical layers into `steel_sentinel_pack/v2`, retaining only the v2 Source Registry records used by the export. It does not invoke a worker or refresh the cache. Refresh writes remain in the bounded request/worker path, separate from all v2 reads and exports.
 
 Implemented Node/Express provider endpoints:
 
@@ -222,6 +226,9 @@ Implemented Node/Express provider endpoints:
 - `GET /api/aoi/:aoiId/issues`
 - `PATCH /api/aoi/:aoiId/issues/:issueId/review`
 - `GET /api/aoi/:aoiId/exports/steel-sentinel-pack`
+- `GET /api/aoi/:aoiId/domain-packs`
+- `GET /api/aoi/:aoiId/domain-packs/:domain`
+- `GET /api/aoi/:aoiId/exports/steel-sentinel-pack-v2`
 
 The first vertical slice is:
 
@@ -232,7 +239,7 @@ Output: cached OSM-derived GeoJSON + metadata + readiness report
 Consumer: Steel Sentinel
 ```
 
-The current release implements the provider side of this slice: a cache-first Rybnik power request, one normalized OSM-derived power layer, source/readiness/issue contracts, durable review state, `steel_sentinel_pack/v1` export, dev-preview inspection and a shared local/CI verification gate. It does not claim a completed Steel Sentinel client. Consumer-side loading remains a separate repository task.
+The current release implements the provider side of this slice: a cache-first Rybnik power request, source/readiness/issue contracts, durable review state, bounded `steel_sentinel_pack/v1` compatibility, manifest-driven v2 reads/exports and a dev-preview whose toggles, counts, popup fields, attribution and limitations are derived from domain-pack responses. The preview is a non-operational provider inspection tool, not a Steel Sentinel client. Consumer-side loading remains a separate repository task.
 
 ## Repository Plan
 

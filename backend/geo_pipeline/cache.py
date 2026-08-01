@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from geo_pipeline.aoi import resolve_aoi, validate_cache_key
 from geo_pipeline.config import CACHE_DIR, RYBNIK_AOI
 from geo_pipeline.contracts import (
     CONTRACT_VERSION,
@@ -40,7 +41,7 @@ class CachePaths:
 
 
 def cache_paths(aoi_id: str, domain: str, *, root: Path = CACHE_DIR) -> CachePaths:
-    cache_root = root / aoi_id / domain
+    cache_root = root / validate_cache_key(aoi_id) / domain
     return CachePaths(
         root=cache_root,
         layer=cache_root / "layer.geojson",
@@ -57,7 +58,7 @@ def build_rybnik_power_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
     metadata = {
         "cache_layout_version": CACHE_LAYOUT_VERSION,
         "geojson_contract_version": CONTRACT_VERSION,
-        "aoi_id": RYBNIK_AOI.name,
+        "aoi_id": resolve_aoi("rybnik_60km").cache_key,
         "domain": "power",
         "layer_id": "power.lines",
         "source": "OpenStreetMap",

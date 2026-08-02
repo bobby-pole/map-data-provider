@@ -12,7 +12,7 @@ import { orthophotoReference } from "./orthophotoReference";
 import "./index.css";
 
 export default function App() {
-  const { aoiId, domainPacks, issues, updateReview, error } = useProviderPreview();
+  const { aoiId, domainPacks, issues, sourceAvailability, updateReview, error } = useProviderPreview();
   const [enabledLayers, setEnabledLayers] = useState<Record<string, boolean>>({});
   const [selectedFeature, setSelectedFeature] = useState<SelectedProviderFeature | null>(null);
   const [enabledReferences, setEnabledReferences] = useState<Record<string, boolean>>({});
@@ -51,6 +51,11 @@ export default function App() {
             <div className="sectionHeading"><h2>KIUT reference overlays</h2><span>{visibleReferences.length}</span></div>
             <p className="muted">Reference-only WMS; enabled from zoom 19. It is not analytical GeoJSON.</p>
             <ul className="layerList">{kiutReferenceLayers.map((reference) => <li key={reference.id}><label className="layerToggle"><input type="checkbox" checked={enabledReferences[reference.id] ?? false} onChange={(event) => setEnabledReferences((current) => ({ ...current, [reference.id]: event.target.checked }))} /><span><strong>{reference.label}</strong><small>Possible coverage only; local completeness is not guaranteed.</small></span></label></li>)}</ul>
+          </section>
+          <section className="inspectorSection">
+            <div className="sectionHeading"><h2>Source availability</h2><span>{sourceAvailability?.sources.length ?? 0}</span></div>
+            <p className="muted">Cached report only; opening this preview never probes remote sources.</p>
+            <ul className="layerList">{sourceAvailability?.sources.map((source) => <li key={source.source_id}><span><strong>{source.source_id}: {source.availability}</strong><small>AOI: {source.aoi_coverage}; features: {source.feature_state}; evidence: {source.freshness}.</small><small>{source.evidence}{source.actionable_gap ? " Actionable source gap." : ""}</small></span></li>)}</ul>
           </section>
           <section className="inspectorSection">
             <div className="sectionHeading"><h2>Official orthophoto</h2><span>{orthophotoEnabled ? "on" : "off"}</span></div>

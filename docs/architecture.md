@@ -208,6 +208,8 @@ The fixture-first `geoportal_orthophoto_wms_adapter/v1` parses the fixed high-re
 
 The fixture-first `nmt_nmpt_raster_adapter/v1` accepts a bounded NMT/NMPT ASCII Grid as native raster evidence in EPSG:2180. It retains native and AOI-processed checksums, validates CRS, cell resolution, nodata and AOI coverage, and converts only AOI geometry to source CRS before clipping; it does not resample raster values. Its single derived-vector product, `terrain_sample_points/v1`, emits labelled cell-centre elevation context with `cell_centroid/v1` provenance and never claims flood risk or object semantics. Native rasters are cache-only artifacts and cannot be marked for public export or served through vector-only reads.
 
+`provider_source_availability/v1` is a dated, cache-only AOI report. It separates availability, AOI coverage, feature state, freshness, eligibility and actionable source gaps for every registered source; empty, unavailable, uncovered, reference-only and not-eligible states are never inferred from a message. The Node read endpoint and preview consume the committed report only. Optional diagnostics are explicit wrappers that fail safely and are never reached by cached reads or the offline verification gate.
+
 ## Planned API
 
 The Node/Express/TypeScript provider now serves typed, read-only local artifacts through `GET /api/health`, `GET /api/aoi/:aoiId/layers`, `GET /api/aoi/:aoiId/layers/:domain`, `GET /api/aoi/:aoiId/readiness` and `GET /api/aoi/:aoiId/sources`. These routes validate identifiers and file contracts, return 422 for malformed input and 404 for a missing cache, and do not invoke Python, Overpass or WMS.

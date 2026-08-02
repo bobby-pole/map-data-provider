@@ -16,6 +16,7 @@ import {
   domainPackListResponseSchema,
   domainPackReadResponseSchema,
   issueListResponseSchema,
+  sourceAvailabilityReportSchema,
 } from "../types/provider.js";
 
 describe("read-only AOI provider routes", () => {
@@ -172,6 +173,14 @@ describe("read-only AOI provider routes", () => {
         expect.objectContaining({ id: "kiut_gesut_wms", source_type: "reference_overlay" }),
       ]),
     );
+  });
+
+  it("serves the committed source availability report without probing a remote service", async () => {
+    const response = await request(createApp()).get("/api/aoi/rybnik_60km/source-availability");
+    expect(response.status).toBe(200);
+    const report = sourceAvailabilityReportSchema.parse(response.body);
+    expect(report.sources).toHaveLength(7);
+    expect(report.sources.find((source) => source.source_id === "openstreetmap")).toMatchObject({ feature_state: "empty", actionable_gap: false });
   });
 
   it("serves a v2 domain pack from the manifest without domain-specific route code", async () => {

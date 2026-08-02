@@ -41,6 +41,18 @@ describe("source_registry/v2 contract", () => {
     expect(sourceRegistryV2Schema.safeParse(registry).success).toBe(false);
   });
 
+  it("accepts free registration as no-cost access metadata", async () => {
+    const registry = await fixture("registry-v2.json") as { sources: Array<Record<string, unknown>> };
+    registry.sources[0]!.access_method = "free_registration";
+    expect(sourceRegistryV2Schema.safeParse(registry).success).toBe(true);
+  });
+
+  it("rejects restricted access claiming to be qualified free", async () => {
+    const registry = await fixture("registry-v2.json") as { sources: Array<Record<string, unknown>> };
+    registry.sources[0]!.access_method = "paid";
+    expect(sourceRegistryV2Schema.safeParse(registry).success).toBe(false);
+  });
+
   it("enforces ordered provenance and public-export eligibility", async () => {
     const registry = sourceRegistryV2Schema.parse(await fixture("registry-v2.json"));
     expect(() => validateOrderedSourceProvenance([{ source_id: "openstreetmap", contribution_role: "primary" }], registry, true)).not.toThrow();

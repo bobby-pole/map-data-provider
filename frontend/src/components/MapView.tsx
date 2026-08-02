@@ -4,6 +4,7 @@ import "leaflet/dist/leaflet.css";
 import { popupDetails, type PreviewLayer } from "../previewCatalog";
 import type { ProviderFeature } from "../types/api";
 import type { SelectedProviderFeature } from "../inspection";
+import { KIUT_MIN_ZOOM, KIUT_WMS_URL, type KiutReferenceLayer } from "../kiutReference";
 
 function escapeHtml(value: string): string { return value.replace(/[&<>'"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[character] ?? character); }
 function popup(feature: ProviderFeature, layer: PreviewLayer): string {
@@ -11,10 +12,11 @@ function popup(feature: ProviderFeature, layer: PreviewLayer): string {
   return `<strong>${escapeHtml(details.title)}</strong><br/>Source: ${escapeHtml(details.source)}<br/>Confidence: ${escapeHtml(details.confidence)}<br/>Readiness: ${escapeHtml(details.readiness)}<br/>Limitations: ${escapeHtml(details.limitations.join("; ") || "none")}`;
 }
 
-export function MapView({ layers, onSelectFeature }: { layers: PreviewLayer[]; onSelectFeature: (selected: SelectedProviderFeature) => void }) {
+export function MapView({ layers, references, onSelectFeature }: { layers: PreviewLayer[]; references: KiutReferenceLayer[]; onSelectFeature: (selected: SelectedProviderFeature) => void }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
   const providerLayerRef = useRef<L.FeatureGroup | null>(null);
+  const referenceLayerRef = useRef<L.LayerGroup | null>(null);
   const onSelectFeatureRef = useRef(onSelectFeature);
   useEffect(() => { onSelectFeatureRef.current = onSelectFeature; }, [onSelectFeature]);
   useEffect(() => {
@@ -42,5 +44,16 @@ export function MapView({ layers, onSelectFeature }: { layers: PreviewLayer[]; o
     const bounds = group.getBounds(); if (bounds.isValid()) map.fitBounds(bounds, { padding: [20, 20] });
     return () => { group.remove(); };
   }, [layers]);
+  useEffect(() => {
+    const map = mapRef.current; if (!map) return;
+    referenceLayerRef.current?.remove();
+    const group = L.layerGroup().addTo(map);
+    references.forEach((reference) => L.tileLayer.wms(KIUT_WMS_URL, {
+      layers: reference.wmsLayer, styles: "default", format: "image/png", transparent: true,
+      version: "1.3.0", attribution: "GUGiK, KIUT/GESUT WMS", minZoom: KIUT_MIN_ZOOM,
+    }).addTo(group));
+    referenceLayerRef.current = group;
+    return () => { group.remove(); };
+  }, [references]);
   return <div className="map" ref={containerRef} />;
 }

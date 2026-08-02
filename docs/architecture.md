@@ -198,6 +198,8 @@ KIUT/GESUT is an OGC WMS visual reference service. Its rendered images are not p
 
 `backend/data/sources/source_strategy.json` is the dated `source_strategy/v1` decision matrix. It maps every planned domain to adopted analytical evidence and reference-only context, or records a visible source gap. It assigns PRG to administrative AOI/boundary work, BDOT10k to bounded topographic classes, KIUT to utility coverage/visual reference, orthophoto to visual reference and NMT/NMPT to later explicitly defined raster-derived context. It does not authorize adapters or convert WMS/WMTS imagery into vectors.
 
+The fixture-first `prg_adapter/v1` uses the allow-listed PRG WFS 2.0 feature types `A01`–`A03` for voivodeship, county and gmina boundaries, and `K01`–`K07` for selected police and fire classes. It preserves raw GML evidence, original feature IDs and EPSG:2180 metadata while normalizing output to EPSG:4326 GeoJSON. A non-boundary police/fire geometry is clipped to the selected AOI but never reclassified as OSM data or assumed to be a building point. Capabilities/schema drift, empty results and unavailable service responses remain structured source outcomes; offline verification reads only committed fixtures.
+
 ## Planned API
 
 The Node/Express/TypeScript provider now serves typed, read-only local artifacts through `GET /api/health`, `GET /api/aoi/:aoiId/layers`, `GET /api/aoi/:aoiId/layers/:domain`, `GET /api/aoi/:aoiId/readiness` and `GET /api/aoi/:aoiId/sources`. These routes validate identifiers and file contracts, return 422 for malformed input and 404 for a missing cache, and do not invoke Python, Overpass or WMS.

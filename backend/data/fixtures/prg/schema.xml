@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:complexType name="PrgFixture"><xsd:sequence>
+    <xsd:element name="msGeometry" type="gml:GeometryPropertyType"/>
+    <xsd:element name="JPT_NAZWA_" type="xsd:string"/>
+    <xsd:element name="IIP_IDENTY" type="xsd:string"/>
+    <xsd:element name="JPT_ID" type="xsd:string"/>
+  </xsd:sequence></xsd:complexType>
+</xsd:schema>

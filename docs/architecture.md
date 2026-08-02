@@ -206,6 +206,8 @@ The fixture-first `kiut_wms_adapter/v1` parses a dated KIUT WMS capabilities sna
 
 The fixture-first `geoportal_orthophoto_wms_adapter/v1` parses the fixed high-resolution Geoportal WMS 1.3.0 `Raster` layer for an optional preview background. It reports `available_reference`, `uncovered` or `service_unavailable`, restricts GetMap URLs to the fixed official endpoint and layer, and records published coverage plus explicit `not_published` image-date and resolution states when WMS capabilities do not provide them. Orthophoto remains rendered reference imagery: it is not cached, object-vectorized, analytically processed or included in public exports.
 
+The fixture-first `nmt_nmpt_raster_adapter/v1` accepts a bounded NMT/NMPT ASCII Grid as native raster evidence in EPSG:2180. It retains native and AOI-processed checksums, validates CRS, cell resolution, nodata and AOI coverage, and converts only AOI geometry to source CRS before clipping; it does not resample raster values. Its single derived-vector product, `terrain_sample_points/v1`, emits labelled cell-centre elevation context with `cell_centroid/v1` provenance and never claims flood risk or object semantics. Native rasters are cache-only artifacts and cannot be marked for public export or served through vector-only reads.
+
 ## Planned API
 
 The Node/Express/TypeScript provider now serves typed, read-only local artifacts through `GET /api/health`, `GET /api/aoi/:aoiId/layers`, `GET /api/aoi/:aoiId/layers/:domain`, `GET /api/aoi/:aoiId/readiness` and `GET /api/aoi/:aoiId/sources`. These routes validate identifiers and file contracts, return 422 for malformed input and 404 for a missing cache, and do not invoke Python, Overpass or WMS.

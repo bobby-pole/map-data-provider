@@ -187,13 +187,15 @@ describe("read-only AOI provider routes", () => {
     const response = await request(createApp()).get("/api/aoi/rybnik_60km/domain-packs/power");
     expect(response.status).toBe(200);
     const pack = domainPackReadResponseSchema.parse(response.body);
-    expect(pack.layers).toEqual([
-      expect.objectContaining({
-        artifact: expect.objectContaining({ id: "power.lines", public_export: true }),
-        layer: expect.objectContaining({ metadata: expect.objectContaining({ domain: "power" }) }),
-      }),
+    expect(pack.layers).toEqual(expect.arrayContaining([
+      expect.objectContaining({ artifact: expect.objectContaining({ id: "power.lines", public_export: true }), layer: expect.objectContaining({ metadata: expect.objectContaining({ domain: "power" }) }) }),
+      expect.objectContaining({ artifact: expect.objectContaining({ id: "power.assets", public_export: true }), layer: expect.objectContaining({ metadata: expect.objectContaining({ layer_id: "power.assets" }) }) }),
+    ]));
+    expect(pack.layers.map((layer) => layer.artifact.kind)).toEqual(["processed_vector", "processed_vector"]);
+    expect(pack.source_provenance).toEqual([
+      { source_id: "openstreetmap", contribution_role: "primary" },
+      { source_id: "kiut_gesut_wms", contribution_role: "validation_reference" },
     ]);
-    expect(pack.layers.map((layer) => layer.artifact.kind)).toEqual(["processed_vector"]);
   });
 
   it("discovers a fixture domain solely from its v2 manifest", async () => {

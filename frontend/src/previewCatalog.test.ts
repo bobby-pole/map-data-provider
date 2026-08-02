@@ -17,15 +17,22 @@ const fixturePack: DomainPack = {
       metadata: { aoi_id: "fixture_aoi", domain: "water", layer_id: "water.main", source: "Fixture source", source_type: "analytical_vector", confidence: "medium", limitations: ["Pack limitation."], eligible_for_analysis: true, readiness: "usable_with_limitations", feature_count: 1, snapshot_at: "2026-08-01T00:00:00Z", source_query: "fixture query" },
       features: [{ type: "Feature", properties: { category: "water main", confidence: "high", limitations: ["Feature limitation."] }, geometry: { type: "Point", coordinates: [18.5, 50.1] } }],
     },
+  }, {
+    artifact: { id: "water.assets", kind: "processed_vector", format: "geojson", feature_count: 1, public_export: true, source_provenance: [{ source_id: "openstreetmap", contribution_role: "primary" }] },
+    layer: {
+      type: "FeatureCollection",
+      metadata: { aoi_id: "fixture_aoi", domain: "water", layer_id: "water.assets", source: "Fixture source", source_type: "analytical_vector", confidence: "medium", limitations: ["Pack limitation."], eligible_for_analysis: true, readiness: "usable_with_limitations", feature_count: 1, snapshot_at: "2026-08-01T00:00:00Z", source_query: "fixture query" },
+      features: [{ type: "Feature", properties: { asset_type: "water pump", confidence: "medium", limitations: ["Asset limitation."] }, geometry: { type: "Point", coordinates: [18.6, 50.2] } }],
+    },
   }],
 };
 
 describe("manifest-driven preview catalog", () => {
   it("creates a toggleable layer from domain-pack data without a hard-coded domain", () => {
-    const [layer] = configuredPreviewLayers([fixturePack]);
-    expect(layer?.domain).toBe("water");
-    expect(layer && previewLayerKey(layer)).toBe("water:water.main");
-    expect(layer && sourceAttribution(layer)).toBe("© OpenStreetMap contributors");
+    const layers = configuredPreviewLayers([fixturePack]);
+    expect(layers.map(previewLayerKey)).toEqual(["water:water.main", "water:water.assets"]);
+    expect(layers[0]?.domain).toBe("water");
+    expect(layers[0] && sourceAttribution(layers[0])).toBe("© OpenStreetMap contributors");
   });
 
   it("uses provider-normalized feature fields with manifest readiness and limitations", () => {

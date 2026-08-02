@@ -1,6 +1,6 @@
 # Manual GIS Layers
 
-This directory contains controlled manual GeoJSON inputs for Steel Sentinel.
+This directory contains controlled manual GeoJSON inputs for Map Data Quality Lab.
 
 Manual layers are not authoritative infrastructure data. They are used as clearly marked seed inputs for synthetic demo topology when public OSM data is incomplete and WMS/KIUT is only a visual reference.
 

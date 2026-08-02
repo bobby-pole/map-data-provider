@@ -116,7 +116,7 @@ def _report(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Clip a GeoJSON layer to the Steel Sentinel AOI.")
+    parser = argparse.ArgumentParser(description="Clip a GeoJSON layer to the Map Data Quality Lab AOI.")
     parser.add_argument("--input", required=True, type=Path, help="Input GeoJSON path.")
     parser.add_argument("--output", type=Path, help="Output GeoJSON path.")
     parser.add_argument("--mode", choices=["clip", "keep-intersecting"], default="keep-intersecting")

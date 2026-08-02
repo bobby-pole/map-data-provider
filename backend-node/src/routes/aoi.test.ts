@@ -13,8 +13,6 @@ import {
   providerLayerResponseSchema,
   readinessListResponseSchema,
   sourceListResponseSchema,
-  steelSentinelPackSchema,
-  steelSentinelPackV2Schema,
   domainPackListResponseSchema,
   domainPackReadResponseSchema,
   issueListResponseSchema,
@@ -48,8 +46,8 @@ describe("read-only AOI provider routes", () => {
     await mkdir(path.join(packRoot, "readiness"), { recursive: true });
     const metadata = {
       cache_layout_version: "provider_cache/v1",
-      geojson_contract_version: "steel_sentinel_geojson/v1",
-      contract_version: "steel_sentinel_geojson/v1",
+      geojson_contract_version: "provider_geojson/v1",
+      contract_version: "provider_geojson/v1",
       aoi_id: aoiId,
       domain,
       layer_id: artifactId,
@@ -61,7 +59,7 @@ describe("read-only AOI provider routes", () => {
       quality_status: "passed",
       confidence: "medium",
       limitations: ["Fixture limitations are visible in the preview."],
-      usable_for_simulation: false,
+      eligible_for_analysis: true,
       readiness: "usable_with_limitations",
       feature_count: 1,
     };
@@ -171,23 +169,12 @@ describe("read-only AOI provider routes", () => {
       expect.arrayContaining([
         expect.objectContaining({ id: "openstreetmap", source_type: "analytical_vector" }),
         expect.objectContaining({ id: "manual_power_seed", source_type: "manual_seed" }),
-        expect.objectContaining({ id: "kiut_gesut_wms", source_type: "reference_overlay", usable_for_simulation: false }),
+        expect.objectContaining({ id: "kiut_gesut_wms", source_type: "reference_overlay" }),
       ]),
     );
   });
 
-  it("exports a complete Steel Sentinel layer pack", async () => {
-    const response = await request(createApp()).get("/api/aoi/rybnik_60km/exports/steel-sentinel-pack");
-
-    expect(response.status).toBe(200);
-    const pack = steelSentinelPackSchema.parse(response.body);
-    expect(pack.layers.power.layer.metadata.feature_count).toBe(16_505);
-    expect(pack.layers.power.metadata.domain).toBe("power");
-    expect(pack.layers.power.readiness.readiness).toBe("usable_with_limitations");
-    expect(pack.sources.sources).toEqual(expect.arrayContaining([expect.objectContaining({ source_type: "reference_overlay" })]));
-  });
-
-  it("serves a v2 domain pack and v2 export from the manifest without domain-specific route code", async () => {
+  it("serves a v2 domain pack from the manifest without domain-specific route code", async () => {
     const response = await request(createApp()).get("/api/aoi/rybnik_60km/domain-packs/power");
     expect(response.status).toBe(200);
     const pack = domainPackReadResponseSchema.parse(response.body);
@@ -198,10 +185,6 @@ describe("read-only AOI provider routes", () => {
       }),
     ]);
     expect(pack.layers.map((layer) => layer.artifact.kind)).toEqual(["processed_vector"]);
-
-    const exported = await request(createApp()).get("/api/aoi/rybnik_60km/exports/steel-sentinel-pack-v2");
-    expect(exported.status).toBe(200);
-    expect(steelSentinelPackV2Schema.parse(exported.body).domain_packs[0]?.layers[0]?.artifact.id).toBe("power.lines");
   });
 
   it("discovers a fixture domain solely from its v2 manifest", async () => {
@@ -222,18 +205,6 @@ describe("read-only AOI provider routes", () => {
     expect(response.status).toBe(404);
     expect(providerErrorSchema.parse(response.body).message).toMatch(/not eligible for public export/i);
     expect(response.body.layers).toBeUndefined();
-
-    const exported = await request(fixture.app).get(`/api/aoi/${fixture.aoiId}/exports/steel-sentinel-pack-v2`);
-    expect(exported.status).toBe(404);
-    expect(providerErrorSchema.parse(exported.body).message).toMatch(/not eligible for public export/i);
-    expect(exported.body.domain_packs).toBeUndefined();
-  });
-
-  it("does not fabricate a pack for missing cache", async () => {
-    const response = await request(createApp()).get("/api/aoi/missing_aoi/exports/steel-sentinel-pack");
-
-    expect(response.status).toBe(404);
-    expect(providerErrorSchema.parse(response.body)).toMatchObject({ error: "not_found" });
   });
 
   it("returns 404 for a missing cached domain", async () => {

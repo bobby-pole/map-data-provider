@@ -3,6 +3,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { popupDetails, type PreviewLayer } from "../previewCatalog";
 import type { ProviderFeature } from "../types/api";
+import type { SelectedProviderFeature } from "../inspection";
 
 function escapeHtml(value: string): string { return value.replace(/[&<>'"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[character] ?? character); }
 function popup(feature: ProviderFeature, layer: PreviewLayer): string {
@@ -10,10 +11,12 @@ function popup(feature: ProviderFeature, layer: PreviewLayer): string {
   return `<strong>${escapeHtml(details.title)}</strong><br/>Source: ${escapeHtml(details.source)}<br/>Confidence: ${escapeHtml(details.confidence)}<br/>Readiness: ${escapeHtml(details.readiness)}<br/>Limitations: ${escapeHtml(details.limitations.join("; ") || "none")}`;
 }
 
-export function MapView({ layers }: { layers: PreviewLayer[] }) {
+export function MapView({ layers, onSelectFeature }: { layers: PreviewLayer[]; onSelectFeature: (selected: SelectedProviderFeature) => void }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
   const providerLayerRef = useRef<L.FeatureGroup | null>(null);
+  const onSelectFeatureRef = useRef(onSelectFeature);
+  useEffect(() => { onSelectFeatureRef.current = onSelectFeature; }, [onSelectFeature]);
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
     const map = L.map(containerRef.current).setView([50.102174, 18.546285], 10); mapRef.current = map;
@@ -28,7 +31,11 @@ export function MapView({ layers }: { layers: PreviewLayer[] }) {
     layers.forEach((layer, index) => {
       L.geoJSON(layer.layer as GeoJSON.GeoJsonObject, {
         style: { color: colors[index % colors.length], weight: 2, opacity: 0.85 },
-        onEachFeature: (feature, leafletLayer) => leafletLayer.bindPopup(popup(feature as ProviderFeature, layer)),
+        onEachFeature: (feature, leafletLayer) => {
+          const providerFeature = feature as ProviderFeature;
+          leafletLayer.bindPopup(popup(providerFeature, layer));
+          leafletLayer.on("click", () => onSelectFeatureRef.current({ feature: providerFeature, layer }));
+        },
       }).addTo(group);
     });
     providerLayerRef.current = group;

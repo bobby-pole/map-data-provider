@@ -176,7 +176,7 @@ function toV1SourceRegistry(registry: SourceRegistryV2): SourceRegistry {
       role: `${source.usage_role} ${source.data_kind} source.`,
       access: source.access_method,
       not_authoritative: source.not_authoritative,
-      usable_for_simulation: source.usable_for_simulation,
+      eligible_for_analysis: source.eligible_for_analysis,
       source_url: source.source_url,
       attribution: source.attribution,
       license: source.license,

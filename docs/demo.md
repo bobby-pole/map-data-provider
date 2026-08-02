@@ -2,7 +2,7 @@
 
 This walkthrough demonstrates the implemented `rybnik_60km/power` provider slice in three to five minutes. It uses the committed cache and offline fixtures; it does not require live Overpass or WMS access.
 
-The current release produces a Steel Sentinel-compatible export. Loading that export inside the Steel Sentinel repository remains separate integration work.
+The current release produces a provider-compatible export. Loading that export inside the downstream application repository remains separate integration work.
 
 ## Preparation
 
@@ -10,8 +10,7 @@ Install dependencies and run the full quality gate once:
 
 ```bash
 (cd backend && uv sync --locked --dev)
-(cd backend-node && npm install --package-lock=false)
-(cd frontend && npm install --package-lock=false)
+pnpm install
 ./scripts/verify_provider.sh
 ```
 
@@ -19,7 +18,7 @@ Start the provider in one terminal:
 
 ```bash
 cd backend-node
-npm run dev
+pnpm run dev
 ```
 
 The examples below use `curl` and `jq` against `http://127.0.0.1:3001`.
@@ -57,10 +56,9 @@ curl -sS http://127.0.0.1:3001/api/aoi/rybnik_60km/layers/power \
 
 This read-only endpoint serves the committed, validated cache without extraction side effects. It is the safe path for a repeatable presentation of the full Rybnik snapshot.
 
-## 3. Inspect the Steel Sentinel-compatible layer pack — 60 seconds
+## 3. Inspect the provider-compatible layer pack — 60 seconds
 
 ```bash
-curl -sS http://127.0.0.1:3001/api/aoi/rybnik_60km/exports/steel-sentinel-pack \
   | jq '{
       contract_version,
       aoi_id,
@@ -80,7 +78,7 @@ The current committed snapshot reports 16,505 OSM-derived power features, `mediu
 
 The response demonstrates the provider boundary:
 
-- `steel_sentinel_pack/v1` is stable and independent of Overpass tagging conventions.
+- `provider_pack/v1` is stable and independent of Overpass tagging conventions.
 - `analytical_vector`, `manual_seed` and `reference_overlay` remain distinguishable.
 - passed validation does not claim complete real-world infrastructure coverage.
 
@@ -90,10 +88,9 @@ The response demonstrates the provider boundary:
 curl -sS http://127.0.0.1:3001/api/aoi/rybnik_60km/sources \
   | jq '.sources[]
       | select(.id == "kiut_gesut_wms")
-      | {id, source_type, role, usable_for_simulation, limitations}'
 ```
 
-The registry identifies KIUT/GESUT WMS as a raster visual reference, not provider-owned analytical geometry. The provider does not fabricate GeoJSON from WMS imagery and does not mark it usable for simulation.
+The registry identifies KIUT/GESUT WMS as a raster visual reference, not provider-owned analytical geometry. The provider does not fabricate GeoJSON from WMS imagery and does not mark it eligible for analytical use.
 
 ## 5. Inspect issues and the map preview — 60–90 seconds
 
@@ -108,7 +105,7 @@ Optionally start the React preview in another terminal:
 
 ```bash
 cd frontend
-npm run dev
+pnpm run dev
 ```
 
 Open `http://localhost:5173`. Use a feature popup to inspect source, confidence, missing fields and limitations; then use the issue-state filter to show the review workflow. Generated rule evidence remains separate from persisted human decisions and never rewrites readiness.
@@ -123,10 +120,10 @@ AOI/domain request
   -> OSM-derived, normalized GeoJSON
   -> validation, provenance, confidence and readiness
   -> explainable issue evidence and review state
-  -> steel_sentinel_pack/v1 export
+  -> provider_pack/v1 export
 ```
 
-This repository owns that upstream data workflow. The export is ready for a Steel Sentinel-compatible client, but actual cross-repository consumption is not claimed by this release.
+This repository owns that upstream data workflow. The export is ready for a provider-compatible client, but actual cross-repository consumption is not claimed by this release.
 
 ## Optional: demonstrate cache refresh after the core demo
 

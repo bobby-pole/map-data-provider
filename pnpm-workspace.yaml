@@ -1,0 +1,5 @@
+packages:
+  - backend-node
+  - frontend
+allowBuilds:
+  esbuild: true

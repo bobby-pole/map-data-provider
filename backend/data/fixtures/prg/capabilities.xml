@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wfs:WFS_Capabilities xmlns:wfs="http://www.opengis.net/wfs/2.0">
+  <FeatureTypeList>
+    <FeatureType><Name>ms:A01_Granice_wojewodztw</Name></FeatureType>
+    <FeatureType><Name>ms:A02_Granice_powiatow</Name></FeatureType>
+    <FeatureType><Name>ms:A03_Granice_gmin</Name></FeatureType>
+    <FeatureType><Name>ms:K02_Komenda_powiatowa_policji</Name></FeatureType>
+    <FeatureType><Name>ms:K07_Komenda_powiatowa_strazy_pozarnej</Name></FeatureType>
+  </FeatureTypeList>
+</wfs:WFS_Capabilities>

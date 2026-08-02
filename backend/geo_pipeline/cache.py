@@ -13,7 +13,7 @@ from geo_pipeline.contracts import (
     CONTRACT_VERSION,
     READINESS_VALUES,
     normalize_analytical_vector_layer,
-    validate_steel_sentinel_geojson,
+    validate_provider_geojson,
 )
 from geo_pipeline.quality_rules import highest_issue_severity, triggered_issues
 from geo_pipeline.readiness import derive_readiness
@@ -73,7 +73,7 @@ def build_rybnik_power_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
         "quality_status": quality_status,
         "confidence": "medium",
         "limitations": POWER_LIMITATIONS,
-        "usable_for_simulation": True,
+        "eligible_for_analysis": True,
         "readiness": "ready",
     }
     layer = normalize_analytical_vector_layer(source, metadata=metadata)
@@ -129,7 +129,7 @@ def read_cached_layer(paths: CachePaths) -> dict[str, Any]:
     layer = _read_json(paths.layer)
     metadata = _read_json(paths.metadata)
     readiness = _read_json(paths.readiness)
-    errors = validate_steel_sentinel_geojson(layer)
+    errors = validate_provider_geojson(layer)
     if errors:
         raise ValueError(f"Invalid cached GeoJSON: {', '.join(errors)}")
     _validate_cache_records(layer=layer, metadata=metadata, readiness=readiness)

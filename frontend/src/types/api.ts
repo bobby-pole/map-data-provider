@@ -4,8 +4,8 @@ export type LayerReadiness = "ready" | "usable_with_limitations" | "needs_source
 
 export type CachedMetadata = {
   aoi_id: string; domain: string; layer_id: string; source: string; source_type: LayerSourceType;
-  confidence: LayerConfidence; limitations: string[]; readiness: LayerReadiness; feature_count: number;
-  snapshot_at: string; source_query: string; usable_for_simulation: boolean;
+  confidence: LayerConfidence; limitations: string[]; eligible_for_analysis: boolean; readiness: LayerReadiness; feature_count: number;
+  snapshot_at: string; source_query: string;
 };
 
 export type ReadinessRecord = {

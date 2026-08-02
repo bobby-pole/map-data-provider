@@ -11,7 +11,6 @@ import {
   type ProviderDataPaths,
 } from "../services/providerDataService.js";
 import { requestAoi } from "../services/aoiRequestService.js";
-import { buildSteelSentinelPack, buildSteelSentinelPackV2 } from "../services/exportService.js";
 import { getReviewedIssues, updateIssueReview, type IssueStorePaths } from "../services/issueReviewService.js";
 import {
   layerListResponseSchema,
@@ -20,8 +19,6 @@ import {
   sourceListResponseSchema,
   aoiRequestResponseSchema,
   aoiRequestSchema,
-  steelSentinelPackSchema,
-  steelSentinelPackV2Schema,
   domainPackListResponseSchema,
   domainPackReadResponseSchema,
   issueListResponseSchema,
@@ -30,22 +27,6 @@ import {
 
 export function createAoiRouter(options?: { issueStorePaths?: IssueStorePaths; providerDataPaths?: ProviderDataPaths }) {
   const aoiRouter = Router();
-
-aoiRouter.get("/:aoiId/exports/steel-sentinel-pack-v2", async (request, response) => {
-  try {
-    response.status(200).json(steelSentinelPackV2Schema.parse(await buildSteelSentinelPackV2(request.params.aoiId, options?.providerDataPaths)));
-  } catch (error) {
-    respondWithProviderError(response, error);
-  }
-});
-
-aoiRouter.get("/:aoiId/exports/steel-sentinel-pack", async (request, response) => {
-  try {
-    response.status(200).json(steelSentinelPackSchema.parse(await buildSteelSentinelPack(request.params.aoiId)));
-  } catch (error) {
-    respondWithProviderError(response, error);
-  }
-});
 
 aoiRouter.get("/:aoiId/domain-packs", async (request, response) => {
   try {

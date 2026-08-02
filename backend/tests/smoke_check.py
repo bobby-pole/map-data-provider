@@ -32,7 +32,7 @@ assert all(
     for layer in catalog
 )
 assert all(
-    {"source_type", "confidence", "limitations", "not_authoritative", "usable_for_simulation"}
+    {"source_type", "confidence", "limitations", "not_authoritative"}
     <= set(layer)
     for layer in catalog
 )

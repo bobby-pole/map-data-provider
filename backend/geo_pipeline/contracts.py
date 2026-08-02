@@ -1,4 +1,4 @@
-"""Provider-owned GeoJSON contract helpers for Steel Sentinel consumers."""
+"""Provider-owned GeoJSON contract helpers."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from copy import deepcopy
 from datetime import datetime
 from typing import Any
 
-CONTRACT_VERSION = "steel_sentinel_geojson/v1"
+CONTRACT_VERSION = "provider_geojson/v1"
 SOURCE_TYPES = frozenset({"analytical_vector", "manual_seed", "reference_overlay"})
 CONFIDENCE_LEVELS = frozenset({"high", "medium", "low", "not_applicable"})
 READINESS_VALUES = frozenset({"ready", "usable_with_limitations", "needs_source", "not_usable"})
@@ -24,7 +24,7 @@ REQUIRED_METADATA_FIELDS = frozenset(
         "readiness",
         "confidence",
         "limitations",
-        "usable_for_simulation",
+        "eligible_for_analysis",
     }
 )
 REQUIRED_FEATURE_FIELDS = frozenset(
@@ -36,7 +36,7 @@ REQUIRED_FEATURE_FIELDS = frozenset(
         "confidence",
         "missing_fields",
         "limitations",
-        "usable_for_simulation",
+        "eligible_for_analysis",
     }
 )
 RAW_OSM_TAG_FIELDS = (
@@ -77,13 +77,13 @@ def normalize_analytical_vector_layer(
         "metadata": layer_metadata,
         "features": normalized_features,
     }
-    errors = validate_steel_sentinel_geojson(collection)
+    errors = validate_provider_geojson(collection)
     if errors:
         raise ValueError(f"Normalized GeoJSON violates the provider contract: {', '.join(errors)}")
     return collection
 
 
-def validate_steel_sentinel_geojson(collection: object) -> list[str]:
+def validate_provider_geojson(collection: object) -> list[str]:
     """Return stable schema errors for a v1 provider GeoJSON layer."""
     errors: list[str] = []
     if not isinstance(collection, dict):
@@ -132,7 +132,7 @@ def _normalize_feature(feature: object, *, metadata: dict[str, Any]) -> dict[str
         "confidence": metadata["confidence"],
         "missing_fields": _missing_fields(raw_properties, asset_type=asset_type),
         "limitations": list(metadata["limitations"]),
-        "usable_for_simulation": metadata["usable_for_simulation"],
+        "eligible_for_analysis": metadata["eligible_for_analysis"],
     }
     if raw_tags:
         properties["osm_tags"] = raw_tags
@@ -175,8 +175,8 @@ def _validate_metadata(metadata: dict[str, Any]) -> list[str]:
         errors.append("metadata.snapshot_at")
     if not _is_string_list(metadata.get("limitations")):
         errors.append("metadata.limitations")
-    if not isinstance(metadata.get("usable_for_simulation"), bool):
-        errors.append("metadata.usable_for_simulation")
+    if not isinstance(metadata.get("eligible_for_analysis"), bool):
+        errors.append("metadata.eligible_for_analysis")
     return errors
 
 
@@ -203,8 +203,8 @@ def _validate_feature(feature: object, *, index: int) -> list[str]:
         errors.append(f"{prefix}.properties.missing_fields")
     if not _is_string_list(properties.get("limitations")):
         errors.append(f"{prefix}.properties.limitations")
-    if not isinstance(properties.get("usable_for_simulation"), bool):
-        errors.append(f"{prefix}.properties.usable_for_simulation")
+    if not isinstance(properties.get("eligible_for_analysis"), bool):
+        errors.append(f"{prefix}.properties.eligible_for_analysis")
     if "osm_tags" in properties and not isinstance(properties["osm_tags"], dict):
         errors.append(f"{prefix}.properties.osm_tags")
     return errors

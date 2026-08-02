@@ -1,0 +1,28 @@
+{
+  "adapter_version": "bdot10k_adapter/v1",
+  "snapshot_at": "2026-08-02T11:54:10Z",
+  "schema": "BDOT10k 2021-class-download fixture",
+  "artifacts": [
+    {
+      "file": "bdot10k_fixture.gpkg",
+      "format": "gpkg",
+      "sha256": "2d0f1c0d2552a8ec72a3311145cf63878e7d1dc52b1f5f7fc0ede597a3f54852",
+      "source_classes": [
+        "OT_SKDR_L",
+        "OT_BUIN_L",
+        "OT_SWRS_L",
+        "OT_BUBD_A",
+        "OT_KUPG_A",
+        "OT_KUPG_P"
+      ]
+    },
+    {
+      "file": "OT_KUPG_P.parquet",
+      "format": "geoparquet",
+      "sha256": "d938d3efeabdc1d48c2033795a9b71f4c18524ba903e9e7cd6da09122d8bdfbf",
+      "source_classes": [
+        "OT_KUPG_P"
+      ]
+    }
+  ]
+}

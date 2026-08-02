@@ -25,7 +25,7 @@ describe("source_registry/v2 contract", () => {
     expect(sources.get("prg_wfs")).toMatchObject({ data_kind: "vector", format: "wfs_gml", authority: "official", qualification: "pending_qualification" });
     expect(sources.get("bdot10k")).toMatchObject({ format: "gpkg_geoparquet" });
     expect(sources.get("kiut_gesut_wms")).toMatchObject({ data_kind: "rendered_imagery", format: "wms", usage_role: "reference" });
-    expect(sources.get("geoportal_orthophoto")).toMatchObject({ data_kind: "rendered_imagery", format: "wmts" });
+    expect(sources.get("geoportal_orthophoto")).toMatchObject({ data_kind: "rendered_imagery", format: "wms" });
     expect(sources.get("nmt_nmpt")).toMatchObject({ data_kind: "raster", format: "geotiff_ascii_grid" });
     expect(isPublicExportEligible(sources.get("openstreetmap")!)).toBe(true);
     expect(isPublicExportEligible(sources.get("kiut_gesut_wms")!)).toBe(false);

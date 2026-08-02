@@ -5,6 +5,7 @@ import { popupDetails, type PreviewLayer } from "../previewCatalog";
 import type { ProviderFeature } from "../types/api";
 import type { SelectedProviderFeature } from "../inspection";
 import { KIUT_MIN_ZOOM, KIUT_WMS_URL, type KiutReferenceLayer } from "../kiutReference";
+import { ORTHOPHOTO_WMS_URL, orthophotoReference } from "../orthophotoReference";
 
 function escapeHtml(value: string): string { return value.replace(/[&<>'"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[character] ?? character); }
 function popup(feature: ProviderFeature, layer: PreviewLayer): string {
@@ -12,11 +13,12 @@ function popup(feature: ProviderFeature, layer: PreviewLayer): string {
   return `<strong>${escapeHtml(details.title)}</strong><br/>Source: ${escapeHtml(details.source)}<br/>Confidence: ${escapeHtml(details.confidence)}<br/>Readiness: ${escapeHtml(details.readiness)}<br/>Limitations: ${escapeHtml(details.limitations.join("; ") || "none")}`;
 }
 
-export function MapView({ layers, references, onSelectFeature }: { layers: PreviewLayer[]; references: KiutReferenceLayer[]; onSelectFeature: (selected: SelectedProviderFeature) => void }) {
+export function MapView({ layers, references, orthophotoEnabled, onSelectFeature }: { layers: PreviewLayer[]; references: KiutReferenceLayer[]; orthophotoEnabled: boolean; onSelectFeature: (selected: SelectedProviderFeature) => void }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
   const providerLayerRef = useRef<L.FeatureGroup | null>(null);
   const referenceLayerRef = useRef<L.LayerGroup | null>(null);
+  const orthophotoLayerRef = useRef<L.TileLayer.WMS | null>(null);
   const onSelectFeatureRef = useRef(onSelectFeature);
   useEffect(() => { onSelectFeatureRef.current = onSelectFeature; }, [onSelectFeature]);
   useEffect(() => {
@@ -55,5 +57,16 @@ export function MapView({ layers, references, onSelectFeature }: { layers: Previ
     referenceLayerRef.current = group;
     return () => { group.remove(); };
   }, [references]);
+  useEffect(() => {
+    const map = mapRef.current; if (!map) return;
+    orthophotoLayerRef.current?.remove();
+    if (!orthophotoEnabled) return;
+    const layer = L.tileLayer.wms(ORTHOPHOTO_WMS_URL, {
+      layers: orthophotoReference.wmsLayer, styles: "", format: "image/jpeg", transparent: false,
+      version: "1.3.0", attribution: orthophotoReference.attribution, zIndex: 1, maxZoom: 20,
+    }).addTo(map);
+    orthophotoLayerRef.current = layer;
+    return () => { layer.remove(); };
+  }, [orthophotoEnabled]);
   return <div className="map" ref={containerRef} />;
 }

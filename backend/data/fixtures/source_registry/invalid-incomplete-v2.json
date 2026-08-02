@@ -151,7 +151,7 @@
       "id": "geoportal_orthophoto",
       "name": "Geoportal orthophoto",
       "data_kind": "rendered_imagery",
-      "format": "wmts",
+      "format": "wms",
       "authority": "official",
       "access_method": "public_service",
       "usage_role": "reference",

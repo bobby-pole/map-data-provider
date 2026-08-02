@@ -21,6 +21,7 @@ import {
   type ReadinessRecord,
   type SourceRegistry,
   type SourceRegistryV2,
+  sourceAvailabilityReportSchema,
 } from "../types/provider.js";
 
 const projectRoot = path.resolve(fileURLToPath(new URL("../../../", import.meta.url)));
@@ -31,6 +32,7 @@ const packDirectoryName = "domain-pack-v2";
 export type ProviderDataPaths = {
   cacheRoot?: string;
   registryPath?: string;
+  sourceAvailabilityRoot?: string;
 };
 
 export class ProviderDataError extends Error {
@@ -76,6 +78,14 @@ export async function getSourcesForAoi(aoiId: string, dataPaths?: ProviderDataPa
   await getCachedLayers(aoiId, dataPaths);
   const registry = await readJson(registryPathFor(dataPaths), "source registry");
   return toV1SourceRegistry(sourceRegistryV2Schema.parse(registry));
+}
+
+export async function getSourceAvailability(aoiId: string, dataPaths?: ProviderDataPaths) {
+  validateIdentifier(aoiId, "AOI");
+  const root = dataPaths?.sourceAvailabilityRoot ?? path.join(projectRoot, "backend", "data", "source-availability");
+  const report = sourceAvailabilityReportSchema.parse(await readJson(path.join(root, `${aoiId}.json`), `source availability '${aoiId}'`));
+  if (report.aoi_id !== aoiId) throw new ProviderDataError("not_found", "Source availability identity does not match the request.");
+  return report;
 }
 
 export async function getDomainPacks(aoiId: string, dataPaths?: ProviderDataPaths): Promise<DomainPackReadResponse[]> {

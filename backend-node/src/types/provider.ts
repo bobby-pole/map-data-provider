@@ -366,6 +366,16 @@ export const readinessListResponseSchema = z.object({
   readiness: z.array(readinessRecordSchema),
 });
 
+export const sourceAvailabilityEntrySchema = z.object({
+  source_id: z.string().min(1), availability: z.enum(["available", "unavailable", "not_eligible", "reference_only"]),
+  aoi_coverage: z.enum(["covered", "uncovered", "not_applicable"]), feature_state: z.enum(["available", "empty", "not_applicable"]),
+  evidence_timestamp: z.string().datetime(), fresh_after_days: z.number().int().positive(), evidence: z.string().min(1),
+  freshness: z.enum(["fresh", "stale"]), eligibility: z.enum(["allowed", "rejected", "not_comparable"]), actionable_gap: z.boolean(),
+}).strict();
+export const sourceAvailabilityReportSchema = z.object({
+  report_version: z.literal("provider_source_availability/v1"), aoi_id: providerIdentifierSchema, evidence_timestamp: z.string().datetime(), sources: z.array(sourceAvailabilityEntrySchema).min(1),
+}).strict();
+
 export const sourceListResponseSchema = z.object({
   aoi_id: providerIdentifierSchema,
   registry_version: z.literal("source_registry/v1"),

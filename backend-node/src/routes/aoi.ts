@@ -8,6 +8,7 @@ import {
   getDomainPack,
   getDomainPacks,
   getSourcesForAoi,
+  getSourceAvailability,
   type ProviderDataPaths,
 } from "../services/providerDataService.js";
 import { requestAoi } from "../services/aoiRequestService.js";
@@ -23,6 +24,7 @@ import {
   domainPackReadResponseSchema,
   issueListResponseSchema,
   issueReviewUpdateSchema,
+  sourceAvailabilityReportSchema,
 } from "../types/provider.js";
 
 export function createAoiRouter(options?: { issueStorePaths?: IssueStorePaths; providerDataPaths?: ProviderDataPaths }) {
@@ -101,6 +103,14 @@ aoiRouter.get("/:aoiId/sources", async (request, response) => {
         sources: registry.sources,
       }),
     );
+  } catch (error) {
+    respondWithProviderError(response, error);
+  }
+});
+
+aoiRouter.get("/:aoiId/source-availability", async (request, response) => {
+  try {
+    response.status(200).json(sourceAvailabilityReportSchema.parse(await getSourceAvailability(request.params.aoiId, options?.providerDataPaths)));
   } catch (error) {
     respondWithProviderError(response, error);
   }

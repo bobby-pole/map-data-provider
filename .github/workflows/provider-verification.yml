@@ -38,19 +38,18 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: 22
-          package-manager-cache: false
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.0.9
 
       - name: Install Python dependencies
         working-directory: backend
         run: uv sync --locked --dev
 
-      - name: Install Node provider dependencies
-        working-directory: backend-node
-        run: npm install --package-lock=false
-
-      - name: Install frontend dependencies
-        working-directory: frontend
-        run: npm install --package-lock=false
+      - name: Install JavaScript dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Run canonical provider verification
         run: ./scripts/verify_provider.sh

@@ -13,7 +13,7 @@
     "purpose": "Seed input for future synthetic demo topology, not a replacement for OSM/GESUT."
   },
   "geojson": {
-    "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/manual/rybnik_60km_power_seed_nodes.geojson",
+    "path": "./backend/data/manual/rybnik_60km_power_seed_nodes.geojson",
     "exists": true,
     "readable": true,
     "feature_count": 6,
@@ -23,7 +23,9 @@
     },
     "empty_geometries": 0,
     "invalid_geometries": 0,
-    "unexpected_geometry_types": [],
+    "unexpected_geometry_types": [
+
+    ],
     "outside_aoi": 0,
     "bbox": {
       "min_lon": 18.512443,
@@ -32,8 +34,12 @@
       "max_lat": 50.122467
     },
     "status": "pass",
-    "errors": [],
-    "warnings": []
+    "errors": [
+
+    ],
+    "warnings": [
+
+    ]
   },
   "schema": {
     "status": "pass",
@@ -52,7 +58,11 @@
       "voltage_estimate"
     ],
     "feature_count": 6,
-    "errors": [],
-    "warnings": []
+    "errors": [
+
+    ],
+    "warnings": [
+
+    ]
   }
 }

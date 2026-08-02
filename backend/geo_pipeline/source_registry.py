@@ -31,7 +31,7 @@ V2_REQUIRED_SOURCE_FIELDS = frozenset(
         "qualification",
         "distribution",
         "not_authoritative",
-        "usable_for_simulation",
+        "eligible_for_analysis",
         "source_url",
         "attribution",
         "license",
@@ -49,7 +49,7 @@ V1_REQUIRED_SOURCE_FIELDS = frozenset(
         "role",
         "access",
         "not_authoritative",
-        "usable_for_simulation",
+        "eligible_for_analysis",
         "source_url",
         "attribution",
         "license",
@@ -179,8 +179,8 @@ def _validate_v2_source(source: dict[str, Any]) -> None:
     _require_enum(source["distribution"], "public_export", DISTRIBUTION_DECISIONS, source_id)
     if not isinstance(source["distribution"]["reason"], str) or not source["distribution"]["reason"]:
         raise ValueError(f"Source {source_id} requires a distribution reason")
-    if not isinstance(source["not_authoritative"], bool) or not isinstance(source["usable_for_simulation"], bool):
-        raise ValueError(f"Source {source_id} must declare boolean authority and simulation flags")
+    if not isinstance(source["not_authoritative"], bool) or not isinstance(source["eligible_for_analysis"], bool):
+        raise ValueError(f"Source {source_id} must declare authority and analytical-eligibility flags")
     if not isinstance(source["source_url"], str) or not source["source_url"]:
         raise ValueError(f"Source {source_id} requires a source URL or local reference")
     if not isinstance(source["attribution"], str) or not source["attribution"] or not isinstance(source["license"], str) or not source["license"]:
@@ -207,8 +207,8 @@ def _validate_v2_source(source: dict[str, Any]) -> None:
         raise ValueError(f"Source {source_id} data kind contradicts its format")
     if source["usage_role"] == "analytical" and source["data_kind"] == "rendered_imagery":
         raise ValueError(f"Source {source_id} cannot use rendered imagery as analytical data")
-    if source["usage_role"] != "analytical" and source["usable_for_simulation"]:
-        raise ValueError(f"Only analytical sources may be simulation inputs: {source_id}")
+    if source["usage_role"] != "analytical" and source["eligible_for_analysis"]:
+        raise ValueError(f"Only analytical sources can be eligible for analysis: {source_id}")
     if source["usage_role"] != "analytical" and source["distribution"]["public_export"] != "prohibited":
         raise ValueError(f"Reference or review source {source_id} cannot enter public analytical export")
     if source["qualification"] != "qualified_free" and source["distribution"]["public_export"] != "prohibited":

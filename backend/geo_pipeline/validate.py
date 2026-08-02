@@ -196,7 +196,7 @@ def write_validation_report(path: Path, report: dict[str, Any]) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Validate generated Steel Sentinel GeoJSON layers.")
+    parser = argparse.ArgumentParser(description="Validate generated Map Data Quality Lab GeoJSON layers.")
     parser.add_argument("--layer", choices=["power"], default="power", help="Layer group to validate.")
     args = parser.parse_args()
 

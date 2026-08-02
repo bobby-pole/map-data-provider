@@ -5,7 +5,7 @@ import geopandas as gpd
 from shapely.geometry import LineString, Point, Polygon
 
 from geo_pipeline.config import AoiConfig
-from geo_pipeline.contracts import CONTRACT_VERSION, normalize_analytical_vector_layer, validate_steel_sentinel_geojson
+from geo_pipeline.contracts import CONTRACT_VERSION, normalize_analytical_vector_layer, validate_provider_geojson
 from geo_pipeline.extract import filter_geometry_types, representative_points, sanitize_for_geojson
 from geo_pipeline.validate import validate_geojson
 
@@ -67,11 +67,11 @@ def test_validate_geojson_reports_missing_file_without_network(tmp_path: Path) -
     assert result["errors"] == ["file_missing"]
 
 
-def test_contract_sample_matches_the_steel_sentinel_geojson_schema() -> None:
+def test_contract_sample_matches_the_provider_geojson_schema() -> None:
     sample_path = Path(__file__).resolve().parents[1] / "data/fixtures/rybnik_60km/power/contract-sample.geojson"
     sample = json.loads(sample_path.read_text(encoding="utf-8"))
 
-    assert validate_steel_sentinel_geojson(sample) == []
+    assert validate_provider_geojson(sample) == []
     assert sample["metadata"]["contract_version"] == CONTRACT_VERSION
     assert sample["metadata"]["feature_count"] == len(sample["features"])
     assert sample["features"][0]["properties"]["osm_tags"]["power"] == "line"
@@ -84,11 +84,10 @@ def test_contract_validator_reports_missing_metadata_and_feature_fields() -> Non
         "features": [{"type": "Feature", "properties": {}, "geometry": {"type": "Point", "coordinates": [0, 0]}}],
     }
 
-    errors = validate_steel_sentinel_geojson(invalid)
+    errors = validate_provider_geojson(invalid)
 
     assert "metadata.missing:aoi_id" in errors
     assert "features[0].properties.missing:source" in errors
-    assert "features[0].properties.missing:usable_for_simulation" in errors
 
 
 def test_contract_validator_rejects_invalid_timestamp_boolean_count_and_geometry() -> None:
@@ -98,7 +97,7 @@ def test_contract_validator_rejects_invalid_timestamp_boolean_count_and_geometry
     invalid["metadata"]["feature_count"] = True
     invalid["features"][0]["geometry"] = {"type": "LineString"}
 
-    errors = validate_steel_sentinel_geojson(invalid)
+    errors = validate_provider_geojson(invalid)
 
     assert "metadata.snapshot_at" in errors
     assert "metadata.feature_count" in errors
@@ -132,13 +131,13 @@ def test_normalizer_makes_provider_fields_without_losing_useful_osm_tags() -> No
         "readiness": "ready",
         "confidence": "medium",
         "limitations": ["OSM completeness varies by area and asset type."],
-        "usable_for_simulation": True,
+        "eligible_for_analysis": True,
     }
 
     normalized = normalize_analytical_vector_layer(source_collection, metadata=metadata)
     properties = normalized["features"][0]["properties"]
 
-    assert validate_steel_sentinel_geojson(normalized) == []
+    assert validate_provider_geojson(normalized) == []
     assert normalized["metadata"]["feature_count"] == 1
     assert properties["source"] == "OpenStreetMap"
     assert properties["source_id"] == "way/32043840"

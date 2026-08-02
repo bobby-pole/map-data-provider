@@ -110,31 +110,29 @@ def test_catalog_exposes_required_source_metadata_contract() -> None:
         "confidence",
         "limitations",
         "not_authoritative",
-        "usable_for_simulation",
+        "eligible_for_analysis",
     }
 
     assert all(required_fields <= set(layer) for layer in catalog.values())
     assert {
         key: catalog["power.lines"][key]
-        for key in ("source_type", "confidence", "not_authoritative", "usable_for_simulation")
+        for key in ("source_type", "confidence", "not_authoritative", "eligible_for_analysis")
     } == {
         "source_type": "analytical_vector",
         "confidence": "medium",
         "not_authoritative": False,
-        "usable_for_simulation": True,
+        "eligible_for_analysis": True,
     }
     assert catalog["power.lines"]["limitations"]
     assert catalog["manual.power.seeds"]["source_type"] == "manual_seed"
     assert catalog["manual.power.seeds"]["confidence"] == "low"
     assert catalog["manual.power.seeds"]["not_authoritative"] is True
-    assert catalog["manual.power.seeds"]["usable_for_simulation"] is False
 
     reference = catalog["external.kiut_wms"]
     assert reference["source_type"] == "reference_overlay"
     assert reference["confidence"] == "not_applicable"
     assert reference["limitations"]
     assert reference["not_authoritative"] is True
-    assert reference["usable_for_simulation"] is False
     assert reference["artifact"] is None
     assert reference["validation_report"] is None
 

@@ -8,7 +8,7 @@
   "status": "pass",
   "layers": {
     "power_lines": {
-      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_lines_clipped.geojson",
+      "path": "./backend/data/processed/rybnik_60km_power_lines_clipped.geojson",
       "exists": true,
       "readable": true,
       "feature_count": 16505,
@@ -19,7 +19,9 @@
       },
       "empty_geometries": 0,
       "invalid_geometries": 0,
-      "unexpected_geometry_types": [],
+      "unexpected_geometry_types": [
+
+      ],
       "outside_aoi": 0,
       "bbox": {
         "min_lon": 17.70726479223589,
@@ -28,11 +30,15 @@
         "max_lat": 50.64107166831461
       },
       "status": "pass",
-      "errors": [],
-      "warnings": []
+      "errors": [
+
+      ],
+      "warnings": [
+
+      ]
     },
     "power_nodes": {
-      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_nodes_clipped.geojson",
+      "path": "./backend/data/processed/rybnik_60km_power_nodes_clipped.geojson",
       "exists": true,
       "readable": true,
       "feature_count": 136394,
@@ -44,7 +50,9 @@
       },
       "empty_geometries": 0,
       "invalid_geometries": 0,
-      "unexpected_geometry_types": [],
+      "unexpected_geometry_types": [
+
+      ],
       "outside_aoi": 0,
       "bbox": {
         "min_lon": 17.7073564,
@@ -53,11 +61,15 @@
         "max_lat": 50.6408633
       },
       "status": "pass",
-      "errors": [],
-      "warnings": []
+      "errors": [
+
+      ],
+      "warnings": [
+
+      ]
     },
     "power_node_points": {
-      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_node_points_clipped.geojson",
+      "path": "./backend/data/processed/rybnik_60km_power_node_points_clipped.geojson",
       "exists": true,
       "readable": true,
       "feature_count": 136391,
@@ -67,7 +79,9 @@
       },
       "empty_geometries": 0,
       "invalid_geometries": 0,
-      "unexpected_geometry_types": [],
+      "unexpected_geometry_types": [
+
+      ],
       "outside_aoi": 0,
       "bbox": {
         "min_lon": 17.7073564,
@@ -76,11 +90,15 @@
         "max_lat": 50.6408633
       },
       "status": "pass",
-      "errors": [],
-      "warnings": []
+      "errors": [
+
+      ],
+      "warnings": [
+
+      ]
     },
     "power_major_lines": {
-      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_major_lines_clipped.geojson",
+      "path": "./backend/data/processed/rybnik_60km_power_major_lines_clipped.geojson",
       "exists": true,
       "readable": true,
       "feature_count": 2787,
@@ -91,7 +109,9 @@
       },
       "empty_geometries": 0,
       "invalid_geometries": 0,
-      "unexpected_geometry_types": [],
+      "unexpected_geometry_types": [
+
+      ],
       "outside_aoi": 0,
       "bbox": {
         "min_lon": 17.716745848742878,
@@ -100,11 +120,15 @@
         "max_lat": 50.64107166831461
       },
       "status": "pass",
-      "errors": [],
-      "warnings": []
+      "errors": [
+
+      ],
+      "warnings": [
+
+      ]
     },
     "power_minor_lines": {
-      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_minor_lines_clipped.geojson",
+      "path": "./backend/data/processed/rybnik_60km_power_minor_lines_clipped.geojson",
       "exists": true,
       "readable": true,
       "feature_count": 11699,
@@ -115,7 +139,9 @@
       },
       "empty_geometries": 0,
       "invalid_geometries": 0,
-      "unexpected_geometry_types": [],
+      "unexpected_geometry_types": [
+
+      ],
       "outside_aoi": 0,
       "bbox": {
         "min_lon": 17.70726479223589,
@@ -124,11 +150,15 @@
         "max_lat": 50.63611494121951
       },
       "status": "pass",
-      "errors": [],
-      "warnings": []
+      "errors": [
+
+      ],
+      "warnings": [
+
+      ]
     },
     "power_cables": {
-      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_cables_clipped.geojson",
+      "path": "./backend/data/processed/rybnik_60km_power_cables_clipped.geojson",
       "exists": true,
       "readable": true,
       "feature_count": 2019,
@@ -138,7 +168,9 @@
       },
       "empty_geometries": 0,
       "invalid_geometries": 0,
-      "unexpected_geometry_types": [],
+      "unexpected_geometry_types": [
+
+      ],
       "outside_aoi": 0,
       "bbox": {
         "min_lon": 17.7537093,
@@ -147,11 +179,15 @@
         "max_lat": 50.63971378227106
       },
       "status": "pass",
-      "errors": [],
-      "warnings": []
+      "errors": [
+
+      ],
+      "warnings": [
+
+      ]
     },
     "power_substations": {
-      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_substations_clipped.geojson",
+      "path": "./backend/data/processed/rybnik_60km_power_substations_clipped.geojson",
       "exists": true,
       "readable": true,
       "feature_count": 4211,
@@ -163,7 +199,9 @@
       },
       "empty_geometries": 0,
       "invalid_geometries": 0,
-      "unexpected_geometry_types": [],
+      "unexpected_geometry_types": [
+
+      ],
       "outside_aoi": 0,
       "bbox": {
         "min_lon": 17.7163692,
@@ -172,11 +210,15 @@
         "max_lat": 50.61818250000001
       },
       "status": "pass",
-      "errors": [],
-      "warnings": []
+      "errors": [
+
+      ],
+      "warnings": [
+
+      ]
     },
     "power_transformers": {
-      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_transformers_clipped.geojson",
+      "path": "./backend/data/processed/rybnik_60km_power_transformers_clipped.geojson",
       "exists": true,
       "readable": true,
       "feature_count": 811,
@@ -187,7 +229,9 @@
       },
       "empty_geometries": 0,
       "invalid_geometries": 0,
-      "unexpected_geometry_types": [],
+      "unexpected_geometry_types": [
+
+      ],
       "outside_aoi": 0,
       "bbox": {
         "min_lon": 17.8270756,
@@ -196,11 +240,15 @@
         "max_lat": 50.6301752
       },
       "status": "pass",
-      "errors": [],
-      "warnings": []
+      "errors": [
+
+      ],
+      "warnings": [
+
+      ]
     },
     "power_plants": {
-      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_plants_clipped.geojson",
+      "path": "./backend/data/processed/rybnik_60km_power_plants_clipped.geojson",
       "exists": true,
       "readable": true,
       "feature_count": 159,
@@ -211,7 +259,9 @@
       },
       "empty_geometries": 0,
       "invalid_geometries": 0,
-      "unexpected_geometry_types": [],
+      "unexpected_geometry_types": [
+
+      ],
       "outside_aoi": 0,
       "bbox": {
         "min_lon": 17.7499863,
@@ -220,11 +270,15 @@
         "max_lat": 50.6021656
       },
       "status": "pass",
-      "errors": [],
-      "warnings": []
+      "errors": [
+
+      ],
+      "warnings": [
+
+      ]
     },
     "power_generators": {
-      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_generators_clipped.geojson",
+      "path": "./backend/data/processed/rybnik_60km_power_generators_clipped.geojson",
       "exists": true,
       "readable": true,
       "feature_count": 11313,
@@ -236,7 +290,9 @@
       },
       "empty_geometries": 0,
       "invalid_geometries": 0,
-      "unexpected_geometry_types": [],
+      "unexpected_geometry_types": [
+
+      ],
       "outside_aoi": 0,
       "bbox": {
         "min_lon": 17.7500191,
@@ -245,11 +301,15 @@
         "max_lat": 50.5508848
       },
       "status": "pass",
-      "errors": [],
-      "warnings": []
+      "errors": [
+
+      ],
+      "warnings": [
+
+      ]
     },
     "power_supports": {
-      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_supports_clipped.geojson",
+      "path": "./backend/data/processed/rybnik_60km_power_supports_clipped.geojson",
       "exists": true,
       "readable": true,
       "feature_count": 117991,
@@ -260,7 +320,9 @@
       },
       "empty_geometries": 0,
       "invalid_geometries": 0,
-      "unexpected_geometry_types": [],
+      "unexpected_geometry_types": [
+
+      ],
       "outside_aoi": 0,
       "bbox": {
         "min_lon": 17.7073564,
@@ -269,11 +331,15 @@
         "max_lat": 50.6408633
       },
       "status": "pass",
-      "errors": [],
-      "warnings": []
+      "errors": [
+
+      ],
+      "warnings": [
+
+      ]
     },
     "power_switchgear": {
-      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_switchgear_clipped.geojson",
+      "path": "./backend/data/processed/rybnik_60km_power_switchgear_clipped.geojson",
       "exists": true,
       "readable": true,
       "feature_count": 1909,
@@ -284,7 +350,9 @@
       },
       "empty_geometries": 0,
       "invalid_geometries": 0,
-      "unexpected_geometry_types": [],
+      "unexpected_geometry_types": [
+
+      ],
       "outside_aoi": 0,
       "bbox": {
         "min_lon": 17.716393,
@@ -293,11 +361,15 @@
         "max_lat": 50.6088952
       },
       "status": "pass",
-      "errors": [],
-      "warnings": []
+      "errors": [
+
+      ],
+      "warnings": [
+
+      ]
     },
     "power_substations_points": {
-      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_substations_points_clipped.geojson",
+      "path": "./backend/data/processed/rybnik_60km_power_substations_points_clipped.geojson",
       "exists": true,
       "readable": true,
       "feature_count": 4209,
@@ -307,7 +379,9 @@
       },
       "empty_geometries": 0,
       "invalid_geometries": 0,
-      "unexpected_geometry_types": [],
+      "unexpected_geometry_types": [
+
+      ],
       "outside_aoi": 0,
       "bbox": {
         "min_lon": 17.716396687416108,
@@ -316,11 +390,15 @@
         "max_lat": 50.61815745
       },
       "status": "pass",
-      "errors": [],
-      "warnings": []
+      "errors": [
+
+      ],
+      "warnings": [
+
+      ]
     },
     "power_transformers_points": {
-      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_transformers_points_clipped.geojson",
+      "path": "./backend/data/processed/rybnik_60km_power_transformers_points_clipped.geojson",
       "exists": true,
       "readable": true,
       "feature_count": 811,
@@ -330,7 +408,9 @@
       },
       "empty_geometries": 0,
       "invalid_geometries": 0,
-      "unexpected_geometry_types": [],
+      "unexpected_geometry_types": [
+
+      ],
       "outside_aoi": 0,
       "bbox": {
         "min_lon": 17.8270756,
@@ -339,11 +419,15 @@
         "max_lat": 50.6301752
       },
       "status": "pass",
-      "errors": [],
-      "warnings": []
+      "errors": [
+
+      ],
+      "warnings": [
+
+      ]
     },
     "power_plants_points": {
-      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_plants_points_clipped.geojson",
+      "path": "./backend/data/processed/rybnik_60km_power_plants_points_clipped.geojson",
       "exists": true,
       "readable": true,
       "feature_count": 158,
@@ -353,7 +437,9 @@
       },
       "empty_geometries": 0,
       "invalid_geometries": 0,
-      "unexpected_geometry_types": [],
+      "unexpected_geometry_types": [
+
+      ],
       "outside_aoi": 0,
       "bbox": {
         "min_lon": 17.750020146287703,
@@ -362,11 +448,15 @@
         "max_lat": 50.6021121
       },
       "status": "pass",
-      "errors": [],
-      "warnings": []
+      "errors": [
+
+      ],
+      "warnings": [
+
+      ]
     },
     "power_generators_points": {
-      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_generators_points_clipped.geojson",
+      "path": "./backend/data/processed/rybnik_60km_power_generators_points_clipped.geojson",
       "exists": true,
       "readable": true,
       "feature_count": 11313,
@@ -376,7 +466,9 @@
       },
       "empty_geometries": 0,
       "invalid_geometries": 0,
-      "unexpected_geometry_types": [],
+      "unexpected_geometry_types": [
+
+      ],
       "outside_aoi": 0,
       "bbox": {
         "min_lon": 17.7500191,
@@ -385,11 +477,15 @@
         "max_lat": 50.5508848
       },
       "status": "pass",
-      "errors": [],
-      "warnings": []
+      "errors": [
+
+      ],
+      "warnings": [
+
+      ]
     },
     "power_supports_points": {
-      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_supports_points_clipped.geojson",
+      "path": "./backend/data/processed/rybnik_60km_power_supports_points_clipped.geojson",
       "exists": true,
       "readable": true,
       "feature_count": 117991,
@@ -399,7 +495,9 @@
       },
       "empty_geometries": 0,
       "invalid_geometries": 0,
-      "unexpected_geometry_types": [],
+      "unexpected_geometry_types": [
+
+      ],
       "outside_aoi": 0,
       "bbox": {
         "min_lon": 17.7073564,
@@ -408,11 +506,15 @@
         "max_lat": 50.6408633
       },
       "status": "pass",
-      "errors": [],
-      "warnings": []
+      "errors": [
+
+      ],
+      "warnings": [
+
+      ]
     },
     "power_switchgear_points": {
-      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_switchgear_points_clipped.geojson",
+      "path": "./backend/data/processed/rybnik_60km_power_switchgear_points_clipped.geojson",
       "exists": true,
       "readable": true,
       "feature_count": 1909,
@@ -422,7 +524,9 @@
       },
       "empty_geometries": 0,
       "invalid_geometries": 0,
-      "unexpected_geometry_types": [],
+      "unexpected_geometry_types": [
+
+      ],
       "outside_aoi": 0,
       "bbox": {
         "min_lon": 17.716393,
@@ -431,11 +535,15 @@
         "max_lat": 50.6088952
       },
       "status": "pass",
-      "errors": [],
-      "warnings": []
+      "errors": [
+
+      ],
+      "warnings": [
+
+      ]
     },
     "power_node_points_display": {
-      "path": "/Users/robert/Documents/Projects/steel-sentinel-v2/backend/data/processed/rybnik_60km_power_node_points_display_clipped.geojson",
+      "path": "./backend/data/processed/rybnik_60km_power_node_points_display_clipped.geojson",
       "exists": true,
       "readable": true,
       "feature_count": 7087,
@@ -445,7 +553,9 @@
       },
       "empty_geometries": 0,
       "invalid_geometries": 0,
-      "unexpected_geometry_types": [],
+      "unexpected_geometry_types": [
+
+      ],
       "outside_aoi": 0,
       "bbox": {
         "min_lon": 17.716393,
@@ -454,8 +564,12 @@
         "max_lat": 50.6301752
       },
       "status": "pass",
-      "errors": [],
-      "warnings": []
+      "errors": [
+
+      ],
+      "warnings": [
+
+      ]
     }
   },
   "domain_quality": {

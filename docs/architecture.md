@@ -2,13 +2,13 @@
 
 ## Decision
 
-Map Data Quality Lab will be developed as a geospatial data provider for Steel Sentinel.
+Map Data Quality Lab will be developed as a geospatial data provider for downstream application.
 
 The selected architecture is:
 
 - Node.js + Express + TypeScript for the provider API.
 - Python for the geospatial extraction and validation worker.
-- GeoJSON as the primary data contract between the provider and Steel Sentinel.
+- GeoJSON as the primary data contract between the provider and downstream application.
 - Cached OSM-derived artifacts as the default read path for fast demos and repeatable results.
 - WMS/KIUT/GESUT only as reference overlays, not analytical vectors.
 
@@ -16,7 +16,7 @@ The selected architecture is:
 
 The provider has two different jobs.
 
-The service/API layer needs to expose stable REST contracts, validate requests, manage cache metadata, return GeoJSON quickly, provide readiness reports and integrate cleanly with Steel Sentinel and React tooling. Node.js, Express and TypeScript are a strong fit for REST services, cache orchestration, TypeScript contracts and frontend integration.
+The service/API layer needs to expose stable REST contracts, validate requests, manage cache metadata, return GeoJSON quickly, provide readiness reports and integrate cleanly with downstream application and React tooling. Node.js, Express and TypeScript are a strong fit for REST services, cache orchestration, TypeScript contracts and frontend integration.
 
 The geospatial processing layer needs to fetch OSM/Overpass data, parse and normalize tags, clip geometries to an AOI, validate geometry and attributes, and write GeoJSON/report artifacts. Python remains a better fit for this layer because OSMnx, GeoPandas, Shapely and PyProj provide mature geospatial processing tools.
 
@@ -30,10 +30,10 @@ GeoJSON and JSON reports are the contract between them.
 
 ## Target Flow
 
-This is the target consumer flow. The provider side is implemented in this repository; loading its export inside Steel Sentinel remains external integration work.
+This is the target consumer flow. The provider side is implemented in this repository; loading its export inside downstream application remains external integration work.
 
 ```text
-Steel Sentinel
+downstream application
   -> GET /api/aoi/{aoi_id}/layers/{domain}
 
 Node/Express provider
@@ -49,20 +49,20 @@ Python geospatial worker
   -> writes GeoJSON, metadata and readiness reports
 
 Node/Express provider
-  -> serves the generated artifacts to Steel Sentinel
+  -> serves the generated artifacts to downstream application
 ```
 
 ## Data Contract
 
-### Steel Sentinel GeoJSON Layer Contract v1
+### downstream application GeoJSON Layer Contract v1
 
-The primary provider output is a GeoJSON `FeatureCollection` with provider-owned metadata. Version 1 is `steel_sentinel_geojson/v1`; consumers integrate with the fields below rather than with raw Overpass or OSM tag conventions.
+The primary provider output is a GeoJSON `FeatureCollection` with provider-owned metadata. Version 1 is `provider_geojson/v1`; consumers integrate with the fields below rather than with raw Overpass or OSM tag conventions.
 
 ```json
 {
   "type": "FeatureCollection",
   "metadata": {
-    "contract_version": "steel_sentinel_geojson/v1",
+    "contract_version": "provider_geojson/v1",
     "aoi_id": "rybnik_60km",
     "domain": "power",
     "layer_id": "power.lines",
@@ -73,7 +73,6 @@ The primary provider output is a GeoJSON `FeatureCollection` with provider-owned
     "readiness": "usable_with_limitations",
     "confidence": "medium",
     "limitations": ["OSM completeness varies by area and asset type."],
-    "usable_for_simulation": true
   },
   "features": []
 }
@@ -90,19 +89,16 @@ Each feature exposes these required provider-owned fields in `properties`:
   "confidence": "medium",
   "missing_fields": ["voltage"],
   "limitations": ["OSM completeness varies by area"],
-  "usable_for_simulation": true
 }
 ```
 
-Required root metadata is `contract_version`, `aoi_id`, `domain`, `layer_id`, `source`, `source_type`, `snapshot_at`, `feature_count`, `readiness`, `confidence`, `limitations` and `usable_for_simulation`. `snapshot_at` is an ISO-8601 timestamp with a timezone. `feature_count` must equal the number of GeoJSON features. `source_type` is one of `analytical_vector`, `manual_seed` or `reference_overlay`; `confidence` is one of `high`, `medium`, `low` or `not_applicable`; and readiness uses the documented provider vocabulary.
 
-Required feature fields are `source`, `source_id`, `domain`, `asset_type`, `confidence`, `missing_fields`, `limitations` and `usable_for_simulation`. `source_id` is a stable provider identifier such as `way/32043840`; `asset_type` is a provider-normalized role such as `line`, not a raw-tag dependency. `missing_fields` is derived feature-level evidence, while limitations and simulation suitability are explicit provider assessments.
 
-`osm_tags` is optional. It preserves useful source values such as `power`, `voltage`, `operator` or an original OSM `source` tag for inspection, but Steel Sentinel must not require it. A representative offline fixture lives at `backend/data/fixtures/rybnik_60km/power/contract-sample.geojson`; it is a contract sample, not the complete cache layout. `MDQ-004` introduces the canonical cache artifacts and metadata/readiness files.
+`osm_tags` is optional. It preserves useful source values such as `power`, `voltage`, `operator` or an original OSM `source` tag for inspection, but downstream application must not require it. A representative offline fixture lives at `backend/data/fixtures/rybnik_60km/power/contract-sample.geojson`; it is a contract sample, not the complete cache layout. `MDQ-004` introduces the canonical cache artifacts and metadata/readiness files.
 
 ### Layer catalog provenance metadata
 
-Every catalog entry makes its source and simulation suitability explicit:
+Every catalog entry makes its source and analytical eligibility explicit:
 
 ```json
 {
@@ -111,11 +107,10 @@ Every catalog entry makes its source and simulation suitability explicit:
   "confidence": "medium",
   "limitations": ["OSM completeness varies by area and asset type."],
   "not_authoritative": false,
-  "usable_for_simulation": true
 }
 ```
 
-`source_type` is one of `analytical_vector`, `manual_seed` or `reference_overlay`. Confidence is a layer-level provider assessment (`high`, `medium`, `low` or `not_applicable`), not a claim of ground truth. `not_authoritative` is `true` for manual seeds and reference overlays. Manual seeds are never simulation inputs, and KIUT/GESUT WMS is catalogued as a `reference_overlay` with no GeoJSON artifact or validation report.
+`source_type` is one of `analytical_vector`, `manual_seed` or `reference_overlay`. Confidence is a layer-level provider assessment (`high`, `medium`, `low` or `not_applicable`), not a claim of ground truth. `not_authoritative` is `true` for manual seeds and reference overlays. Manual seeds are never analytical inputs, and KIUT/GESUT WMS is catalogued as a `reference_overlay` with no GeoJSON artifact or validation report.
 
 ### Validation and readiness semantics
 
@@ -175,7 +170,7 @@ backend/data/cache/{aoi_id}/{domain}/
   readiness.json
 ```
 
-`layer.geojson` is the complete `steel_sentinel_geojson/v1` provider layer. `metadata.json` records the cache-layout and GeoJSON contract versions, AOI, domain, source query, snapshot timestamp, feature count, normalized validation status, confidence and limitations. `readiness.json` records the bounded readiness decision, quality status, highest applicable issue severity, count and evaluation timestamp. The initial committed snapshot is `rybnik_60km/power`, built from the existing OSM-derived power-lines artifact; it is read and validated locally without invoking Overpass extraction. Existing processed artifacts remain available to the FastAPI prototype during this migration.
+`layer.geojson` is the complete `provider_geojson/v1` provider layer. `metadata.json` records the cache-layout and GeoJSON contract versions, AOI, domain, source query, snapshot timestamp, feature count, normalized validation status, confidence and limitations. `readiness.json` records the bounded readiness decision, quality status, highest applicable issue severity, count and evaluation timestamp. The initial committed snapshot is `rybnik_60km/power`, built from the existing OSM-derived power-lines artifact; it is read and validated locally without invoking Overpass extraction. Existing processed artifacts remain available to the FastAPI prototype during this migration.
 
 `MDQ-019` adds an additive `domain-pack-v2/manifest.json` under the same AOI/domain root. `provider_domain_pack/v2` can retain multiple role-named processed or derived vector layers, native vector/raster artifacts, remote-service records, validation/readiness files and ordered source provenance. File artifacts are constrained to the pack root and validated for existence, SHA-256 integrity and GeoJSON feature counts. Public-export selection admits only artifacts whose source provenance is qualified, analytical and distributable under `source_registry/v2`; WMS/WMTS reference imagery and pending or rejected candidates remain in the pack as evidence but are excluded. The committed Rybnik power v2 pack is generated from the v1 snapshot, so existing v1 readers remain compatible while the manifest is the generic v2 read source.
 
@@ -199,7 +194,7 @@ backend/data/cache/{aoi_id}/{domain}/
 
 Every analytical cache record references its registry ID and retains `source_url`, `source_query`, `snapshot_at`, `pipeline_version` and `query_version`. The existing `rybnik_60km/power` cache keeps its v1 provenance shape and resolves it through the v2 OpenStreetMap record. A later domain pack may retain ordered source-provenance records without merging source identities; a public export accepts only sources that are qualified free, analytical, non-rendered and explicitly allowed by their distribution policy.
 
-KIUT/GESUT is an OGC WMS visual reference service. Its rendered images are not provider GeoJSON and must not be converted into analytical vectors or default simulation inputs. The provider does not redistribute WMS imagery; a future redistribution must retain GUGiK/KIUT attribution and verify the current service terms and metadata. The current Node `/sources` and v1 pack responses serialize the three legacy source classes during migration. Generic v2 reads and exports return only source records actually used by public analytical artifacts.
+KIUT/GESUT is an OGC WMS visual reference service. Its rendered images are not provider GeoJSON and must not be converted into analytical vectors or default analytical inputs. The provider does not redistribute WMS imagery; a future redistribution must retain GUGiK/KIUT attribution and verify the current service terms and metadata. The current Node `/sources` and v1 pack responses serialize the three legacy source classes during migration. Generic v2 reads and exports return only source records actually used by public analytical artifacts.
 
 `backend/data/sources/source_strategy.json` is the dated `source_strategy/v1` decision matrix. It maps every planned domain to adopted analytical evidence and reference-only context, or records a visible source gap. It assigns PRG to administrative AOI/boundary work, BDOT10k to bounded topographic classes, KIUT to utility coverage/visual reference, orthophoto to visual reference and NMT/NMPT to later explicitly defined raster-derived context. It does not authorize adapters or convert WMS/WMTS imagery into vectors.
 
@@ -209,11 +204,9 @@ The Node/Express/TypeScript provider now serves typed, read-only local artifacts
 
 `POST /api/aoi/requests` currently supports only `rybnik_60km/power`, whose registered boundary reference uses EPSG:4326. The provider treats a cache as fresh for 24 hours after `snapshot_at`; a missing or stale cache invokes the Python worker fixture path and returns whether the artifact came from cache or refresh.
 
-`GET /api/aoi/:aoiId/exports/steel-sentinel-pack` returns `steel_sentinel_pack/v1`: the selected cached GeoJSON layer, cache metadata, readiness and the complete source registry in one read-only response. The pack preserves the `analytical_vector`, `manual_seed` and `reference_overlay` distinctions for the bounded power compatibility path.
 
 `GET /api/aoi/:aoiId/domain-packs` and `GET /api/aoi/:aoiId/domain-packs/:domain` provide read-only `provider_domain_pack_read/v2` responses from registered manifests. Node validates request and manifest identity, pack-relative paths, source provenance, SHA-256 checksums, feature counts and provider GeoJSON metadata before returning any layer. The response exposes only explicitly public processed, derived or representative-point GeoJSON vectors. Native artifacts, rasters, remote services and reference-only records remain inside the cache as provenance evidence and cannot enter an analytical endpoint.
 
-`GET /api/aoi/:aoiId/exports/steel-sentinel-pack-v2` aggregates those validated public analytical layers into `steel_sentinel_pack/v2`, retaining only the v2 Source Registry records used by the export. It does not invoke a worker or refresh the cache. Refresh writes remain in the bounded request/worker path, separate from all v2 reads and exports.
 
 Implemented Node/Express provider endpoints:
 
@@ -225,10 +218,8 @@ Implemented Node/Express provider endpoints:
 - `GET /api/aoi/:aoiId/sources`
 - `GET /api/aoi/:aoiId/issues`
 - `PATCH /api/aoi/:aoiId/issues/:issueId/review`
-- `GET /api/aoi/:aoiId/exports/steel-sentinel-pack`
 - `GET /api/aoi/:aoiId/domain-packs`
 - `GET /api/aoi/:aoiId/domain-packs/:domain`
-- `GET /api/aoi/:aoiId/exports/steel-sentinel-pack-v2`
 
 The first vertical slice is:
 
@@ -236,10 +227,10 @@ The first vertical slice is:
 AOI: rybnik_60km
 Domain: power
 Output: cached OSM-derived GeoJSON + metadata + readiness report
-Consumer: Steel Sentinel
+Consumer: downstream application
 ```
 
-The current release implements the provider side of this slice: a cache-first Rybnik power request, source/readiness/issue contracts, durable review state, bounded `steel_sentinel_pack/v1` compatibility, manifest-driven v2 reads/exports and a dev-preview whose toggles, counts, popup fields, attribution and limitations are derived from domain-pack responses. The preview is a non-operational provider inspection tool, not a Steel Sentinel client. Consumer-side loading remains a separate repository task.
+The current release implements the provider side of this slice: a cache-first Rybnik power request, source/readiness/issue contracts, durable review state, bounded `provider_pack/v1` compatibility, manifest-driven v2 reads/exports and a dev-preview whose toggles, counts, popup fields, attribution and limitations are derived from domain-pack responses. The preview is a non-operational provider inspection tool, not a downstream application client. Consumer-side loading remains a separate repository task.
 
 ## Repository Plan
 
@@ -276,7 +267,7 @@ backend/data/cache/{aoi_id}/{domain}/readiness.json
 
 - Keep Python as a CLI/worker invoked by Node only when extraction or refresh is needed.
 - Validate registered AOIs/domains and use explicit snapshot-freshness rules.
-- Complete the cache-first request path and Steel Sentinel-compatible export.
+- Complete the cache-first request path and provider-compatible export.
 - Verify the entire fixture-to-export pipeline without live Overpass.
 
 ### Phase 5 - Dev Preview and Issue Review
@@ -284,13 +275,13 @@ backend/data/cache/{aoi_id}/{domain}/readiness.json
 - Align the map preview with provider contracts and source metadata.
 - Persist human review decisions separately from generated issue evidence.
 - Support the issue lifecycle `open -> acknowledged -> resolved | accepted | ignored`.
-- Keep the preview focused on data inspection rather than Steel Sentinel operational behavior.
+- Keep the preview focused on data inspection rather than downstream application operational behavior.
 
 ### Phase 6 - Provider Release
 
 - Run the Python, Node and frontend verification baseline locally and in CI.
 - Publish provider setup, verification and integration documentation based only on implemented behavior.
-- Treat Steel Sentinel consumer integration as external follow-up work after this release.
+- Treat downstream application consumer integration as external follow-up work after this release.
 
 ### Phase 7 - Evidence-Driven Scale Options
 
@@ -301,7 +292,7 @@ backend/data/cache/{aoi_id}/{domain}/readiness.json
 
 ## Non-Goals
 
-- Do not move Steel Sentinel C2, RAG, attack simulation or operator UI into this repo.
+- Do not move downstream application C2, RAG, attack simulation or operator UI into this repo.
 - Do not treat KIUT/GESUT WMS as analytical vector data.
 - Do not rewrite the geospatial worker in Node just to use one language.
 - Do not build vector tiles before the GeoJSON/cache provider contract is stable.

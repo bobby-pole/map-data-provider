@@ -118,7 +118,7 @@ export const issueReviewUpdateSchema = z
 export const cachedMetadataSchema = z
   .object({
     cache_layout_version: z.literal("provider_cache/v1"),
-    geojson_contract_version: z.literal("steel_sentinel_geojson/v1"),
+    geojson_contract_version: z.literal("provider_geojson/v1"),
     aoi_id: providerIdentifierSchema,
     domain: providerIdentifierSchema,
     layer_id: z.string(),
@@ -134,7 +134,7 @@ export const cachedMetadataSchema = z
     quality_status: z.enum(["passed", "warning", "failed", "unknown"]),
     confidence: z.enum(["high", "medium", "low", "not_applicable"]),
     limitations: z.array(z.string()),
-    usable_for_simulation: z.boolean(),
+    eligible_for_analysis: z.boolean(),
     readiness: z.enum(["ready", "usable_with_limitations", "needs_source", "not_usable"]),
     feature_count: z.number().int().nonnegative(),
   })
@@ -157,8 +157,8 @@ export const readinessRecordSchema = z
 export const providerLayerMetadataSchema = z
   .object({
     cache_layout_version: z.literal("provider_cache/v1"),
-    geojson_contract_version: z.literal("steel_sentinel_geojson/v1"),
-    contract_version: z.literal("steel_sentinel_geojson/v1"),
+    geojson_contract_version: z.literal("provider_geojson/v1"),
+    contract_version: z.literal("provider_geojson/v1"),
     aoi_id: providerIdentifierSchema,
     domain: providerIdentifierSchema,
     layer_id: z.string(),
@@ -170,11 +170,11 @@ export const providerLayerMetadataSchema = z
     quality_status: z.enum(["passed", "warning", "failed", "unknown"]),
     confidence: z.enum(["high", "medium", "low", "not_applicable"]),
     limitations: z.array(z.string()),
-    usable_for_simulation: z.boolean(),
+    eligible_for_analysis: z.boolean(),
     readiness: z.enum(["ready", "usable_with_limitations", "needs_source", "not_usable"]),
     feature_count: z.number().int().nonnegative(),
   })
-  .strict();
+  .passthrough();
 
 export const providerLayerResponseSchema = z
   .object({
@@ -198,7 +198,7 @@ export const sourceRegistryV1EntrySchema = z
     role: z.string(),
     access: z.string(),
     not_authoritative: z.boolean(),
-    usable_for_simulation: z.boolean(),
+    eligible_for_analysis: z.boolean(),
     source_url: z.string(),
     attribution: z.string(),
     license: z.string(),
@@ -252,7 +252,7 @@ export const sourceRegistryV2EntrySchema = z.object({
   qualification: sourceQualificationSchema,
   distribution: sourceDistributionSchema,
   not_authoritative: z.boolean(),
-  usable_for_simulation: z.boolean(),
+  eligible_for_analysis: z.boolean(),
   source_url: z.string().min(1),
   attribution: z.string().min(1),
   license: z.string().min(1),
@@ -267,8 +267,8 @@ export const sourceRegistryV2EntrySchema = z.object({
   if (source.usage_role === "analytical" && source.data_kind === "rendered_imagery") {
     context.addIssue({ code: "custom", message: "Rendered imagery cannot be analytical data." });
   }
-  if (source.usage_role !== "analytical" && source.usable_for_simulation) {
-    context.addIssue({ code: "custom", message: "Only analytical sources may be simulation inputs." });
+  if (source.usage_role !== "analytical" && source.eligible_for_analysis) {
+    context.addIssue({ code: "custom", message: "Only analytical sources can be eligible for analysis." });
   }
   if (source.usage_role !== "analytical" && source.distribution.public_export !== "prohibited") {
     context.addIssue({ code: "custom", message: "Reference or review sources cannot enter public analytical export." });
@@ -387,20 +387,6 @@ export const aoiRequestResponseSchema = z.object({
   metadata: cachedMetadataSchema,
 });
 
-export const steelSentinelPackSchema = z.object({
-  contract_version: z.literal("steel_sentinel_pack/v1"),
-  aoi_id: providerIdentifierSchema,
-  domains: z.array(z.literal("power")),
-  layers: z.object({
-    power: z.object({
-      layer: providerLayerResponseSchema,
-      metadata: cachedMetadataSchema,
-      readiness: readinessRecordSchema,
-    }),
-  }),
-  sources: sourceRegistrySchema,
-});
-
 const analyticalDomainPackArtifactSchema = domainPackArtifactSchema
   .extend({
     kind: z.enum(["processed_vector", "derived_vector", "representative_points"]),
@@ -436,15 +422,6 @@ export const domainPackListResponseSchema = z
     response_version: z.literal("provider_domain_pack_list/v2"),
     aoi_id: providerIdentifierSchema,
     domain_packs: z.array(domainPackReadResponseSchema),
-  })
-  .strict();
-
-export const steelSentinelPackV2Schema = z
-  .object({
-    contract_version: z.literal("steel_sentinel_pack/v2"),
-    aoi_id: providerIdentifierSchema,
-    domain_packs: z.array(domainPackReadResponseSchema),
-    sources: z.array(sourceRegistryV2EntrySchema),
   })
   .strict();
 

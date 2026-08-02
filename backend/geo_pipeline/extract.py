@@ -9,6 +9,7 @@ import osmnx as ox
 from shapely.geometry.base import BaseGeometry
 
 from .config import AoiConfig
+from .source_registry import guard_source_access
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +26,10 @@ def configure_osmnx() -> None:
 
 
 def fetch_osm_features(aoi: AoiConfig, tags: dict[str, list[str]]) -> gpd.GeoDataFrame:
+    return guard_source_access("openstreetmap", "acquisition", lambda: _fetch_osm_features(aoi, tags))
+
+
+def _fetch_osm_features(aoi: AoiConfig, tags: dict[str, list[str]]) -> gpd.GeoDataFrame:
     logger.info(
         "Fetching OSM features for %s around %.6f, %.6f, radius=%sm, tags=%s",
         aoi.name,

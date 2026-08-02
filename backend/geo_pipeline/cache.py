@@ -17,7 +17,7 @@ from geo_pipeline.contracts import (
 )
 from geo_pipeline.quality_rules import highest_issue_severity, triggered_issues
 from geo_pipeline.readiness import derive_readiness
-from geo_pipeline.source_registry import validate_analytical_cache_provenance
+from geo_pipeline.source_registry import guard_source_access, validate_analytical_cache_provenance
 
 CACHE_LAYOUT_VERSION = "provider_cache/v1"
 POWER_LINES_SOURCE = Path(__file__).resolve().parents[1] / "data/processed/rybnik_60km_power_lines_clipped.geojson"
@@ -52,8 +52,8 @@ def cache_paths(aoi_id: str, domain: str, *, root: Path = CACHE_DIR) -> CachePat
 
 def build_rybnik_power_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
     """Build the committed Rybnik power-lines cache from local artifacts only."""
-    source = _read_json(POWER_LINES_SOURCE)
-    validation_report = _read_json(POWER_VALIDATION_REPORT)
+    source = guard_source_access("openstreetmap", "local_import", lambda: _read_json(POWER_LINES_SOURCE))
+    validation_report = guard_source_access("openstreetmap", "local_import", lambda: _read_json(POWER_VALIDATION_REPORT))
     quality_status = _normalize_validation_status(validation_report.get("status"))
     metadata = {
         "cache_layout_version": CACHE_LAYOUT_VERSION,

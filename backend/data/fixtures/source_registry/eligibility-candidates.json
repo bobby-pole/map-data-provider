@@ -1,0 +1,62 @@
+[
+  {
+    "id": "free_analytical_vector",
+    "qualification": "qualified_free",
+    "access_method": "public_download",
+    "usage_role": "analytical",
+    "eligible_for_analysis": true,
+    "data_kind": "vector",
+    "distribution": {"public_export": "allowed", "reason": "Open licence with attribution."},
+    "not_authoritative": false
+  },
+  {
+    "id": "free_registration_vector",
+    "qualification": "qualified_free",
+    "access_method": "free_registration",
+    "usage_role": "analytical",
+    "eligible_for_analysis": true,
+    "data_kind": "vector",
+    "distribution": {"public_export": "prohibited", "reason": "No-cost registration allows access but not redistribution."},
+    "not_authoritative": false
+  },
+  {
+    "id": "free_reference_wms",
+    "qualification": "qualified_free",
+    "access_method": "public_service",
+    "usage_role": "reference",
+    "eligible_for_analysis": false,
+    "data_kind": "rendered_imagery",
+    "distribution": {"public_export": "prohibited", "reason": "Reference imagery is not an analytical export."},
+    "not_authoritative": true
+  },
+  {
+    "id": "paid_source",
+    "qualification": "rejected",
+    "access_method": "paid",
+    "usage_role": "analytical",
+    "eligible_for_analysis": true,
+    "data_kind": "vector",
+    "distribution": {"public_export": "prohibited", "reason": "Paid source is outside the release policy."},
+    "not_authoritative": false
+  },
+  {
+    "id": "agreement_only_source",
+    "qualification": "rejected",
+    "access_method": "agreement_only",
+    "usage_role": "analytical",
+    "eligible_for_analysis": true,
+    "data_kind": "vector",
+    "distribution": {"public_export": "prohibited", "reason": "Agreement-only source is outside the release policy."},
+    "not_authoritative": false
+  },
+  {
+    "id": "legally_unclear_source",
+    "qualification": "pending_qualification",
+    "access_method": "public_download",
+    "usage_role": "analytical",
+    "eligible_for_analysis": true,
+    "data_kind": "vector",
+    "distribution": {"public_export": "prohibited", "reason": "Terms have not been qualified."},
+    "not_authoritative": false
+  }
+]

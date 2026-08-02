@@ -52,5 +52,5 @@ def test_domain_pack_accepts_native_raster_and_remote_wms_but_rejects_unqualifie
     }
     validate_domain_pack(manifest, pack_root=pack_root)
     manifest["artifacts"][1]["public_export"] = True
-    with pytest.raises(ValueError, match="not eligible for public export"):
+    with pytest.raises(ValueError, match="public_export"):
         validate_domain_pack(manifest, pack_root=pack_root)

@@ -49,7 +49,7 @@ export default function App() {
           />
           <section className="inspectorSection">
             <div className="sectionHeading"><h2>KIUT reference overlays</h2><span>{visibleReferences.length}</span></div>
-            <p className="muted">Reference-only WMS; enabled from zoom 19. It is not analytical GeoJSON.</p>
+            <p className="muted">Reference-only WMS; selection moves the map to zoom 19 and renders KIUT above orthophoto. It is not analytical GeoJSON.</p>
             <ul className="layerList">{kiutReferenceLayers.map((reference) => <li key={reference.id}><label className="layerToggle"><input type="checkbox" checked={enabledReferences[reference.id] ?? false} onChange={(event) => setEnabledReferences((current) => ({ ...current, [reference.id]: event.target.checked }))} /><span><strong>{reference.label}</strong><small>Possible coverage only; local completeness is not guaranteed.</small></span></label></li>)}</ul>
           </section>
           <section className="inspectorSection">

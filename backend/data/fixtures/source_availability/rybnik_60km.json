@@ -1,0 +1,9 @@
+{"report_version":"provider_source_availability/v1","aoi_id":"rybnik_60km","evidence_timestamp":"2026-08-02T00:00:00Z","sources":[
+{"source_id":"openstreetmap","availability":"available","aoi_coverage":"covered","feature_state":"empty","evidence_timestamp":"2026-08-02T00:00:00Z","fresh_after_days":7,"evidence":"offline empty response fixture"},
+{"source_id":"manual_power_seed","availability":"not_eligible","aoi_coverage":"not_applicable","feature_state":"not_applicable","evidence_timestamp":"2026-08-02T00:00:00Z","fresh_after_days":30,"evidence":"local review input"},
+{"source_id":"prg_wfs","availability":"unavailable","aoi_coverage":"not_applicable","feature_state":"not_applicable","evidence_timestamp":"2026-08-02T00:00:00Z","fresh_after_days":1,"evidence":"fixture service unavailable"},
+{"source_id":"bdot10k","availability":"available","aoi_coverage":"uncovered","feature_state":"not_applicable","evidence_timestamp":"2026-07-01T00:00:00Z","fresh_after_days":7,"evidence":"fixture AOI outside selected package"},
+{"source_id":"kiut_gesut_wms","availability":"reference_only","aoi_coverage":"covered","feature_state":"not_applicable","evidence_timestamp":"2026-08-02T00:00:00Z","fresh_after_days":1,"evidence":"capabilities fixture"},
+{"source_id":"geoportal_orthophoto","availability":"reference_only","aoi_coverage":"covered","feature_state":"not_applicable","evidence_timestamp":"2026-08-02T00:00:00Z","fresh_after_days":7,"evidence":"capabilities fixture"},
+{"source_id":"nmt_nmpt","availability":"available","aoi_coverage":"covered","feature_state":"available","evidence_timestamp":"2026-08-02T00:00:00Z","fresh_after_days":30,"evidence":"ASCII Grid fixture"}
+]}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { DomainPack, DomainPackListResponse, IssueReviewStatus, ProviderIssue } from "../types/api";
+import type { DomainPack, DomainPackListResponse, IssueReviewStatus, ProviderIssue, SourceAvailabilityReport } from "../types/api";
 
 async function fetchJson<T>(path: string): Promise<T> {
   const response = await fetch(path);
@@ -12,6 +12,7 @@ const defaultPreviewAoiId = import.meta.env.VITE_PROVIDER_PREVIEW_AOI ?? "rybnik
 export function useProviderPreview(aoiId = defaultPreviewAoiId) {
   const [domainPacks, setDomainPacks] = useState<DomainPack[]>([]);
   const [issues, setIssues] = useState<ProviderIssue[]>([]);
+  const [sourceAvailability, setSourceAvailability] = useState<SourceAvailabilityReport | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -19,11 +20,13 @@ export function useProviderPreview(aoiId = defaultPreviewAoiId) {
     void Promise.all([
       fetchJson<DomainPackListResponse>(`/api/aoi/${encodeURIComponent(aoiId)}/domain-packs`),
       fetchJson<{ aoi_id: string; issues: ProviderIssue[] }>(`/api/aoi/${encodeURIComponent(aoiId)}/issues`),
+      fetchJson<SourceAvailabilityReport>(`/api/aoi/${encodeURIComponent(aoiId)}/source-availability`),
     ])
-      .then(([domainPackData, issueData]) => {
+      .then(([domainPackData, issueData, availabilityData]) => {
         if (cancelled) return;
         setDomainPacks(domainPackData.domain_packs);
         setIssues(issueData.issues);
+        setSourceAvailability(availabilityData);
       })
       .catch((reason: unknown) => {
         if (!cancelled) setError(reason instanceof Error ? reason.message : String(reason));
@@ -48,5 +51,5 @@ export function useProviderPreview(aoiId = defaultPreviewAoiId) {
     }
   }
 
-  return { aoiId, domainPacks, issues, updateReview, error };
+  return { aoiId, domainPacks, issues, sourceAvailability, updateReview, error };
 }

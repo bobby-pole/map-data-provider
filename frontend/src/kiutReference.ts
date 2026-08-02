@@ -11,3 +11,4 @@ export const kiutReferenceLayers = [
 
 export type KiutReferenceLayer = (typeof kiutReferenceLayers)[number];
 export const KIUT_MIN_ZOOM = 19; // At the preview latitude this is finer than the published 1:1000 maximum denominator.
+export const KIUT_MAX_ZOOM = 20;

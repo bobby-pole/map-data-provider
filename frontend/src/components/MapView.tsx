@@ -4,7 +4,7 @@ import "leaflet/dist/leaflet.css";
 import { popupDetails, type PreviewLayer } from "../previewCatalog";
 import type { ProviderFeature } from "../types/api";
 import type { SelectedProviderFeature } from "../inspection";
-import { KIUT_MIN_ZOOM, KIUT_WMS_URL, type KiutReferenceLayer } from "../kiutReference";
+import { KIUT_MAX_ZOOM, KIUT_MIN_ZOOM, KIUT_WMS_URL, type KiutReferenceLayer } from "../kiutReference";
 import { ORTHOPHOTO_WMS_URL, orthophotoReference } from "../orthophotoReference";
 
 function escapeHtml(value: string): string { return value.replace(/[&<>'"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[character] ?? character); }
@@ -24,7 +24,11 @@ export function MapView({ layers, references, orthophotoEnabled, onSelectFeature
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
     const map = L.map(containerRef.current).setView([50.102174, 18.546285], 10); mapRef.current = map;
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution: "© OpenStreetMap contributors", maxZoom: 19 }).addTo(map);
+    map.createPane("orthophotoReferencePane").style.zIndex = "250";
+    map.createPane("kiutReferencePane").style.zIndex = "350";
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "© OpenStreetMap contributors", maxZoom: KIUT_MAX_ZOOM, maxNativeZoom: 19,
+    }).addTo(map);
     return () => { map.remove(); mapRef.current = null; };
   }, []);
   useEffect(() => {
@@ -49,10 +53,12 @@ export function MapView({ layers, references, orthophotoEnabled, onSelectFeature
   useEffect(() => {
     const map = mapRef.current; if (!map) return;
     referenceLayerRef.current?.remove();
+    if (references.length && map.getZoom() < KIUT_MIN_ZOOM) map.setZoom(KIUT_MIN_ZOOM);
     const group = L.layerGroup().addTo(map);
     references.forEach((reference) => L.tileLayer.wms(KIUT_WMS_URL, {
       layers: reference.wmsLayer, styles: "default", format: "image/png", transparent: true,
-      version: "1.3.0", attribution: "GUGiK, KIUT/GESUT WMS", minZoom: KIUT_MIN_ZOOM,
+      version: "1.3.0", attribution: "GUGiK, KIUT/GESUT WMS", pane: "kiutReferencePane",
+      minZoom: KIUT_MIN_ZOOM, maxZoom: KIUT_MAX_ZOOM,
     }).addTo(group));
     referenceLayerRef.current = group;
     return () => { group.remove(); };
@@ -63,7 +69,7 @@ export function MapView({ layers, references, orthophotoEnabled, onSelectFeature
     if (!orthophotoEnabled) return;
     const layer = L.tileLayer.wms(ORTHOPHOTO_WMS_URL, {
       layers: orthophotoReference.wmsLayer, styles: "", format: "image/jpeg", transparent: false,
-      version: "1.3.0", attribution: orthophotoReference.attribution, zIndex: 1, maxZoom: 20,
+      version: "1.3.0", attribution: orthophotoReference.attribution, pane: "orthophotoReferencePane", maxZoom: 20,
     }).addTo(map);
     orthophotoLayerRef.current = layer;
     return () => { layer.remove(); };

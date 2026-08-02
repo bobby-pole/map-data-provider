@@ -126,6 +126,8 @@ def _validate_artifact(artifact: Any, *, pack_root: Path, registry: dict[str, An
     artifact_ids.add(artifact["id"])
     if artifact["kind"] not in ARTIFACT_KINDS:
         raise ValueError("Unsupported domain-pack artifact kind")
+    if artifact["kind"] == "native_raster" and artifact["public_export"] is True:
+        raise ValueError("Native raster artifacts cannot be publicly exported through vector-only paths")
     validate_ordered_provenance(artifact["source_provenance"], registry, public_export=bool(artifact["public_export"]))
     if public_export and artifact["public_export"] is not True:
         return

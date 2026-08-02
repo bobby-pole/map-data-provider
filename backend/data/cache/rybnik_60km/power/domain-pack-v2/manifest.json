@@ -6,6 +6,10 @@
     {
       "source_id": "openstreetmap",
       "contribution_role": "primary"
+    },
+    {
+      "source_id": "kiut_gesut_wms",
+      "contribution_role": "validation_reference"
     }
   ],
   "artifacts": [
@@ -25,10 +29,27 @@
       "public_export": true
     },
     {
+      "id": "power.assets",
+      "kind": "processed_vector",
+      "format": "geojson",
+      "path": "layers/power.assets.geojson",
+      "sha256": "060da42f0d6ab815c0501078c9197df32ccff3f19ce7a78f64fa1b4ad722f208",
+      "feature_count": 7087,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
       "id": "power.representative_points",
       "kind": "representative_points",
       "format": "geojson",
-      "not_applicable_reason": "Representative points are deferred until multi-layer power classification.",
+      "path": "layers/power.representative_points.geojson",
+      "sha256": "e3445dee113150cc5cd3fadd66179230bb2256c34c9bbbe4935a9d525f99bd49",
+      "feature_count": 16505,
       "source_provenance": [
         {
           "source_id": "openstreetmap",
@@ -38,15 +59,27 @@
       "public_export": false
     },
     {
-      "id": "power.source_metadata",
+      "id": "power.osm_source_evidence",
       "kind": "native_vector",
       "format": "json",
-      "path": "native/metadata.json",
-      "sha256": "efa690c20861e03475caf5b9d9a0929f971ba7a15a7e52ecc28c4605ebbaed94",
+      "path": "native/osm-source-evidence.json",
+      "sha256": "2e7e3d3a689a4eacdc51f5a11defe3cbe0ad98ec977e55bcd3c0d58bd3ead118",
       "source_provenance": [
         {
           "source_id": "openstreetmap",
           "contribution_role": "primary"
+        }
+      ],
+      "public_export": false
+    },
+    {
+      "id": "power.kiut_reference",
+      "kind": "remote_service",
+      "format": "wms",
+      "source_provenance": [
+        {
+          "source_id": "kiut_gesut_wms",
+          "contribution_role": "validation_reference"
         }
       ],
       "public_export": false

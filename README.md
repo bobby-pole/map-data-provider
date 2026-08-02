@@ -65,7 +65,7 @@ Follow the [3–5 minute provider demo](./docs/demo.md) for exact commands and r
 Scenario: a provider-compatible client requests a power infrastructure layer
 
 A compatible client requests the `power` domain for the Rybnik AOI.
-Map Data Quality Lab returns one cached, normalized OSM-derived power layer with its metadata and readiness record.
+Map Data Quality Lab returns cached, normalized OSM-derived power-line and power-asset layers with their metadata and readiness record. The power domain pack retains private source evidence and representative points, while KIUT/GESUT remains a separate reference-only WMS overlay.
 The provider exposes source attribution, feature count, validation status, confidence and known limitations.
 Its source registry keeps manual inputs and KIUT/GESUT WMS references distinct from analytical vectors.
 The returned layer pack is ready for a provider-compatible client; actual downstream application consumption remains external integration work.

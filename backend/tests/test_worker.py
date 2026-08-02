@@ -23,8 +23,17 @@ def test_fixture_worker_creates_complete_cache_without_network(tmp_path: Path) -
     assert result["feature_count"] == 16_505
     assert read_cached_layer(cache_paths("rybnik_60km", "power", root=tmp_path))["readiness"]["readiness"] == "usable_with_limitations"
     manifest = read_domain_pack("rybnik_60km", "power", root=tmp_path)
-    assert manifest["source_provenance"] == [{"source_id": "openstreetmap", "contribution_role": "primary"}]
-    assert manifest["artifacts"][2]["id"] == "power.source_metadata"
+    assert manifest["source_provenance"] == [
+        {"source_id": "openstreetmap", "contribution_role": "primary"},
+        {"source_id": "kiut_gesut_wms", "contribution_role": "validation_reference"},
+    ]
+    assert [artifact["id"] for artifact in manifest["artifacts"]] == [
+        "power.lines",
+        "power.assets",
+        "power.representative_points",
+        "power.osm_source_evidence",
+        "power.kiut_reference",
+    ]
 
 
 def test_worker_rejects_unsupported_target_without_creating_cache(tmp_path: Path) -> None:

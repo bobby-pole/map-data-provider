@@ -33,7 +33,7 @@ def test_approved_prg_reference_keeps_fixture_provenance_without_live_access() -
 
     assert resolved.input_type == "administrative_reference"
     assert resolved.source_crs == "EPSG:4326"
-    assert resolved.boundary_provenance["source_registry_id"] == "prg"
+    assert resolved.boundary_provenance["source_registry_id"] == "prg_wfs"
     assert resolved.boundary_provenance["fixture"] == "backend/data/fixtures/aoi/prg_gmina_rybnik.geojson"
     assert resolved.geometry["type"] == "Polygon"
 

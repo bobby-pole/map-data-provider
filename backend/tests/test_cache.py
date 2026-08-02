@@ -30,7 +30,7 @@ def _write_valid_cache(root: Path) -> Path:
             "readiness": "ready",
             "confidence": "medium",
             "limitations": ["Fixture only."],
-            "usable_for_simulation": True,
+            "eligible_for_analysis": True,
         },
     )
     metadata = {
@@ -52,7 +52,7 @@ def _write_valid_cache(root: Path) -> Path:
         "quality_status": "passed",
         "confidence": "medium",
         "limitations": ["Fixture only."],
-        "usable_for_simulation": True,
+        "eligible_for_analysis": True,
         "readiness": "ready",
     }
     readiness = {

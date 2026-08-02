@@ -8,7 +8,6 @@
       "role": "OSM-derived infrastructure vectors used as provider analytical evidence.",
       "access": "public_query",
       "not_authoritative": false,
-      "usable_for_simulation": true,
       "source_url": "https://overpass-api.de/api/interpreter",
       "attribution": "© OpenStreetMap contributors",
       "license": "ODbL-1.0",
@@ -29,7 +28,8 @@
           "pipeline_version",
           "query_version"
         ]
-      }
+      },
+      "eligible_for_analysis": true
     },
     {
       "id": "manual_power_seed",
@@ -38,7 +38,6 @@
       "role": "Local non-authoritative review input.",
       "access": "local_review_input",
       "not_authoritative": true,
-      "usable_for_simulation": false,
       "source_url": "backend/data/manual/rybnik_60km_power_seed_nodes.geojson",
       "attribution": "Map Data Quality Lab manual seed input",
       "license": "Project-maintained demo input",
@@ -49,7 +48,8 @@
       ],
       "limitations": [
         "Not a public infrastructure registry."
-      ]
+      ],
+      "eligible_for_analysis": false
     },
     {
       "id": "kiut_gesut_wms",
@@ -58,7 +58,6 @@
       "role": "Remote visual reference overlay.",
       "access": "remote_wms_reference",
       "not_authoritative": true,
-      "usable_for_simulation": false,
       "source_url": "https://integracja.gugik.gov.pl/cgi-bin/KrajowaIntegracjaUzbrojeniaTerenu",
       "attribution": "GUGiK, KIUT/GESUT WMS",
       "license": "Verify current terms.",
@@ -70,7 +69,8 @@
       "limitations": [
         "Rendered imagery is not vector data."
       ],
-      "service_type": "OGC WMS"
+      "service_type": "OGC WMS",
+      "eligible_for_analysis": false
     }
   ]
 }

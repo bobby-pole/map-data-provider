@@ -23,7 +23,6 @@
         "reason": "ODbL attribution and obligations remain with distributed analytical output."
       },
       "not_authoritative": false,
-      "usable_for_simulation": true,
       "source_url": "https://overpass-api.de/api/interpreter",
       "attribution": "© OpenStreetMap contributors",
       "license": "ODbL-1.0",
@@ -36,7 +35,8 @@
           "pipeline_version",
           "query_version"
         ]
-      }
+      },
+      "eligible_for_analysis": true
     },
     {
       "license_url": null,
@@ -59,10 +59,10 @@
         "reason": "Local demo review input is not an authoritative analytical source."
       },
       "not_authoritative": true,
-      "usable_for_simulation": false,
       "source_url": "backend/data/manual/rybnik_60km_power_seed_nodes.geojson",
       "attribution": "Map Data Quality Lab manual seed input",
-      "license": "Project-maintained demo input"
+      "license": "Project-maintained demo input",
+      "eligible_for_analysis": false
     },
     {
       "license_url": null,
@@ -85,10 +85,10 @@
         "reason": "MDQ-021 must verify current endpoint, coverage and redistribution terms before acquisition or export."
       },
       "not_authoritative": false,
-      "usable_for_simulation": false,
       "source_url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
       "attribution": "Główny Urząd Geodezji i Kartografii (GUGiK), PRG",
-      "license": "Pending source qualification"
+      "license": "Pending source qualification",
+      "eligible_for_analysis": true
     },
     {
       "license_url": null,
@@ -111,10 +111,10 @@
         "reason": "MDQ-021 must verify current class packages and redistribution terms before acquisition or export."
       },
       "not_authoritative": false,
-      "usable_for_simulation": false,
       "source_url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT/WFS/PobieranieBDOT10k",
       "attribution": "Główny Urząd Geodezji i Kartografii (GUGiK), BDOT10k",
-      "license": "Pending source qualification"
+      "license": "Pending source qualification",
+      "eligible_for_analysis": true
     },
     {
       "license_url": null,
@@ -124,7 +124,7 @@
       ],
       "limitations": [
         "WMS responses are rendered raster/reference imagery, not provider analytical vector geometry.",
-        "Do not convert WMS imagery to GeoJSON or use it as simulation input by default."
+        "Do not convert WMS imagery to GeoJSON or use it as analytical input by default."
       ],
       "id": "kiut_gesut_wms",
       "name": "Krajowa Integracja Uzbrojenia Terenu (KIUT/GESUT) WMS",
@@ -139,10 +139,10 @@
         "reason": "invalid test fixture"
       },
       "not_authoritative": true,
-      "usable_for_simulation": true,
       "source_url": "https://integracja.gugik.gov.pl/cgi-bin/KrajowaIntegracjaUzbrojeniaTerenu",
       "attribution": "Źródło: Główny Urząd Geodezji i Kartografii (GUGiK), KIUT/GESUT WMS",
-      "license": "Verify current GUGiK service terms and metadata before redistributing rendered imagery."
+      "license": "Verify current GUGiK service terms and metadata before redistributing rendered imagery.",
+      "eligible_for_analysis": true
     },
     {
       "license_url": null,
@@ -165,10 +165,10 @@
         "reason": "MDQ-021 must verify imagery service metadata and redistribution terms before any use."
       },
       "not_authoritative": true,
-      "usable_for_simulation": false,
       "source_url": "https://mapy.geoportal.gov.pl",
       "attribution": "Główny Urząd Geodezji i Kartografii (GUGiK), orthophoto",
-      "license": "Pending source qualification"
+      "license": "Pending source qualification",
+      "eligible_for_analysis": false
     },
     {
       "license_url": null,
@@ -191,10 +191,10 @@
         "reason": "MDQ-021 must qualify source access and redistribution before raster acquisition or export."
       },
       "not_authoritative": false,
-      "usable_for_simulation": false,
       "source_url": "https://www.geoportal.gov.pl/dane/numeryczny-model-terenu",
       "attribution": "Główny Urząd Geodezji i Kartografii (GUGiK), NMT/NMPT",
-      "license": "Pending source qualification"
+      "license": "Pending source qualification",
+      "eligible_for_analysis": true
     }
   ]
 }

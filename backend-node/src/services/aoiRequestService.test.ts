@@ -4,7 +4,7 @@ import { CACHE_FRESHNESS_MS, isFresh, requestAoi } from "./aoiRequestService.js"
 import type { CachedMetadata } from "../types/provider.js";
 
 const metadata = (snapshot_at: string): CachedMetadata => ({
-  cache_layout_version: "provider_cache/v1", geojson_contract_version: "steel_sentinel_geojson/v1", aoi_id: "rybnik_60km", domain: "power", layer_id: "power.lines", source: "OpenStreetMap", source_type: "analytical_vector", source_registry_id: "openstreetmap", source_url: "https://overpass-api.de/api/interpreter", source_query: "fixture", snapshot_at, pipeline_version: "v1", query_version: "v1", validation_status_raw: "pass", quality_status: "passed", confidence: "medium", limitations: [], usable_for_simulation: true, readiness: "ready", feature_count: 1,
+  cache_layout_version: "provider_cache/v1", geojson_contract_version: "provider_geojson/v1", aoi_id: "rybnik_60km", domain: "power", layer_id: "power.lines", source: "OpenStreetMap", source_type: "analytical_vector", source_registry_id: "openstreetmap", source_url: "https://overpass-api.de/api/interpreter", source_query: "fixture", snapshot_at, pipeline_version: "v1", query_version: "v1", validation_status_raw: "pass", quality_status: "passed", confidence: "medium", limitations: [], eligible_for_analysis: true, readiness: "ready", feature_count: 1,
 });
 
 describe("AOI request orchestration", () => {

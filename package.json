@@ -1,0 +1,14 @@
+{
+  "name": "map-data-quality-lab",
+  "private": true,
+  "packageManager": "pnpm@11.0.9",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  },
+  "scripts": {
+    "verify:node": "pnpm --dir backend-node run build && pnpm --dir backend-node test && pnpm --dir backend-node run lint",
+    "verify:frontend": "pnpm --dir frontend test && pnpm --dir frontend run build && pnpm --dir frontend run lint"
+  }
+}

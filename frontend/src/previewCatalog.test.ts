@@ -14,7 +14,7 @@ const fixturePack: DomainPack = {
     artifact: { id: "water.main", kind: "processed_vector", format: "geojson", feature_count: 1, public_export: true, source_provenance: [{ source_id: "openstreetmap", contribution_role: "primary" }] },
     layer: {
       type: "FeatureCollection",
-      metadata: { aoi_id: "fixture_aoi", domain: "water", layer_id: "water.main", source: "Fixture source", source_type: "analytical_vector", confidence: "medium", limitations: ["Pack limitation."], readiness: "usable_with_limitations", feature_count: 1, snapshot_at: "2026-08-01T00:00:00Z", source_query: "fixture query", usable_for_simulation: false },
+      metadata: { aoi_id: "fixture_aoi", domain: "water", layer_id: "water.main", source: "Fixture source", source_type: "analytical_vector", confidence: "medium", limitations: ["Pack limitation."], eligible_for_analysis: true, readiness: "usable_with_limitations", feature_count: 1, snapshot_at: "2026-08-01T00:00:00Z", source_query: "fixture query" },
       features: [{ type: "Feature", properties: { category: "water main", confidence: "high", limitations: ["Feature limitation."] }, geometry: { type: "Point", coordinates: [18.5, 50.1] } }],
     },
   }],

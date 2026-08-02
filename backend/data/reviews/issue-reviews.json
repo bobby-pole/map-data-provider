@@ -1,4 +1,16 @@
 {
   "review_store_version": "provider_issue_reviews/v1",
-  "reviews": []
+  "reviews": [
+    {
+      "aoi_id": "rybnik_60km",
+      "issue_id": "DQ-MANUAL-SEEDS-NON-AUTHORITATIVE",
+      "rule_id": "manual.non_authoritative",
+      "rule_version": "1.0",
+      "layer_id": "manual.power.seeds",
+      "status": "accepted",
+      "note": null,
+      "created_at": "2026-08-02T11:56:44.329Z",
+      "updated_at": "2026-08-02T11:56:44.329Z"
+    }
+  ]
 }

@@ -63,6 +63,7 @@ export type DomainPackListResponse = {
   aoi_id: string;
   domain_packs: DomainPack[];
 };
+export type SourceAvailabilityReport = { report_version: "provider_source_availability/v1"; aoi_id: string; evidence_timestamp: string; sources: Array<{ source_id: string; availability: string; aoi_coverage: string; feature_state: string; freshness: string; evidence: string; actionable_gap: boolean }> };
 
 export type IssueReviewStatus = "open" | "acknowledged" | "resolved" | "accepted" | "ignored";
 

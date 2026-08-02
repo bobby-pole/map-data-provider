@@ -19,10 +19,22 @@ def _legacy_power(root: Path) -> None:
 def test_power_domain_pack_v2_preserves_v1_cache_compatibility(tmp_path: Path) -> None:
     _legacy_power(tmp_path)
     pack = build_rybnik_power_domain_pack(root=tmp_path)
+    artifacts = {artifact["id"]: artifact for artifact in pack["artifacts"]}
+    pack_root = tmp_path / "rybnik_60km" / "power" / "domain-pack-v2"
+    representative_points = json.loads((pack_root / artifacts["power.representative_points"]["path"]).read_text())
 
     assert pack["domain_pack_version"] == "provider_domain_pack/v2"
-    assert pack["artifacts"][0]["id"] == "power.lines"
-    assert read_domain_pack("rybnik_60km", "power", root=tmp_path, public_export=True)["artifacts"] == [pack["artifacts"][0]]
+    assert pack["source_provenance"] == [
+        {"source_id": "openstreetmap", "contribution_role": "primary"},
+        {"source_id": "kiut_gesut_wms", "contribution_role": "validation_reference"},
+    ]
+    assert {"power.lines", "power.assets", "power.representative_points", "power.osm_source_evidence", "power.kiut_reference"} == set(artifacts)
+    assert artifacts["power.kiut_reference"]["public_export"] is False and "path" not in artifacts["power.kiut_reference"]
+    assert artifacts["power.osm_source_evidence"]["format"] == "json"
+    assert representative_points["features"][0]["properties"]["source_id"] == "way/32043840"
+    assert representative_points["features"][0]["properties"]["source_geometry_type"] == "LineString"
+    public = read_domain_pack("rybnik_60km", "power", root=tmp_path, public_export=True)["artifacts"]
+    assert [artifact["id"] for artifact in public] == ["power.lines", "power.assets"]
 
 
 def test_domain_pack_rejects_escape_checksum_and_count_mismatch(tmp_path: Path) -> None:

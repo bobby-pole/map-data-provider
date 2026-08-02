@@ -7,17 +7,23 @@ import json
 import os
 import shutil
 import uuid
+from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
+from shapely.geometry import mapping, shape
+
 from geo_pipeline.aoi import validate_cache_key
 from geo_pipeline.cache import cache_paths, read_cached_layer
-from geo_pipeline.source_registry import load_source_registry, validate_ordered_provenance
+from geo_pipeline.contracts import normalize_analytical_vector_layer, validate_provider_geojson
+from geo_pipeline.source_registry import guard_source_access, load_source_registry, validate_ordered_provenance
 
 DOMAIN_PACK_VERSION = "provider_domain_pack/v2"
 PACK_DIRNAME = "domain-pack-v2"
 ARTIFACT_KINDS = {"native_vector", "native_raster", "remote_service", "processed_vector", "derived_vector", "representative_points"}
 FILE_KINDS = {"native_vector", "native_raster", "processed_vector", "derived_vector", "representative_points"}
+POWER_ASSETS_SOURCE = Path(__file__).resolve().parents[1] / "data/processed/rybnik_60km_power_node_points_display_clipped.geojson"
+POWER_ASSETS_QUERY = "OSMnx power and utility-pole point features from the committed Rybnik 60 km AOI snapshot."
 
 
 def domain_pack_root(aoi_id: str, domain: str, *, root: Path) -> Path:
@@ -91,30 +97,82 @@ def write_domain_pack(aoi_id: str, domain: str, *, root: Path, manifest: dict[st
 
 def build_rybnik_power_domain_pack(*, root: Path) -> dict[str, Any]:
     legacy = read_cached_layer(cache_paths("rybnik_60km", "power", root=root))
-    pack_root = domain_pack_root("rybnik_60km", "power", root=root)
     layer_bytes = json.dumps(legacy["layer"], ensure_ascii=False, indent=2).encode()
     metadata_bytes = json.dumps(legacy["metadata"], ensure_ascii=False, indent=2).encode()
     readiness_bytes = json.dumps(legacy["readiness"], ensure_ascii=False, indent=2).encode()
-    source_provenance = [{"source_id": "openstreetmap", "contribution_role": "primary"}]
+    assets_source = guard_source_access("openstreetmap", "local_import", lambda: _read_json(POWER_ASSETS_SOURCE))
+    assets = normalize_analytical_vector_layer(
+        assets_source,
+        metadata={**legacy["metadata"], "layer_id": "power.assets", "source_query": POWER_ASSETS_QUERY},
+    )
+    assets["metadata"]["readiness"] = legacy["readiness"]["readiness"]
+    assets_bytes = json.dumps(assets, ensure_ascii=False, indent=2).encode()
+    representative_points = _representative_points_layer(legacy["layer"])
+    representative_points_bytes = json.dumps(representative_points, ensure_ascii=False, indent=2).encode()
+    analytical_provenance = [{"source_id": "openstreetmap", "contribution_role": "primary"}]
+    source_provenance = [
+        *analytical_provenance,
+        {"source_id": "kiut_gesut_wms", "contribution_role": "validation_reference"},
+    ]
+    source_evidence_bytes = json.dumps(
+        {
+            "source_registry_id": legacy["metadata"]["source_registry_id"],
+            "source_url": legacy["metadata"]["source_url"],
+            "source_query": legacy["metadata"]["source_query"],
+            "snapshot_at": legacy["metadata"]["snapshot_at"],
+            "pipeline_version": legacy["metadata"]["pipeline_version"],
+            "query_version": legacy["metadata"]["query_version"],
+        },
+        ensure_ascii=False,
+        indent=2,
+    ).encode()
     manifest = {
         "domain_pack_version": DOMAIN_PACK_VERSION, "aoi_id": "rybnik_60km", "domain": "power",
         "source_provenance": source_provenance,
         "artifacts": [
             {"id": "power.lines", "kind": "processed_vector", "format": "geojson", "path": "layers/power.lines.geojson",
              "sha256": _digest(layer_bytes), "feature_count": legacy["metadata"]["feature_count"],
-             "source_provenance": source_provenance, "public_export": True},
+             "source_provenance": analytical_provenance, "public_export": True},
+            {"id": "power.assets", "kind": "processed_vector", "format": "geojson", "path": "layers/power.assets.geojson",
+             "sha256": _digest(assets_bytes), "feature_count": assets["metadata"]["feature_count"],
+             "source_provenance": analytical_provenance, "public_export": True},
             {"id": "power.representative_points", "kind": "representative_points", "format": "geojson",
-             "not_applicable_reason": "Representative points are deferred until multi-layer power classification.", "source_provenance": source_provenance, "public_export": False},
-            {"id": "power.source_metadata", "kind": "native_vector", "format": "json", "path": "native/metadata.json",
-             "sha256": _digest(metadata_bytes), "source_provenance": source_provenance, "public_export": False},
+             "path": "layers/power.representative_points.geojson", "sha256": _digest(representative_points_bytes),
+             "feature_count": representative_points["metadata"]["feature_count"], "source_provenance": analytical_provenance, "public_export": False},
+            {"id": "power.osm_source_evidence", "kind": "native_vector", "format": "json", "path": "native/osm-source-evidence.json",
+             "sha256": _digest(source_evidence_bytes),
+             "source_provenance": analytical_provenance, "public_export": False},
+            {"id": "power.kiut_reference", "kind": "remote_service", "format": "wms",
+             "source_provenance": [{"source_id": "kiut_gesut_wms", "contribution_role": "validation_reference"}], "public_export": False},
         ],
         "validation": {"path": "validation/metadata.json"},
         "readiness": {"path": "readiness/readiness.json"},
     }
     return write_domain_pack("rybnik_60km", "power", root=root, manifest=manifest, files={
-        "layers/power.lines.geojson": layer_bytes, "native/metadata.json": metadata_bytes,
+        "layers/power.lines.geojson": layer_bytes, "layers/power.assets.geojson": assets_bytes,
+        "layers/power.representative_points.geojson": representative_points_bytes,
+        "native/osm-source-evidence.json": source_evidence_bytes,
         "validation/metadata.json": metadata_bytes, "readiness/readiness.json": readiness_bytes,
     })
+
+
+def _representative_points_layer(layer: dict[str, Any]) -> dict[str, Any]:
+    metadata = {**deepcopy(layer["metadata"]), "layer_id": "power.representative_points"}
+    features = []
+    for feature in layer["features"]:
+        geometry = shape(feature["geometry"])
+        properties = {**deepcopy(feature["properties"]), "source_geometry_type": geometry.geom_type}
+        features.append({"type": "Feature", "properties": properties, "geometry": mapping(geometry.representative_point())})
+    metadata["feature_count"] = len(features)
+    points = {"type": "FeatureCollection", "metadata": metadata, "features": features}
+    errors = validate_provider_geojson(points)
+    if errors:
+        raise ValueError(f"Representative points violate the provider contract: {', '.join(errors)}")
+    return points
+
+
+def _read_json(path: Path) -> dict[str, Any]:
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def _validate_artifact(artifact: Any, *, pack_root: Path, registry: dict[str, Any], public_export: bool, artifact_ids: set[str]) -> None:

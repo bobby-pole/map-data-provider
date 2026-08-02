@@ -106,7 +106,7 @@ def _resolve_administrative_reference(value: dict[str, Any]) -> ResolvedAoi:
     properties = payload.get("properties", {})
     provenance = {
         "kind": "prg_reference",
-        "source_registry_id": "prg",
+        "source_registry_id": "prg_wfs",
         "reference_id": reference_id,
         "snapshot_id": properties.get("snapshot_id"),
         "fixture": "backend/data/fixtures/aoi/prg_gmina_rybnik.geojson",

@@ -1,0 +1,20 @@
+{
+  "fixture_version": "prg_fixture/v1",
+  "captured_at": "2026-08-02T10:37:05Z",
+  "source_registry_id": "prg_wfs",
+  "source_url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
+  "service": {"version": "2.0.0", "source_crs": "EPSG:2180", "interchange_crs": "EPSG:4326"},
+  "attribution": "Główny Urząd Geodezji i Kartografii (GUGiK), PRG",
+  "terms": "Free reuse of published PRG data; preserve GUGiK attribution, service evidence and snapshot provenance.",
+  "feature_types": [
+    "ms:A01_Granice_wojewodztw",
+    "ms:A02_Granice_powiatow",
+    "ms:A03_Granice_gmin",
+    "ms:K02_Komenda_powiatowa_policji",
+    "ms:K07_Komenda_powiatowa_strazy_pozarnej"
+  ],
+  "limitations": [
+    "Fixtures are bounded deterministic GML examples built from the verified WFS schema and do not claim a complete PRG snapshot.",
+    "Police and fire PRG classes may describe unit/area geometry; they are not assumed to be building points."
+  ]
+}

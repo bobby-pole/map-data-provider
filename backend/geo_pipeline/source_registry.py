@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable, Literal, TypeVar
 
 SOURCE_REGISTRY_V1 = "source_registry/v1"
 SOURCE_REGISTRY_VERSION = "source_registry/v2"
@@ -13,11 +14,50 @@ REGISTRY_PATH = Path(__file__).resolve().parents[1] / "data" / "sources" / "regi
 DATA_KINDS = frozenset({"vector", "raster", "rendered_imagery"})
 FORMATS = frozenset({"geojson", "osm_query", "wfs_gml", "gpkg_geoparquet", "wms", "wmts", "geotiff_ascii_grid"})
 AUTHORITIES = frozenset({"community", "official", "project_local"})
-ACCESS_METHODS = frozenset({"public_query", "public_service", "public_download", "local_review_input"})
+ACCESS_METHODS = frozenset({
+    "public_query",
+    "public_service",
+    "public_download",
+    "free_registration",
+    "local_review_input",
+    "paid",
+    "agreement_only",
+    "private_partner",
+})
 USAGE_ROLES = frozenset({"analytical", "reference", "review"})
 QUALIFICATION_STATUSES = frozenset({"qualified_free", "pending_qualification", "rejected"})
 DISTRIBUTION_DECISIONS = frozenset({"allowed", "prohibited"})
 CONTRIBUTION_ROLES = frozenset({"primary", "supplementary", "validation_reference", "derived_context"})
+ELIGIBILITY_USES = frozenset({"acquisition", "local_import", "analytical_processing", "reference", "comparison", "public_export"})
+
+EligibilityUse = Literal["acquisition", "local_import", "analytical_processing", "reference", "comparison", "public_export"]
+EligibilityOutcome = Literal["allowed", "rejected", "not_comparable"]
+AccessResult = TypeVar("AccessResult")
+
+
+@dataclass(frozen=True)
+class SourceEligibilityDecision:
+    """Stable source-governance outcome for one requested use."""
+
+    source_id: str
+    requested_use: EligibilityUse
+    outcome: EligibilityOutcome
+    reason_code: str
+
+    @property
+    def allowed(self) -> bool:
+        return self.outcome == "allowed"
+
+
+class SourceEligibilityError(ValueError):
+    """Raised before source access when a requested use is not allowed."""
+
+    def __init__(self, decision: SourceEligibilityDecision) -> None:
+        self.decision = decision
+        super().__init__(
+            f"Source {decision.source_id} is {decision.outcome} for "
+            f"{decision.requested_use}: {decision.reason_code}"
+        )
 
 V2_REQUIRED_SOURCE_FIELDS = frozenset(
     {
@@ -104,8 +144,8 @@ def validate_ordered_provenance(
         if contribution_role not in CONTRIBUTION_ROLES:
             raise ValueError("Unsupported provenance contribution role")
         source = _source_by_id(registry, source_id)
-        if public_export and not is_public_export_eligible(source):
-            raise ValueError(f"Source {source_id} is not eligible for public export")
+        if public_export:
+            require_source_eligibility(source, "public_export")
         source_ids.add(source_id)
 
 
@@ -121,6 +161,71 @@ def is_public_export_eligible(source: dict[str, Any]) -> bool:
     )
 
 
+def evaluate_source_eligibility(source: dict[str, Any], requested_use: EligibilityUse) -> SourceEligibilityDecision:
+    """Evaluate a source before access, processing, comparison or export.
+
+    The decision deliberately uses registry evidence only. It never makes a live
+    licence, availability or completeness claim, and callers must enforce a
+    non-allowed result before opening a remote connection or local import.
+    """
+    if requested_use not in ELIGIBILITY_USES:
+        raise ValueError(f"Unsupported source eligibility use: {requested_use}")
+
+    source_id = source.get("id")
+    if not isinstance(source_id, str) or not source_id:
+        raise ValueError("Eligibility source requires a non-empty id")
+
+    if source.get("qualification") != "qualified_free":
+        return _decision(source_id, requested_use, "rejected", "not_qualified_free")
+
+    if requested_use in {"acquisition", "local_import"}:
+        return _decision(source_id, requested_use, "allowed", "qualified_free")
+
+    if requested_use == "reference":
+        if source.get("usage_role") == "reference":
+            return _decision(source_id, requested_use, "allowed", "qualified_free_reference")
+        return _decision(source_id, requested_use, "rejected", "not_reference_source")
+
+    if requested_use == "analytical_processing":
+        if source.get("usage_role") != "analytical" or source.get("eligible_for_analysis") is not True:
+            return _decision(source_id, requested_use, "rejected", "not_analytical_source")
+        if source.get("data_kind") == "rendered_imagery":
+            return _decision(source_id, requested_use, "rejected", "rendered_imagery_not_analytical")
+        return _decision(source_id, requested_use, "allowed", "qualified_free_analytical")
+
+    if requested_use == "comparison":
+        if source.get("usage_role") != "analytical" or source.get("eligible_for_analysis") is not True:
+            return _decision(source_id, requested_use, "not_comparable", "reference_or_review_only")
+        if source.get("data_kind") != "vector":
+            return _decision(source_id, requested_use, "not_comparable", "not_analytical_vector")
+        return _decision(source_id, requested_use, "allowed", "qualified_free_analytical_vector")
+
+    if is_public_export_eligible(source):
+        return _decision(source_id, requested_use, "allowed", "qualified_free_public_export")
+    return _decision(source_id, requested_use, "rejected", "public_export_prohibited")
+
+
+def require_source_eligibility(source: dict[str, Any], requested_use: EligibilityUse) -> SourceEligibilityDecision:
+    """Raise before an ineligible source is acquired, imported or processed."""
+    decision = evaluate_source_eligibility(source, requested_use)
+    if not decision.allowed:
+        raise SourceEligibilityError(decision)
+    return decision
+
+
+def guard_source_access(
+    source_id: str,
+    requested_use: EligibilityUse,
+    action: Callable[[], AccessResult],
+    registry: dict[str, Any] | None = None,
+) -> AccessResult:
+    """Run a fetch/import action only after the registry eligibility check."""
+    registry = registry or load_source_registry()
+    source = _source_by_id(registry, source_id)
+    require_source_eligibility(source, requested_use)
+    return action()
+
+
 def validate_analytical_cache_provenance(metadata: dict[str, Any], registry: dict[str, Any] | None = None) -> None:
     """Keep v1 cache metadata readable while resolving its source ID through v2."""
     if metadata.get("source_type") != "analytical_vector":
@@ -130,6 +235,10 @@ def validate_analytical_cache_provenance(metadata: dict[str, Any], registry: dic
     if not isinstance(source_id, str):
         raise ValueError("Analytical cache metadata is missing source_registry_id")
     source = _source_by_id(registry, source_id)
+    try:
+        require_source_eligibility(source, "analytical_processing")
+    except SourceEligibilityError as error:
+        raise ValueError("Analytical cache provenance must reference an eligible analytical source") from error
     if not _is_analytical_vector(source):
         raise ValueError("Analytical cache provenance must reference an analytical vector source")
     required_fields = _cache_provenance_fields(source)
@@ -174,6 +283,8 @@ def _validate_v2_source(source: dict[str, Any]) -> None:
     _require_enum(source, "access_method", ACCESS_METHODS, source_id)
     _require_enum(source, "usage_role", USAGE_ROLES, source_id)
     _require_enum(source, "qualification", QUALIFICATION_STATUSES, source_id)
+    if source["access_method"] in {"paid", "agreement_only", "private_partner"} and source["qualification"] == "qualified_free":
+        raise ValueError(f"Restricted access source {source_id} cannot be qualified free")
     if not isinstance(source["distribution"], dict) or set(source["distribution"]) != {"public_export", "reason"}:
         raise ValueError(f"Source {source_id} requires a complete distribution policy")
     _require_enum(source["distribution"], "public_export", DISTRIBUTION_DECISIONS, source_id)
@@ -282,3 +393,17 @@ def _source_by_id(registry: dict[str, Any], source_id: str) -> dict[str, Any]:
         if source["id"] == source_id:
             return source
     raise ValueError(f"Unknown source registry ID: {source_id}")
+
+
+def _decision(
+    source_id: str,
+    requested_use: EligibilityUse,
+    outcome: EligibilityOutcome,
+    reason_code: str,
+) -> SourceEligibilityDecision:
+    return SourceEligibilityDecision(
+        source_id=source_id,
+        requested_use=requested_use,
+        outcome=outcome,
+        reason_code=reason_code,
+    )

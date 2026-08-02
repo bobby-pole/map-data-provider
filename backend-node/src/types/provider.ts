@@ -219,7 +219,7 @@ export const sourceRegistrySchema = z
 export const sourceDataKindSchema = z.enum(["vector", "raster", "rendered_imagery"]);
 export const sourceFormatSchema = z.enum(["geojson", "osm_query", "wfs_gml", "gpkg_geoparquet", "wms", "wmts", "geotiff_ascii_grid"]);
 export const sourceAuthoritySchema = z.enum(["community", "official", "project_local"]);
-export const sourceAccessMethodSchema = z.enum(["public_query", "public_service", "public_download", "local_review_input"]);
+export const sourceAccessMethodSchema = z.enum(["public_query", "public_service", "public_download", "free_registration", "local_review_input", "paid", "agreement_only", "private_partner"]);
 export const sourceUsageRoleSchema = z.enum(["analytical", "reference", "review"]);
 export const sourceQualificationSchema = z.enum(["qualified_free", "pending_qualification", "rejected"]);
 export const sourceDistributionSchema = z.object({
@@ -263,6 +263,9 @@ export const sourceRegistryV2EntrySchema = z.object({
 }).strict().superRefine((source, context) => {
   if (source.data_kind !== sourceFormatDataKind[source.format]) {
     context.addIssue({ code: "custom", message: "Source data kind contradicts its format." });
+  }
+  if (["paid", "agreement_only", "private_partner"].includes(source.access_method) && source.qualification === "qualified_free") {
+    context.addIssue({ code: "custom", message: "Restricted access source cannot be qualified free." });
   }
   if (source.usage_role === "analytical" && source.data_kind === "rendered_imagery") {
     context.addIssue({ code: "custom", message: "Rendered imagery cannot be analytical data." });

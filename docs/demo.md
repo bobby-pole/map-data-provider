@@ -70,7 +70,7 @@ curl -sS http://127.0.0.1:3001/api/aoi/rybnik_60km/presentations/power \
 
 The response is compact metadata, not the full GeoJSON collections. The local MapLibre preview uses its `archive_url` with HTTP byte ranges to read only required MVT tiles from PMTiles. The full domain-pack and GeoJSON endpoints remain the data/export path.
 
-The current committed snapshot contains 23,592 public power features across the two GeoJSON layers. Its PMTiles archive is a derived, checked presentation artifact; treat both counts and archive size as snapshot-specific.
+The current committed snapshot contains 23,604 public power features across the three GeoJSON layers. `power.supports` is a bounded OSM evidence fixture rather than a complete AOI support inventory. Its PMTiles archive is a derived, checked presentation artifact; treat counts and archive size as snapshot-specific.
 
 ## 4. Show why KIUT/GESUT remains reference-only — 45 seconds
 
@@ -98,7 +98,7 @@ cd frontend
 pnpm run dev
 ```
 
-Open `http://localhost:5173`. The MapLibre preview draws public power data from the local PMTiles archive over the default-on OpenStreetMap base map. The base map is online visual context only: turn it off to verify the local PMTiles view, and do not expect it offline. Use a visible feature to inspect source, confidence, missing fields and limitations. KIUT and orthophoto toggles remain optional external WMS references and are not available offline. Generated rule evidence remains separate from persisted human decisions and never rewrites readiness.
+Open `http://localhost:5173`. The MapLibre preview draws public power data from the local PMTiles archive over the default-on OpenStreetMap base map. The base map is online visual context only: turn it off to verify the local PMTiles view, and do not expect it offline. Power lines use deterministic voltage colours; toggle the separate Power supports layer and zoom to 12 for towers, portals and utility poles, or 14 for ordinary poles. Click a visible feature to inspect source, confidence, limitations and its validated OSM source tags in the single inspector panel. KIUT and orthophoto toggles remain optional external WMS references and are not available offline. Generated rule evidence remains separate from persisted human decisions and never rewrites readiness.
 
 ## 6. Close with the system boundary — 20 seconds
 

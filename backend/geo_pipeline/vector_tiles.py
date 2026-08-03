@@ -27,6 +27,8 @@ PRESENTATION_PROPERTY_NAMES = (
     "source_id",
     "domain",
     "asset_type",
+    "voltage_state",
+    "voltage_bucket",
     "confidence",
     "missing_fields",
     "limitations",
@@ -144,7 +146,7 @@ def _write_pmtiles(archive_path: Path, source_layers: list[dict[str, Any]]) -> d
             if geometry.is_empty:
                 continue
             properties = _presentation_properties(feature.get("properties"), source_layer["metadata"])
-            for z, x, y in _tiles_for_bounds(geometry.bounds):
+            for z, x, y in _tiles_for_bounds(geometry.bounds, min_zoom=_feature_min_zoom(properties)):
                 tile_bounds = _tile_bounds(z, x, y)
                 clipped = geometry.intersection(box(*tile_bounds))
                 if clipped.is_empty:
@@ -281,6 +283,9 @@ def _presentation_properties(raw_properties: Any, metadata: dict[str, Any]) -> d
     selected.setdefault("source", str(metadata["source"]))
     selected.setdefault("domain", str(metadata["domain"]))
     selected.setdefault("confidence", str(metadata["confidence"]))
+    voltage_state, voltage_bucket = _voltage_style(properties.get("osm_tags"))
+    selected["voltage_state"] = voltage_state
+    selected["voltage_bucket"] = voltage_bucket
     return selected
 
 
@@ -299,9 +304,18 @@ def _source_layer_name(artifact_id: str) -> str:
     return artifact_id.replace(".", "_").replace("-", "_")
 
 
-def _tiles_for_bounds(bounds: tuple[float, float, float, float]):
+def _feature_min_zoom(properties: dict[str, str]) -> int:
+    asset_type = properties.get("asset_type")
+    if asset_type in {"tower", "portal", "utility_pole"}:
+        return 12
+    if asset_type == "pole":
+        return 14
+    return MIN_ZOOM
+
+
+def _tiles_for_bounds(bounds: tuple[float, float, float, float], *, min_zoom: int = MIN_ZOOM):
     min_lon, min_lat, max_lon, max_lat = bounds
-    for zoom in range(MIN_ZOOM, MAX_ZOOM + 1):
+    for zoom in range(max(MIN_ZOOM, min_zoom), MAX_ZOOM + 1):
         min_x, max_y = _lon_lat_to_tile(min_lon, min_lat, zoom)
         max_x, min_y = _lon_lat_to_tile(max_lon, max_lat, zoom)
         for x in range(min_x, max_x + 1):
@@ -331,6 +345,29 @@ def _simplify_for_zoom(geometry: Any, zoom: int) -> Any:
         return geometry
     degrees_per_tile = 360 / (1 << zoom)
     return geometry.simplify(degrees_per_tile / 2048, preserve_topology=True)
+
+
+def _voltage_style(raw_tags: Any) -> tuple[str, str]:
+    tags = raw_tags if isinstance(raw_tags, dict) else {}
+    value = tags.get("voltage")
+    if value is None or not str(value).strip():
+        return "missing", "unknown"
+    values = [item.strip() for item in str(value).split(";") if item.strip()]
+    if len(values) != 1:
+        return "multiple", "unknown"
+    try:
+        voltage = int(values[0])
+    except ValueError:
+        return "unparseable", "unknown"
+    if voltage <= 0:
+        return "unparseable", "unknown"
+    if voltage < 1_000:
+        return "low_voltage", "low"
+    if voltage < 35_000:
+        return "medium_voltage", "medium"
+    if voltage < 110_000:
+        return "high_voltage", "high"
+    return "extra_high_voltage", "extra_high"
 
 
 def _combined_bounds(source_layers: list[dict[str, Any]]) -> list[float]:

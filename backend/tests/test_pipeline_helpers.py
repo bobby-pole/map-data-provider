@@ -117,6 +117,8 @@ def test_normalizer_makes_provider_fields_without_losing_useful_osm_tags() -> No
                     "voltage": "220000",
                     "operator": "ČEPS",
                     "source": "bing;uhul:ortofoto",
+                    "circuits": "2",
+                    "tower:type": "suspension",
                 },
                 "geometry": {"type": "LineString", "coordinates": [[18.3, 49.7], [18.4, 49.8]]},
             }
@@ -144,3 +146,5 @@ def test_normalizer_makes_provider_fields_without_losing_useful_osm_tags() -> No
     assert properties["asset_type"] == "line"
     assert properties["missing_fields"] == []
     assert properties["osm_tags"]["source"] == "bing;uhul:ortofoto"
+    assert properties["osm_tags"]["circuits"] == "2"
+    assert properties["osm_tags"]["tower:type"] == "suspension"

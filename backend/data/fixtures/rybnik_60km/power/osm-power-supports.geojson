@@ -1,0 +1,23 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "source": "OpenStreetMap",
+    "snapshot_at": "2026-08-03T00:25:06Z",
+    "source_query": "Overpass bounded support query: 50.09,18.52,50.11,18.56; power=tower|pole|portal and man_made=utility_pole.",
+    "attribution": "© OpenStreetMap contributors, ODbL"
+  },
+  "features": [
+    {"type":"Feature","properties":{"element":"node","id":1528794574,"power":"tower","operator":"Tauron","operator:wikidata":"Q2397198","ref":"11"},"geometry":{"type":"Point","coordinates":[18.5205587,50.1095243]}},
+    {"type":"Feature","properties":{"element":"node","id":1528794589,"power":"tower","operator":"Tauron","operator:wikidata":"Q2397198","ref":"10"},"geometry":{"type":"Point","coordinates":[18.5243594,50.1099813]}},
+    {"type":"Feature","properties":{"element":"node","id":1758409133,"power":"tower","operator":"Tauron","operator:wikidata":"Q2397198","ref":"9"},"geometry":{"type":"Point","coordinates":[18.5588499,50.1080071]}},
+    {"type":"Feature","properties":{"element":"node","id":1954863228,"power":"tower","operator":"Tauron","operator:wikidata":"Q2397198","ref":"20","material":"metal"},"geometry":{"type":"Point","coordinates":[18.5592908,50.0931996]}},
+    {"type":"Feature","properties":{"element":"node","id":1954863232,"power":"tower","operator":"Tauron","operator:wikidata":"Q2397198","ref":"19","material":"metal"},"geometry":{"type":"Point","coordinates":[18.5598525,50.0942892]}},
+    {"type":"Feature","properties":{"element":"node","id":1954856086,"power":"portal"},"geometry":{"type":"Point","coordinates":[18.5584942,50.0916154]}},
+    {"type":"Feature","properties":{"element":"node","id":1954856105,"power":"portal"},"geometry":{"type":"Point","coordinates":[18.5585582,50.0917324]}},
+    {"type":"Feature","properties":{"element":"node","id":1758555079,"power":"pole","material":"steel"},"geometry":{"type":"Point","coordinates":[18.5595757,50.1073779]}},
+    {"type":"Feature","properties":{"element":"node","id":4178078511,"power":"pole"},"geometry":{"type":"Point","coordinates":[18.5360138,50.1084088]}},
+    {"type":"Feature","properties":{"element":"node","id":4178078542,"power":"pole"},"geometry":{"type":"Point","coordinates":[18.5365907,50.1085277]}},
+    {"type":"Feature","properties":{"element":"node","id":4736100326,"power":"pole"},"geometry":{"type":"Point","coordinates":[18.5332981,50.0908397]}},
+    {"type":"Feature","properties":{"element":"node","id":12514589575,"power":"pole"},"geometry":{"type":"Point","coordinates":[18.558111,50.1082654]}}
+  ]
+}

@@ -18,7 +18,7 @@ export function LayerCatalog({
           <label className="layerToggle">
             <input type="checkbox" checked={enabledLayers[key] ?? true} onChange={(event) => onToggle(key, event.target.checked)} />
             <span>
-              <strong>{layer.artifact.artifact_id}</strong>
+              <strong>{layer.artifact.artifact_id === "power.supports" ? "Power supports" : layer.artifact.artifact_id}</strong>
               <small>{layer.domain} · {layer.artifact.feature_count} features · {layer.artifact.readiness}</small>
               <small>{sourceAttribution(layer)}</small>
             </span>

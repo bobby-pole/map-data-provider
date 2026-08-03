@@ -8,6 +8,9 @@
     ]
   },
   "scripts": {
+    "prepare": "pnpm run setup:git-hooks",
+    "setup:git-hooks": "./scripts/setup_git_hooks.sh",
+    "verify:provider": "./scripts/verify_provider.sh",
     "verify:node": "pnpm --dir backend-node run build && pnpm --dir backend-node test && pnpm --dir backend-node run lint",
     "verify:frontend": "pnpm --dir frontend test && pnpm --dir frontend run build && pnpm --dir frontend run lint"
   }

@@ -96,7 +96,7 @@
     }
   ],
   "domains": [
-    {"id": "emergency", "analytical_sources": ["openstreetmap"], "reference_sources": [], "fallback": "Retain OSM source limitations; no official national facility registry is enabled.", "source_gaps": ["Official emergency-service feature coverage is not qualified."]},
+    {"id": "emergency", "analytical_sources": ["openstreetmap", "prg_wfs"], "reference_sources": [], "fallback": "Retain OSM hospital and ambulance/rescue evidence independently. PRG police/fire unit-area records are supplementary and never reclassified as exact facility geometry.", "source_gaps": ["No qualified official national hospital or ambulance/rescue facility registry is enabled; PRG police/fire coverage is unit-area evidence, not a complete facility registry."]},
     {"id": "public_services", "analytical_sources": ["openstreetmap", "prg_wfs", "bdot10k"], "reference_sources": ["geoportal_orthophoto"], "fallback": "Keep facility semantics only where a source supplies them; BDOT10k building context is not facility classification.", "source_gaps": []},
     {"id": "transport", "analytical_sources": ["openstreetmap", "bdot10k"], "reference_sources": ["geoportal_orthophoto"], "fallback": "Use OSM when a bounded BDOT10k class is unavailable and retain source identity.", "source_gaps": []},
     {"id": "bridges", "analytical_sources": ["openstreetmap", "bdot10k"], "reference_sources": ["geoportal_orthophoto"], "fallback": "Report missing bridge class coverage instead of inferring crossings from imagery.", "source_gaps": []},

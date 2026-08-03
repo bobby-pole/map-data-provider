@@ -39,7 +39,7 @@ REQUIRED_FEATURE_FIELDS = frozenset(
         "eligible_for_analysis",
     }
 )
-OSM_POWER_DISPLAY_TAG_FIELDS = (
+DISPLAY_ATTRIBUTE_FIELDS = (
     "power",
     "man_made",
     "name",
@@ -81,6 +81,19 @@ OSM_POWER_DISPLAY_TAG_FIELDS = (
     "plant:output:electricity",
     "start_date",
     "source",
+    "amenity",
+    "healthcare",
+    "emergency",
+    "opening_hours",
+    "phone",
+    "contact:phone",
+    "email",
+    "contact:email",
+    "wheelchair",
+    "official_type",
+    "iip_identifier",
+    "version_from",
+    "jpt_id",
 )
 
 
@@ -148,11 +161,11 @@ def _normalize_feature(feature: object, *, metadata: dict[str, Any]) -> dict[str
     if not isinstance(raw_properties, dict):
         raise ValueError("source feature properties must be an object")
 
-    asset_type = _as_string(raw_properties.get("ss_power_category") or raw_properties.get("power"), "unknown")
+    asset_type = _as_string(raw_properties.get("provider_category") or raw_properties.get("ss_power_category") or raw_properties.get("power"), "unknown")
     source_id = _source_id(raw_properties)
     raw_tags = {
         key: value
-        for key in OSM_POWER_DISPLAY_TAG_FIELDS
+        for key in DISPLAY_ATTRIBUTE_FIELDS
         if (value := raw_properties.get(key)) is not None
     }
     properties: dict[str, Any] = {
@@ -165,8 +178,14 @@ def _normalize_feature(feature: object, *, metadata: dict[str, Any]) -> dict[str
         "limitations": list(metadata["limitations"]),
         "eligible_for_analysis": metadata["eligible_for_analysis"],
     }
+    for field in ("source_geometry_type", "geometry_role", "source_response_sha256"):
+        if raw_properties.get(field) is not None:
+            properties[field] = raw_properties[field]
     if raw_tags:
-        properties["osm_tags"] = raw_tags
+        # Preserve the established OSM/legacy contract unless a source is
+        # explicitly identified as PRG.  PRG's attributes remain separate so a
+        # client cannot mistake official representative evidence for OSM tags.
+        properties["source_attributes" if metadata.get("source_registry_id") == "prg_wfs" else "osm_tags"] = raw_tags
     return {
         "type": "Feature",
         "properties": properties,

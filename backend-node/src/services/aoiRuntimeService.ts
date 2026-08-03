@@ -38,7 +38,7 @@ export async function getAdministrativeCatalog(): Promise<unknown> {
 
 async function runRuntimeWorker(request: ProviderRuntimeRequest) {
   try {
-    const { stdout } = await execFileAsync("uv", ["run", "--offline", "python", "-m", "geo_pipeline.worker", "--runtime-request", JSON.stringify(request), "--input", "fixture"], { cwd: new URL("../../../backend/", import.meta.url), maxBuffer: 1024 * 1024 });
+    const { stdout } = await execFileAsync("uv", ["run", "--offline", "python", "-m", "geo_pipeline.worker", "--runtime-request", JSON.stringify(request), "--input", "live"], { cwd: new URL("../../../backend/", import.meta.url), maxBuffer: 1024 * 1024, timeout: 240_000 });
     return providerRuntimeResponseSchema.parse(JSON.parse(stdout));
   } catch (error) {
     throw new ProviderDataError("worker_failed", error instanceof Error ? error.message : "AOI runtime worker failed.");

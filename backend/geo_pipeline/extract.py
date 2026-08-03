@@ -6,6 +6,8 @@ from typing import Any
 
 import geopandas as gpd
 import osmnx as ox
+import pandas as pd
+from shapely.geometry import shape
 from shapely.geometry.base import BaseGeometry
 
 from .config import AoiConfig
@@ -29,6 +31,11 @@ def fetch_osm_features(aoi: AoiConfig, tags: dict[str, list[str]]) -> gpd.GeoDat
     return guard_source_access("openstreetmap", "acquisition", lambda: _fetch_osm_features(aoi, tags))
 
 
+def fetch_osm_features_geometry(geometry: dict[str, Any], tags: dict[str, list[str]]) -> gpd.GeoDataFrame:
+    """Fetch a bounded Polygon/MultiPolygon AOI without reducing it to its bbox."""
+    return guard_source_access("openstreetmap", "acquisition", lambda: _fetch_osm_features_geometry(geometry, tags))
+
+
 def _fetch_osm_features(aoi: AoiConfig, tags: dict[str, list[str]]) -> gpd.GeoDataFrame:
     logger.info(
         "Fetching OSM features for %s around %.6f, %.6f, radius=%sm, tags=%s",
@@ -50,6 +57,32 @@ def _fetch_osm_features(aoi: AoiConfig, tags: dict[str, list[str]]) -> gpd.GeoDa
             logger.warning("Overpass endpoint failed: %s (%s)", endpoint, exc)
 
     ox.settings.overpass_url = original_endpoint
+    if last_error is not None:
+        raise last_error
+    raise RuntimeError("No Overpass endpoint configured")
+
+
+def _fetch_osm_features_geometry(geometry: dict[str, Any], tags: dict[str, list[str]]) -> gpd.GeoDataFrame:
+    polygonal = shape(geometry)
+    if polygonal.geom_type not in {"Polygon", "MultiPolygon"} or polygonal.is_empty:
+        raise ValueError("OSM acquisition requires a non-empty polygonal AOI")
+    polygons = [polygonal] if polygonal.geom_type == "Polygon" else list(polygonal.geoms)
+    last_error: Exception | None = None
+    original_endpoint = ox.settings.overpass_url
+    try:
+        for endpoint in OVERPASS_ENDPOINTS:
+            ox.settings.overpass_url = endpoint
+            try:
+                frames = [ox.features_from_polygon(polygon, tags=tags) for polygon in polygons]
+                if not frames:
+                    return gpd.GeoDataFrame(geometry=[], crs="EPSG:4326")
+                merged = gpd.GeoDataFrame(pd.concat(frames))
+                return merged.loc[~merged.index.duplicated(keep="first")]
+            except Exception as exc:
+                last_error = exc
+                logger.warning("Overpass endpoint failed: %s (%s)", endpoint, exc)
+    finally:
+        ox.settings.overpass_url = original_endpoint
     if last_error is not None:
         raise last_error
     raise RuntimeError("No Overpass endpoint configured")

@@ -1,7 +1,11 @@
+from datetime import UTC, datetime
+
 import pytest
 
 from geo_pipeline.aoi_runtime import RuntimeRequestError, administrative_catalog, context_outcomes, profile_outcomes, resolve_runtime_request
 from geo_pipeline.config import CACHE_DIR
+from geo_pipeline.domain_pack import read_domain_pack
+from geo_pipeline.runtime_osm import publish_runtime_osm_collection
 from geo_pipeline.worker import run_runtime_worker
 
 
@@ -48,11 +52,41 @@ def test_runtime_reuses_a_valid_local_request_cache(tmp_path) -> None:
     assert second["outcomes"] == first["outcomes"]
 
 
+def test_runtime_ignores_incomplete_legacy_local_cache_and_refreshes_it(tmp_path) -> None:
+    request = {"aoi": point_radius(), "profiles": ["public"]}
+    resolved = resolve_runtime_request(request)
+    state_path = tmp_path / "provider-runtime-v1" / f"{resolved['cache_key']}.json"
+    state_path.parent.mkdir(parents=True)
+    state_path.write_text(
+        f'{{"status":"ok","cache_key":"legacy","cached_at":"{datetime.now(UTC).isoformat()}","outcomes":[{{}}]}}',
+        encoding="utf-8",
+    )
+
+    response = run_runtime_worker(request=request, input_mode="fixture", cache_root=CACHE_DIR, runtime_root=tmp_path)
+
+    assert response["request_result"] == "refresh"
+    assert response["contexts"]
+    assert response["outcomes"][0]["artifact_aoi_id"] is None
+
+
 def test_non_osm_contexts_remain_source_labelled_and_non_vector() -> None:
     contexts = context_outcomes({"aoi": {"type": "administrative_selection", "unit_ids": ["county_rybnik_city"]}, "profiles": ["water", "gas"]})
     assert {record["source_registry_id"] for record in contexts} >= {"prg_wfs", "bdot10k", "kiut_gesut_wms", "geoportal_orthophoto", "nmt_nmpt"}
     assert next(record for record in contexts if record["source_registry_id"] == "kiut_gesut_wms")["status"] == "reference_only"
     assert all(record["output_kind"] != "analytical_vector" for record in contexts)
+
+
+def test_runtime_power_publication_builds_a_valid_pmtiles_domain_pack(tmp_path) -> None:
+    aoi = resolve_runtime_request({"aoi": {"type": "administrative_selection", "unit_ids": ["county_rybnik_city"]}, "profiles": ["power"]})["aoi"]
+    source = {"type": "FeatureCollection", "features": [
+        {"type": "Feature", "properties": {"element": "way", "id": 1, "ss_power_category": "line", "power": "line", "voltage": "110000", "name": "fixture line"}, "geometry": {"type": "LineString", "coordinates": [[18.45, 50.05], [18.55, 50.15]]}},
+        {"type": "Feature", "properties": {"element": "node", "id": 2, "ss_power_category": "substation", "power": "substation", "name": "fixture substation"}, "geometry": {"type": "Point", "coordinates": [18.5, 50.1]}},
+    ]}
+
+    result = publish_runtime_osm_collection(aoi=aoi, domain="power", source=source, query_version="power-osm/v1", root=tmp_path)
+
+    assert result == {"status": "ready", "detail": "A bounded OpenStreetMap runtime artifact was acquired, validated and cached for this AOI.", "artifact_aoi_id": aoi["aoi_id"], "cache_status": "fresh"}
+    assert [artifact["id"] for artifact in read_domain_pack(aoi["aoi_id"], "power", root=tmp_path)["artifacts"]] == ["power.lines", "power.assets"]
 
 
 @pytest.mark.parametrize(

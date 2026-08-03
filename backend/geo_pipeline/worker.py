@@ -16,6 +16,7 @@ from geo_pipeline.aoi_runtime import RuntimeRequestError, context_outcomes, prof
 from geo_pipeline.cache import cache_paths, read_cached_layer
 from geo_pipeline.config import CACHE_DIR, RUNTIME_CACHE_DIR
 from geo_pipeline.domain_pack import read_domain_pack
+from geo_pipeline.runtime_osm import refresh_runtime_osm_domain
 
 EXIT_INVALID_REQUEST = 2
 EXIT_WORKER_FAILURE = 3
@@ -52,7 +53,7 @@ def run_worker(*, aoi: str, domain: str, input_mode: str, cache_root: Path) -> d
 
 
 def run_runtime_worker(*, request: dict[str, Any], input_mode: str, cache_root: Path, runtime_root: Path | None = None) -> dict[str, Any]:
-    """Resolve a v2 request without fabricating cache entries for source gaps."""
+    """Resolve a v2 request and publish selected qualified OSM runtime packs."""
     if input_mode not in {"fixture", "live"}:
         raise WorkerError(EXIT_INVALID_REQUEST, "unsupported_input", f"Unsupported input mode: {input_mode}")
     try:
@@ -66,6 +67,8 @@ def run_runtime_worker(*, request: dict[str, Any], input_mode: str, cache_root: 
         return {**cached, "request_result": "cache"}
     try:
         outcomes = profile_outcomes(request, fixture_mode=input_mode == "fixture")
+        if input_mode == "live":
+            outcomes = _refresh_live_runtime_outcomes(resolved, outcomes, cache_root)
         # A ready fixture outcome is only valid when its existing domain-pack
         # still passes the same manifest validation as normal read routes.
         for outcome in outcomes:
@@ -82,6 +85,18 @@ def run_runtime_worker(*, request: dict[str, Any], input_mode: str, cache_root: 
         raise WorkerError(EXIT_WORKER_FAILURE, "worker_failed", str(error)) from error
 
 
+def _refresh_live_runtime_outcomes(resolved: dict[str, Any], outcomes: list[dict[str, Any]], cache_root: Path) -> list[dict[str, Any]]:
+    refreshed = []
+    for outcome in outcomes:
+        # The committed Rybnik demo remains a deterministic fixture fallback.
+        # Every other requested power/emergency AOI uses a bounded OSM refresh.
+        if outcome["domain"] in {"power", "emergency"} and outcome["artifact_aoi_id"] is None:
+            refreshed.append({**outcome, **refresh_runtime_osm_domain(aoi=resolved["aoi"], domain=outcome["domain"], root=cache_root)})
+        else:
+            refreshed.append(outcome)
+    return refreshed
+
+
 def _read_fresh_runtime_state(path: Path) -> dict[str, Any] | None:
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
@@ -90,10 +105,25 @@ def _read_fresh_runtime_state(path: Path) -> dict[str, Any] | None:
         return None
     if cached_at.tzinfo is None or cached_at < datetime.now(UTC) - timedelta(hours=24):
         return None
-    if payload.get("status") != "ok" or not isinstance(payload.get("cache_key"), str):
+    if not _is_complete_runtime_state(payload):
         return None
     payload["cached_at"] = _utc_timestamp(cached_at)
     return payload
+
+
+def _is_complete_runtime_state(payload: dict[str, Any]) -> bool:
+    """Reject stale/corrupt local cache records before Node validates them."""
+    if payload.get("status") != "ok" or not isinstance(payload.get("cache_key"), str):
+        return False
+    if not isinstance(payload.get("contexts"), list) or not isinstance(payload.get("outcomes"), list):
+        return False
+    return all(
+        isinstance(outcome, dict)
+        and "artifact_aoi_id" in outcome
+        and (isinstance(outcome["artifact_aoi_id"], str) or outcome["artifact_aoi_id"] is None)
+        and outcome.get("cache_status") in {"fresh", "missing"}
+        for outcome in payload["outcomes"]
+    )
 
 
 def _write_runtime_state(path: Path, payload: dict[str, Any]) -> None:

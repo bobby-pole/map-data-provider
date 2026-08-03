@@ -58,5 +58,17 @@ jobs:
       - name: Run Node unit tests
         run: pnpm --dir backend-node test
 
+      - name: Type-check and build Node provider
+        run: pnpm --dir backend-node run build
+
+      - name: Lint Node provider
+        run: pnpm --dir backend-node run lint
+
       - name: Run frontend unit tests
         run: pnpm --dir frontend test
+
+      - name: Type-check and build frontend
+        run: pnpm --dir frontend run build
+
+      - name: Lint frontend
+        run: pnpm --dir frontend run lint

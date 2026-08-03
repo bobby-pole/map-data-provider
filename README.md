@@ -207,12 +207,12 @@ pnpm install
 Then run the canonical offline quality gate from the repository root:
 
 ```bash
-./scripts/verify_provider.sh
+pnpm run verify:provider
 ```
 
-`verify_provider.sh` is the required local pre-PR gate for larger changes. It covers Python pipeline stages and contracts, the FastAPI smoke check, Node API/build/lint, the layer-pack export, issue-review persistence and conflicts, plus frontend review tests/build/lint. It does not query live Overpass or WMS services.
+`pnpm install` configures the tracked native Git hook in `.githooks/`. Before every `git push`, that `pre-push` hook runs `pnpm run verify:provider`. The full gate covers Python pipeline stages and contracts, the FastAPI smoke check, Node API/build/lint, the layer-pack export, issue-review persistence and conflicts, plus frontend review tests/build/lint. It does not query live Overpass or WMS services.
 
-GitHub Actions is intentionally faster: for every pull request and push to `main` it runs the Python, Node and frontend test suites, plus Node/frontend type-check/build and lint. It does not run the smoke check or the controlled negative probe.
+GitHub Actions is intentionally fast: for every pull request and push to `main` it checks Python syntax and runs Node/frontend unit tests, type-check/build and lint. The full Python suite, smoke check and controlled negative probe run locally before a push instead.
 
 The gate also runs a controlled negative probe and confirms that an intentionally invalid issue-snapshot contract makes its pytest command fail. A probe that unexpectedly passes fails the overall gate.
 

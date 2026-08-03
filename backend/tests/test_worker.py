@@ -57,6 +57,17 @@ def test_emergency_fixture_worker_keeps_official_and_community_evidence_separate
     assert artifacts["emergency.prg_police_fire_source_evidence"]["public_export"] is False
 
 
+def test_public_fixture_worker_publishes_independent_semantic_categories(tmp_path: Path) -> None:
+    result = run_worker(aoi="rybnik_60km", domain="public", input_mode="fixture", cache_root=tmp_path)
+    manifest = read_domain_pack("rybnik_60km", "public", root=tmp_path)
+
+    assert result["query_version"] == "public-osm/v1"
+    assert result["feature_count"] == 4
+    assert [artifact["id"] for artifact in manifest["artifacts"][:4]] == [
+        "public.administration", "public.education", "public.post", "public.community_social",
+    ]
+
+
 def test_worker_rejects_unsupported_target_without_creating_cache(tmp_path: Path) -> None:
     try:
         run_worker(aoi="unknown", domain="power", input_mode="fixture", cache_root=tmp_path)

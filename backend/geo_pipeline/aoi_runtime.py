@@ -39,7 +39,7 @@ class ProviderProfile:
 PROFILES: tuple[ProviderProfile, ...] = (
     ProviderProfile("power", "openstreetmap", "analytical", "analytical_vector", "power-osmnx/v1", {"power": ["line", "minor_line", "cable", "substation", "transformer", "plant", "generator"], "man_made": ["utility_pole"]}, True),
     ProviderProfile("emergency", "openstreetmap", "analytical", "analytical_vector", "emergency-osm/v1", {"amenity": ["hospital", "fire_station", "police", "ambulance_station"], "healthcare": ["hospital"], "emergency": ["ambulance_station", "mountain_rescue", "lifeguard_base"]}, True),
-    ProviderProfile("public", "openstreetmap", "analytical", "analytical_vector", "public-osm/v1", {"amenity": ["townhall", "post_office", "community_centre", "social_facility", "school", "college", "university", "library"]}),
+    ProviderProfile("public", "openstreetmap", "analytical", "analytical_vector", "public-osm/v1", {"amenity": ["townhall", "school", "college", "university", "kindergarten", "post_office", "community_centre", "social_facility", "library", "arts_centre"], "office": ["government"]}, True),
     ProviderProfile("transport", "openstreetmap", "analytical", "analytical_vector", "transport-osm/v1", {"highway": ["motorway", "trunk", "primary"], "railway": ["rail", "station", "halt"], "aeroway": ["aerodrome", "helipad"]}),
     ProviderProfile("bridges", "openstreetmap", "analytical", "analytical_vector", "bridges-osm/v1", {"man_made": ["bridge"], "bridge": ["yes", "viaduct"]}),
     ProviderProfile("water", "openstreetmap", "analytical", "analytical_vector", "water-osm/v1", {"man_made": ["water_tower", "water_works"], "waterway": ["stream", "river", "canal"], "pipeline": ["water"]}),

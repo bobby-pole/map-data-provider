@@ -1,3 +1,4 @@
+import json
 from datetime import UTC, datetime
 
 import pytest
@@ -35,8 +36,8 @@ def test_runtime_profiles_are_explicit_and_do_not_fabricate_non_fixture_data() -
     assert [outcome["domain"] for outcome in outcomes] == ["power", "public", "water"]
     assert outcomes[0]["status"] == "ready"
     assert outcomes[0]["artifact_aoi_id"] == "rybnik_60km"
-    assert outcomes[1]["status"] == "needs_source"
-    assert outcomes[1]["artifact_aoi_id"] is None
+    assert outcomes[1]["status"] == "ready"
+    assert outcomes[1]["artifact_aoi_id"] == "rybnik_60km"
     assert outcomes[2]["tags"] == {"man_made": ["water_tower", "water_works"], "waterway": ["stream", "river", "canal"], "pipeline": ["water"]}
 
 
@@ -66,7 +67,7 @@ def test_runtime_ignores_incomplete_legacy_local_cache_and_refreshes_it(tmp_path
 
     assert response["request_result"] == "refresh"
     assert response["contexts"]
-    assert response["outcomes"][0]["artifact_aoi_id"] is None
+    assert response["outcomes"][0]["artifact_aoi_id"] == "rybnik_60km"
 
 
 def test_non_osm_contexts_remain_source_labelled_and_non_vector() -> None:
@@ -87,6 +88,21 @@ def test_runtime_power_publication_builds_a_valid_pmtiles_domain_pack(tmp_path) 
 
     assert result == {"status": "ready", "detail": "A bounded OpenStreetMap runtime artifact was acquired, validated and cached for this AOI.", "artifact_aoi_id": aoi["aoi_id"], "cache_status": "fresh"}
     assert [artifact["id"] for artifact in read_domain_pack(aoi["aoi_id"], "power", root=tmp_path)["artifacts"]] == ["power.lines", "power.assets"]
+
+
+def test_runtime_public_publication_keeps_semantic_categories_independent(tmp_path) -> None:
+    aoi = resolve_runtime_request({"aoi": {"type": "administrative_selection", "unit_ids": ["county_rybnik_city"]}, "profiles": ["public"]})["aoi"]
+    source = {"type": "FeatureCollection", "features": [
+        {"type": "Feature", "properties": {"element": "way", "id": 1, "provider_category": "administration", "amenity": "townhall", "name": "fixture townhall"}, "geometry": {"type": "Polygon", "coordinates": [[[18.49, 50.09], [18.50, 50.09], [18.50, 50.10], [18.49, 50.10], [18.49, 50.09]]]}},
+        {"type": "Feature", "properties": {"element": "node", "id": 2, "provider_category": "education", "amenity": "school", "name": "fixture school"}, "geometry": {"type": "Point", "coordinates": [18.5, 50.1]}},
+    ]}
+
+    publish_runtime_osm_collection(aoi=aoi, domain="public", source=source, query_version="public-osm/v1", root=tmp_path)
+
+    pack = read_domain_pack(aoi["aoi_id"], "public", root=tmp_path)
+    assert [artifact["id"] for artifact in pack["artifacts"]] == ["public.administration", "public.education", "public.inspection_points"]
+    inspection = json.loads((tmp_path / aoi["aoi_id"] / "public" / "domain-pack-v2" / "layers" / "public.inspection_points.geojson").read_text())
+    assert inspection["features"][0]["properties"]["origin_artifact"] == "public.administration"
 
 
 @pytest.mark.parametrize(

@@ -14,12 +14,13 @@ from shapely.geometry import mapping, shape
 from geo_pipeline.contracts import normalize_analytical_vector_layer
 from geo_pipeline.domain_pack import build_map_presentation, domain_pack_root, read_domain_pack, write_domain_pack
 from geo_pipeline.emergency import category_for_osm_feature
+from geo_pipeline.public_services import category_for_osm_feature as public_category_for_osm_feature
 from geo_pipeline.extract import configure_osmnx, fetch_osm_features_geometry, sanitize_for_geojson
 from geo_pipeline.layers.power import _add_power_categories, _compact_power_properties
-from geo_pipeline.query_catalog import EMERGENCY_OSM_QUERY, POWER_OSM_QUERY
+from geo_pipeline.query_catalog import EMERGENCY_OSM_QUERY, PUBLIC_OSM_QUERY, POWER_OSM_QUERY
 
 RUNTIME_PIPELINE_VERSION = "geo_pipeline/runtime-osm/v1"
-_QUERY_BY_DOMAIN = {"power": POWER_OSM_QUERY, "emergency": EMERGENCY_OSM_QUERY}
+_QUERY_BY_DOMAIN = {"power": POWER_OSM_QUERY, "emergency": EMERGENCY_OSM_QUERY, "public": PUBLIC_OSM_QUERY}
 
 
 def refresh_runtime_osm_domain(*, aoi: dict[str, Any], domain: str, root: Path) -> dict[str, Any]:
@@ -31,8 +32,10 @@ def refresh_runtime_osm_domain(*, aoi: dict[str, Any], domain: str, root: Path) 
     raw = sanitize_for_geojson(fetch_osm_features_geometry(aoi["geometry"], query.tags))
     if domain == "power":
         raw = _compact_power_properties(_add_power_categories(raw))
-    else:
+    elif domain == "emergency":
         raw = _add_emergency_categories(raw)
+    else:
+        raw = _add_public_categories(raw)
     source = _clip_to_aoi(_geojson_collection(raw), aoi["geometry"])
     return publish_runtime_osm_collection(aoi=aoi, domain=domain, source=source, query_version=query.query_version, root=root)
 
@@ -55,6 +58,14 @@ def _add_emergency_categories(frame: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
         return frame
     enriched = frame.copy()
     enriched["provider_category"] = enriched.apply(lambda row: category_for_osm_feature(dict(row)) or "other", axis=1)
+    return enriched[enriched["provider_category"] != "other"].copy()
+
+
+def _add_public_categories(frame: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
+    if frame.empty:
+        return frame
+    enriched = frame.copy()
+    enriched["provider_category"] = enriched.apply(lambda row: public_category_for_osm_feature(dict(row)) or "other", axis=1)
     return enriched[enriched["provider_category"] != "other"].copy()
 
 
@@ -81,7 +92,29 @@ def _domain_layers(domain: str, collection: dict[str, Any]) -> dict[str, list[di
         lines = [feature for feature in collection["features"] if feature["geometry"]["type"] in {"LineString", "MultiLineString"}]
         assets = [feature for feature in collection["features"] if feature["geometry"]["type"] not in {"LineString", "MultiLineString"}]
         return {key: value for key, value in {"power.lines": lines, "power.assets": assets}.items() if value}
-    return {"emergency.facilities": collection["features"]} if collection["features"] else {}
+    if domain == "emergency":
+        return {"emergency.facilities": collection["features"]} if collection["features"] else {}
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for feature in collection["features"]:
+        category = feature.get("properties", {}).get("provider_category")
+        if isinstance(category, str):
+            grouped.setdefault(f"public.{category}", []).append(feature)
+    inspection_points = []
+    for layer_id, features in grouped.items():
+        for feature in features:
+            geometry = shape(feature["geometry"])
+            if geometry.geom_type == "Point":
+                continue
+            properties = dict(feature.get("properties", {}))
+            properties.update({
+                "origin_artifact": layer_id,
+                "origin_source_id": f"{properties.get('element', 'feature')}/{properties.get('id')}",
+                "source_geometry_type": geometry.geom_type,
+            })
+            inspection_points.append({"type": "Feature", "properties": properties, "geometry": mapping(geometry.representative_point())})
+    if inspection_points:
+        grouped["public.inspection_points"] = inspection_points
+    return grouped
 
 
 def _pack_payload(*, aoi: dict[str, Any], domain: str, query_version: str, snapshot_at: str, layers: dict[str, list[dict[str, Any]]]) -> tuple[dict[str, Any], dict[str, bytes]]:

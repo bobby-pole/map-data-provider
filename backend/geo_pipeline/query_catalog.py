@@ -35,3 +35,13 @@ EMERGENCY_OSM_QUERY = OsmQueryDefinition(
         "emergency": ["ambulance_station", "mountain_rescue", "lifeguard_base"],
     },
 )
+
+
+PUBLIC_OSM_QUERY = OsmQueryDefinition(
+    source_registry_id="openstreetmap",
+    query_version="public-osm/v1",
+    tags={
+        "amenity": ["townhall", "school", "college", "university", "kindergarten", "post_office", "community_centre", "social_facility", "library", "arts_centre"],
+        "office": ["government"],
+    },
+)

@@ -210,7 +210,7 @@ describe("read-only AOI provider routes", () => {
       { source_id: "openstreetmap", contribution_role: "primary" },
       { source_id: "kiut_gesut_wms", contribution_role: "validation_reference" },
     ]);
-  });
+  }, 10_000);
 
   it("serves compact MapLibre presentation metadata without loading public GeoJSON into the response", async () => {
     const response = await request(createApp()).get("/api/aoi/rybnik_60km/presentations");

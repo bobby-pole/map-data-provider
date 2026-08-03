@@ -16,7 +16,10 @@ from geo_pipeline.aoi import AoiResolutionError, MAX_AREA_SQ_M, WGS84, _resolved
 
 AOI_REQUEST_CONTRACT_VERSION = "provider_aoi_request/v2"
 RUNTIME_CONTRACT_VERSION = "provider_runtime/v1"
-PIPELINE_VERSION = "geo_pipeline/runtime/v1"
+# Changing the pipeline version deliberately creates a new request-cache key.
+# v3 adds actual on-demand OSM acquisition for qualified profiles, so earlier
+# status-only v2 cache entries must never suppress that preparation work.
+PIPELINE_VERSION = "geo_pipeline/runtime/v3"
 CATALOG_PATH = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "aoi" / "prg_administrative_catalog.geojson"
 POLAND_BOUNDS = (14.05, 49.0, 24.25, 55.0)
 ProfileOutcome = Literal["ready", "needs_source", "reference_only", "pending_qualification"]

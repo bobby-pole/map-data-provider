@@ -19,14 +19,15 @@ export function useProviderPreview(aoiId = defaultPreviewAoiId) {
     let cancelled = false;
     void Promise.all([
       fetchJson<MapPresentationListResponse>(`/api/aoi/${encodeURIComponent(aoiId)}/presentations`),
-      fetchJson<{ aoi_id: string; issues: ProviderIssue[] }>(`/api/aoi/${encodeURIComponent(aoiId)}/issues`),
-      fetchJson<SourceAvailabilityReport>(`/api/aoi/${encodeURIComponent(aoiId)}/source-availability`),
+      fetchJson<{ aoi_id: string; issues: ProviderIssue[] }>(`/api/aoi/${encodeURIComponent(aoiId)}/issues`).catch(() => ({ aoi_id: aoiId, issues: [] })),
+      fetchJson<SourceAvailabilityReport>(`/api/aoi/${encodeURIComponent(aoiId)}/source-availability`).catch(() => null),
     ])
       .then(([presentationData, issueData, availabilityData]) => {
         if (cancelled) return;
         setPresentations(presentationData.presentations);
         setIssues(issueData.issues);
         setSourceAvailability(availabilityData);
+        setError(null);
       })
       .catch((reason: unknown) => {
         if (!cancelled) setError(reason instanceof Error ? reason.message : String(reason));

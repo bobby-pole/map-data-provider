@@ -26,6 +26,11 @@ export function supportStyle(assetType: string | undefined): { color: string; ra
   return { color: "#cbd5e1", radius: 3 };
 }
 
+/** Reference rasters supply visual context and must not obscure analytical vectors. */
+export function referenceRasterInsertionPoint(layerIds: readonly string[]): string | undefined {
+  return layerIds.find((layerId) => layerId.startsWith("provider:"));
+}
+
 /** Online-only visual context; it is not provider data and is never cached by this app. */
 export const openStreetMapBasemap = {
   label: "OpenStreetMap base map",

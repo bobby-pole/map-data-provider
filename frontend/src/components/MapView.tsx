@@ -9,7 +9,7 @@ import type { MapCircuit, MapFeatureDetail, ProviderFeature } from "../types/api
 import type { SelectedProviderFeature } from "../inspection";
 import { KIUT_MAX_ZOOM, KIUT_MIN_ZOOM, KIUT_WMS_URL, type KiutReferenceLayer } from "../kiutReference";
 import { ORTHOPHOTO_WMS_URL, orthophotoReference } from "../orthophotoReference";
-import { isLinePresentationLayer, openStreetMapBasemap, presentationColor, voltageLineColor } from "../mapStyle";
+import { isLinePresentationLayer, openStreetMapBasemap, presentationColor, referenceRasterInsertionPoint, voltageLineColor } from "../mapStyle";
 
 const pmtilesProtocol = new Protocol();
 maplibregl.addProtocol("pmtiles", pmtilesProtocol.tile);
@@ -204,7 +204,13 @@ function asProviderFeature(feature: MapGeoJSONFeature): ProviderFeature {
 function addRasterReference(map: maplibregl.Map, key: string, endpoint: string, wmsLayer: string, format: string, attribution: string, minzoom: number, maxzoom: number): void {
   const sourceId = `${REFERENCE_PREFIX}${key}`;
   map.addSource(sourceId, { type: "raster", tiles: [wmsTileUrl(endpoint, wmsLayer, format)], tileSize: 256, attribution, minzoom, maxzoom });
-  map.addLayer({ id: sourceId, type: "raster", source: sourceId, minzoom, maxzoom, paint: { "raster-opacity": key === "orthophoto" ? 0.8 : 0.72 } });
+  // Reference imagery stays below public analytical vectors. KIUT remains above
+  // orthophoto because each subsequent raster is inserted immediately before
+  // the first provider layer.
+  map.addLayer(
+    { id: sourceId, type: "raster", source: sourceId, minzoom, maxzoom, paint: { "raster-opacity": key === "orthophoto" ? 0.8 : 0.72 } },
+    referenceRasterInsertionPoint(map.getStyle().layers?.map((layer) => layer.id) ?? []),
+  );
 }
 
 function removePrefixedLayersAndSources(map: maplibregl.Map, prefix: string): void {

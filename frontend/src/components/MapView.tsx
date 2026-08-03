@@ -20,6 +20,9 @@ const BASEMAP_SOURCE_ID = "basemap:openstreetmap";
 const CIRCUIT_SOURCE_ID = "circuit:selected";
 const CIRCUIT_LINE_ID = "circuit:selected-line";
 const CIRCUIT_ENDPOINT_ID = "circuit:selected-endpoints";
+const AOI_OUTLINE_SOURCE_ID = "aoi:selected";
+const AOI_OUTLINE_FILL_ID = "aoi:selected-fill";
+const AOI_OUTLINE_LINE_ID = "aoi:selected-line";
 
 function providerLayerId(layer: PreviewLayer): string { return `${PROVIDER_PREFIX}${previewLayerKey(layer)}`; }
 function providerInteractiveLayerIds(layer: PreviewLayer): string[] { const id = providerLayerId(layer); return [id, `${id}-medium`, `${id}-low`, `${id}-fill`, `${id}-outline`]; }
@@ -32,7 +35,7 @@ function wmsTileUrl(endpoint: string, wmsLayer: string, format: string): string 
   return `${endpoint}?${parameters.toString().replace("%7Bbbox-epsg-3857%7D", "{bbox-epsg-3857}")}`;
 }
 
-export function MapView({ layers, references, orthophotoEnabled, basemapEnabled, selected, selectedDetail, selectedCircuit, onSelectFeature }: { layers: PreviewLayer[]; references: KiutReferenceLayer[]; orthophotoEnabled: boolean; basemapEnabled: boolean; selected: SelectedProviderFeature | null; selectedDetail: MapFeatureDetail | null; selectedCircuit: MapCircuit | null; onSelectFeature: (selected: SelectedProviderFeature) => void }) {
+export function MapView({ layers, references, orthophotoEnabled, basemapEnabled, aoiOutline, selected, selectedDetail, selectedCircuit, onSelectFeature }: { layers: PreviewLayer[]; references: KiutReferenceLayer[]; orthophotoEnabled: boolean; basemapEnabled: boolean; aoiOutline: Geometry | null; selected: SelectedProviderFeature | null; selectedDetail: MapFeatureDetail | null; selectedCircuit: MapCircuit | null; onSelectFeature: (selected: SelectedProviderFeature) => void }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const layersRef = useRef(layers);
@@ -144,6 +147,18 @@ export function MapView({ layers, references, orthophotoEnabled, basemapEnabled,
     references.forEach((reference) => addRasterReference(map, reference.id, KIUT_WMS_URL, reference.wmsLayer, "image/png", "GUGiK, KIUT/GESUT WMS", KIUT_MIN_ZOOM, KIUT_MAX_ZOOM));
     if (references.length && map.getZoom() < KIUT_MIN_ZOOM) map.setZoom(KIUT_MIN_ZOOM);
   }, [references, orthophotoEnabled, mapReady]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady) return;
+    if (map.getLayer(AOI_OUTLINE_LINE_ID)) map.removeLayer(AOI_OUTLINE_LINE_ID);
+    if (map.getLayer(AOI_OUTLINE_FILL_ID)) map.removeLayer(AOI_OUTLINE_FILL_ID);
+    if (map.getSource(AOI_OUTLINE_SOURCE_ID)) map.removeSource(AOI_OUTLINE_SOURCE_ID);
+    if (!aoiOutline || !["Polygon", "MultiPolygon"].includes(aoiOutline.type)) return;
+    map.addSource(AOI_OUTLINE_SOURCE_ID, { type: "geojson", data: { type: "Feature", properties: {}, geometry: aoiOutline } });
+    map.addLayer({ id: AOI_OUTLINE_FILL_ID, type: "fill", source: AOI_OUTLINE_SOURCE_ID, paint: { "fill-color": "#38bdf8", "fill-opacity": 0.11 } });
+    map.addLayer({ id: AOI_OUTLINE_LINE_ID, type: "line", source: AOI_OUTLINE_SOURCE_ID, paint: { "line-color": "#38bdf8", "line-width": 2.5, "line-dasharray": [2, 1] } });
+  }, [aoiOutline, mapReady]);
 
   useEffect(() => {
     const map = mapRef.current;

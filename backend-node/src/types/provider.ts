@@ -17,6 +17,38 @@ export const administrativeAoiReferenceInputSchema = z.object({
 
 export const aoiInputSchema = z.union([aoiCircleInputSchema, administrativeAoiReferenceInputSchema]);
 
+const runtimePointRadiusAoiSchema = z.object({
+  type: z.literal("point_radius"), longitude: z.number().finite(), latitude: z.number().finite(), radius_m: z.number().finite(),
+}).strict();
+const runtimeAdministrativeAoiSchema = z.object({
+  type: z.literal("administrative_selection"), unit_ids: z.array(providerIdentifierSchema).min(1),
+}).strict();
+export const runtimeAoiInputSchema = z.union([runtimePointRadiusAoiSchema, runtimeAdministrativeAoiSchema]);
+export const runtimeProfileSchema = z.enum(["power", "emergency", "public", "transport", "bridges", "water", "gas", "sewer", "industrial"]);
+export const providerRuntimeRequestSchema = z.object({
+  aoi: runtimeAoiInputSchema,
+  profiles: z.array(runtimeProfileSchema).min(1),
+}).strict();
+const runtimeGeometrySchema = z.object({
+  type: z.enum(["Polygon", "MultiPolygon"]), coordinates: z.unknown(),
+}).strict();
+const runtimeResolvedAoiSchema = z.object({
+  aoi_contract_version: z.literal("provider_aoi/v1"), aoi_id: providerIdentifierSchema, cache_key: providerIdentifierSchema,
+  geometry: runtimeGeometrySchema, geometry_crs: z.literal("EPSG:4326"), input_type: z.enum(["circle", "administrative_selection"]),
+  source_crs: z.string().min(1), boundary_provenance: z.record(z.string(), z.unknown()), constraints: z.record(z.string(), z.number().positive()), aliases: z.array(providerIdentifierSchema),
+}).strict();
+export const providerRuntimeResponseSchema = z.object({
+  status: z.literal("ok"), request_contract_version: z.literal("provider_aoi_request/v2"), request_id: providerIdentifierSchema,
+  cache_key: providerIdentifierSchema, aoi: runtimeResolvedAoiSchema, pipeline_version: z.string().min(1), job_state: z.literal("ready"), request_result: z.enum(["cache", "refresh"]), cached_at: z.string().datetime(),
+  profiles: z.array(z.object({ domain: runtimeProfileSchema, source_registry_id: z.string().min(1), source_role: z.enum(["analytical", "reference", "review"]), output_kind: z.enum(["analytical_vector", "reference_descriptor", "derived_context"]), query_version: z.string().min(1), tags: z.record(z.string(), z.array(z.string())) }).strict()),
+  outcomes: z.array(z.object({ domain: runtimeProfileSchema, source_registry_id: z.string().min(1), source_role: z.enum(["analytical", "reference", "review"]), output_kind: z.enum(["analytical_vector", "reference_descriptor", "derived_context"]), query_version: z.string().min(1), tags: z.record(z.string(), z.array(z.string())), status: z.enum(["ready", "needs_source", "reference_only", "pending_qualification"]), detail: z.string().min(1), artifact_aoi_id: providerIdentifierSchema.nullable(), cache_status: z.enum(["fresh", "missing"]) }).strict()),
+  contexts: z.array(z.object({ domain: z.enum(["administrative", "power", "emergency", "public", "transport", "bridges", "water", "gas", "sewer", "industrial"]), source_registry_id: z.string().min(1), output_kind: z.enum(["official_context", "topographic_context", "reference_descriptor", "derived_context"]), status: z.enum(["ready", "needs_source", "reference_only", "pending_qualification"]), detail: z.string().min(1) }).strict()),
+}).strict();
+export const administrativeCatalogResponseSchema = z.object({
+  catalog_version: z.literal("prg_administrative_catalog/v1"), source_registry_id: z.literal("prg_wfs"), snapshot_at: z.string().datetime(), source_crs: z.literal("EPSG:4326"), limitations: z.array(z.string()),
+  units: z.array(z.object({ id: providerIdentifierSchema, kind: z.enum(["voivodeship", "county", "gmina"]), name: z.string().min(1), prg_id: z.string().min(1), geometry: runtimeGeometrySchema }).strict()),
+}).strict();
+
 export const resolvedAoiSchema = z.object({
   aoi_contract_version: z.literal("provider_aoi/v1"),
   aoi_id: providerIdentifierSchema,
@@ -573,3 +605,5 @@ export type GeneratedIssue = z.infer<typeof generatedIssueSchema>;
 export type IssueReviewRecord = z.infer<typeof issueReviewRecordSchema>;
 export type ReviewedIssue = z.infer<typeof reviewedIssueSchema>;
 export type IssueReviewUpdate = z.infer<typeof issueReviewUpdateSchema>;
+export type ProviderRuntimeRequest = z.infer<typeof providerRuntimeRequestSchema>;
+export type ProviderRuntimeResponse = z.infer<typeof providerRuntimeResponseSchema>;

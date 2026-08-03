@@ -6,10 +6,11 @@
 
 * { box-sizing: border-box; }
 body { margin: 0; }
-button, select, textarea { font: inherit; }
+button, select, textarea, input { font: inherit; }
 button { background: #0369a1; color: #f0f9ff; border: 0; border-radius: 8px; padding: 8px 10px; cursor: pointer; }
 button:disabled { cursor: not-allowed; opacity: .55; }
 select, textarea { background: #07111f; color: #e5edf7; border: 1px solid #1e3555; border-radius: 8px; padding: 8px; }
+input { background: #07111f; color: #e5edf7; border: 1px solid #1e3555; border-radius: 8px; padding: 8px; }
 textarea { min-height: 58px; resize: vertical; }
 label { display: grid; gap: 6px; color: #cbd5e1; font-size: 13px; }
 
@@ -19,6 +20,8 @@ label { display: grid; gap: 6px; color: #cbd5e1; font-size: 13px; }
 .eyebrow { margin: 0; text-transform: uppercase; letter-spacing: .12em; color: #38bdf8; font-size: 11px; font-weight: 800; }
 .previewContext { margin: 0; color: #9fb0c7; font-size: 13px; }
 .previewContext strong { color: #e5edf7; }
+.previewActions { display: flex; align-items: center; gap: 10px; }
+.settingsButton { background: #102039; border: 1px solid #1e3555; white-space: nowrap; }
 .inspectorContent { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 14px; }
 .mapPanel, .inspectorPanel { background: #0b1728; border: 1px solid #1e3555; border-radius: 12px; overflow: hidden; }
 .map { height: calc(100vh - 96px); min-height: 520px; }
@@ -79,6 +82,16 @@ dd { margin: 0; text-align: right; overflow-wrap: anywhere; }
 .selectedCircuit summary { cursor: pointer; color: #cbd5e1; }
 .selectedCircuit ul { display: grid; gap: 6px; margin: 8px 0 0; padding-left: 18px; }
 .selectedCircuit li small { display: block; color: #9fb0c7; overflow-wrap: anywhere; }
+.modeButtons { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 10px 0; }
+.modeButtons button { background: #102039; border: 1px solid #1e3555; }
+.modeButtons button.active { border-color: #38bdf8; background: #07345a; }
+.aoiFields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.aoiFields label:last-child { grid-column: 1 / -1; }
+.aoiUnits fieldset { border: 1px solid #1e3555; border-radius: 8px; margin: 8px 0; padding: 4px; }
+.aoiUnits legend { color: #9fb0c7; font-size: 12px; text-transform: capitalize; }
+.categoryGrid { display: grid; grid-template-columns: 1fr 1fr; margin: 8px 0; }
+.categoryGrid .layerToggle { padding: 4px; }
+.contextHeading { margin: 14px 0 0; color: #9fb0c7; font-size: 12px; text-transform: uppercase; letter-spacing: .07em; }
 
 @media (max-width: 900px) {
   .inspectorLayout { padding: 12px; }

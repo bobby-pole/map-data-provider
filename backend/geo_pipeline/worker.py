@@ -7,12 +7,15 @@ import json
 import shutil
 import sys
 import uuid
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
 from geo_pipeline.adapters import AdapterError, resolve_adapter
+from geo_pipeline.aoi_runtime import RuntimeRequestError, context_outcomes, profile_outcomes, resolve_runtime_request
 from geo_pipeline.cache import cache_paths, read_cached_layer
-from geo_pipeline.config import CACHE_DIR
+from geo_pipeline.config import CACHE_DIR, RUNTIME_CACHE_DIR
+from geo_pipeline.domain_pack import read_domain_pack
 
 EXIT_INVALID_REQUEST = 2
 EXIT_WORKER_FAILURE = 3
@@ -46,6 +49,66 @@ def run_worker(*, aoi: str, domain: str, input_mode: str, cache_root: Path) -> d
         raise WorkerError(EXIT_WORKER_FAILURE, "worker_failed", str(error)) from error
     finally:
         shutil.rmtree(staging_root, ignore_errors=True)
+
+
+def run_runtime_worker(*, request: dict[str, Any], input_mode: str, cache_root: Path, runtime_root: Path | None = None) -> dict[str, Any]:
+    """Resolve a v2 request without fabricating cache entries for source gaps."""
+    if input_mode not in {"fixture", "live"}:
+        raise WorkerError(EXIT_INVALID_REQUEST, "unsupported_input", f"Unsupported input mode: {input_mode}")
+    try:
+        resolved = resolve_runtime_request(request)
+    except RuntimeRequestError as error:
+        raise WorkerError(EXIT_INVALID_REQUEST, "invalid_aoi_request", str(error)) from error
+    state_root = (runtime_root or RUNTIME_CACHE_DIR) / "provider-runtime-v1"
+    state_path = state_root / f"{resolved['cache_key']}.json"
+    cached = _read_fresh_runtime_state(state_path)
+    if cached is not None:
+        return {**cached, "request_result": "cache"}
+    try:
+        outcomes = profile_outcomes(request, fixture_mode=input_mode == "fixture")
+        # A ready fixture outcome is only valid when its existing domain-pack
+        # still passes the same manifest validation as normal read routes.
+        for outcome in outcomes:
+            if outcome["status"] == "ready":
+                read_domain_pack("rybnik_60km", outcome["domain"], root=cache_root)
+        response = {"status": "ok", **resolved, "outcomes": outcomes, "contexts": context_outcomes(request), "job_state": "ready", "request_result": "refresh", "cached_at": _utc_timestamp()}
+        _write_runtime_state(state_path, response)
+        return response
+    except WorkerError:
+        raise
+    except Exception as error:
+        # State is written only after every ready artifact validates, so a
+        # failed attempt cannot replace a previous valid cached response.
+        raise WorkerError(EXIT_WORKER_FAILURE, "worker_failed", str(error)) from error
+
+
+def _read_fresh_runtime_state(path: Path) -> dict[str, Any] | None:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        cached_at = datetime.fromisoformat(payload["cached_at"])
+    except (OSError, ValueError, KeyError, json.JSONDecodeError):
+        return None
+    if cached_at.tzinfo is None or cached_at < datetime.now(UTC) - timedelta(hours=24):
+        return None
+    if payload.get("status") != "ok" or not isinstance(payload.get("cache_key"), str):
+        return None
+    payload["cached_at"] = _utc_timestamp(cached_at)
+    return payload
+
+
+def _write_runtime_state(path: Path, payload: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    staged = path.with_suffix(f".{uuid.uuid4().hex}.tmp")
+    try:
+        staged.write_text(json.dumps(payload, ensure_ascii=False, sort_keys=True), encoding="utf-8")
+        staged.replace(path)
+    finally:
+        if staged.exists():
+            staged.unlink()
+
+
+def _utc_timestamp(value: datetime | None = None) -> str:
+    return (value or datetime.now(UTC)).astimezone(UTC).isoformat().replace("+00:00", "Z")
 
 
 def _replace_cache(target: Path, staged: Path) -> None:
@@ -89,12 +152,24 @@ class WorkerError(Exception):
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Refresh or validate provider cache artifacts.")
-    parser.add_argument("--aoi", required=True)
-    parser.add_argument("--domain", required=True)
+    parser.add_argument("--aoi")
+    parser.add_argument("--domain")
     parser.add_argument("--input", choices=["fixture", "cache", "live"], default="fixture")
     parser.add_argument("--cache-root", type=Path, default=CACHE_DIR)
+    parser.add_argument("--runtime-request", help="JSON provider_aoi_request/v2 payload")
     args = parser.parse_args()
     try:
+        if args.runtime_request:
+            if args.aoi or args.domain:
+                raise WorkerError(EXIT_INVALID_REQUEST, "invalid_aoi_request", "Runtime request cannot be combined with --aoi or --domain.")
+            try:
+                request = json.loads(args.runtime_request)
+            except json.JSONDecodeError as error:
+                raise WorkerError(EXIT_INVALID_REQUEST, "invalid_aoi_request", "Runtime request must be valid JSON.") from error
+            print(json.dumps(run_runtime_worker(request=request, input_mode=args.input, cache_root=args.cache_root)))
+            return 0
+        if not args.aoi or not args.domain:
+            raise WorkerError(EXIT_INVALID_REQUEST, "invalid_request", "--aoi and --domain are required without --runtime-request.")
         print(json.dumps(run_worker(aoi=args.aoi, domain=args.domain, input_mode=args.input, cache_root=args.cache_root)))
         return 0
     except WorkerError as error:

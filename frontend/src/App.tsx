@@ -6,10 +6,11 @@ import { FeatureDetails } from "./components/FeatureDetails";
 import { IssueReviewDrawer } from "./components/IssueReviewDrawer";
 import { LayerCatalog } from "./components/LayerCatalog";
 import { PreviewHeader } from "./components/PreviewHeader";
+import { AoiSettings } from "./components/AoiSettings";
 import type { SelectedProviderFeature } from "./inspection";
 import { kiutReferenceLayers } from "./kiutReference";
 import { orthophotoReference } from "./orthophotoReference";
-import type { MapCircuit, MapFeatureDetail } from "./types/api";
+import type { MapCircuit, MapFeatureDetail, ProviderRuntimeResponse } from "./types/api";
 import "./index.css";
 
 export default function App() {
@@ -21,6 +22,8 @@ export default function App() {
   const [enabledReferences, setEnabledReferences] = useState<Record<string, boolean>>({});
   const [orthophotoEnabled, setOrthophotoEnabled] = useState(false);
   const [basemapEnabled, setBasemapEnabled] = useState(true);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [runtimeResult, setRuntimeResult] = useState<ProviderRuntimeResponse | null>(null);
   const catalog = useMemo(() => configuredPreviewLayers(presentations), [presentations]);
   const visibleLayers = useMemo(
     () => catalog.filter((layer) => enabledLayers[previewLayerKey(layer)] ?? true),
@@ -43,11 +46,13 @@ export default function App() {
 
   return (
     <main className="inspectorLayout">
-      <PreviewHeader aoiId={aoiId} featureCount={featureCount} />
+      <PreviewHeader aoiId={runtimeResult?.aoi.aoi_id ?? aoiId} featureCount={featureCount} onSettingsClick={() => setSettingsOpen((current) => !current)} />
       {error && <div className="error">Provider API error: {error}</div>}
       <section className="inspectorContent">
-        <div className="mapPanel"><MapView layers={visibleLayers} references={visibleReferences} orthophotoEnabled={orthophotoEnabled} basemapEnabled={basemapEnabled} selected={selectedFeature} selectedDetail={selectedDetail} selectedCircuit={selectedCircuit} onSelectFeature={selectFeature} /></div>
+        <div className="mapPanel"><MapView layers={visibleLayers} references={visibleReferences} orthophotoEnabled={orthophotoEnabled} basemapEnabled={basemapEnabled} aoiOutline={runtimeResult?.aoi.geometry ?? null} selected={selectedFeature} selectedDetail={selectedDetail} selectedCircuit={selectedCircuit} onSelectFeature={selectFeature} /></div>
         <aside className="inspectorPanel">
+          {settingsOpen && <AoiSettings onApplied={(result) => { setRuntimeResult(result); setSettingsOpen(false); }} />}
+          {runtimeResult && <section className="inspectorSection"><div className="sectionHeading"><h2>Preparation status</h2><span>{runtimeResult.request_result} · {runtimeResult.request_id}</span></div><ul className="layerList">{runtimeResult.outcomes.map((outcome) => <li key={outcome.domain}><strong>{outcome.domain}: {outcome.status}</strong><small>{outcome.detail}</small><small>{outcome.source_registry_id} · {outcome.output_kind} · {outcome.query_version}{outcome.artifact_aoi_id ? ` · artifact ${outcome.artifact_aoi_id}` : ""}</small></li>)}</ul><h3 className="contextHeading">Source context</h3><ul className="layerList">{runtimeResult.contexts.map((context, index) => <li key={`${context.domain}-${context.source_registry_id}-${index}`}><strong>{context.domain}: {context.status}</strong><small>{context.source_registry_id} · {context.output_kind}</small><small>{context.detail}</small></li>)}</ul></section>}
           <section className="inspectorSection">
             <div className="sectionHeading"><h2>Map background</h2><span>{basemapEnabled ? "on" : "off"}</span></div>
             <label className="layerToggle"><input type="checkbox" checked={basemapEnabled} onChange={(event) => setBasemapEnabled(event.target.checked)} /><span><strong>OpenStreetMap base map</strong><small>Online visual context only; it is not provider data and is unavailable offline.</small></span></label>

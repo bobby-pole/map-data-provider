@@ -130,3 +130,13 @@ export type ProviderIssue = {
   source_type: LayerSourceType; domain: string; layer_id: string; category: string; title: string;
   evidence: string; recommendation: string; review: IssueReview;
 };
+
+export type RuntimeCategory = "power" | "emergency" | "public" | "transport" | "bridges" | "water" | "gas" | "sewer" | "industrial";
+export type RuntimeAoiInput = { type: "point_radius"; longitude: number; latitude: number; radius_m: number } | { type: "administrative_selection"; unit_ids: string[] };
+export type AdministrativeCatalog = { catalog_version: "prg_administrative_catalog/v1"; source_registry_id: "prg_wfs"; snapshot_at: string; source_crs: "EPSG:4326"; limitations: string[]; units: Array<{ id: string; kind: "voivodeship" | "county" | "gmina"; name: string; prg_id: string; geometry: Geometry }> };
+export type ProviderRuntimeResponse = {
+  status: "ok"; request_contract_version: "provider_aoi_request/v2"; request_id: string; cache_key: string; pipeline_version: string; job_state: "ready"; request_result: "cache" | "refresh"; cached_at: string;
+  aoi: { aoi_id: string; geometry: Geometry; boundary_provenance: Record<string, unknown> };
+  outcomes: Array<{ domain: RuntimeCategory; source_registry_id: string; source_role: string; output_kind: string; query_version: string; tags: Record<string, string[]>; status: "ready" | "needs_source" | "reference_only" | "pending_qualification"; detail: string; artifact_aoi_id: string | null; cache_status: "fresh" | "missing" }>;
+  contexts: Array<{ domain: RuntimeCategory | "administrative"; source_registry_id: string; output_kind: string; status: "ready" | "needs_source" | "reference_only" | "pending_qualification"; detail: string }>;
+};

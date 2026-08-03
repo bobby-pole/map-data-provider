@@ -25,11 +25,14 @@ import {
   mapPresentationManifestSchema,
   mapPresentationResponseSchema,
   mapFeatureDetailResponseSchema,
-  mapRelationEvidenceResponseSchema,
+  mapCircuitListResponseSchema,
+  mapCircuitDetailResponseSchema,
+  powerCircuitEvidencePayloadSchema,
   type MapPresentationManifest,
   type MapPresentationResponse,
   type MapFeatureDetailResponse,
-  type MapRelationEvidenceResponse,
+  type MapCircuitListResponse,
+  type MapCircuitDetailResponse,
 } from "../types/provider.js";
 
 const projectRoot = path.resolve(fileURLToPath(new URL("../../../", import.meta.url)));
@@ -262,16 +265,50 @@ export async function getMapFeatureDetail(
   throw notFound(`No eligible public feature exists for source_id '${sourceId}'.`);
 }
 
-export async function getMapRelationEvidence(aoiId: string, domain: string, sourceId: string, dataPaths?: ProviderDataPaths): Promise<MapRelationEvidenceResponse> {
+export async function getMapCircuitsForFeature(aoiId: string, domain: string, sourceId: string, dataPaths?: ProviderDataPaths): Promise<MapCircuitListResponse> {
   if (!/^(node|way|relation)\/\d+$/.test(sourceId)) throw new ProviderDataError("invalid_request", "source_id must be an OSM node, way or relation identifier.");
+  // A reverse-index hit is useful only for a feature that is actually present
+  // in the delivered AOI. This avoids exposing stale or out-of-scope evidence.
+  await getMapFeatureDetail(aoiId, domain, sourceId, dataPaths);
+  const evidence = await readPowerCircuitEvidence(aoiId, domain, dataPaths);
+  const ids = evidence.reverse_member_index[sourceId] ?? [];
+  const byId = new Map(evidence.relations.map((relation) => [relation.relation_id, relation]));
+  const circuits = ids.map((id) => byId.get(id)).filter((relation): relation is PowerCircuitEvidence => relation !== undefined);
+  return mapCircuitListResponseSchema.parse({
+    response_version: "provider_map_circuit_list/v1", aoi_id: aoiId, domain, source_id: sourceId,
+    state: circuits.length ? "available" : "not_applicable",
+    circuits: circuits.map((circuit) => ({ relation_id: circuit.relation_id, tags: circuit.tags, aoi_coverage: circuit.aoi_coverage, member_count: circuit.members.length })),
+  });
+}
+
+export async function getMapCircuitDetail(aoiId: string, domain: string, circuitId: string, dataPaths?: ProviderDataPaths): Promise<MapCircuitDetailResponse> {
+  if (!/^relation\/\d+$/.test(circuitId)) throw new ProviderDataError("invalid_request", "circuit_id must be an OSM relation identifier.");
+  const evidence = await readPowerCircuitEvidence(aoiId, domain, dataPaths);
+  const circuit = evidence.relations.find((candidate) => candidate.relation_id === circuitId);
+  if (!circuit) throw notFound(`No committed circuit exists for circuit_id '${circuitId}'.`);
+  return mapCircuitDetailResponseSchema.parse({ response_version: "provider_map_circuit_detail/v1", aoi_id: aoiId, domain, circuit });
+}
+
+type PowerCircuitEvidence = {
+  relation_id: string;
+  tags: Record<string, string>;
+  aoi_coverage: "bounded_source_snapshot";
+  limitations: string[];
+  members: Array<{ source_id: string; role: string; availability?: string; endpoint_evidence?: { start: string; end: string }; geometry?: { type: "LineString"; coordinates: [number, number][] } }>;
+};
+
+type PowerCircuitEvidencePayload = { relations: PowerCircuitEvidence[]; reverse_member_index: Record<string, string[]> };
+
+async function readPowerCircuitEvidence(aoiId: string, domain: string, dataPaths?: ProviderDataPaths): Promise<PowerCircuitEvidencePayload> {
   const { manifest, packRoot } = await validatedMapPresentation(aoiId, domain, dataPaths);
   const artifact = manifest.artifacts.find((candidate) => candidate.id === "power.osm_relation_evidence");
-  if (!artifact?.path || artifact.public_export || artifact.kind !== "native_vector") throw new ProviderDataError("not_found", "Relation evidence is unavailable.");
-  const bytes = await readBytes(resolvePackPath(packRoot, artifact.path), "relation evidence");
-  if (digest(bytes) !== artifact.sha256) throw new ProviderDataError("not_found", "Relation evidence checksum does not match.");
-  const payload = JSON.parse(bytes.toString("utf8")) as { relations?: Array<{ members?: Array<{ source_id?: string }> }> };
-  const relation = payload.relations?.find((candidate) => candidate.members?.some((member) => member.source_id === sourceId)) ?? null;
-  return mapRelationEvidenceResponseSchema.parse({ response_version: "provider_map_relation_evidence/v1", aoi_id: aoiId, domain, source_id: sourceId, state: relation ? "available" : "not_applicable", relation });
+  if (!artifact?.path || artifact.public_export || artifact.kind !== "native_vector") throw new ProviderDataError("not_found", "Circuit evidence is unavailable.");
+  const bytes = await readBytes(resolvePackPath(packRoot, artifact.path), "circuit evidence");
+  if (digest(bytes) !== artifact.sha256) throw new ProviderDataError("not_found", "Circuit evidence checksum does not match.");
+  const raw = JSON.parse(bytes.toString("utf8")) as unknown;
+  const parsed = powerCircuitEvidencePayloadSchema.safeParse(raw);
+  if (!parsed.success) throw new ProviderDataError("not_found", "Circuit evidence has an invalid contract.");
+  return parsed.data;
 }
 
 function toV1SourceRegistry(registry: SourceRegistryV2): SourceRegistry {

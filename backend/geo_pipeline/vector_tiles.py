@@ -29,6 +29,10 @@ PRESENTATION_PROPERTY_NAMES = (
     "asset_type",
     "voltage_state",
     "voltage_bucket",
+    "voltage_label",
+    "name",
+    "ref",
+    "operator",
     "confidence",
     "missing_fields",
     "limitations",
@@ -286,6 +290,10 @@ def _presentation_properties(raw_properties: Any, metadata: dict[str, Any]) -> d
     voltage_state, voltage_bucket = _voltage_style(properties.get("osm_tags"))
     selected["voltage_state"] = voltage_state
     selected["voltage_bucket"] = voltage_bucket
+    tags = properties.get("osm_tags") if isinstance(properties.get("osm_tags"), dict) else {}
+    selected["voltage_label"] = _voltage_label(tags.get("voltage"))
+    for name in ("name", "ref", "operator"):
+        if tags.get(name) is not None: selected[name] = str(tags[name])
     return selected
 
 
@@ -353,21 +361,35 @@ def _voltage_style(raw_tags: Any) -> tuple[str, str]:
     if value is None or not str(value).strip():
         return "missing", "unknown"
     values = [item.strip() for item in str(value).split(";") if item.strip()]
-    if len(values) != 1:
-        return "multiple", "unknown"
     try:
-        voltage = int(values[0])
+        voltages = [int(item) for item in values]
     except ValueError:
         return "unparseable", "unknown"
-    if voltage <= 0:
+    if any(voltage <= 0 for voltage in voltages):
         return "unparseable", "unknown"
+    voltage = max(voltages)
+    state = "multiple_voltage" if len(voltages) > 1 else ""
     if voltage < 1_000:
-        return "low_voltage", "low"
+        return state or "low_voltage", "low"
     if voltage < 35_000:
-        return "medium_voltage", "medium"
-    if voltage < 110_000:
-        return "high_voltage", "high"
-    return "extra_high_voltage", "extra_high"
+        return state or "medium_voltage", "medium"
+    if voltage < 150_000:
+        return state or "high_voltage", "high_110"
+    if voltage < 300_000:
+        return state or "extra_high_voltage", "high_220"
+    return state or "ultra_high_voltage", "high_400"
+
+
+def _voltage_label(raw_value: Any) -> str:
+    values = [item.strip() for item in str(raw_value or "").split(";") if item.strip()]
+    try:
+        volts = [int(value) for value in values]
+    except ValueError:
+        return str(raw_value or "voltage unknown")
+    if not volts or any(value <= 0 for value in volts):
+        return str(raw_value or "voltage unknown")
+    labels = [f"{value // 1000:g}" if value % 1000 == 0 else f"{value / 1000:g}" for value in volts]
+    return f"{'/'.join(labels)} kV"
 
 
 def _combined_bounds(source_layers: list[dict[str, Any]]) -> list[float]:

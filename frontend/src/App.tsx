@@ -9,12 +9,15 @@ import { PreviewHeader } from "./components/PreviewHeader";
 import type { SelectedProviderFeature } from "./inspection";
 import { kiutReferenceLayers } from "./kiutReference";
 import { orthophotoReference } from "./orthophotoReference";
+import type { MapCircuit, MapFeatureDetail } from "./types/api";
 import "./index.css";
 
 export default function App() {
   const { aoiId, presentations, issues, sourceAvailability, updateReview, error } = useProviderPreview();
   const [enabledLayers, setEnabledLayers] = useState<Record<string, boolean>>({});
   const [selectedFeature, setSelectedFeature] = useState<SelectedProviderFeature | null>(null);
+  const [selectedDetail, setSelectedDetail] = useState<MapFeatureDetail | null>(null);
+  const [selectedCircuit, setSelectedCircuit] = useState<MapCircuit | null>(null);
   const [enabledReferences, setEnabledReferences] = useState<Record<string, boolean>>({});
   const [orthophotoEnabled, setOrthophotoEnabled] = useState(false);
   const [basemapEnabled, setBasemapEnabled] = useState(true);
@@ -28,11 +31,13 @@ export default function App() {
     [visibleLayers],
   );
   const visibleReferences = useMemo(() => kiutReferenceLayers.filter((reference) => enabledReferences[reference.id] ?? false), [enabledReferences]);
-  const selectFeature = useCallback((selection: SelectedProviderFeature) => setSelectedFeature(selection), []);
+  const selectFeature = useCallback((selection: SelectedProviderFeature) => { setSelectedFeature(selection); setSelectedDetail(null); setSelectedCircuit(null); }, []);
   const toggleLayer = useCallback((key: string, enabled: boolean) => {
     setEnabledLayers((current) => ({ ...current, [key]: enabled }));
     if (!enabled && selectedFeature && previewLayerKey(selectedFeature.layer) === key) {
       setSelectedFeature(null);
+      setSelectedDetail(null);
+      setSelectedCircuit(null);
     }
   }, [selectedFeature]);
 
@@ -41,12 +46,13 @@ export default function App() {
       <PreviewHeader aoiId={aoiId} featureCount={featureCount} />
       {error && <div className="error">Provider API error: {error}</div>}
       <section className="inspectorContent">
-        <div className="mapPanel"><MapView layers={visibleLayers} references={visibleReferences} orthophotoEnabled={orthophotoEnabled} basemapEnabled={basemapEnabled} onSelectFeature={selectFeature} /></div>
+        <div className="mapPanel"><MapView layers={visibleLayers} references={visibleReferences} orthophotoEnabled={orthophotoEnabled} basemapEnabled={basemapEnabled} selected={selectedFeature} selectedDetail={selectedDetail} selectedCircuit={selectedCircuit} onSelectFeature={selectFeature} /></div>
         <aside className="inspectorPanel">
           <section className="inspectorSection">
             <div className="sectionHeading"><h2>Map background</h2><span>{basemapEnabled ? "on" : "off"}</span></div>
             <label className="layerToggle"><input type="checkbox" checked={basemapEnabled} onChange={(event) => setBasemapEnabled(event.target.checked)} /><span><strong>OpenStreetMap base map</strong><small>Online visual context only; it is not provider data and is unavailable offline.</small></span></label>
           </section>
+          <FeatureDetails aoiId={aoiId} selected={selectedFeature} selectedCircuit={selectedCircuit} onDetailChange={setSelectedDetail} onCircuitChange={setSelectedCircuit} />
           <LayerCatalog
             layers={catalog}
             enabledLayers={enabledLayers}
@@ -66,7 +72,6 @@ export default function App() {
             <div className="sectionHeading"><h2>Official orthophoto</h2><span>{orthophotoEnabled ? "on" : "off"}</span></div>
             <label className="layerToggle"><input type="checkbox" checked={orthophotoEnabled} onChange={(event) => setOrthophotoEnabled(event.target.checked)} /><span><strong>{orthophotoReference.label}</strong><small>Source date: {orthophotoReference.sourceDate}. Resolution: {orthophotoReference.resolution}.</small><small>{orthophotoReference.limitation}</small></span></label>
           </section>
-          <FeatureDetails aoiId={aoiId} selected={selectedFeature} />
           <IssueReviewDrawer issues={issues} updateReview={updateReview} />
         </aside>
       </section>

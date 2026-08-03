@@ -56,7 +56,15 @@ dd { margin: 0; text-align: right; overflow-wrap: anywhere; }
 .severity-high { background: #7f1d1d; color: #fecaca; }
 .severity-medium { background: #78350f; color: #fde68a; }
 .severity-low { background: #1e3a8a; color: #bfdbfe; }
-.leaflet-container { background: #0b1728; }
+.maplibregl-map { background: #0b1728; }
+.maplibregl-ctrl-attrib { background: rgba(7, 17, 31, .82) !important; color: #9fb0c7; }
+.maplibregl-ctrl-attrib a { color: #7dd3fc; }
+.maplibregl-popup-content { background: #0b1728; color: #e5edf7; border: 1px solid #1e3555; border-radius: 8px; box-shadow: 0 8px 24px rgba(0, 0, 0, .35); }
+.maplibregl-popup-tip { border-top-color: #0b1728 !important; }
+.maplibregl-popup-close-button { color: #9fb0c7; font-size: 18px; }
+.mapFeaturePopup { display: grid; gap: 4px; min-width: 180px; }
+.mapFeaturePopup strong { color: #f8fafc; }
+.mapFeaturePopup span, .mapFeaturePopup small { color: #9fb0c7; }
 
 @media (max-width: 900px) {
   .inspectorLayout { padding: 12px; }

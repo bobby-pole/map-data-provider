@@ -1,4 +1,4 @@
-import { readdir, readFile } from "node:fs/promises";
+import { open, readdir, readFile, stat } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -22,17 +22,30 @@ import {
   type SourceRegistry,
   type SourceRegistryV2,
   sourceAvailabilityReportSchema,
+  mapPresentationManifestSchema,
+  mapPresentationResponseSchema,
+  type MapPresentationManifest,
+  type MapPresentationResponse,
 } from "../types/provider.js";
 
 const projectRoot = path.resolve(fileURLToPath(new URL("../../../", import.meta.url)));
 const defaultCacheRoot = path.join(projectRoot, "backend", "data", "cache");
 const defaultRegistryPath = path.join(projectRoot, "backend", "data", "sources", "registry.json");
 const packDirectoryName = "domain-pack-v2";
+const verifiedMapArchives = new Map<string, { size: number; modifiedAt: number; sha256: string }>();
 
 export type ProviderDataPaths = {
   cacheRoot?: string;
   registryPath?: string;
   sourceAvailabilityRoot?: string;
+};
+
+export type MapPresentationArchiveRange = {
+  bytes: Buffer;
+  totalSize: number;
+  start: number;
+  end: number;
+  etag: string;
 };
 
 export class ProviderDataError extends Error {
@@ -169,6 +182,55 @@ export async function getDomainPack(aoiId: string, domain: string, dataPaths?: P
   });
 }
 
+export async function getMapPresentations(aoiId: string, dataPaths?: ProviderDataPaths): Promise<MapPresentationResponse[]> {
+  validateIdentifier(aoiId, "AOI");
+  const aoiRoot = path.join(cacheRootFor(dataPaths), aoiId);
+  let entries;
+  try {
+    entries = await readdir(aoiRoot, { withFileTypes: true });
+  } catch (error) {
+    if (isMissingFile(error)) throw notFound(`No cached map presentations exist for AOI '${aoiId}'.`);
+    throw error;
+  }
+  const presentations = await Promise.all(entries
+    .filter((entry) => entry.isDirectory() && providerIdentifierSchema.safeParse(entry.name).success)
+    .map((entry) => getMapPresentation(aoiId, entry.name, dataPaths).catch((error: unknown) => {
+      if (error instanceof ProviderDataError && error.kind === "not_found" && error.message.startsWith("Missing map presentation manifest")) return null;
+      throw error;
+    })));
+  const available = presentations.filter((presentation): presentation is MapPresentationResponse => presentation !== null).sort((left, right) => left.domain.localeCompare(right.domain));
+  if (available.length === 0) throw notFound(`No cached map presentations exist for AOI '${aoiId}'.`);
+  return available;
+}
+
+export async function getMapPresentation(aoiId: string, domain: string, dataPaths?: ProviderDataPaths): Promise<MapPresentationResponse> {
+  const { presentation } = await validatedMapPresentation(aoiId, domain, dataPaths);
+  return mapPresentationResponseSchema.parse({
+    ...presentation,
+    response_version: "provider_map_presentation_read/v1",
+    archive_url: `/api/aoi/${aoiId}/presentations/${domain}/archive`,
+  });
+}
+
+export async function getMapPresentationArchiveRange(
+  aoiId: string,
+  domain: string,
+  rangeHeader: string | undefined,
+  dataPaths?: ProviderDataPaths,
+): Promise<MapPresentationArchiveRange> {
+  const { presentation, archivePath } = await validatedMapPresentation(aoiId, domain, dataPaths);
+  const totalSize = presentation.archive.size_bytes;
+  const range = parseSingleRange(rangeHeader, totalSize);
+  const handle = await open(archivePath, "r");
+  try {
+    const bytes = Buffer.alloc(range.end - range.start + 1);
+    await handle.read(bytes, 0, bytes.length, range.start);
+    return { ...range, bytes, totalSize, etag: `"${presentation.archive.sha256}"` };
+  } finally {
+    await handle.close();
+  }
+}
+
 function toV1SourceRegistry(registry: SourceRegistryV2): SourceRegistry {
   const legacySourceIds = ["openstreetmap", "manual_power_seed", "kiut_gesut_wms"];
   const sources = legacySourceIds.map((sourceId) => {
@@ -199,6 +261,54 @@ function toV1SourceRegistry(registry: SourceRegistryV2): SourceRegistry {
     };
   });
   return sourceRegistrySchema.parse({ registry_version: "source_registry/v1", sources });
+}
+
+async function validatedMapPresentation(aoiId: string, domain: string, dataPaths?: ProviderDataPaths): Promise<{ presentation: MapPresentationManifest; archivePath: string }> {
+  validateIdentifier(aoiId, "AOI");
+  validateIdentifier(domain, "domain");
+  const packRoot = path.join(cacheRootFor(dataPaths), aoiId, domain, packDirectoryName);
+  const manifest = domainPackV2Schema.parse(await readJson(path.join(packRoot, "manifest.json"), `domain-pack manifest '${aoiId}/${domain}'`));
+  if (manifest.aoi_id !== aoiId || manifest.domain !== domain) throw notFound("Domain-pack identity does not match the request.");
+  assertSafePackPaths(packRoot, manifest);
+  const registry = sourceRegistryV2Schema.parse(await readJson(registryPathFor(dataPaths), "source registry"));
+  validatePackProvenance(manifest.source_provenance, registry, false);
+  const presentationRoot = path.join(packRoot, "presentation");
+  const presentation = mapPresentationManifestSchema.parse(await readJson(path.join(presentationRoot, "manifest.json"), "map presentation manifest"));
+  if (presentation.aoi_id !== aoiId || presentation.domain !== domain) throw notFound("Map presentation identity does not match the request.");
+  if (presentation.parent_domain_pack.sha256 !== digest(Buffer.from(canonicalJson(manifest)))) {
+    throw notFound("Map presentation is stale for the domain manifest.");
+  }
+  const publicArtifacts = new Map(manifest.artifacts.filter(isAnalyticalGeoJsonArtifact).map((artifact) => [artifact.id, artifact]));
+  if (presentation.layers.length !== publicArtifacts.size) throw notFound("Map presentation layers do not match public domain artifacts.");
+  for (const layer of presentation.layers) {
+    const artifact = publicArtifacts.get(layer.artifact_id);
+    if (!artifact || JSON.stringify(layer.source_provenance) !== JSON.stringify(artifact.source_provenance)) {
+      throw notFound("Map presentation provenance does not match the domain artifact.");
+    }
+    validatePackProvenance(layer.source_provenance, registry, true);
+  }
+  const archivePath = resolvePackPath(presentationRoot, presentation.archive.path);
+  const archiveStats = await stat(archivePath).catch((error: unknown) => {
+    if (isMissingFile(error)) throw notFound("Missing map presentation archive.");
+    throw error;
+  });
+  if (archiveStats.size !== presentation.archive.size_bytes) throw notFound("Map presentation archive size does not match.");
+  const previouslyVerified = verifiedMapArchives.get(archivePath);
+  if (
+    !previouslyVerified
+    || previouslyVerified.size !== archiveStats.size
+    || previouslyVerified.modifiedAt !== archiveStats.mtimeMs
+    || previouslyVerified.sha256 !== presentation.archive.sha256
+  ) {
+    const archiveBytes = await readBytes(archivePath, "map presentation archive");
+    if (digest(archiveBytes) !== presentation.archive.sha256) throw notFound("Map presentation archive checksum does not match.");
+    verifiedMapArchives.set(archivePath, {
+      size: archiveStats.size,
+      modifiedAt: archiveStats.mtimeMs,
+      sha256: presentation.archive.sha256,
+    });
+  }
+  return { presentation, archivePath };
 }
 
 async function getCachedMetadata(aoiId: string, domain: string, dataPaths?: ProviderDataPaths): Promise<CachedMetadata> {
@@ -270,6 +380,27 @@ function resolvePackPath(packRoot: string, relativePath: string): string {
     throw new ProviderDataError("not_found", "Domain-pack path escapes its root.");
   }
   return candidate;
+}
+
+function canonicalJson(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
+  if (value && typeof value === "object") {
+    const record = value as Record<string, unknown>;
+    return `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${canonicalJson(record[key])}`).join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+function parseSingleRange(rangeHeader: string | undefined, totalSize: number): { start: number; end: number } {
+  const match = /^bytes=(\d+)-(\d*)$/.exec(rangeHeader ?? "");
+  if (!match) throw new ProviderDataError("invalid_request", "Map presentation archive requires one valid bytes range.");
+  const start = Number(match[1]);
+  const requestedEnd = match[2] ? Number(match[2]) : totalSize - 1;
+  const end = Math.min(requestedEnd, totalSize - 1);
+  if (!Number.isSafeInteger(start) || !Number.isSafeInteger(end) || start < 0 || start >= totalSize || end < start) {
+    throw new ProviderDataError("invalid_request", "Map presentation byte range is not satisfiable.");
+  }
+  return { start, end };
 }
 
 function digest(payload: Buffer): string {

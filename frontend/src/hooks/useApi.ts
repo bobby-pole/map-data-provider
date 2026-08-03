@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { DomainPack, DomainPackListResponse, IssueReviewStatus, ProviderIssue, SourceAvailabilityReport } from "../types/api";
+import type { IssueReviewStatus, MapPresentation, MapPresentationListResponse, ProviderIssue, SourceAvailabilityReport } from "../types/api";
 
 async function fetchJson<T>(path: string): Promise<T> {
   const response = await fetch(path);
@@ -10,7 +10,7 @@ async function fetchJson<T>(path: string): Promise<T> {
 const defaultPreviewAoiId = import.meta.env.VITE_PROVIDER_PREVIEW_AOI ?? "rybnik_60km";
 
 export function useProviderPreview(aoiId = defaultPreviewAoiId) {
-  const [domainPacks, setDomainPacks] = useState<DomainPack[]>([]);
+  const [presentations, setPresentations] = useState<MapPresentation[]>([]);
   const [issues, setIssues] = useState<ProviderIssue[]>([]);
   const [sourceAvailability, setSourceAvailability] = useState<SourceAvailabilityReport | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -18,13 +18,13 @@ export function useProviderPreview(aoiId = defaultPreviewAoiId) {
   useEffect(() => {
     let cancelled = false;
     void Promise.all([
-      fetchJson<DomainPackListResponse>(`/api/aoi/${encodeURIComponent(aoiId)}/domain-packs`),
+      fetchJson<MapPresentationListResponse>(`/api/aoi/${encodeURIComponent(aoiId)}/presentations`),
       fetchJson<{ aoi_id: string; issues: ProviderIssue[] }>(`/api/aoi/${encodeURIComponent(aoiId)}/issues`),
       fetchJson<SourceAvailabilityReport>(`/api/aoi/${encodeURIComponent(aoiId)}/source-availability`),
     ])
-      .then(([domainPackData, issueData, availabilityData]) => {
+      .then(([presentationData, issueData, availabilityData]) => {
         if (cancelled) return;
-        setDomainPacks(domainPackData.domain_packs);
+        setPresentations(presentationData.presentations);
         setIssues(issueData.issues);
         setSourceAvailability(availabilityData);
       })
@@ -51,5 +51,5 @@ export function useProviderPreview(aoiId = defaultPreviewAoiId) {
     }
   }
 
-  return { aoiId, domainPacks, issues, sourceAvailability, updateReview, error };
+  return { aoiId, presentations, issues, sourceAvailability, updateReview, error };
 }

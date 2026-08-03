@@ -1,44 +1,35 @@
 import { describe, expect, it } from "vitest";
 
 import { configuredPreviewLayers, popupDetails, previewLayerKey, sourceAttribution } from "./previewCatalog";
-import type { DomainPack } from "./types/api";
+import type { MapPresentation } from "./types/api";
 
-const fixturePack: DomainPack = {
-  response_version: "provider_domain_pack_read/v2",
+const fixturePresentation: MapPresentation = {
+  response_version: "provider_map_presentation_read/v1",
+  presentation_version: "provider_map_presentation/v1",
   aoi_id: "fixture_aoi",
   domain: "water",
-  readiness: { domain: "water", readiness: "usable_with_limitations", quality_status: "passed", highest_issue_severity: null, feature_count: 1 },
-  source_provenance: [{ source_id: "openstreetmap", contribution_role: "primary" }],
-  sources: [{ id: "openstreetmap", name: "OpenStreetMap", attribution: "© OpenStreetMap contributors", usage_role: "analytical", distribution: { public_export: "allowed", reason: "ODbL" }, limitations: ["Completeness varies."] }],
-  layers: [{
-    artifact: { id: "water.main", kind: "processed_vector", format: "geojson", feature_count: 1, public_export: true, source_provenance: [{ source_id: "openstreetmap", contribution_role: "primary" }] },
-    layer: {
-      type: "FeatureCollection",
-      metadata: { aoi_id: "fixture_aoi", domain: "water", layer_id: "water.main", source: "Fixture source", source_type: "analytical_vector", confidence: "medium", limitations: ["Pack limitation."], eligible_for_analysis: true, readiness: "usable_with_limitations", feature_count: 1, snapshot_at: "2026-08-01T00:00:00Z", source_query: "fixture query" },
-      features: [{ type: "Feature", properties: { category: "water main", confidence: "high", limitations: ["Feature limitation."] }, geometry: { type: "Point", coordinates: [18.5, 50.1] } }],
-    },
-  }, {
-    artifact: { id: "water.assets", kind: "processed_vector", format: "geojson", feature_count: 1, public_export: true, source_provenance: [{ source_id: "openstreetmap", contribution_role: "primary" }] },
-    layer: {
-      type: "FeatureCollection",
-      metadata: { aoi_id: "fixture_aoi", domain: "water", layer_id: "water.assets", source: "Fixture source", source_type: "analytical_vector", confidence: "medium", limitations: ["Pack limitation."], eligible_for_analysis: true, readiness: "usable_with_limitations", feature_count: 1, snapshot_at: "2026-08-01T00:00:00Z", source_query: "fixture query" },
-      features: [{ type: "Feature", properties: { asset_type: "water pump", confidence: "medium", limitations: ["Asset limitation."] }, geometry: { type: "Point", coordinates: [18.6, 50.2] } }],
-    },
-  }],
+  archive: { format: "pmtiles", size_bytes: 300, min_zoom: 7, max_zoom: 14, bounds: [18.4, 50, 18.7, 50.3] },
+  attribution: "© OpenStreetMap contributors",
+  archive_url: "/api/aoi/fixture_aoi/presentations/water/archive",
+  layers: [
+    { artifact_id: "water.main", source_layer: "water_main", feature_count: 1, source: "Fixture source", confidence: "medium", readiness: "usable_with_limitations", limitations: ["Pack limitation."], attribution: "© OpenStreetMap contributors", source_provenance: [{ source_id: "openstreetmap", contribution_role: "primary" }] },
+    { artifact_id: "water.assets", source_layer: "water_assets", feature_count: 1, source: "Fixture source", confidence: "medium", readiness: "usable_with_limitations", limitations: ["Pack limitation."], attribution: "© OpenStreetMap contributors", source_provenance: [{ source_id: "openstreetmap", contribution_role: "primary" }] },
+  ],
 };
 
 describe("manifest-driven preview catalog", () => {
-  it("creates a toggleable layer from domain-pack data without a hard-coded domain", () => {
-    const layers = configuredPreviewLayers([fixturePack]);
+  it("creates a toggleable layer from compact presentation metadata without a hard-coded domain", () => {
+    const layers = configuredPreviewLayers([fixturePresentation]);
     expect(layers.map(previewLayerKey)).toEqual(["water:water.main", "water:water.assets"]);
     expect(layers[0]?.domain).toBe("water");
     expect(layers[0] && sourceAttribution(layers[0])).toBe("© OpenStreetMap contributors");
+    expect(layers[0]?.archiveUrl).toContain("/presentations/water/archive");
   });
 
-  it("uses provider-normalized feature fields with manifest readiness and limitations", () => {
-    const [layer] = configuredPreviewLayers([fixturePack]);
+  it("uses rendered MVT fields with manifest readiness and limitations", () => {
+    const [layer] = configuredPreviewLayers([fixturePresentation]);
     if (!layer) throw new Error("Expected fixture layer.");
-    expect(popupDetails(layer.layer.features[0]!, layer)).toEqual({
+    expect(popupDetails({ type: "Feature", properties: { category: "water main", confidence: "high", limitations: "Feature limitation." }, geometry: { type: "Point", coordinates: [18.5, 50.1] } }, layer)).toEqual({
       title: "water main",
       source: "Fixture source",
       confidence: "high",

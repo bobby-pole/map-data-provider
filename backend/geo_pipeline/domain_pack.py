@@ -17,6 +17,7 @@ from geo_pipeline.aoi import validate_cache_key
 from geo_pipeline.cache import cache_paths, read_cached_layer
 from geo_pipeline.contracts import normalize_analytical_vector_layer, validate_provider_geojson
 from geo_pipeline.source_registry import guard_source_access, load_source_registry, validate_ordered_provenance
+from geo_pipeline.vector_tiles import build_map_presentation
 
 DOMAIN_PACK_VERSION = "provider_domain_pack/v2"
 PACK_DIRNAME = "domain-pack-v2"
@@ -148,12 +149,14 @@ def build_rybnik_power_domain_pack(*, root: Path) -> dict[str, Any]:
         "validation": {"path": "validation/metadata.json"},
         "readiness": {"path": "readiness/readiness.json"},
     }
-    return write_domain_pack("rybnik_60km", "power", root=root, manifest=manifest, files={
+    pack = write_domain_pack("rybnik_60km", "power", root=root, manifest=manifest, files={
         "layers/power.lines.geojson": layer_bytes, "layers/power.assets.geojson": assets_bytes,
         "layers/power.representative_points.geojson": representative_points_bytes,
         "native/osm-source-evidence.json": source_evidence_bytes,
         "validation/metadata.json": metadata_bytes, "readiness/readiness.json": readiness_bytes,
     })
+    build_map_presentation(pack_root=domain_pack_root("rybnik_60km", "power", root=root), manifest=pack)
+    return pack
 
 
 def _representative_points_layer(layer: dict[str, Any]) -> dict[str, Any]:

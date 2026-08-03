@@ -1,9 +1,12 @@
-import type { DomainPack, DomainPackLayer, ProviderFeature, SourceRegistryV2Entry } from "./types/api";
+import type { MapPresentation, MapPresentationLayer, ProviderFeature } from "./types/api";
 
-export type PreviewLayer = DomainPackLayer & {
+export type PreviewLayer = {
+  artifact: MapPresentationLayer;
   domain: string;
-  readiness: DomainPack["readiness"];
-  sources: SourceRegistryV2Entry[];
+  archiveUrl: string;
+  archiveBounds: MapPresentation["archive"]["bounds"];
+  archiveMinZoom: number;
+  archiveMaxZoom: number;
 };
 
 export type PopupDetails = {
@@ -14,39 +17,38 @@ export type PopupDetails = {
   limitations: string[];
 };
 
-export function configuredPreviewLayers(domainPacks: DomainPack[]): PreviewLayer[] {
-  return domainPacks.flatMap((domainPack) => domainPack.layers.map((layer) => ({
-    ...layer,
-    domain: domainPack.domain,
-    readiness: domainPack.readiness,
-    sources: layer.artifact.source_provenance
-      .map((provenance) => domainPack.sources.find((source) => source.id === provenance.source_id))
-      .filter((source): source is SourceRegistryV2Entry => source !== undefined),
+export function configuredPreviewLayers(presentations: MapPresentation[]): PreviewLayer[] {
+  return presentations.flatMap((presentation) => presentation.layers.map((artifact) => ({
+    artifact,
+    domain: presentation.domain,
+    archiveUrl: presentation.archive_url,
+    archiveBounds: presentation.archive.bounds,
+    archiveMinZoom: presentation.archive.min_zoom,
+    archiveMaxZoom: presentation.archive.max_zoom,
   })));
 }
 
 export function previewLayerKey(layer: PreviewLayer): string {
-  return `${layer.domain}:${layer.artifact.id}`;
+  return `${layer.domain}:${layer.artifact.artifact_id}`;
 }
 
 export function popupDetails(feature: ProviderFeature, layer: PreviewLayer): PopupDetails {
   const properties = feature.properties;
-  const limitations = stringList(properties.limitations, layer.layer.metadata.limitations);
+  const limitations = stringList(properties.limitations, layer.artifact.limitations);
   return {
     title: stringValue(properties.asset_type)
       ?? stringValue(properties.category)
       ?? stringValue(properties.feature_type)
-      ?? layer.artifact.id,
-    source: stringValue(properties.source) ?? layer.layer.metadata.source,
-    confidence: stringValue(properties.confidence) ?? layer.layer.metadata.confidence,
-    readiness: layer.readiness.readiness,
+      ?? layer.artifact.artifact_id,
+    source: stringValue(properties.source) ?? layer.artifact.source,
+    confidence: stringValue(properties.confidence) ?? layer.artifact.confidence,
+    readiness: layer.artifact.readiness,
     limitations,
   };
 }
 
 export function sourceAttribution(layer: PreviewLayer): string {
-  const labels = layer.sources.map((source) => source.attribution || source.name);
-  return labels.length > 0 ? labels.join("; ") : layer.layer.metadata.source;
+  return layer.artifact.attribution || layer.artifact.source;
 }
 
 function stringValue(value: unknown): string | undefined {
@@ -55,5 +57,6 @@ function stringValue(value: unknown): string | undefined {
 
 function stringList(value: unknown, fallback: string[]): string[] {
   if (Array.isArray(value) && value.every((item) => typeof item === "string")) return value;
+  if (typeof value === "string" && value.trim()) return value.split(";").map((item) => item.trim()).filter(Boolean);
   return fallback;
 }

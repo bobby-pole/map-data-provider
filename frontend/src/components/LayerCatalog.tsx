@@ -18,13 +18,13 @@ export function LayerCatalog({
           <label className="layerToggle">
             <input type="checkbox" checked={enabledLayers[key] ?? true} onChange={(event) => onToggle(key, event.target.checked)} />
             <span>
-              <strong>{layer.artifact.id}</strong>
-              <small>{layer.domain} · {layer.layer.features.length} features · {layer.readiness.readiness}</small>
+              <strong>{layer.artifact.artifact_id}</strong>
+              <small>{layer.domain} · {layer.artifact.feature_count} features · {layer.artifact.readiness}</small>
               <small>{sourceAttribution(layer)}</small>
             </span>
           </label>
         </li>;
-      })}</ul> : <p className="muted">Loading registered domain-pack manifests…</p>}
+      })}</ul> : <p className="muted">Loading registered map-presentation manifests…</p>}
     </section>
   );
 }

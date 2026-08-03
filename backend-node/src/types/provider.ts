@@ -438,6 +438,64 @@ export const domainPackListResponseSchema = z
   })
   .strict();
 
+const presentationBoundsSchema = z.tuple([
+  z.number().min(-180).max(180),
+  z.number().min(-90).max(90),
+  z.number().min(-180).max(180),
+  z.number().min(-90).max(90),
+]).refine(([minLon, minLat, maxLon, maxLat]) => minLon < maxLon && minLat < maxLat, {
+  message: "Presentation bounds must have a positive extent.",
+});
+
+export const mapPresentationLayerSchema = z.object({
+  artifact_id: z.string().min(1),
+  source_layer: z.string().regex(/^[a-z0-9_]+$/),
+  feature_count: z.number().int().nonnegative(),
+  source: z.string().min(1),
+  confidence: z.enum(["high", "medium", "low", "not_applicable"]),
+  readiness: z.enum(["ready", "usable_with_limitations", "needs_source", "not_usable"]),
+  limitations: z.array(z.string()),
+  attribution: z.string().min(1),
+  source_provenance: z.array(sourceProvenanceSchema).min(1),
+}).strict();
+
+export const mapPresentationManifestSchema = z.object({
+  presentation_version: z.literal("provider_map_presentation/v1"),
+  aoi_id: providerIdentifierSchema,
+  domain: providerIdentifierSchema,
+  parent_domain_pack: z.object({
+    version: z.literal("provider_domain_pack/v2"),
+    sha256: z.string().regex(/^[a-f0-9]{64}$/),
+  }).strict(),
+  archive: z.object({
+    format: z.literal("pmtiles"),
+    path: z.string().min(1),
+    sha256: z.string().regex(/^[a-f0-9]{64}$/),
+    size_bytes: z.number().int().positive(),
+    min_zoom: z.number().int().min(0).max(22),
+    max_zoom: z.number().int().min(0).max(22),
+    bounds: presentationBoundsSchema,
+  }).strict().refine((archive) => archive.min_zoom <= archive.max_zoom, { message: "Presentation zoom range is invalid." }),
+  layers: z.array(mapPresentationLayerSchema).min(1),
+  attribution: z.string().min(1),
+  benchmark: z.object({
+    benchmark_version: z.literal("provider_map_presentation_benchmark/v1"),
+    baseline: z.object({ delivery: z.literal("full_geojson_to_leaflet"), feature_count: z.number().int().nonnegative(), payload_bytes: z.number().int().positive() }).strict(),
+    presentation: z.object({ delivery: z.literal("pmtiles_mvt_range_reads"), archive_bytes: z.number().int().positive(), addressed_tiles: z.number().int().positive(), min_zoom: z.number().int(), max_zoom: z.number().int() }).strict(),
+  }).strict(),
+}).strict();
+
+export const mapPresentationResponseSchema = mapPresentationManifestSchema.extend({
+  response_version: z.literal("provider_map_presentation_read/v1"),
+  archive_url: z.string().startsWith("/api/aoi/"),
+}).strict();
+
+export const mapPresentationListResponseSchema = z.object({
+  response_version: z.literal("provider_map_presentation_list/v1"),
+  aoi_id: providerIdentifierSchema,
+  presentations: z.array(mapPresentationResponseSchema),
+}).strict();
+
 export type CachedMetadata = z.infer<typeof cachedMetadataSchema>;
 export type ProviderLayerResponse = z.infer<typeof providerLayerResponseSchema>;
 export type ReadinessRecord = z.infer<typeof readinessRecordSchema>;
@@ -445,6 +503,8 @@ export type SourceRegistry = z.infer<typeof sourceRegistrySchema>;
 export type SourceRegistryV2 = z.infer<typeof sourceRegistryV2Schema>;
 export type DomainPackReadResponse = z.infer<typeof domainPackReadResponseSchema>;
 export type DomainPackLayer = z.infer<typeof domainPackLayerSchema>;
+export type MapPresentationManifest = z.infer<typeof mapPresentationManifestSchema>;
+export type MapPresentationResponse = z.infer<typeof mapPresentationResponseSchema>;
 export type GeneratedIssue = z.infer<typeof generatedIssueSchema>;
 export type IssueReviewRecord = z.infer<typeof issueReviewRecordSchema>;
 export type ReviewedIssue = z.infer<typeof reviewedIssueSchema>;

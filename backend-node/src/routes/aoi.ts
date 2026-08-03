@@ -9,6 +9,7 @@ import {
   getDomainPacks,
   getMapPresentation,
   getMapPresentationArchiveRange,
+  getMapFeatureDetail,
   getMapPresentations,
   getSourcesForAoi,
   getSourceAvailability,
@@ -30,6 +31,7 @@ import {
   sourceAvailabilityReportSchema,
   mapPresentationListResponseSchema,
   mapPresentationResponseSchema,
+  mapFeatureDetailResponseSchema,
 } from "../types/provider.js";
 
 export function createAoiRouter(options?: { issueStorePaths?: IssueStorePaths; providerDataPaths?: ProviderDataPaths }) {
@@ -52,6 +54,19 @@ aoiRouter.get("/:aoiId/presentations/:domain", async (request, response) => {
     response.status(200).json(mapPresentationResponseSchema.parse(await getMapPresentation(
       request.params.aoiId,
       request.params.domain,
+      options?.providerDataPaths,
+    )));
+  } catch (error) {
+    respondWithProviderError(response, error);
+  }
+});
+
+aoiRouter.get("/:aoiId/presentations/:domain/features/:sourceId", async (request, response) => {
+  try {
+    response.status(200).json(mapFeatureDetailResponseSchema.parse(await getMapFeatureDetail(
+      request.params.aoiId,
+      request.params.domain,
+      request.params.sourceId,
       options?.providerDataPaths,
     )));
   } catch (error) {

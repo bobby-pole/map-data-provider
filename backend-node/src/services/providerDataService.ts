@@ -24,8 +24,10 @@ import {
   sourceAvailabilityReportSchema,
   mapPresentationManifestSchema,
   mapPresentationResponseSchema,
+  mapFeatureDetailResponseSchema,
   type MapPresentationManifest,
   type MapPresentationResponse,
+  type MapFeatureDetailResponse,
 } from "../types/provider.js";
 
 const projectRoot = path.resolve(fileURLToPath(new URL("../../../", import.meta.url)));
@@ -231,6 +233,33 @@ export async function getMapPresentationArchiveRange(
   }
 }
 
+export async function getMapFeatureDetail(
+  aoiId: string,
+  domain: string,
+  sourceId: string,
+  dataPaths?: ProviderDataPaths,
+): Promise<MapFeatureDetailResponse> {
+  if (!/^(node|way|relation)\/\d+$/.test(sourceId)) {
+    throw new ProviderDataError("invalid_request", "source_id must be an OSM node, way or relation identifier.");
+  }
+  const { manifest, packRoot } = await validatedMapPresentation(aoiId, domain, dataPaths);
+  for (const artifact of manifest.artifacts.filter(isAnalyticalGeoJsonArtifact)) {
+    const layer = providerLayerResponseSchema.parse(await readJson(resolvePackPath(packRoot, artifact.path), `public layer '${artifact.id}'`));
+    const feature = layer.features.find((candidate) => candidate.properties.source_id === sourceId);
+    if (feature) {
+      return mapFeatureDetailResponseSchema.parse({
+        response_version: "provider_map_feature_detail/v1",
+        aoi_id: aoiId,
+        domain,
+        artifact_id: artifact.id,
+        source_id: sourceId,
+        feature,
+      });
+    }
+  }
+  throw notFound(`No eligible public feature exists for source_id '${sourceId}'.`);
+}
+
 function toV1SourceRegistry(registry: SourceRegistryV2): SourceRegistry {
   const legacySourceIds = ["openstreetmap", "manual_power_seed", "kiut_gesut_wms"];
   const sources = legacySourceIds.map((sourceId) => {
@@ -263,7 +292,7 @@ function toV1SourceRegistry(registry: SourceRegistryV2): SourceRegistry {
   return sourceRegistrySchema.parse({ registry_version: "source_registry/v1", sources });
 }
 
-async function validatedMapPresentation(aoiId: string, domain: string, dataPaths?: ProviderDataPaths): Promise<{ presentation: MapPresentationManifest; archivePath: string }> {
+async function validatedMapPresentation(aoiId: string, domain: string, dataPaths?: ProviderDataPaths): Promise<{ presentation: MapPresentationManifest; archivePath: string; manifest: z.infer<typeof domainPackV2Schema>; packRoot: string }> {
   validateIdentifier(aoiId, "AOI");
   validateIdentifier(domain, "domain");
   const packRoot = path.join(cacheRootFor(dataPaths), aoiId, domain, packDirectoryName);
@@ -308,7 +337,7 @@ async function validatedMapPresentation(aoiId: string, domain: string, dataPaths
       sha256: presentation.archive.sha256,
     });
   }
-  return { presentation, archivePath };
+  return { presentation, archivePath, manifest, packRoot };
 }
 
 async function getCachedMetadata(aoiId: string, domain: string, dataPaths?: ProviderDataPaths): Promise<CachedMetadata> {

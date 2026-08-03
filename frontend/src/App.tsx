@@ -66,7 +66,7 @@ export default function App() {
             <div className="sectionHeading"><h2>Official orthophoto</h2><span>{orthophotoEnabled ? "on" : "off"}</span></div>
             <label className="layerToggle"><input type="checkbox" checked={orthophotoEnabled} onChange={(event) => setOrthophotoEnabled(event.target.checked)} /><span><strong>{orthophotoReference.label}</strong><small>Source date: {orthophotoReference.sourceDate}. Resolution: {orthophotoReference.resolution}.</small><small>{orthophotoReference.limitation}</small></span></label>
           </section>
-          <FeatureDetails selected={selectedFeature} />
+          <FeatureDetails aoiId={aoiId} selected={selectedFeature} />
           <IssueReviewDrawer issues={issues} updateReview={updateReview} />
         </aside>
       </section>

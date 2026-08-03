@@ -28,7 +28,7 @@ def test_power_domain_pack_v2_preserves_v1_cache_compatibility(tmp_path: Path) -
         {"source_id": "openstreetmap", "contribution_role": "primary"},
         {"source_id": "kiut_gesut_wms", "contribution_role": "validation_reference"},
     ]
-    assert {"power.lines", "power.assets", "power.representative_points", "power.osm_source_evidence", "power.kiut_reference"} == set(artifacts)
+    assert {"power.lines", "power.assets", "power.supports", "power.representative_points", "power.osm_source_evidence", "power.kiut_reference"} == set(artifacts)
     assert artifacts["power.kiut_reference"]["public_export"] is False and "path" not in artifacts["power.kiut_reference"]
     assert artifacts["power.osm_source_evidence"]["format"] == "json"
     assert representative_points["features"][0]["properties"]["source_id"] == "way/32043840"
@@ -36,9 +36,9 @@ def test_power_domain_pack_v2_preserves_v1_cache_compatibility(tmp_path: Path) -
     presentation = json.loads((pack_root / "presentation" / "manifest.json").read_text())
     assert presentation["presentation_version"] == "provider_map_presentation/v1"
     assert presentation["archive"]["format"] == "pmtiles"
-    assert {layer["artifact_id"] for layer in presentation["layers"]} == {"power.lines", "power.assets"}
+    assert {layer["artifact_id"] for layer in presentation["layers"]} == {"power.lines", "power.assets", "power.supports"}
     public = read_domain_pack("rybnik_60km", "power", root=tmp_path, public_export=True)["artifacts"]
-    assert [artifact["id"] for artifact in public] == ["power.lines", "power.assets"]
+    assert [artifact["id"] for artifact in public] == ["power.lines", "power.assets", "power.supports"]
 
 
 def test_domain_pack_rejects_escape_checksum_and_count_mismatch(tmp_path: Path) -> None:

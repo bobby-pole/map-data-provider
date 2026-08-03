@@ -7,7 +7,7 @@ import pytest
 from pmtiles.reader import MemorySource, Reader
 from pmtiles.tile import TileType
 
-from geo_pipeline.vector_tiles import build_map_presentation, read_map_presentation
+from geo_pipeline.vector_tiles import _tiles_for_bounds, _voltage_style, build_map_presentation, read_map_presentation
 
 
 def _digest(payload: bytes) -> str:
@@ -31,7 +31,7 @@ def _fixture_pack(tmp_path: Path) -> tuple[Path, dict]:
     layers_root = pack_root / "layers"
     layers_root.mkdir(parents=True)
     lines = _layer("power.lines", {
-        "type": "Feature", "properties": {"source": "OpenStreetMap", "source_id": "way/1", "domain": "power", "asset_type": "line", "confidence": "medium", "limitations": ["Fixture-only MVT evidence."]},
+        "type": "Feature", "properties": {"source": "OpenStreetMap", "source_id": "way/1", "domain": "power", "asset_type": "line", "confidence": "medium", "limitations": ["Fixture-only MVT evidence."], "osm_tags": {"voltage": "220000"}},
         "geometry": {"type": "LineString", "coordinates": [[18.45, 50.1], [18.55, 50.2]]},
     })
     assets = _layer("power.assets", {
@@ -76,9 +76,10 @@ def test_public_layers_build_deterministic_mvt_pmtiles_with_compact_properties(t
     tile = reader.get(7, 70, 43)
     assert tile is not None
     decoded = mapbox_vector_tile.decode(tile)
-    properties = next(iter(decoded.values()))["features"][0]["properties"]
+    properties = next(feature["properties"] for layer in decoded.values() for feature in layer["features"] if feature["properties"]["source_id"] == "way/1")
     assert properties["source_id"] in {"way/1", "node/1"}
     assert "osm_tags" not in properties
+    assert properties["voltage_bucket"] == "extra_high"
     assert read_map_presentation(pack_root=pack_root, manifest=manifest)["archive"]["size_bytes"] == len(first_bytes)
 
 
@@ -93,3 +94,14 @@ def test_presentation_rejects_reference_only_or_stale_inputs(tmp_path: Path) -> 
     manifest["artifacts"][0]["feature_count"] = 2
     with pytest.raises(ValueError, match="stale"):
         read_map_presentation(pack_root=pack_root, manifest=manifest)
+
+
+def test_voltage_states_and_power_support_zoom_thresholds_are_explicit() -> None:
+    assert _voltage_style({"voltage": "23000"}) == ("medium_voltage", "medium")
+    assert _voltage_style({"voltage": "110000;220000"}) == ("multiple", "unknown")
+    assert _voltage_style({}) == ("missing", "unknown")
+    assert _voltage_style({"voltage": "unknown"}) == ("unparseable", "unknown")
+
+    bounds = (18.5, 50.1, 18.5, 50.1)
+    assert min(coordinate[0] for coordinate in _tiles_for_bounds(bounds, min_zoom=12)) == 12
+    assert min(coordinate[0] for coordinate in _tiles_for_bounds(bounds, min_zoom=14)) == 14

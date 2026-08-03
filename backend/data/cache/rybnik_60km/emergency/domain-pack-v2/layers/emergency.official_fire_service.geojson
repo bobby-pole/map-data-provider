@@ -1,0 +1,66 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "cache_layout_version": "provider_cache/v1",
+    "geojson_contract_version": "provider_geojson/v1",
+    "aoi_id": "rybnik_60km",
+    "domain": "emergency",
+    "layer_id": "emergency.official_fire_service",
+    "source": "PRG (official unit-area evidence)",
+    "source_type": "analytical_vector",
+    "source_registry_id": "prg_wfs",
+    "source_url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
+    "source_query": "PRG WFS 2.0 GetFeature: K02_Komenda_powiatowa_policji and K07_Komenda_powiatowa_strazy_pozarnej, retained as representative points.",
+    "snapshot_at": "2026-08-03T10:26:40Z",
+    "pipeline_version": "geo_pipeline/emergency/v1",
+    "query_version": "emergency-prg/v1",
+    "validation_status_raw": "warning",
+    "quality_status": "warning",
+    "confidence": "medium",
+    "limitations": [
+      "PRG police and fire records are official unit-area geometry, not verified facility footprints or operational locations.",
+      "The public inspection layer contains one representative point per retained PRG source area; source geometry type and source checksum remain explicit.",
+      "PRG contributes police/fire evidence only. Hospitals and ambulance/rescue remain separately published OSM community evidence where no qualified official facility registry is enabled."
+    ],
+    "eligible_for_analysis": true,
+    "readiness": "usable_with_limitations",
+    "contract_version": "provider_geojson/v1",
+    "feature_count": 1
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "PRG (official unit-area evidence)",
+        "source_id": "prg_k07/1350193",
+        "domain": "emergency",
+        "asset_type": "fire_service",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "PRG police and fire records are official unit-area geometry, not verified facility footprints or operational locations.",
+          "The public inspection layer contains one representative point per retained PRG source area; source geometry type and source checksum remain explicit.",
+          "PRG contributes police/fire evidence only. Hospitals and ambulance/rescue remain separately published OSM community evidence where no qualified official facility registry is enabled."
+        ],
+        "eligible_for_analysis": true,
+        "source_geometry_type": "MultiSurface",
+        "geometry_role": "representative_point_from_official_unit_area",
+        "source_response_sha256": "08c2a1e72621fde12430ec8f094df437a023940520b700fb40d9f4197505f74e",
+        "source_attributes": {
+          "name": "Komenda Miejska Państwowej Straży Pożarnej w Żorach",
+          "official_type": "K07_Komenda_powiatowa_strazy_pozarnej",
+          "iip_identifier": "9f03ee59-4b7d-41ad-ae23-f91a460206bd",
+          "version_from": "2018-10-23T12:55:09+02:00",
+          "jpt_id": "1350193"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.680535,
+          50.038899
+        ]
+      }
+    }
+  ]
+}

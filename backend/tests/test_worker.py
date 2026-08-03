@@ -38,6 +38,25 @@ def test_fixture_worker_creates_complete_cache_without_network(tmp_path: Path) -
     ]
 
 
+def test_emergency_fixture_worker_keeps_official_and_community_evidence_separate(tmp_path: Path) -> None:
+    result = run_worker(aoi="rybnik_60km", domain="emergency", input_mode="fixture", cache_root=tmp_path)
+    manifest = read_domain_pack("rybnik_60km", "emergency", root=tmp_path)
+    artifacts = {artifact["id"]: artifact for artifact in manifest["artifacts"]}
+
+    assert result == {
+        "status": "ok", "aoi_id": "rybnik_60km", "domain": "emergency", "input": "fixture", "refreshed": True,
+        "source_registry_id": "openstreetmap", "query_version": "emergency-osm/v1", "feature_count": 4,
+        "readiness": "usable_with_limitations",
+    }
+    assert manifest["source_provenance"] == [
+        {"source_id": "openstreetmap", "contribution_role": "primary"},
+        {"source_id": "prg_wfs", "contribution_role": "supplementary"},
+    ]
+    assert artifacts["emergency.police"]["source_provenance"] == [{"source_id": "openstreetmap", "contribution_role": "primary"}]
+    assert artifacts["emergency.official_police"]["source_provenance"] == [{"source_id": "prg_wfs", "contribution_role": "supplementary"}]
+    assert artifacts["emergency.prg_police_fire_source_evidence"]["public_export"] is False
+
+
 def test_worker_rejects_unsupported_target_without_creating_cache(tmp_path: Path) -> None:
     try:
         run_worker(aoi="unknown", domain="power", input_mode="fixture", cache_root=tmp_path)

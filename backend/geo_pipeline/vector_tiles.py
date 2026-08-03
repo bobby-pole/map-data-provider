@@ -301,7 +301,7 @@ def _is_public_vector_artifact(artifact: dict[str, Any]) -> bool:
     return (
         artifact.get("public_export") is True
         and artifact.get("format") == "geojson"
-        and artifact.get("kind") in {"processed_vector", "derived_vector"}
+        and artifact.get("kind") in {"processed_vector", "derived_vector", "representative_points"}
         and isinstance(artifact.get("path"), str)
         and isinstance(artifact.get("sha256"), str)
         and isinstance(artifact.get("feature_count"), int)

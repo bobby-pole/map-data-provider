@@ -16,6 +16,14 @@ from shapely.geometry import mapping, shape
 from geo_pipeline.aoi import validate_cache_key
 from geo_pipeline.cache import cache_paths, read_cached_layer
 from geo_pipeline.contracts import normalize_analytical_vector_layer, validate_provider_geojson
+from geo_pipeline.emergency import (
+    EMERGENCY_FIXTURE,
+    EMERGENCY_LIMITATIONS,
+    PRG_EMERGENCY_FIXTURE,
+    PRG_EMERGENCY_LIMITATIONS,
+    build_osm_emergency_layers,
+    build_prg_emergency_layers,
+)
 from geo_pipeline.source_registry import guard_source_access, load_source_registry, validate_ordered_provenance
 from geo_pipeline.vector_tiles import build_map_presentation
 
@@ -185,6 +193,95 @@ def build_rybnik_power_domain_pack(*, root: Path) -> dict[str, Any]:
     return pack
 
 
+def build_rybnik_emergency_domain_pack(*, root: Path) -> dict[str, Any]:
+    """Build a source-separated emergency pack from committed fixture evidence."""
+    legacy = read_cached_layer(cache_paths("rybnik_60km", "emergency", root=root))
+    readiness = legacy["readiness"]["readiness"]
+    osm_layers = build_osm_emergency_layers(readiness=readiness)
+    prg_layers = build_prg_emergency_layers(readiness=readiness)
+    osm_provenance = [{"source_id": "openstreetmap", "contribution_role": "primary"}]
+    source_provenance = [
+        *osm_provenance,
+        {"source_id": "prg_wfs", "contribution_role": "supplementary"},
+    ]
+    files: dict[str, bytes] = {
+        "validation/metadata.json": json.dumps(legacy["metadata"], ensure_ascii=False, indent=2).encode(),
+        "readiness/readiness.json": json.dumps(legacy["readiness"], ensure_ascii=False, indent=2).encode(),
+    }
+    artifacts: list[dict[str, Any]] = []
+    for category, layer in osm_layers.items():
+        path = f"layers/emergency.{category}.geojson"
+        payload = json.dumps(layer, ensure_ascii=False, indent=2).encode()
+        files[path] = payload
+        artifacts.append({
+            "id": f"emergency.{category}", "kind": "processed_vector", "format": "geojson", "path": path,
+            "sha256": _digest(payload), "feature_count": layer["metadata"]["feature_count"],
+            "source_provenance": osm_provenance, "public_export": True,
+        })
+
+    prg_provenance = [{"source_id": "prg_wfs", "contribution_role": "supplementary"}]
+    for category, layer in prg_layers.items():
+        path = f"layers/emergency.official_{category}.geojson"
+        payload = json.dumps(layer, ensure_ascii=False, indent=2).encode()
+        files[path] = payload
+        artifacts.append({
+            "id": f"emergency.official_{category}", "kind": "representative_points", "format": "geojson", "path": path,
+            "sha256": _digest(payload), "feature_count": layer["metadata"]["feature_count"],
+            "source_provenance": prg_provenance, "public_export": True,
+        })
+
+    inspection_points = _emergency_representative_points(osm_layers)
+    inspection_payload = json.dumps(inspection_points, ensure_ascii=False, indent=2).encode()
+    files["layers/emergency.inspection_points.geojson"] = inspection_payload
+    artifacts.append({
+        "id": "emergency.inspection_points", "kind": "derived_vector", "format": "geojson", "path": "layers/emergency.inspection_points.geojson",
+        "sha256": _digest(inspection_payload), "feature_count": inspection_points["metadata"]["feature_count"],
+        "source_provenance": osm_provenance, "public_export": True,
+    })
+
+    osm_evidence = {
+        "source_registry_id": "openstreetmap",
+        "fixture": str(EMERGENCY_FIXTURE.relative_to(Path(__file__).resolve().parents[1])),
+        "sha256": _digest(EMERGENCY_FIXTURE.read_bytes()),
+        "category_mappings": {
+            "hospital": ["amenity=hospital", "healthcare=hospital"],
+            "fire_service": ["amenity=fire_station"],
+            "police": ["amenity=police"],
+            "ambulance_rescue": ["amenity=ambulance_station", "emergency=ambulance_station", "emergency=mountain_rescue", "emergency=lifeguard_base"],
+        },
+        "limitations": EMERGENCY_LIMITATIONS,
+    }
+    osm_evidence_payload = json.dumps(osm_evidence, ensure_ascii=False, indent=2).encode()
+    files["native/osm-emergency-source-evidence.json"] = osm_evidence_payload
+    artifacts.append({
+        "id": "emergency.osm_source_evidence", "kind": "native_vector", "format": "json", "path": "native/osm-emergency-source-evidence.json",
+        "sha256": _digest(osm_evidence_payload), "source_provenance": osm_provenance, "public_export": False,
+    })
+
+    prg_evidence = {
+        "source_registry_id": "prg_wfs",
+        "mapped_feature_types": ["ms:K02_Komenda_powiatowa_policji", "ms:K07_Komenda_powiatowa_strazy_pozarnej"],
+        "fixture": str(PRG_EMERGENCY_FIXTURE.relative_to(Path(__file__).resolve().parents[1])),
+        "fixture_sha256": _digest(PRG_EMERGENCY_FIXTURE.read_bytes()),
+        "publication": "Public representative points retain PRG identity separately from OSM and do not assert exact facility locations.",
+        "limitations": PRG_EMERGENCY_LIMITATIONS,
+    }
+    prg_evidence_payload = json.dumps(prg_evidence, ensure_ascii=False, indent=2).encode()
+    files["native/prg-police-fire-source-evidence.json"] = prg_evidence_payload
+    artifacts.append({
+        "id": "emergency.prg_police_fire_source_evidence", "kind": "native_vector", "format": "json", "path": "native/prg-police-fire-source-evidence.json",
+        "sha256": _digest(prg_evidence_payload), "source_provenance": prg_provenance, "public_export": False,
+    })
+    manifest = {
+        "domain_pack_version": DOMAIN_PACK_VERSION, "aoi_id": "rybnik_60km", "domain": "emergency",
+        "source_provenance": source_provenance, "artifacts": artifacts,
+        "validation": {"path": "validation/metadata.json"}, "readiness": {"path": "readiness/readiness.json"},
+    }
+    pack = write_domain_pack("rybnik_60km", "emergency", root=root, manifest=manifest, files=files)
+    build_map_presentation(pack_root=domain_pack_root("rybnik_60km", "emergency", root=root), manifest=pack)
+    return pack
+
+
 def _representative_points_layer(layer: dict[str, Any]) -> dict[str, Any]:
     metadata = {**deepcopy(layer["metadata"]), "layer_id": "power.representative_points"}
     features = []
@@ -197,6 +294,28 @@ def _representative_points_layer(layer: dict[str, Any]) -> dict[str, Any]:
     errors = validate_provider_geojson(points)
     if errors:
         raise ValueError(f"Representative points violate the provider contract: {', '.join(errors)}")
+    return points
+
+
+def _emergency_representative_points(layers: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    first = next(iter(layers.values()))
+    metadata = {**deepcopy(first["metadata"]), "layer_id": "emergency.inspection_points"}
+    features = []
+    for category, layer in layers.items():
+        for feature in layer["features"]:
+            geometry = shape(feature["geometry"])
+            properties = {
+                **deepcopy(feature["properties"]),
+                "origin_artifact": f"emergency.{category}",
+                "origin_source_id": feature["properties"]["source_id"],
+                "source_geometry_type": geometry.geom_type,
+            }
+            features.append({"type": "Feature", "properties": properties, "geometry": mapping(geometry.representative_point())})
+    metadata["feature_count"] = len(features)
+    points = {"type": "FeatureCollection", "metadata": metadata, "features": features}
+    errors = validate_provider_geojson(points)
+    if errors:
+        raise ValueError(f"Emergency representative points violate the provider contract: {', '.join(errors)}")
     return points
 
 

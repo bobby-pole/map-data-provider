@@ -244,8 +244,8 @@ export async function getMapFeatureDetail(
   sourceId: string,
   dataPaths?: ProviderDataPaths,
 ): Promise<MapFeatureDetailResponse> {
-  if (!/^(node|way|relation)\/\d+$/.test(sourceId)) {
-    throw new ProviderDataError("invalid_request", "source_id must be an OSM node, way or relation identifier.");
+  if (!/^[a-z][a-z0-9_-]*\/[A-Za-z0-9._:-]+$/i.test(sourceId)) {
+    throw new ProviderDataError("invalid_request", "source_id must be a provider feature identifier.");
   }
   const { manifest, packRoot } = await validatedMapPresentation(aoiId, domain, dataPaths);
   for (const artifact of manifest.artifacts.filter(isAnalyticalGeoJsonArtifact)) {

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import maplibregl, { type MapGeoJSONFeature } from "maplibre-gl";
+import maplibregl, { type CircleLayerSpecification, type ExpressionSpecification, type MapGeoJSONFeature } from "maplibre-gl";
 import type { Geometry } from "geojson";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Protocol } from "pmtiles";
@@ -22,7 +22,7 @@ const CIRCUIT_LINE_ID = "circuit:selected-line";
 const CIRCUIT_ENDPOINT_ID = "circuit:selected-endpoints";
 
 function providerLayerId(layer: PreviewLayer): string { return `${PROVIDER_PREFIX}${previewLayerKey(layer)}`; }
-function providerInteractiveLayerIds(layer: PreviewLayer): string[] { const id = providerLayerId(layer); return [id, `${id}-medium`, `${id}-low`]; }
+function providerInteractiveLayerIds(layer: PreviewLayer): string[] { const id = providerLayerId(layer); return [id, `${id}-medium`, `${id}-low`, `${id}-fill`, `${id}-outline`]; }
 function providerSourceId(archiveUrl: string): string { return `${PROVIDER_PREFIX}archive:${archiveUrl.replace(/[^a-z0-9]/gi, "_")}`; }
 function wmsTileUrl(endpoint: string, wmsLayer: string, format: string): string {
   const parameters = new URLSearchParams({
@@ -116,12 +116,17 @@ export function MapView({ layers, references, orthophotoEnabled, basemapEnabled,
           map.addLayer({ ...base, id: `${id}-medium`, minzoom: 11, filter: ["==", ["get", "voltage_bucket"], "medium"] });
           map.addLayer({ ...base, id: `${id}-low`, minzoom: 13, filter: ["==", ["get", "voltage_bucket"], "low"] });
           map.addLayer({ id: `${id}-labels`, type: "symbol", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom: 12, filter: ["all", ["!=", ["get", "voltage_bucket"], "medium"], ["!=", ["get", "voltage_bucket"], "low"]], layout: { "symbol-placement": "line", "text-field": ["coalesce", ["get", "voltage_label"], ["get", "name"]], "text-size": 11, "text-max-angle": 35 }, paint: { "text-color": "#f8fafc", "text-halo-color": "#0f172a", "text-halo-width": 1.5 } });
-        } else map.addLayer({
-          id, type: "circle", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom: 12,
-          paint: layer.artifact.artifact_id === "power.supports"
-            ? { "circle-color": ["match", ["get", "asset_type"], "tower", "#f97316", "portal", "#facc15", "utility_pole", "#38bdf8", "#cbd5e1"], "circle-radius": ["match", ["get", "asset_type"], "tower", 5, "portal", 4.5, "utility_pole", 3.5, 3], "circle-stroke-width": 1.25, "circle-stroke-color": "#07111f", "circle-opacity": 0.9 }
-            : { "circle-color": color, "circle-radius": 6, "circle-stroke-width": 1.25, "circle-stroke-color": "#07111f", "circle-opacity": 0.9 },
-        });
+        } else {
+          const minzoom = layer.domain === "emergency" ? 7 : 12;
+          const emergencyColor = ["match", ["get", "asset_type"], "hospital", "#e11d48", "fire_service", "#f97316", "police", "#2563eb", "ambulance_rescue", "#eab308", color] as ExpressionSpecification;
+          const supportPaint: CircleLayerSpecification["paint"] = { "circle-color": ["match", ["get", "asset_type"], "tower", "#f97316", "portal", "#facc15", "utility_pole", "#38bdf8", "#cbd5e1"] as ExpressionSpecification, "circle-radius": ["match", ["get", "asset_type"], "tower", 5, "portal", 4.5, "utility_pole", 3.5, 3] as ExpressionSpecification, "circle-stroke-width": 1.25, "circle-stroke-color": "#07111f", "circle-opacity": 0.9 };
+          const pointPaint: CircleLayerSpecification["paint"] = layer.artifact.artifact_id === "power.supports"
+            ? supportPaint
+            : { "circle-color": emergencyColor, "circle-radius": layer.domain === "emergency" ? 7 : 6, "circle-stroke-width": 1.25, "circle-stroke-color": "#07111f", "circle-opacity": 0.9 };
+          map.addLayer({ id: `${id}-fill`, type: "fill", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom, filter: ["==", ["geometry-type"], "Polygon"], paint: { "fill-color": emergencyColor, "fill-opacity": 0.3 } });
+          map.addLayer({ id: `${id}-outline`, type: "line", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom, filter: ["==", ["geometry-type"], "Polygon"], paint: { "line-color": emergencyColor, "line-width": 2.5, "line-opacity": 0.95 } });
+          map.addLayer({ id, type: "circle", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom, filter: ["==", ["geometry-type"], "Point"], paint: pointPaint });
+        }
       });
       const bounds = archiveLayers[0]?.archiveBounds;
       if (bounds && fittedArchiveRef.current !== archiveUrl) {
@@ -170,15 +175,16 @@ export function MapView({ layers, references, orthophotoEnabled, basemapEnabled,
 
 function featurePopupContent(feature: ProviderFeature, layer: PreviewLayer): HTMLElement {
   const details = popupDetails(feature, layer); const properties = feature.properties;
-  const tags = asStringRecord(properties.osm_tags);
+  const tags = { ...asStringRecord(properties.osm_tags), ...asStringRecord(properties.source_attributes) };
   const sourceId = typeof properties.source_id === "string" ? properties.source_id : "";
   const sourceLink = /^((node|way|relation)\/\d+)$/.test(sourceId) ? `https://www.openstreetmap.org/${sourceId}` : null;
   const links = [sourceLink ? `<a href="${sourceLink}" target="_blank" rel="noreferrer">OpenStreetMap object</a>` : "", externalLink(tags.website, "website"), wikipediaLink(tags.wikipedia), wikidataLink(tags.wikidata), externalLink(tags.image, "source image")].filter(Boolean).join(" · ");
-  const fields = ["power", "man_made", "voltage", "frequency", "ref", "operator", "circuits", "cables", "wires", "plant:source", "plant:method", "plant:output:electricity", "start_date", "description"]
+  const fields = ["power", "man_made", "amenity", "healthcare", "emergency", "official_type", "iip_identifier", "jpt_id", "version_from", "voltage", "frequency", "ref", "operator", "circuits", "cables", "wires", "plant:source", "plant:method", "plant:output:electricity", "start_date", "description", "phone", "contact:phone", "opening_hours", "wheelchair"]
     .filter((name) => tags[name])
     .map((name) => `<dt>${escapeHtml(name)}</dt><dd>${escapeHtml(tags[name]!)}</dd>`).join("");
   const content = document.createElement("div"); content.className = "mapFeaturePopup";
-  content.innerHTML = `<strong>${escapeHtml(String(properties.name ?? tags.name ?? details.title))}</strong><span>${escapeHtml(String(properties.voltage_label ?? tags.voltage ?? "voltage unknown"))} · ${escapeHtml(String(tags.operator ?? details.source))}</span>${fields ? `<dl>${fields}</dl>` : ""}<small>${escapeHtml(sourceId)}</small>${links ? `<small class="popupLinks">${links}</small>` : ""}`;
+  const classification = properties.domain === "power" ? String(properties.voltage_label ?? tags.voltage ?? "voltage unknown") : String(properties.asset_type ?? "feature").replaceAll("_", " ");
+  content.innerHTML = `<strong>${escapeHtml(String(properties.name ?? tags.name ?? details.title))}</strong><span>${escapeHtml(classification)} · ${escapeHtml(String(tags.operator ?? details.source))}</span>${fields ? `<dl>${fields}</dl>` : ""}<small>${escapeHtml(sourceId)}</small>${links ? `<small class="popupLinks">${links}</small>` : ""}`;
   return content;
 }
 function escapeHtml(value: string): string { return value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] ?? character); }

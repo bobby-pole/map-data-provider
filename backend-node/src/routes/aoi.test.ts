@@ -143,9 +143,10 @@ describe("read-only AOI provider routes", () => {
     const response = await request(createApp()).get("/api/aoi/rybnik_60km/layers");
 
     expect(response.status).toBe(200);
-    expect(layerListResponseSchema.parse(response.body).layers).toEqual([
+    expect(layerListResponseSchema.parse(response.body).layers).toEqual(expect.arrayContaining([
       expect.objectContaining({ domain: "power", feature_count: 16_505, source_type: "analytical_vector" }),
-    ]);
+      expect.objectContaining({ domain: "emergency", feature_count: 4, source_type: "analytical_vector" }),
+    ]));
   });
 
   it("returns the cached Rybnik power GeoJSON contract", async () => {
@@ -161,9 +162,10 @@ describe("read-only AOI provider routes", () => {
     const response = await request(createApp()).get("/api/aoi/rybnik_60km/readiness");
 
     expect(response.status).toBe(200);
-    expect(readinessListResponseSchema.parse(response.body).readiness).toEqual([
+    expect(readinessListResponseSchema.parse(response.body).readiness).toEqual(expect.arrayContaining([
       expect.objectContaining({ domain: "power", readiness: "usable_with_limitations", highest_issue_severity: "medium" }),
-    ]);
+      expect.objectContaining({ domain: "emergency", readiness: "usable_with_limitations" }),
+    ]));
   });
 
   it("returns source classifications for the cached AOI", async () => {
@@ -185,7 +187,8 @@ describe("read-only AOI provider routes", () => {
     expect(response.status).toBe(200);
     const report = sourceAvailabilityReportSchema.parse(response.body);
     expect(report.sources).toHaveLength(7);
-    expect(report.sources.find((source) => source.source_id === "openstreetmap")).toMatchObject({ feature_state: "empty", actionable_gap: false });
+    expect(report.sources.find((source) => source.source_id === "openstreetmap")).toMatchObject({ feature_state: "available", actionable_gap: false });
+    expect(report.sources.find((source) => source.source_id === "prg_wfs")).toMatchObject({ feature_state: "available", actionable_gap: false });
   });
 
   it("serves a v2 domain pack from the manifest without domain-specific route code", async () => {
@@ -208,7 +211,7 @@ describe("read-only AOI provider routes", () => {
 
     expect(response.status).toBe(200);
     const listed = mapPresentationListResponseSchema.parse(response.body);
-    const [presentation] = listed.presentations;
+    const presentation = listed.presentations.find((candidate) => candidate.domain === "power");
     expect(presentation && mapPresentationResponseSchema.parse(presentation)).toMatchObject({
       domain: "power",
       archive: expect.objectContaining({ format: "pmtiles", min_zoom: 7, max_zoom: 14 }),
@@ -254,6 +257,30 @@ describe("read-only AOI provider routes", () => {
     expect(plant.status).toBe(200);
     expect(mapFeatureDetailResponseSchema.parse(plant.body)).toMatchObject({
       feature: { properties: { osm_tags: { wikipedia: "pl:Elektrownia Rybnik", wikidata: "Q751203", website: "https://elrybnik.pgegiek.pl/o-oddziale" } } },
+    });
+  });
+
+  it("serves emergency community geometry and distinct official PRG representative evidence", async () => {
+    const presentations = await request(createApp()).get("/api/aoi/rybnik_60km/presentations");
+    expect(presentations.status).toBe(200);
+    expect(presentations.body.presentations).toEqual(expect.arrayContaining([
+      expect.objectContaining({ domain: "emergency", layers: expect.arrayContaining([
+        expect.objectContaining({ artifact_id: "emergency.hospital" }),
+        expect.objectContaining({ artifact_id: "emergency.official_police" }),
+      ]) }),
+    ]));
+
+    const hospital = await request(createApp()).get("/api/aoi/rybnik_60km/presentations/emergency/features/way%2F39829907");
+    expect(hospital.status).toBe(200);
+    expect(mapFeatureDetailResponseSchema.parse(hospital.body)).toMatchObject({
+      artifact_id: "emergency.hospital", source_id: "way/39829907", feature: { geometry: { type: "Polygon" }, properties: { source: "OpenStreetMap", asset_type: "hospital", osm_tags: { amenity: "hospital" } } },
+    });
+
+    const officialPolice = await request(createApp()).get("/api/aoi/rybnik_60km/presentations/emergency/features/prg_k02%2F1350186");
+    expect(officialPolice.status).toBe(200);
+    expect(mapFeatureDetailResponseSchema.parse(officialPolice.body)).toMatchObject({
+      artifact_id: "emergency.official_police", source_id: "prg_k02/1350186",
+      feature: { geometry: { type: "Point" }, properties: { source: "PRG (official unit-area evidence)", source_geometry_type: "MultiSurface", source_attributes: { official_type: "K02_Komenda_powiatowa_policji" } } },
     });
   });
 

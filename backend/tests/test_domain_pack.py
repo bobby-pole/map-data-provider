@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from geo_pipeline.cache import cache_paths
-from geo_pipeline.domain_pack import build_rybnik_power_domain_pack, read_domain_pack, validate_domain_pack
+from geo_pipeline.cache import build_rybnik_emergency_cache, cache_paths
+from geo_pipeline.domain_pack import build_rybnik_emergency_domain_pack, build_rybnik_power_domain_pack, read_domain_pack, validate_domain_pack
 
 
 def _legacy_power(root: Path) -> None:
@@ -74,3 +74,27 @@ def test_domain_pack_keeps_native_raster_private_and_rejects_reference_public_ex
     manifest["artifacts"][1]["public_export"] = True
     with pytest.raises(ValueError, match="public_export"):
         validate_domain_pack(manifest, pack_root=pack_root)
+
+
+def test_emergency_pack_retains_original_osm_geometry_and_distinct_prg_representative_points(tmp_path: Path) -> None:
+    build_rybnik_emergency_cache(root=tmp_path)
+    pack = build_rybnik_emergency_domain_pack(root=tmp_path)
+    pack_root = tmp_path / "rybnik_60km" / "emergency" / "domain-pack-v2"
+    artifacts = {artifact["id"]: artifact for artifact in pack["artifacts"]}
+    hospital = json.loads((pack_root / artifacts["emergency.hospital"]["path"]).read_text())
+    inspection = json.loads((pack_root / artifacts["emergency.inspection_points"]["path"]).read_text())
+    official_police = json.loads((pack_root / artifacts["emergency.official_police"]["path"]).read_text())
+
+    assert hospital["features"][0]["geometry"]["type"] == "Polygon"
+    assert inspection["features"][0]["properties"]["source_geometry_type"] == "Polygon"
+    assert official_police["features"][0]["properties"] == {
+        "source": "PRG (official unit-area evidence)", "source_id": "prg_k02/1350186", "domain": "emergency",
+        "asset_type": "police", "confidence": "medium", "missing_fields": [], "limitations": official_police["metadata"]["limitations"],
+        "eligible_for_analysis": True, "source_geometry_type": "MultiSurface", "geometry_role": "representative_point_from_official_unit_area",
+        "source_response_sha256": "cd3e2eb355292207aa72b71cc5c3e29328fd7d48261c17288e5d87e7264f5266", "source_attributes": {
+            "name": "Komenda Miejska Policji w Żorach", "official_type": "K02_Komenda_powiatowa_policji", "iip_identifier": "beaf5604-b69f-40f9-bfd9-cdfd23fb30b4",
+            "jpt_id": "1350186", "version_from": "2025-07-17",
+        },
+    }
+    assert official_police["features"][0]["geometry"]["type"] == "Point"
+    assert read_domain_pack("rybnik_60km", "emergency", root=tmp_path, public_export=True)["artifacts"][-1]["id"] == "emergency.inspection_points"

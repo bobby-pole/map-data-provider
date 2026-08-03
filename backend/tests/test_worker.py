@@ -33,6 +33,7 @@ def test_fixture_worker_creates_complete_cache_without_network(tmp_path: Path) -
         "power.supports",
         "power.representative_points",
         "power.osm_source_evidence",
+        "power.osm_relation_evidence",
         "power.kiut_reference",
     ]
 

@@ -88,6 +88,20 @@
       "public_export": false
     },
     {
+      "id": "power.osm_relation_evidence",
+      "kind": "native_vector",
+      "format": "json",
+      "path": "native/osm-relation-evidence.json",
+      "sha256": "259251e65f3f4cbe539405f93eb21e8ad2498381fbaf547fd0c63cb6df2492c6",
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": false
+    },
+    {
       "id": "power.kiut_reference",
       "kind": "remote_service",
       "format": "wms",

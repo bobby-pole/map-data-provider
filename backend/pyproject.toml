@@ -10,6 +10,8 @@ dependencies = [
     "osmnx>=2.0.0",
     "matplotlib>=3.8.0",
     "pyarrow>=20.0.0",
+    "mapbox-vector-tile==2.2.0",
+    "pmtiles==3.4.1",
 ]
 
 [tool.uv]

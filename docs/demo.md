@@ -56,41 +56,31 @@ curl -sS http://127.0.0.1:3001/api/aoi/rybnik_60km/layers/power \
 
 This read-only endpoint serves the committed, validated cache without extraction side effects. It is the safe path for a repeatable presentation of the full Rybnik snapshot.
 
-## 3. Inspect the provider-compatible layer pack — 60 seconds
+## 3. Inspect the compact offline map presentation — 45 seconds
 
 ```bash
+curl -sS http://127.0.0.1:3001/api/aoi/rybnik_60km/presentations/power \
   | jq '{
-      contract_version,
       aoi_id,
-      domains,
-      power: {
-        feature_count: .layers.power.metadata.feature_count,
-        source: .layers.power.metadata.source,
-        confidence: .layers.power.metadata.confidence,
-        readiness: .layers.power.readiness.readiness,
-        limitations: .layers.power.metadata.limitations
-      },
-      source_types: [.sources.sources[].source_type] | unique
+      domain,
+      archive: {format: .archive.format, size_bytes: .archive.size_bytes, min_zoom: .archive.min_zoom, max_zoom: .archive.max_zoom},
+      layers: [.layers[] | {artifact_id, source_layer, feature_count, attribution}]
     }'
 ```
 
-The current committed snapshot reports 16,505 OSM-derived power features, `medium` confidence and `usable_with_limitations` readiness. Treat the count as snapshot-specific: the returned value is authoritative for the checked-out artifact.
+The response is compact metadata, not the full GeoJSON collections. The local MapLibre preview uses its `archive_url` with HTTP byte ranges to read only required MVT tiles from PMTiles. The full domain-pack and GeoJSON endpoints remain the data/export path.
 
-The response demonstrates the provider boundary:
-
-- `provider_pack/v1` is stable and independent of Overpass tagging conventions.
-- `analytical_vector`, `manual_seed` and `reference_overlay` remain distinguishable.
-- passed validation does not claim complete real-world infrastructure coverage.
+The current committed snapshot contains 23,592 public power features across the two GeoJSON layers. Its PMTiles archive is a derived, checked presentation artifact; treat both counts and archive size as snapshot-specific.
 
 ## 4. Show why KIUT/GESUT remains reference-only — 45 seconds
 
 ```bash
 curl -sS http://127.0.0.1:3001/api/aoi/rybnik_60km/sources \
   | jq '.sources[]
-      | select(.id == "kiut_gesut_wms")
+      | select(.id == "kiut_gesut_wms")'
 ```
 
-The registry identifies KIUT/GESUT WMS as a raster visual reference, not provider-owned analytical geometry. The provider does not fabricate GeoJSON from WMS imagery and does not mark it eligible for analytical use.
+The registry identifies KIUT/GESUT WMS as a raster visual reference, not provider-owned analytical geometry. The provider does not fabricate GeoJSON or MVT from WMS imagery, and it does not include the service in offline PMTiles.
 
 ## 5. Inspect issues and the map preview — 60–90 seconds
 
@@ -108,7 +98,7 @@ cd frontend
 pnpm run dev
 ```
 
-Open `http://localhost:5173`. Use a feature popup to inspect source, confidence, missing fields and limitations; then use the issue-state filter to show the review workflow. Generated rule evidence remains separate from persisted human decisions and never rewrites readiness.
+Open `http://localhost:5173`. The MapLibre preview draws public power data from the local PMTiles archive over the default-on OpenStreetMap base map. The base map is online visual context only: turn it off to verify the local PMTiles view, and do not expect it offline. Use a visible feature to inspect source, confidence, missing fields and limitations. KIUT and orthophoto toggles remain optional external WMS references and are not available offline. Generated rule evidence remains separate from persisted human decisions and never rewrites readiness.
 
 ## 6. Close with the system boundary — 20 seconds
 
@@ -119,6 +109,7 @@ AOI/domain request
   -> cache-first provider orchestration
   -> OSM-derived, normalized GeoJSON
   -> validation, provenance, confidence and readiness
+  -> derived MVT/PMTiles map presentation
   -> explainable issue evidence and review state
   -> provider_pack/v1 export
 ```

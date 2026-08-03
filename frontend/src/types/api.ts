@@ -1,3 +1,5 @@
+import type { Geometry } from "geojson";
+
 export type LayerSourceType = "analytical_vector" | "manual_seed" | "reference_overlay";
 export type LayerConfidence = "high" | "medium" | "low" | "not_applicable";
 export type LayerReadiness = "ready" | "usable_with_limitations" | "needs_source" | "not_usable";
@@ -15,7 +17,7 @@ export type ReadinessRecord = {
 export type ProviderFeature = {
   type: "Feature";
   properties: Record<string, unknown>;
-  geometry: GeoJSON.Geometry;
+  geometry: Geometry;
 };
 
 export type CachedLayer = { type: "FeatureCollection"; metadata: CachedMetadata; features: ProviderFeature[] };
@@ -62,6 +64,41 @@ export type DomainPackListResponse = {
   response_version: "provider_domain_pack_list/v2";
   aoi_id: string;
   domain_packs: DomainPack[];
+};
+
+export type MapPresentationLayer = {
+  artifact_id: string;
+  source_layer: string;
+  feature_count: number;
+  source: string;
+  confidence: LayerConfidence;
+  readiness: LayerReadiness;
+  limitations: string[];
+  attribution: string;
+  source_provenance: SourceProvenance[];
+};
+
+export type MapPresentation = {
+  response_version: "provider_map_presentation_read/v1";
+  presentation_version: "provider_map_presentation/v1";
+  aoi_id: string;
+  domain: string;
+  archive: {
+    format: "pmtiles";
+    size_bytes: number;
+    min_zoom: number;
+    max_zoom: number;
+    bounds: [number, number, number, number];
+  };
+  layers: MapPresentationLayer[];
+  attribution: string;
+  archive_url: string;
+};
+
+export type MapPresentationListResponse = {
+  response_version: "provider_map_presentation_list/v1";
+  aoi_id: string;
+  presentations: MapPresentation[];
 };
 export type SourceAvailabilityReport = { report_version: "provider_source_availability/v1"; aoi_id: string; evidence_timestamp: string; sources: Array<{ source_id: string; availability: string; aoi_coverage: string; feature_state: string; freshness: string; evidence: string; actionable_gap: boolean }> };
 

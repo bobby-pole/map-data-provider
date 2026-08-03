@@ -30,6 +30,9 @@ GEOJSON_DIR = DATA_DIR / "geojson"
 PREVIEWS_DIR = DATA_DIR / "previews"
 REPORTS_DIR = DATA_DIR / "reports"
 CACHE_DIR = DATA_DIR / "cache"
+# Runtime request outcomes are local, mutable cache state.  They deliberately
+# live outside committed fixture evidence under data/cache.
+RUNTIME_CACHE_DIR = BACKEND_DIR / "cache"
 
 
 def ensure_data_dirs() -> None:

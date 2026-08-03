@@ -16,6 +16,7 @@ from geo_pipeline.contracts import (
     validate_provider_geojson,
 )
 from geo_pipeline.emergency import build_osm_emergency_cache_layer, emergency_osm_metadata
+from geo_pipeline.public_services import build_osm_public_services_cache_layer, public_services_osm_metadata
 from geo_pipeline.quality_rules import highest_issue_severity, triggered_issues
 from geo_pipeline.readiness import derive_readiness
 from geo_pipeline.source_registry import guard_source_access, validate_analytical_cache_provenance
@@ -141,6 +142,20 @@ def build_rybnik_emergency_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
         "evaluated_at": metadata["snapshot_at"],
     }
     paths = cache_paths("rybnik_60km", "emergency", root=root)
+    _write_cache(paths, layer=layer, metadata=metadata, readiness=readiness)
+    return read_cached_layer(paths)
+
+
+def build_rybnik_public_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
+    """Build a v1-compatible public-services cache from committed OSM evidence."""
+    layer = build_osm_public_services_cache_layer(readiness="usable_with_limitations")
+    metadata = {**public_services_osm_metadata(layer_id="public.osm_facilities", readiness="usable_with_limitations"), "feature_count": layer["metadata"]["feature_count"]}
+    readiness = {
+        "cache_layout_version": CACHE_LAYOUT_VERSION, "aoi_id": "rybnik_60km", "domain": "public",
+        "layer_id": "public.osm_facilities", "readiness": "usable_with_limitations", "quality_status": "warning",
+        "highest_issue_severity": "medium", "feature_count": metadata["feature_count"], "evaluated_at": metadata["snapshot_at"],
+    }
+    paths = cache_paths("rybnik_60km", "public", root=root)
     _write_cache(paths, layer=layer, metadata=metadata, readiness=readiness)
     return read_cached_layer(paths)
 

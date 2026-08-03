@@ -84,6 +84,11 @@ DISPLAY_ATTRIBUTE_FIELDS = (
     "amenity",
     "healthcare",
     "emergency",
+    "office",
+    "government",
+    "community_centre",
+    "social_facility",
+    "building",
     "opening_hours",
     "phone",
     "contact:phone",
@@ -178,7 +183,7 @@ def _normalize_feature(feature: object, *, metadata: dict[str, Any]) -> dict[str
         "limitations": list(metadata["limitations"]),
         "eligible_for_analysis": metadata["eligible_for_analysis"],
     }
-    for field in ("source_geometry_type", "geometry_role", "source_response_sha256"):
+    for field in ("source_geometry_type", "geometry_role", "source_response_sha256", "origin_artifact", "origin_source_id"):
         if raw_properties.get(field) is not None:
             properties[field] = raw_properties[field]
     if raw_tags:

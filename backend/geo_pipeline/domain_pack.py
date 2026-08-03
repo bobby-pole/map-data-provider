@@ -24,6 +24,12 @@ from geo_pipeline.emergency import (
     build_osm_emergency_layers,
     build_prg_emergency_layers,
 )
+from geo_pipeline.public_services import (
+    FACILITY_MAPPINGS as PUBLIC_FACILITY_MAPPINGS,
+    PUBLIC_SERVICES_FIXTURE,
+    PUBLIC_SERVICES_LIMITATIONS,
+    build_osm_public_service_layers,
+)
 from geo_pipeline.source_registry import guard_source_access, load_source_registry, validate_ordered_provenance
 from geo_pipeline.vector_tiles import build_map_presentation
 
@@ -282,6 +288,65 @@ def build_rybnik_emergency_domain_pack(*, root: Path) -> dict[str, Any]:
     return pack
 
 
+def build_rybnik_public_domain_pack(*, root: Path) -> dict[str, Any]:
+    """Build the public-services pack without deriving facilities from building context."""
+    legacy = read_cached_layer(cache_paths("rybnik_60km", "public", root=root))
+    readiness = legacy["readiness"]["readiness"]
+    layers = build_osm_public_service_layers(readiness=readiness)
+    osm_provenance = [{"source_id": "openstreetmap", "contribution_role": "primary"}]
+    source_provenance = [
+        *osm_provenance,
+        {"source_id": "prg_wfs", "contribution_role": "supplementary"},
+        {"source_id": "bdot10k", "contribution_role": "supplementary"},
+    ]
+    files: dict[str, bytes] = {
+        "validation/metadata.json": json.dumps(legacy["metadata"], ensure_ascii=False, indent=2).encode(),
+        "readiness/readiness.json": json.dumps(legacy["readiness"], ensure_ascii=False, indent=2).encode(),
+    }
+    artifacts: list[dict[str, Any]] = []
+    for category, layer in layers.items():
+        path = f"layers/public.{category}.geojson"
+        payload = json.dumps(layer, ensure_ascii=False, indent=2).encode()
+        files[path] = payload
+        artifacts.append({"id": f"public.{category}", "kind": "processed_vector", "format": "geojson", "path": path,
+                          "sha256": _digest(payload), "feature_count": layer["metadata"]["feature_count"],
+                          "source_provenance": osm_provenance, "public_export": True})
+
+    points = _public_representative_points(layers)
+    points_payload = json.dumps(points, ensure_ascii=False, indent=2).encode()
+    files["layers/public.inspection_points.geojson"] = points_payload
+    artifacts.append({"id": "public.inspection_points", "kind": "derived_vector", "format": "geojson", "path": "layers/public.inspection_points.geojson",
+                      "sha256": _digest(points_payload), "feature_count": points["metadata"]["feature_count"],
+                      "source_provenance": osm_provenance, "public_export": True})
+
+    evidence = {
+        "source_registry_id": "openstreetmap", "fixture": str(PUBLIC_SERVICES_FIXTURE.relative_to(Path(__file__).resolve().parents[1])),
+        "sha256": _digest(PUBLIC_SERVICES_FIXTURE.read_bytes()),
+        "category_mappings": {category: [f"{key}={value}" for key, value in mappings] for category, mappings in PUBLIC_FACILITY_MAPPINGS.items()},
+        "building_rule": "A BDOT10k or OSM building footprint without one of the mapped facility tags is not a public-service feature.",
+        "limitations": PUBLIC_SERVICES_LIMITATIONS,
+    }
+    evidence_payload = json.dumps(evidence, ensure_ascii=False, indent=2).encode()
+    files["native/osm-public-services-source-evidence.json"] = evidence_payload
+    artifacts.append({"id": "public.osm_source_evidence", "kind": "native_vector", "format": "json", "path": "native/osm-public-services-source-evidence.json",
+                      "sha256": _digest(evidence_payload), "source_provenance": osm_provenance, "public_export": False})
+
+    context = {
+        "prg": {"status": "needs_source", "detail": "No qualified PRG facility class is enabled for administration, education, post or community/social semantics."},
+        "bdot10k": {"status": "context_only", "detail": "BDOT10k buildings are topographic context and cannot independently establish a public-service facility."},
+        "comparison": [{"outcome": "ambiguous", "left": {"source_id": "openstreetmap", "feature_id": "way/public-townhall-1"}, "right": {"source_id": "bdot10k", "feature_id": None}, "evidence": "building_context_cannot_establish_facility_semantics"}],
+    }
+    context_payload = json.dumps(context, ensure_ascii=False, indent=2).encode()
+    files["native/public-services-context-and-comparison.json"] = context_payload
+    artifacts.append({"id": "public.context_and_comparison", "kind": "native_vector", "format": "json", "path": "native/public-services-context-and-comparison.json",
+                      "sha256": _digest(context_payload), "source_provenance": [{"source_id": "prg_wfs", "contribution_role": "supplementary"}, {"source_id": "bdot10k", "contribution_role": "supplementary"}], "public_export": False})
+    manifest = {"domain_pack_version": DOMAIN_PACK_VERSION, "aoi_id": "rybnik_60km", "domain": "public", "source_provenance": source_provenance,
+                "artifacts": artifacts, "validation": {"path": "validation/metadata.json"}, "readiness": {"path": "readiness/readiness.json"}}
+    pack = write_domain_pack("rybnik_60km", "public", root=root, manifest=manifest, files=files)
+    build_map_presentation(pack_root=domain_pack_root("rybnik_60km", "public", root=root), manifest=pack)
+    return pack
+
+
 def _representative_points_layer(layer: dict[str, Any]) -> dict[str, Any]:
     metadata = {**deepcopy(layer["metadata"]), "layer_id": "power.representative_points"}
     features = []
@@ -316,6 +381,25 @@ def _emergency_representative_points(layers: dict[str, dict[str, Any]]) -> dict[
     errors = validate_provider_geojson(points)
     if errors:
         raise ValueError(f"Emergency representative points violate the provider contract: {', '.join(errors)}")
+    return points
+
+
+def _public_representative_points(layers: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    first = next(iter(layers.values()))
+    metadata = {**deepcopy(first["metadata"]), "layer_id": "public.inspection_points"}
+    features = []
+    for category, layer in layers.items():
+        for feature in layer["features"]:
+            geometry = shape(feature["geometry"])
+            if geometry.geom_type == "Point":
+                continue
+            properties = {**deepcopy(feature["properties"]), "origin_artifact": f"public.{category}", "origin_source_id": feature["properties"]["source_id"], "source_geometry_type": geometry.geom_type}
+            features.append({"type": "Feature", "properties": properties, "geometry": mapping(geometry.representative_point())})
+    metadata["feature_count"] = len(features)
+    points = {"type": "FeatureCollection", "metadata": metadata, "features": features}
+    errors = validate_provider_geojson(points)
+    if errors:
+        raise ValueError(f"Public-service representative points violate the provider contract: {', '.join(errors)}")
     return points
 
 

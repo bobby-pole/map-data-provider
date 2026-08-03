@@ -18,7 +18,7 @@
       "kind": "processed_vector",
       "format": "geojson",
       "path": "layers/power.lines.geojson",
-      "sha256": "f3e1b32c9b3f8f3b1e6c1418626c666752c706ff76dac6759b07e8660243501d",
+      "sha256": "2fbb850e4c2bd1fde9969a62ff3a3e7cba455b497dd9a0bbdf9eae7db0c58d36",
       "feature_count": 16505,
       "source_provenance": [
         {
@@ -33,7 +33,7 @@
       "kind": "processed_vector",
       "format": "geojson",
       "path": "layers/power.assets.geojson",
-      "sha256": "4885227af1468f2938161aba1a58cea8213213eaeee7258d24a89fe3aa91191a",
+      "sha256": "c7e9192c682ca591ab5d33ba7bcf726820147e6872d4a3b0ac74c1f473dc8a68",
       "feature_count": 7087,
       "source_provenance": [
         {
@@ -48,8 +48,8 @@
       "kind": "processed_vector",
       "format": "geojson",
       "path": "layers/power.supports.geojson",
-      "sha256": "98bdecbcdb0212b74d89b5cc89d8bd75bc8d095d0e85473559e85064fc60f6e1",
-      "feature_count": 12,
+      "sha256": "a60265494e9f392679f8f60bb621230d18a097cd66595da73dd1b3e57ac65221",
+      "feature_count": 133129,
       "source_provenance": [
         {
           "source_id": "openstreetmap",
@@ -63,7 +63,7 @@
       "kind": "representative_points",
       "format": "geojson",
       "path": "layers/power.representative_points.geojson",
-      "sha256": "e3445dee113150cc5cd3fadd66179230bb2256c34c9bbbe4935a9d525f99bd49",
+      "sha256": "8dc85d55d2cda3e85a0d40364df8a8cd47b5057f1162b5374a6990b048fb2de2",
       "feature_count": 16505,
       "source_provenance": [
         {
@@ -78,7 +78,7 @@
       "kind": "native_vector",
       "format": "json",
       "path": "native/osm-source-evidence.json",
-      "sha256": "2e7e3d3a689a4eacdc51f5a11defe3cbe0ad98ec977e55bcd3c0d58bd3ead118",
+      "sha256": "4721d64ac90e4ac9132d098148f5ae4ab405536bb13f116a36f253e12c71f210",
       "source_provenance": [
         {
           "source_id": "openstreetmap",
@@ -92,7 +92,7 @@
       "kind": "native_vector",
       "format": "json",
       "path": "native/osm-relation-evidence.json",
-      "sha256": "259251e65f3f4cbe539405f93eb21e8ad2498381fbaf547fd0c63cb6df2492c6",
+      "sha256": "7815d9d6708f365dfba4f17917b80d0bce5b010f4df74d27492582f820211958",
       "source_provenance": [
         {
           "source_id": "openstreetmap",

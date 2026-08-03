@@ -110,11 +110,13 @@ export type MapFeatureDetail = {
   feature: ProviderFeature;
 };
 
-export type MapRelationEvidence = {
-  response_version: "provider_map_relation_evidence/v1"; aoi_id: string; domain: string; source_id: string;
-  state: "available" | "not_applicable";
-  relation: null | { relation_id: string; tags: Record<string, string>; aoi_coverage: string; limitations: string[]; members: Array<{ source_id: string; role: string; availability?: string; geometry?: { type: "LineString"; coordinates: [number, number][] }; endpoint_evidence?: { start: string; end: string } }> };
+export type MapCircuitSummary = { relation_id: string; tags: Record<string, string>; aoi_coverage: "bounded_source_snapshot"; member_count: number };
+export type MapCircuit = MapCircuitSummary & { limitations: string[]; members: Array<{ source_id: string; role: string; availability?: string; endpoint_evidence?: { start: string; end: string }; geometry?: { type: "LineString"; coordinates: [number, number][] } }> };
+export type MapCircuitList = {
+  response_version: "provider_map_circuit_list/v1"; aoi_id: string; domain: string; source_id: string;
+  state: "available" | "not_applicable"; circuits: MapCircuitSummary[];
 };
+export type MapCircuitDetail = { response_version: "provider_map_circuit_detail/v1"; aoi_id: string; domain: string; circuit: MapCircuit };
 export type SourceAvailabilityReport = { report_version: "provider_source_availability/v1"; aoi_id: string; evidence_timestamp: string; sources: Array<{ source_id: string; availability: string; aoi_coverage: string; feature_state: string; freshness: string; evidence: string; actionable_gap: boolean }> };
 
 export type IssueReviewStatus = "open" | "acknowledged" | "resolved" | "accepted" | "ignored";

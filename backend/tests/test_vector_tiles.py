@@ -79,7 +79,8 @@ def test_public_layers_build_deterministic_mvt_pmtiles_with_compact_properties(t
     properties = next(feature["properties"] for layer in decoded.values() for feature in layer["features"] if feature["properties"]["source_id"] == "way/1")
     assert properties["source_id"] in {"way/1", "node/1"}
     assert "osm_tags" not in properties
-    assert properties["voltage_bucket"] == "extra_high"
+    assert properties["voltage_bucket"] == "high_220"
+    assert properties["voltage_label"] == "220 kV"
     assert read_map_presentation(pack_root=pack_root, manifest=manifest)["archive"]["size_bytes"] == len(first_bytes)
 
 
@@ -98,7 +99,7 @@ def test_presentation_rejects_reference_only_or_stale_inputs(tmp_path: Path) -> 
 
 def test_voltage_states_and_power_support_zoom_thresholds_are_explicit() -> None:
     assert _voltage_style({"voltage": "23000"}) == ("medium_voltage", "medium")
-    assert _voltage_style({"voltage": "110000;220000"}) == ("multiple", "unknown")
+    assert _voltage_style({"voltage": "110000;220000"}) == ("multiple_voltage", "high_220")
     assert _voltage_style({}) == ("missing", "unknown")
     assert _voltage_style({"voltage": "unknown"}) == ("unparseable", "unknown")
 

@@ -20,7 +20,8 @@ import {
   mapPresentationListResponseSchema,
   mapPresentationResponseSchema,
   mapFeatureDetailResponseSchema,
-  mapRelationEvidenceResponseSchema,
+  mapCircuitDetailResponseSchema,
+  mapCircuitListResponseSchema,
 } from "../types/provider.js";
 
 describe("read-only AOI provider routes", () => {
@@ -248,15 +249,24 @@ describe("read-only AOI provider routes", () => {
     expect(malformed.status).toBe(422);
     const missing = await request(createApp()).get("/api/aoi/rybnik_60km/presentations/power/features/node%2F1");
     expect(missing.status).toBe(404);
+
+    const plant = await request(createApp()).get("/api/aoi/rybnik_60km/presentations/power/features/relation%2F12825526");
+    expect(plant.status).toBe(200);
+    expect(mapFeatureDetailResponseSchema.parse(plant.body)).toMatchObject({
+      feature: { properties: { osm_tags: { wikipedia: "pl:Elektrownia Rybnik", wikidata: "Q751203", website: "https://elrybnik.pgegiek.pl/o-oddziale" } } },
+    });
   });
 
-  it("returns bounded relation evidence only for a committed member", async () => {
-    const available = await request(createApp()).get("/api/aoi/rybnik_60km/presentations/power/features/way%2F185080408/relation-evidence");
+  it("lists only committed circuits and returns one selected circuit", async () => {
+    const available = await request(createApp()).get("/api/aoi/rybnik_60km/presentations/power/features/way%2F185080408/circuits");
     expect(available.status).toBe(200);
-    expect(mapRelationEvidenceResponseSchema.parse(available.body)).toMatchObject({ state: "available", relation: { relation_id: "relation/19511895", aoi_coverage: "members_partially_represented" } });
-    expect(Object.keys((available.body.relation as { tags: object }).tags)).not.toContain("flow");
-    const absent = await request(createApp()).get("/api/aoi/rybnik_60km/presentations/power/features/node%2F1528794574/relation-evidence");
-    expect(mapRelationEvidenceResponseSchema.parse(absent.body)).toMatchObject({ state: "not_applicable", relation: null });
+    expect(mapCircuitListResponseSchema.parse(available.body)).toMatchObject({ state: "available", circuits: [expect.objectContaining({ relation_id: "relation/19511895", aoi_coverage: "bounded_source_snapshot" })] });
+    const detail = await request(createApp()).get("/api/aoi/rybnik_60km/presentations/power/circuits/relation%2F19511895");
+    expect(detail.status).toBe(200);
+    expect(mapCircuitDetailResponseSchema.parse(detail.body)).toMatchObject({ circuit: { relation_id: "relation/19511895" } });
+    expect(Object.keys((detail.body.circuit as { tags: object }).tags)).not.toContain("flow");
+    const absent = await request(createApp()).get("/api/aoi/rybnik_60km/presentations/power/features/node%2F314662971/circuits");
+    expect(mapCircuitListResponseSchema.parse(absent.body)).toMatchObject({ state: "not_applicable", circuits: [] });
   });
 
   it("discovers a fixture domain solely from its v2 manifest", async () => {

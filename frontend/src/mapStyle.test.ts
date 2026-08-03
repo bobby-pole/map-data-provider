@@ -19,7 +19,7 @@ describe("MapLibre presentation style policy", () => {
   });
 
   it("keeps voltage buckets and source support classes visually distinct", () => {
-    expect(voltageLineColor).toContain("extra_high");
+    expect(voltageLineColor).toEqual(expect.arrayContaining(["high_110", "#dc2626", "high_220", "#d946ef", "high_400", "#a855f7"]));
     expect(supportStyle("tower")).toEqual({ color: "#f97316", radius: 5 });
     expect(supportStyle("pole")).toEqual({ color: "#cbd5e1", radius: 3 });
   });

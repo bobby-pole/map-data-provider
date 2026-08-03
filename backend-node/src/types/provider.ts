@@ -509,9 +509,52 @@ export const mapFeatureDetailResponseSchema = z.object({
   }),
 }).strict();
 
-export const mapRelationEvidenceResponseSchema = z.object({
-  response_version: z.literal("provider_map_relation_evidence/v1"), aoi_id: providerIdentifierSchema, domain: providerIdentifierSchema,
-  source_id: z.string().regex(/^(node|way|relation)\/\d+$/), state: z.enum(["available", "not_applicable"]), relation: z.unknown().nullable(),
+const osmElementIdentifierSchema = z.string().regex(/^(node|way|relation)\/\d+$/);
+const circuitMemberSchema = z.object({
+  source_id: osmElementIdentifierSchema,
+  role: z.string(),
+  availability: z.string().optional(),
+  endpoint_evidence: z.object({ start: osmElementIdentifierSchema, end: osmElementIdentifierSchema }).strict().optional(),
+  geometry: z.object({
+    type: z.literal("LineString"),
+    coordinates: z.array(z.tuple([z.number(), z.number()])).min(2),
+  }).optional(),
+}).strict();
+const powerCircuitSchema = z.object({
+  relation_id: z.string().regex(/^relation\/\d+$/),
+  tags: z.record(z.string(), z.string()),
+  aoi_coverage: z.literal("bounded_source_snapshot"),
+  limitations: z.array(z.string().min(1)).min(1),
+  members: z.array(circuitMemberSchema).min(1),
+}).strict();
+const powerCircuitSummarySchema = z.object({
+  relation_id: z.string().regex(/^relation\/\d+$/),
+  tags: z.record(z.string(), z.string()),
+  aoi_coverage: z.literal("bounded_source_snapshot"),
+  member_count: z.number().int().positive(),
+}).strict();
+export const powerCircuitEvidencePayloadSchema = z.object({
+  relation_evidence_version: z.literal("osm_power_relation_evidence/v2"),
+  source: z.literal("OpenStreetMap"),
+  snapshot_at: z.string().datetime(),
+  bbox: z.array(z.number().finite()).length(4),
+  source_checksum: z.string().regex(/^[a-f0-9]{64}$/),
+  relations: z.array(powerCircuitSchema),
+  reverse_member_index: z.record(z.string(), z.array(z.string().regex(/^relation\/\d+$/))),
+}).strict();
+export const mapCircuitListResponseSchema = z.object({
+  response_version: z.literal("provider_map_circuit_list/v1"),
+  aoi_id: providerIdentifierSchema,
+  domain: providerIdentifierSchema,
+  source_id: osmElementIdentifierSchema,
+  state: z.enum(["available", "not_applicable"]),
+  circuits: z.array(powerCircuitSummarySchema),
+}).strict();
+export const mapCircuitDetailResponseSchema = z.object({
+  response_version: z.literal("provider_map_circuit_detail/v1"),
+  aoi_id: providerIdentifierSchema,
+  domain: providerIdentifierSchema,
+  circuit: powerCircuitSchema,
 }).strict();
 
 export type CachedMetadata = z.infer<typeof cachedMetadataSchema>;
@@ -524,7 +567,8 @@ export type DomainPackLayer = z.infer<typeof domainPackLayerSchema>;
 export type MapPresentationManifest = z.infer<typeof mapPresentationManifestSchema>;
 export type MapPresentationResponse = z.infer<typeof mapPresentationResponseSchema>;
 export type MapFeatureDetailResponse = z.infer<typeof mapFeatureDetailResponseSchema>;
-export type MapRelationEvidenceResponse = z.infer<typeof mapRelationEvidenceResponseSchema>;
+export type MapCircuitListResponse = z.infer<typeof mapCircuitListResponseSchema>;
+export type MapCircuitDetailResponse = z.infer<typeof mapCircuitDetailResponseSchema>;
 export type GeneratedIssue = z.infer<typeof generatedIssueSchema>;
 export type IssueReviewRecord = z.infer<typeof issueReviewRecordSchema>;
 export type ReviewedIssue = z.infer<typeof reviewedIssueSchema>;

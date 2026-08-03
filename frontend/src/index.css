@@ -63,8 +63,22 @@ dd { margin: 0; text-align: right; overflow-wrap: anywhere; }
 .maplibregl-popup-tip { border-top-color: #0b1728 !important; }
 .maplibregl-popup-close-button { color: #9fb0c7; font-size: 18px; }
 .mapFeaturePopup { display: grid; gap: 4px; min-width: 180px; }
+.mapFeaturePopup { max-width: 320px; }
 .mapFeaturePopup strong { color: #f8fafc; }
 .mapFeaturePopup span, .mapFeaturePopup small { color: #9fb0c7; }
+.mapFeaturePopup dl { grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); margin-top: 4px; }
+.mapFeaturePopup dd { text-align: right; }
+.popupLinks { display: block; line-height: 1.5; }
+.popupLinks a { color: #7dd3fc; }
+.circuitList { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.circuitButton { display: grid; gap: 3px; width: 100%; text-align: left; background: #102039; border: 1px solid #1e3555; }
+.circuitButton:hover, .circuitButton.active { border-color: #facc15; background: #2b260f; }
+.circuitButton small { color: #cbd5e1; }
+.inlineError { margin: 10px 0 0; font-size: 12px; }
+.selectedCircuit details { margin-top: 10px; font-size: 13px; }
+.selectedCircuit summary { cursor: pointer; color: #cbd5e1; }
+.selectedCircuit ul { display: grid; gap: 6px; margin: 8px 0 0; padding-left: 18px; }
+.selectedCircuit li small { display: block; color: #9fb0c7; overflow-wrap: anywhere; }
 
 @media (max-width: 900px) {
   .inspectorLayout { padding: 12px; }

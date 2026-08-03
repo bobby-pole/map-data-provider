@@ -20,6 +20,7 @@ import {
   mapPresentationListResponseSchema,
   mapPresentationResponseSchema,
   mapFeatureDetailResponseSchema,
+  mapRelationEvidenceResponseSchema,
 } from "../types/provider.js";
 
 describe("read-only AOI provider routes", () => {
@@ -247,6 +248,15 @@ describe("read-only AOI provider routes", () => {
     expect(malformed.status).toBe(422);
     const missing = await request(createApp()).get("/api/aoi/rybnik_60km/presentations/power/features/node%2F1");
     expect(missing.status).toBe(404);
+  });
+
+  it("returns bounded relation evidence only for a committed member", async () => {
+    const available = await request(createApp()).get("/api/aoi/rybnik_60km/presentations/power/features/way%2F185080408/relation-evidence");
+    expect(available.status).toBe(200);
+    expect(mapRelationEvidenceResponseSchema.parse(available.body)).toMatchObject({ state: "available", relation: { relation_id: "relation/19511895", aoi_coverage: "members_partially_represented" } });
+    expect(Object.keys((available.body.relation as { tags: object }).tags)).not.toContain("flow");
+    const absent = await request(createApp()).get("/api/aoi/rybnik_60km/presentations/power/features/node%2F1528794574/relation-evidence");
+    expect(mapRelationEvidenceResponseSchema.parse(absent.body)).toMatchObject({ state: "not_applicable", relation: null });
   });
 
   it("discovers a fixture domain solely from its v2 manifest", async () => {

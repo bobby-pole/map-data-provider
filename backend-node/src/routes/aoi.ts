@@ -10,6 +10,7 @@ import {
   getMapPresentation,
   getMapPresentationArchiveRange,
   getMapFeatureDetail,
+  getMapRelationEvidence,
   getMapPresentations,
   getSourcesForAoi,
   getSourceAvailability,
@@ -32,6 +33,7 @@ import {
   mapPresentationListResponseSchema,
   mapPresentationResponseSchema,
   mapFeatureDetailResponseSchema,
+  mapRelationEvidenceResponseSchema,
 } from "../types/provider.js";
 
 export function createAoiRouter(options?: { issueStorePaths?: IssueStorePaths; providerDataPaths?: ProviderDataPaths }) {
@@ -72,6 +74,11 @@ aoiRouter.get("/:aoiId/presentations/:domain/features/:sourceId", async (request
   } catch (error) {
     respondWithProviderError(response, error);
   }
+});
+
+aoiRouter.get("/:aoiId/presentations/:domain/features/:sourceId/relation-evidence", async (request, response) => {
+  try { response.status(200).json(mapRelationEvidenceResponseSchema.parse(await getMapRelationEvidence(request.params.aoiId, request.params.domain, request.params.sourceId, options?.providerDataPaths))); }
+  catch (error) { respondWithProviderError(response, error); }
 });
 
 aoiRouter.get("/:aoiId/presentations/:domain/archive", async (request, response) => {

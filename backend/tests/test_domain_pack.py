@@ -28,7 +28,7 @@ def test_power_domain_pack_v2_preserves_v1_cache_compatibility(tmp_path: Path) -
         {"source_id": "openstreetmap", "contribution_role": "primary"},
         {"source_id": "kiut_gesut_wms", "contribution_role": "validation_reference"},
     ]
-    assert {"power.lines", "power.assets", "power.supports", "power.representative_points", "power.osm_source_evidence", "power.kiut_reference"} == set(artifacts)
+    assert {"power.lines", "power.assets", "power.supports", "power.representative_points", "power.osm_source_evidence", "power.osm_relation_evidence", "power.kiut_reference"} == set(artifacts)
     assert artifacts["power.kiut_reference"]["public_export"] is False and "path" not in artifacts["power.kiut_reference"]
     assert artifacts["power.osm_source_evidence"]["format"] == "json"
     assert representative_points["features"][0]["properties"]["source_id"] == "way/32043840"

@@ -25,9 +25,11 @@ import {
   mapPresentationManifestSchema,
   mapPresentationResponseSchema,
   mapFeatureDetailResponseSchema,
+  mapRelationEvidenceResponseSchema,
   type MapPresentationManifest,
   type MapPresentationResponse,
   type MapFeatureDetailResponse,
+  type MapRelationEvidenceResponse,
 } from "../types/provider.js";
 
 const projectRoot = path.resolve(fileURLToPath(new URL("../../../", import.meta.url)));
@@ -258,6 +260,18 @@ export async function getMapFeatureDetail(
     }
   }
   throw notFound(`No eligible public feature exists for source_id '${sourceId}'.`);
+}
+
+export async function getMapRelationEvidence(aoiId: string, domain: string, sourceId: string, dataPaths?: ProviderDataPaths): Promise<MapRelationEvidenceResponse> {
+  if (!/^(node|way|relation)\/\d+$/.test(sourceId)) throw new ProviderDataError("invalid_request", "source_id must be an OSM node, way or relation identifier.");
+  const { manifest, packRoot } = await validatedMapPresentation(aoiId, domain, dataPaths);
+  const artifact = manifest.artifacts.find((candidate) => candidate.id === "power.osm_relation_evidence");
+  if (!artifact?.path || artifact.public_export || artifact.kind !== "native_vector") throw new ProviderDataError("not_found", "Relation evidence is unavailable.");
+  const bytes = await readBytes(resolvePackPath(packRoot, artifact.path), "relation evidence");
+  if (digest(bytes) !== artifact.sha256) throw new ProviderDataError("not_found", "Relation evidence checksum does not match.");
+  const payload = JSON.parse(bytes.toString("utf8")) as { relations?: Array<{ members?: Array<{ source_id?: string }> }> };
+  const relation = payload.relations?.find((candidate) => candidate.members?.some((member) => member.source_id === sourceId)) ?? null;
+  return mapRelationEvidenceResponseSchema.parse({ response_version: "provider_map_relation_evidence/v1", aoi_id: aoiId, domain, source_id: sourceId, state: relation ? "available" : "not_applicable", relation });
 }
 
 function toV1SourceRegistry(registry: SourceRegistryV2): SourceRegistry {

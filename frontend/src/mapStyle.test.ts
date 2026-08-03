@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { isLinePresentationLayer, openStreetMapBasemap, presentationColor, supportStyle, voltageLineColor } from "./mapStyle";
+import { isLinePresentationLayer, openStreetMapBasemap, presentationColor, referenceRasterInsertionPoint, supportStyle, voltageLineColor } from "./mapStyle";
 
 describe("MapLibre presentation style policy", () => {
   it("renders line source layers as lines and asset layers as inspectable points", () => {
@@ -22,5 +22,10 @@ describe("MapLibre presentation style policy", () => {
     expect(voltageLineColor).toEqual(expect.arrayContaining(["high_110", "#dc2626", "high_220", "#d946ef", "high_400", "#a855f7"]));
     expect(supportStyle("tower")).toEqual({ color: "#f97316", radius: 5 });
     expect(supportStyle("pole")).toEqual({ color: "#cbd5e1", radius: 3 });
+  });
+
+  it("inserts reference rasters below analytical provider vectors", () => {
+    expect(referenceRasterInsertionPoint(["background", "basemap:openstreetmap", "provider:power-lines", "provider:power-assets"])).toBe("provider:power-lines");
+    expect(referenceRasterInsertionPoint(["background", "basemap:openstreetmap"])).toBeUndefined();
   });
 });

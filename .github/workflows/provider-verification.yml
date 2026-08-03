@@ -1,4 +1,4 @@
-name: Provider Verification
+name: Unit Tests
 
 on:
   pull_request:
@@ -10,12 +10,12 @@ permissions:
   contents: read
 
 concurrency:
-  group: provider-verification-${{ github.workflow }}-${{ github.ref }}
+  group: unit-tests-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   verify:
-    name: provider-verification
+    name: unit-tests
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -51,5 +51,12 @@ jobs:
       - name: Install JavaScript dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run canonical provider verification
-        run: ./scripts/verify_provider.sh
+      - name: Run Python unit tests
+        working-directory: backend
+        run: uv run --offline pytest -q -W error
+
+      - name: Run Node unit tests
+        run: pnpm --dir backend-node test
+
+      - name: Run frontend unit tests
+        run: pnpm --dir frontend test

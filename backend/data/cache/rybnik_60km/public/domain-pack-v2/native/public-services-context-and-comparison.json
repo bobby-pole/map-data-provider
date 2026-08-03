@@ -1,0 +1,24 @@
+{
+  "prg": {
+    "status": "needs_source",
+    "detail": "No qualified PRG facility class is enabled for administration, education, post or community/social semantics."
+  },
+  "bdot10k": {
+    "status": "context_only",
+    "detail": "BDOT10k buildings are topographic context and cannot independently establish a public-service facility."
+  },
+  "comparison": [
+    {
+      "outcome": "ambiguous",
+      "left": {
+        "source_id": "openstreetmap",
+        "feature_id": "way/public-townhall-1"
+      },
+      "right": {
+        "source_id": "bdot10k",
+        "feature_id": null
+      },
+      "evidence": "building_context_cannot_establish_facility_semantics"
+    }
+  ]
+}

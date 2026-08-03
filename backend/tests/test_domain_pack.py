@@ -4,8 +4,9 @@ from pathlib import Path
 
 import pytest
 
-from geo_pipeline.cache import build_rybnik_emergency_cache, cache_paths
-from geo_pipeline.domain_pack import build_rybnik_emergency_domain_pack, build_rybnik_power_domain_pack, read_domain_pack, validate_domain_pack
+from geo_pipeline.cache import build_rybnik_emergency_cache, build_rybnik_public_cache, cache_paths
+from geo_pipeline.domain_pack import build_rybnik_emergency_domain_pack, build_rybnik_power_domain_pack, build_rybnik_public_domain_pack, read_domain_pack, validate_domain_pack
+from geo_pipeline.public_services import category_for_osm_feature
 
 
 def _legacy_power(root: Path) -> None:
@@ -98,3 +99,23 @@ def test_emergency_pack_retains_original_osm_geometry_and_distinct_prg_represent
     }
     assert official_police["features"][0]["geometry"]["type"] == "Point"
     assert read_domain_pack("rybnik_60km", "emergency", root=tmp_path, public_export=True)["artifacts"][-1]["id"] == "emergency.inspection_points"
+
+
+def test_public_pack_keeps_facility_semantics_separate_from_buildings_and_publishes_comparison_evidence(tmp_path: Path) -> None:
+    assert category_for_osm_feature({"building": "yes", "name": "Unlabelled building"}) is None
+    build_rybnik_public_cache(root=tmp_path)
+    pack = build_rybnik_public_domain_pack(root=tmp_path)
+    pack_root = tmp_path / "rybnik_60km" / "public" / "domain-pack-v2"
+    artifacts = {artifact["id"]: artifact for artifact in pack["artifacts"]}
+    administration = json.loads((pack_root / artifacts["public.administration"]["path"]).read_text())
+    inspection = json.loads((pack_root / artifacts["public.inspection_points"]["path"]).read_text())
+    context = json.loads((pack_root / artifacts["public.context_and_comparison"]["path"]).read_text())
+
+    assert administration["features"][0]["geometry"]["type"] == "Polygon"
+    assert inspection["features"][0]["properties"]["origin_artifact"] == "public.administration"
+    assert inspection["features"][0]["properties"]["source_geometry_type"] == "Polygon"
+    assert context["bdot10k"]["status"] == "context_only"
+    assert context["comparison"][0]["outcome"] == "ambiguous"
+    assert {artifact["id"] for artifact in read_domain_pack("rybnik_60km", "public", root=tmp_path, public_export=True)["artifacts"]} == {
+        "public.administration", "public.education", "public.post", "public.community_social", "public.inspection_points",
+    }

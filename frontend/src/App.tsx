@@ -14,7 +14,6 @@ import type { MapCircuit, MapFeatureDetail, ProviderRuntimeResponse } from "./ty
 import "./index.css";
 
 export default function App() {
-  const { aoiId, presentations, issues, sourceAvailability, updateReview, error } = useProviderPreview();
   const [enabledLayers, setEnabledLayers] = useState<Record<string, boolean>>({});
   const [selectedFeature, setSelectedFeature] = useState<SelectedProviderFeature | null>(null);
   const [selectedDetail, setSelectedDetail] = useState<MapFeatureDetail | null>(null);
@@ -24,6 +23,10 @@ export default function App() {
   const [basemapEnabled, setBasemapEnabled] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [runtimeResult, setRuntimeResult] = useState<ProviderRuntimeResponse | null>(null);
+  const preparedAoiId = runtimeResult?.outcomes.some((outcome) => outcome.status === "ready" && outcome.artifact_aoi_id === runtimeResult.aoi.aoi_id)
+    ? runtimeResult.aoi.aoi_id
+    : undefined;
+  const { aoiId, presentations, issues, sourceAvailability, updateReview, error } = useProviderPreview(preparedAoiId);
   const catalog = useMemo(() => configuredPreviewLayers(presentations), [presentations]);
   const visibleLayers = useMemo(
     () => catalog.filter((layer) => enabledLayers[previewLayerKey(layer)] ?? true),
@@ -51,7 +54,7 @@ export default function App() {
       <section className="inspectorContent">
         <div className="mapPanel"><MapView layers={visibleLayers} references={visibleReferences} orthophotoEnabled={orthophotoEnabled} basemapEnabled={basemapEnabled} aoiOutline={runtimeResult?.aoi.geometry ?? null} selected={selectedFeature} selectedDetail={selectedDetail} selectedCircuit={selectedCircuit} onSelectFeature={selectFeature} /></div>
         <aside className="inspectorPanel">
-          {settingsOpen && <AoiSettings onApplied={(result) => { setRuntimeResult(result); setSettingsOpen(false); }} />}
+          {settingsOpen && <AoiSettings onApplied={(result) => { setRuntimeResult(result); setSelectedFeature(null); setSelectedDetail(null); setSelectedCircuit(null); setSettingsOpen(false); }} />}
           {runtimeResult && <section className="inspectorSection"><div className="sectionHeading"><h2>Preparation status</h2><span>{runtimeResult.request_result} · {runtimeResult.request_id}</span></div><ul className="layerList">{runtimeResult.outcomes.map((outcome) => <li key={outcome.domain}><strong>{outcome.domain}: {outcome.status}</strong><small>{outcome.detail}</small><small>{outcome.source_registry_id} · {outcome.output_kind} · {outcome.query_version}{outcome.artifact_aoi_id ? ` · artifact ${outcome.artifact_aoi_id}` : ""}</small></li>)}</ul><h3 className="contextHeading">Source context</h3><ul className="layerList">{runtimeResult.contexts.map((context, index) => <li key={`${context.domain}-${context.source_registry_id}-${index}`}><strong>{context.domain}: {context.status}</strong><small>{context.source_registry_id} · {context.output_kind}</small><small>{context.detail}</small></li>)}</ul></section>}
           <section className="inspectorSection">
             <div className="sectionHeading"><h2>Map background</h2><span>{basemapEnabled ? "on" : "off"}</span></div>

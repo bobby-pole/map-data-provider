@@ -509,6 +509,11 @@ export const mapFeatureDetailResponseSchema = z.object({
   }),
 }).strict();
 
+export const mapRelationEvidenceResponseSchema = z.object({
+  response_version: z.literal("provider_map_relation_evidence/v1"), aoi_id: providerIdentifierSchema, domain: providerIdentifierSchema,
+  source_id: z.string().regex(/^(node|way|relation)\/\d+$/), state: z.enum(["available", "not_applicable"]), relation: z.unknown().nullable(),
+}).strict();
+
 export type CachedMetadata = z.infer<typeof cachedMetadataSchema>;
 export type ProviderLayerResponse = z.infer<typeof providerLayerResponseSchema>;
 export type ReadinessRecord = z.infer<typeof readinessRecordSchema>;
@@ -519,6 +524,7 @@ export type DomainPackLayer = z.infer<typeof domainPackLayerSchema>;
 export type MapPresentationManifest = z.infer<typeof mapPresentationManifestSchema>;
 export type MapPresentationResponse = z.infer<typeof mapPresentationResponseSchema>;
 export type MapFeatureDetailResponse = z.infer<typeof mapFeatureDetailResponseSchema>;
+export type MapRelationEvidenceResponse = z.infer<typeof mapRelationEvidenceResponseSchema>;
 export type GeneratedIssue = z.infer<typeof generatedIssueSchema>;
 export type IssueReviewRecord = z.infer<typeof issueReviewRecordSchema>;
 export type ReviewedIssue = z.infer<typeof reviewedIssueSchema>;

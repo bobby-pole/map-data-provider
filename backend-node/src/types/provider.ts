@@ -501,7 +501,7 @@ export const mapFeatureDetailResponseSchema = z.object({
   aoi_id: providerIdentifierSchema,
   domain: providerIdentifierSchema,
   artifact_id: z.string().min(1),
-  source_id: z.string().regex(/^(node|way|relation)\/\d+$/),
+  source_id: z.string().regex(/^[a-z][a-z0-9_-]*\/[A-Za-z0-9._:-]+$/i),
   feature: z.object({
     type: z.literal("Feature"),
     properties: z.record(z.string(), z.unknown()),

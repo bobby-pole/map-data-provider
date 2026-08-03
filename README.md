@@ -51,8 +51,8 @@ The intended contract is that downstream application can request infrastructure 
 ## Provider demo flow
 
 1. Run the offline provider verification and start the Node/Express API.
-2. Request `rybnik_60km/power` through the read-only cached-layer endpoint.
-3. Inspect the cached OSM-derived GeoJSON, metadata and readiness record.
+2. Request the `rybnik_60km/power` or `rybnik_60km/emergency` cached layer through the read-only endpoint.
+3. Inspect the source-labelled GeoJSON, metadata and readiness record.
 4. Compare analytical, manual and reference-only source classifications.
 5. Inspect generated issue evidence, human review state and feature metadata in the dev-preview.
 6. Export `provider_pack/v1` for a provider-compatible client.
@@ -62,10 +62,10 @@ Follow the [3–5 minute provider demo](./docs/demo.md) for exact commands and r
 ## Demo scenario
 
 ```text
-Scenario: a provider-compatible client requests a power infrastructure layer
+Scenario: a provider-compatible client requests a source-aware infrastructure layer
 
-A compatible client requests the `power` domain for the Rybnik AOI.
-Map Data Quality Lab returns cached, normalized OSM-derived power-line and power-asset layers with their metadata and readiness record. The power domain pack retains private source evidence and representative points, while KIUT/GESUT remains a separate reference-only WMS overlay.
+A compatible client requests the `power` or `emergency` domain for the Rybnik AOI.
+Map Data Quality Lab returns cached, normalized analytical layers with their metadata and readiness record. The power pack preserves OSM source evidence and a separate KIUT/GESUT reference-only WMS overlay. The emergency pack keeps OSM hospital/fire/police/ambulance-rescue geometry distinct from supplementary PRG police/fire unit-area representative points.
 The provider exposes source attribution, feature count, validation status, confidence and known limitations.
 Its source registry keeps manual inputs and KIUT/GESUT WMS references distinct from analytical vectors.
 The returned layer pack is ready for a provider-compatible client; actual downstream application consumption remains external integration work.
@@ -117,7 +117,7 @@ The dev-preview is an inspection surface for that provider workflow, not an atte
 
 Core provider capabilities:
 
-- AOI/domain request model, starting with `power` for Rybnik + 60 km.
+- AOI/domain request model for `power` and `emergency` in Rybnik + 60 km.
 - Layer Catalog with source, geometry type, AOI, feature count, confidence and access metadata.
 - Cached OSM-derived layer artifacts so normal reads do not depend on live Overpass availability.
 - Source-aware validation and readiness metrics that make data limitations visible instead of hiding them.
@@ -229,6 +229,7 @@ The Python worker can also be exercised directly with its offline fixture:
 ```bash
 cd backend
 uv run --offline python -m geo_pipeline.worker --aoi rybnik_60km --domain power --input fixture
+uv run --offline python -m geo_pipeline.worker --aoi rybnik_60km --domain emergency --input fixture
 ```
 
 ## Why this matters for map data tooling
@@ -245,9 +246,11 @@ KIUT/GESUT is kept as an OGC WMS visual reference overlay. WMS imagery is not co
 
 ## Map presentation and offline use
 
-Full `provider_geojson/v1` artifacts remain the canonical cache, validation and export products. They are intentionally not the dev-preview map read path for the 23,604-feature Rybnik power snapshot. The worker derives only manifest-approved public analytical layers into MVT and packages them in the checked `provider_map_presentation/v1` PMTiles archive. Node returns compact presentation metadata and HTTP byte ranges; MapLibre reads the local archive without a remote vector-data request. Selecting a visible feature loads one validated, allow-listed source-detail record by its stable OSM ID; it never fetches a full GeoJSON layer into the inspector.
+Full `provider_geojson/v1` artifacts remain the canonical cache, validation and export products. They are intentionally not the dev-preview map read path for the 23,604-feature Rybnik power snapshot or source-separated emergency artifacts. The worker derives only manifest-approved public analytical layers into MVT and packages them in the checked `provider_map_presentation/v1` PMTiles archive. Node returns compact presentation metadata and HTTP byte ranges; MapLibre reads the local archive without a remote vector-data request. Selecting a visible feature loads one validated, allow-listed source-detail record by its stable provider source ID; it never fetches a full GeoJSON layer into the inspector.
 
 The presentation has separate power-line, power-asset and bounded power-support layers. Power-line colours use deterministic voltage buckets. The support layer carries OSM `tower`, `pole`, `portal` and `utility_pole` classes where present in the committed source snapshot; towers, portals and utility poles are generated from zoom 12, while ordinary poles are generated from zoom 14. These rules constrain tile generation rather than only hiding client-side features. The bounded support fixture is evidence for this preview behaviour, not a claim of complete support coverage across the AOI.
+
+The emergency presentation uses four explicit OSM categories—hospital, fire service, police and ambulance/rescue—plus separately attributed PRG representative points for police/fire unit areas. OSM polygons remain in their original geometry and have a companion inspection-point layer. PRG points state that they derive from official unit-area geometry and never claim an exact facility footprint. No official hospital or ambulance/rescue registry is enabled; this remains a visible source gap rather than a reason to hide the committed OSM evidence.
 
 This makes public vector inspection available offline after the repository cache is present. The preview also offers a default-on OpenStreetMap raster base map for online visual context; it is clearly separate from provider data, may be turned off and is unavailable offline. KIUT, orthophoto and other WMS/raster references remain external visual services: they are not vectorized, included in PMTiles or claimed to work offline.
 

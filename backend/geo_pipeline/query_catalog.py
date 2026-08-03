@@ -24,3 +24,14 @@ POWER_OSM_QUERY = OsmQueryDefinition(
         "man_made": ["utility_pole"],
     },
 )
+
+
+EMERGENCY_OSM_QUERY = OsmQueryDefinition(
+    source_registry_id="openstreetmap",
+    query_version="emergency-osm/v1",
+    tags={
+        "amenity": ["hospital", "fire_station", "police", "ambulance_station"],
+        "healthcare": ["hospital"],
+        "emergency": ["ambulance_station", "mountain_rescue", "lifeguard_base"],
+    },
+)

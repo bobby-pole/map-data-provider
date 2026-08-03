@@ -23,7 +23,7 @@ export function featureInspection(selected: SelectedProviderFeature): FeatureIns
     attribution: sourceAttribution(selected.layer),
     providerAttributes: Object.entries(selected.feature.properties)
       // Source-specific tags remain in the response, but are not provider-normalized evidence.
-      .filter(([name]) => name !== "osm_tags")
+      .filter(([name]) => name !== "osm_tags" && name !== "source_attributes")
       .sort(([left], [right]) => left.localeCompare(right))
       .map(([name, value]) => ({ name, value: displayValue(value) })),
   };

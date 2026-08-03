@@ -39,16 +39,37 @@ REQUIRED_FEATURE_FIELDS = frozenset(
         "eligible_for_analysis",
     }
 )
-RAW_OSM_TAG_FIELDS = (
+OSM_POWER_DISPLAY_TAG_FIELDS = (
     "power",
     "man_made",
     "name",
     "ref",
     "operator",
+    "operator:short",
+    "operator:wikidata",
     "voltage",
+    "voltage:primary",
+    "voltage:secondary",
+    "frequency",
+    "circuits",
+    "cables",
+    "wires",
+    "phases",
+    "location",
+    "line",
+    "rating",
+    "design",
+    "height",
+    "material",
+    "tower:type",
+    "tower:construction",
     "substation",
     "transformer",
     "generator:source",
+    "generator:method",
+    "generator:type",
+    "plant:source",
+    "plant:output:electricity",
     "source",
 )
 
@@ -121,7 +142,7 @@ def _normalize_feature(feature: object, *, metadata: dict[str, Any]) -> dict[str
     source_id = _source_id(raw_properties)
     raw_tags = {
         key: value
-        for key in RAW_OSM_TAG_FIELDS
+        for key in OSM_POWER_DISPLAY_TAG_FIELDS
         if (value := raw_properties.get(key)) is not None
     }
     properties: dict[str, Any] = {

@@ -1,3 +1,5 @@
+import type { ExpressionSpecification } from "maplibre-gl";
+
 /** Pure style policy so the MVT preview can be verified without a WebGL runtime. */
 export function isLinePresentationLayer(sourceLayer: string): boolean {
   return sourceLayer.includes("line");
@@ -5,6 +7,22 @@ export function isLinePresentationLayer(sourceLayer: string): boolean {
 
 export function presentationColor(index: number): string {
   return ["#f59e0b", "#38bdf8", "#a78bfa", "#34d399"][index % 4] ?? "#38bdf8";
+}
+
+export const voltageLineColor: ExpressionSpecification = [
+  "match", ["get", "voltage_bucket"],
+  "low", "#84cc16",
+  "medium", "#eab308",
+  "high", "#f97316",
+  "extra_high", "#dc2626",
+  "#64748b",
+] as ExpressionSpecification;
+
+export function supportStyle(assetType: string | undefined): { color: string; radius: number } {
+  if (assetType === "tower") return { color: "#f97316", radius: 5 };
+  if (assetType === "portal") return { color: "#facc15", radius: 4.5 };
+  if (assetType === "utility_pole") return { color: "#38bdf8", radius: 3.5 };
+  return { color: "#cbd5e1", radius: 3 };
 }
 
 /** Online-only visual context; it is not provider data and is never cached by this app. */

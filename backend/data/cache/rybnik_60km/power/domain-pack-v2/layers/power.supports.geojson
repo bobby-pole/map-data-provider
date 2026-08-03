@@ -1,0 +1,361 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "cache_layout_version": "provider_cache/v1",
+    "geojson_contract_version": "provider_geojson/v1",
+    "aoi_id": "rybnik_60km",
+    "domain": "power",
+    "layer_id": "power.supports",
+    "source": "OpenStreetMap",
+    "source_type": "analytical_vector",
+    "source_registry_id": "openstreetmap",
+    "source_url": "https://overpass-api.de/api/interpreter",
+    "source_query": "Bounded OpenStreetMap power-support snapshot for the committed Rybnik 60 km AOI fixture.",
+    "snapshot_at": "2026-07-22T00:00:00Z",
+    "pipeline_version": "geo_pipeline/cache/v1",
+    "query_version": "power-osmnx/v1",
+    "validation_status_raw": "pass",
+    "quality_status": "passed",
+    "confidence": "medium",
+    "limitations": [
+      "OSM completeness varies by area and asset type.",
+      "Passed validation does not prove complete real-world infrastructure coverage."
+    ],
+    "eligible_for_analysis": true,
+    "readiness": "usable_with_limitations",
+    "feature_count": 12,
+    "contract_version": "provider_geojson/v1"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/1528794574",
+        "domain": "power",
+        "asset_type": "tower",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM completeness varies by area and asset type.",
+          "Passed validation does not prove complete real-world infrastructure coverage."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "power": "tower",
+          "ref": "11",
+          "operator": "Tauron",
+          "operator:wikidata": "Q2397198"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5205587,
+          50.1095243
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/1528794589",
+        "domain": "power",
+        "asset_type": "tower",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM completeness varies by area and asset type.",
+          "Passed validation does not prove complete real-world infrastructure coverage."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "power": "tower",
+          "ref": "10",
+          "operator": "Tauron",
+          "operator:wikidata": "Q2397198"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5243594,
+          50.1099813
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/1758409133",
+        "domain": "power",
+        "asset_type": "tower",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM completeness varies by area and asset type.",
+          "Passed validation does not prove complete real-world infrastructure coverage."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "power": "tower",
+          "ref": "9",
+          "operator": "Tauron",
+          "operator:wikidata": "Q2397198"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5588499,
+          50.1080071
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/1954863228",
+        "domain": "power",
+        "asset_type": "tower",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM completeness varies by area and asset type.",
+          "Passed validation does not prove complete real-world infrastructure coverage."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "power": "tower",
+          "ref": "20",
+          "operator": "Tauron",
+          "operator:wikidata": "Q2397198",
+          "material": "metal"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5592908,
+          50.0931996
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/1954863232",
+        "domain": "power",
+        "asset_type": "tower",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM completeness varies by area and asset type.",
+          "Passed validation does not prove complete real-world infrastructure coverage."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "power": "tower",
+          "ref": "19",
+          "operator": "Tauron",
+          "operator:wikidata": "Q2397198",
+          "material": "metal"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5598525,
+          50.0942892
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/1954856086",
+        "domain": "power",
+        "asset_type": "portal",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM completeness varies by area and asset type.",
+          "Passed validation does not prove complete real-world infrastructure coverage."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "power": "portal"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5584942,
+          50.0916154
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/1954856105",
+        "domain": "power",
+        "asset_type": "portal",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM completeness varies by area and asset type.",
+          "Passed validation does not prove complete real-world infrastructure coverage."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "power": "portal"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5585582,
+          50.0917324
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/1758555079",
+        "domain": "power",
+        "asset_type": "pole",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM completeness varies by area and asset type.",
+          "Passed validation does not prove complete real-world infrastructure coverage."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "power": "pole",
+          "material": "steel"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5595757,
+          50.1073779
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/4178078511",
+        "domain": "power",
+        "asset_type": "pole",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM completeness varies by area and asset type.",
+          "Passed validation does not prove complete real-world infrastructure coverage."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "power": "pole"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5360138,
+          50.1084088
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/4178078542",
+        "domain": "power",
+        "asset_type": "pole",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM completeness varies by area and asset type.",
+          "Passed validation does not prove complete real-world infrastructure coverage."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "power": "pole"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5365907,
+          50.1085277
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/4736100326",
+        "domain": "power",
+        "asset_type": "pole",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM completeness varies by area and asset type.",
+          "Passed validation does not prove complete real-world infrastructure coverage."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "power": "pole"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5332981,
+          50.0908397
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/12514589575",
+        "domain": "power",
+        "asset_type": "pole",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM completeness varies by area and asset type.",
+          "Passed validation does not prove complete real-world infrastructure coverage."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "power": "pole"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.558111,
+          50.1082654
+        ]
+      }
+    }
+  ]
+}

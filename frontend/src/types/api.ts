@@ -100,6 +100,15 @@ export type MapPresentationListResponse = {
   aoi_id: string;
   presentations: MapPresentation[];
 };
+
+export type MapFeatureDetail = {
+  response_version: "provider_map_feature_detail/v1";
+  aoi_id: string;
+  domain: string;
+  artifact_id: string;
+  source_id: string;
+  feature: ProviderFeature;
+};
 export type SourceAvailabilityReport = { report_version: "provider_source_availability/v1"; aoi_id: string; evidence_timestamp: string; sources: Array<{ source_id: string; availability: string; aoi_coverage: string; feature_state: string; freshness: string; evidence: string; actionable_gap: boolean }> };
 
 export type IssueReviewStatus = "open" | "acknowledged" | "resolved" | "accepted" | "ignored";

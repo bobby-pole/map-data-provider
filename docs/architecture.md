@@ -179,6 +179,8 @@ backend/data/cache/{aoi_id}/{domain}/
 
 `MDQ-047` adds `presentation/manifest.json`, `presentation/benchmark.json` and a version-3 PMTiles archive below the same domain-pack root. `provider_map_presentation/v1` records the parent domain-manifest digest, archive SHA-256/size/bounds/zoom range, compact layer descriptors, attribution, source provenance and the measured full-GeoJSON baseline. Generation checks every public input checksum and source-eligibility record before writing tiles; private evidence, manual/review material, WMS/raster references and non-exportable sources cannot enter the archive. The archive is a render derivative, not a replacement source or public GeoJSON export.
 
+`MDQ-048` adds a public `power.supports` OSM vector layer from a bounded committed source fixture. Its source tag allow-list preserves only map-inspection fields: power/class, identity and operator, voltage, frequency, circuit/conductor, location/design, and explicitly named equipment fields. The presentation keeps compact selection properties only; the source-detail route resolves one validated record by stable OSM source ID from the canonical public artifact. Lines receive deterministic low, medium, high, extra-high, multiple, missing or unparseable voltage states. Tiles for `tower`, `portal` and `utility_pole` start at zoom 12; ordinary `pole` tiles start at zoom 14. The fixture does not establish exhaustive AOI support coverage or electrical topology.
+
 `MDQ-020` defines `provider_aoi/v1` before generic adapter or API work. A bounded circle request records its EPSG:4326 boundary, source CRS, radius/area limits and request provenance; an approved administrative reference records its PRG identifier and offline fixture/snapshot provenance without claiming a live WFS read. The provider derives canonical AOI identity from normalized geometry, contract version and identity-relevant provenance. Cache paths accept only validated provider identifiers; `rybnik_60km` remains a compatibility alias and v1 cache key for the committed power snapshot while retaining its derived geometry identity.
 
 `MDQ-022` introduces a Python adapter catalog and versioned OSM query catalog. The worker resolves an approved AOI/domain adapter before creating paths, returns its source registry ID and query version, and stages the v1 compatibility cache with its v2 domain pack before atomic replacement. The first registered adapter remains `rybnik_60km/power`; no other domain acquisition is implied by the generic interface.
@@ -226,7 +228,7 @@ The Node/Express/TypeScript provider now serves typed, read-only local artifacts
 
 `GET /api/aoi/:aoiId/domain-packs` and `GET /api/aoi/:aoiId/domain-packs/:domain` provide read-only `provider_domain_pack_read/v2` responses from registered manifests. Node validates request and manifest identity, pack-relative paths, source provenance, SHA-256 checksums, feature counts and provider GeoJSON metadata before returning any layer. The response exposes only explicitly public processed, derived or representative-point GeoJSON vectors. Native artifacts, rasters, remote services and reference-only records remain inside the cache as provenance evidence and cannot enter an analytical endpoint.
 
-`GET /api/aoi/:aoiId/presentations` and `GET /api/aoi/:aoiId/presentations/:domain` provide compact `provider_map_presentation_read/v1` metadata without reading or serializing analytical GeoJSON collections. `GET /api/aoi/:aoiId/presentations/:domain/archive` requires one satisfiable HTTP byte range and responds with immutable PMTiles bytes, an ETag and `Content-Range`. Node validates presentation identity, parent-manifest digest, public-source provenance, archive size and SHA-256 before serving it. These routes are read-only and never invoke Python, Overpass, WMS or a tile generator.
+`GET /api/aoi/:aoiId/presentations` and `GET /api/aoi/:aoiId/presentations/:domain` provide compact `provider_map_presentation_read/v1` metadata without reading or serializing analytical GeoJSON collections. `GET /api/aoi/:aoiId/presentations/:domain/features/:sourceId` returns one validated source-detail feature and its allow-listed attributes; it validates an OSM `node`, `way` or `relation` ID and never returns an entire layer. `GET /api/aoi/:aoiId/presentations/:domain/archive` requires one satisfiable HTTP byte range and responds with checked PMTiles bytes, an ETag and `Content-Range`. Node validates presentation identity, parent-manifest digest, public-source provenance, archive size and SHA-256 before serving it. These routes are read-only and never invoke Python, Overpass, WMS or a tile generator.
 
 
 Implemented Node/Express provider endpoints:
@@ -243,6 +245,7 @@ Implemented Node/Express provider endpoints:
 - `GET /api/aoi/:aoiId/domain-packs/:domain`
 - `GET /api/aoi/:aoiId/presentations`
 - `GET /api/aoi/:aoiId/presentations/:domain`
+- `GET /api/aoi/:aoiId/presentations/:domain/features/:sourceId`
 - `GET /api/aoi/:aoiId/presentations/:domain/archive` (HTTP range only)
 
 The first vertical slice is:
@@ -254,7 +257,7 @@ Output: public OSM power-line and power-asset GeoJSON, private source/representa
 Consumer: downstream application
 ```
 
-The current release implements the provider side of this slice: a cache-first Rybnik power request, source/readiness/issue contracts, durable review state, bounded `provider_pack/v1` compatibility, a multi-artifact power domain pack and manifest-driven v2 reads/exports. The MapLibre dev-preview derives its layer toggles, counts, popup fields, attribution and limitations from compact presentation metadata and reads public MVT from local PMTiles ranges; KIUT remains a separate external reference-only overlay. The preview is a non-operational provider inspection tool, not a downstream application client. Consumer-side loading remains a separate repository task.
+The current release implements the provider side of this slice: a cache-first Rybnik power request, source/readiness/issue contracts, durable review state, bounded `provider_pack/v1` compatibility, a multi-artifact power domain pack and manifest-driven v2 reads/exports. The MapLibre dev-preview derives its layer toggles, counts, voltage style, attribution and limitations from compact presentation metadata, resolves one selected feature into its validated source detail, and reads public MVT from local PMTiles ranges; KIUT remains a separate external reference-only overlay. The preview is a non-operational provider inspection tool, not a downstream application client. Consumer-side loading remains a separate repository task.
 
 ## Repository Plan
 

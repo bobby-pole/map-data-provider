@@ -30,6 +30,7 @@ def test_fixture_worker_creates_complete_cache_without_network(tmp_path: Path) -
     assert [artifact["id"] for artifact in manifest["artifacts"]] == [
         "power.lines",
         "power.assets",
+        "power.supports",
         "power.representative_points",
         "power.osm_source_evidence",
         "power.kiut_reference",

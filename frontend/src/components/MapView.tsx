@@ -4,12 +4,12 @@ import type { Geometry } from "geojson";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Protocol } from "pmtiles";
 
-import { popupDetails, previewLayerKey, type PreviewLayer } from "../previewCatalog";
+import { previewLayerKey, type PreviewLayer } from "../previewCatalog";
 import type { ProviderFeature } from "../types/api";
 import type { SelectedProviderFeature } from "../inspection";
 import { KIUT_MAX_ZOOM, KIUT_MIN_ZOOM, KIUT_WMS_URL, type KiutReferenceLayer } from "../kiutReference";
 import { ORTHOPHOTO_WMS_URL, orthophotoReference } from "../orthophotoReference";
-import { isLinePresentationLayer, openStreetMapBasemap, presentationColor } from "../mapStyle";
+import { isLinePresentationLayer, openStreetMapBasemap, presentationColor, voltageLineColor } from "../mapStyle";
 
 const pmtilesProtocol = new Protocol();
 maplibregl.addProtocol("pmtiles", pmtilesProtocol.tile);
@@ -34,7 +34,6 @@ export function MapView({ layers, references, orthophotoEnabled, basemapEnabled,
   const layersRef = useRef(layers);
   const onSelectFeatureRef = useRef(onSelectFeature);
   const fittedArchiveRef = useRef<string | null>(null);
-  const popupRef = useRef<maplibregl.Popup | null>(null);
   const [mapReady, setMapReady] = useState(false);
 
   useEffect(() => { layersRef.current = layers; }, [layers]);
@@ -58,17 +57,12 @@ export function MapView({ layers, references, orthophotoEnabled, basemapEnabled,
       if (!layer) return;
       const feature = asProviderFeature(rendered);
       onSelectFeatureRef.current({ layer, feature });
-      popupRef.current?.remove();
-      popupRef.current = new maplibregl.Popup({ closeButton: true, closeOnClick: false, offset: 10 })
-        .setLngLat(event.lngLat)
-        .setDOMContent(featurePopupContent(feature, layer))
-        .addTo(map);
     });
     map.on("mousemove", (event) => {
       const visibleIds = layersRef.current.map(providerLayerId).filter((id) => map.getLayer(id));
       map.getCanvas().style.cursor = visibleIds.length && map.queryRenderedFeatures(event.point, { layers: visibleIds }).length ? "pointer" : "";
     });
-    return () => { popupRef.current?.remove(); map.remove(); mapRef.current = null; };
+    return () => { map.remove(); mapRef.current = null; };
   }, []);
 
   useEffect(() => {
@@ -91,8 +85,6 @@ export function MapView({ layers, references, orthophotoEnabled, basemapEnabled,
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !mapReady) return;
-    popupRef.current?.remove();
-    popupRef.current = null;
     removePrefixedLayersAndSources(map, PROVIDER_PREFIX);
     const archives = new Map<string, PreviewLayer[]>();
     layers.forEach((layer) => archives.set(layer.archiveUrl, [...(archives.get(layer.archiveUrl) ?? []), layer]));
@@ -111,10 +103,12 @@ export function MapView({ layers, references, orthophotoEnabled, basemapEnabled,
         const isLine = isLinePresentationLayer(layer.artifact.source_layer);
         map.addLayer(isLine ? {
           id, type: "line", source: sourceId, "source-layer": layer.artifact.source_layer,
-          paint: { "line-color": color, "line-width": 4.5, "line-opacity": 0.9 },
+          paint: { "line-color": voltageLineColor, "line-width": 4.5, "line-opacity": 0.9 },
         } : {
           id, type: "circle", source: sourceId, "source-layer": layer.artifact.source_layer,
-          paint: { "circle-color": color, "circle-radius": 6, "circle-stroke-width": 1.25, "circle-stroke-color": "#07111f", "circle-opacity": 0.9 },
+          paint: layer.artifact.artifact_id === "power.supports"
+            ? { "circle-color": ["match", ["get", "asset_type"], "tower", "#f97316", "portal", "#facc15", "utility_pole", "#38bdf8", "#cbd5e1"], "circle-radius": ["match", ["get", "asset_type"], "tower", 5, "portal", 4.5, "utility_pole", 3.5, 3], "circle-stroke-width": 1.25, "circle-stroke-color": "#07111f", "circle-opacity": 0.9 }
+            : { "circle-color": color, "circle-radius": 6, "circle-stroke-width": 1.25, "circle-stroke-color": "#07111f", "circle-opacity": 0.9 },
         });
       });
       const bounds = archiveLayers[0]?.archiveBounds;
@@ -139,20 +133,6 @@ export function MapView({ layers, references, orthophotoEnabled, basemapEnabled,
 
 function asProviderFeature(feature: MapGeoJSONFeature): ProviderFeature {
   return { type: "Feature", properties: feature.properties ?? {}, geometry: feature.geometry as Geometry };
-}
-
-function featurePopupContent(feature: ProviderFeature, layer: PreviewLayer): HTMLElement {
-  const details = popupDetails(feature, layer);
-  const content = document.createElement("div");
-  content.className = "mapFeaturePopup";
-  const title = document.createElement("strong");
-  title.textContent = details.title;
-  const source = document.createElement("span");
-  source.textContent = `${details.source} · ${details.confidence}`;
-  const hint = document.createElement("small");
-  hint.textContent = "Full provider evidence is in the Selected feature panel.";
-  content.append(title, source, hint);
-  return content;
 }
 
 function addRasterReference(map: maplibregl.Map, key: string, endpoint: string, wmsLayer: string, format: string, attribution: string, minzoom: number, maxzoom: number): void {

@@ -33,8 +33,23 @@
       "kind": "processed_vector",
       "format": "geojson",
       "path": "layers/power.assets.geojson",
-      "sha256": "060da42f0d6ab815c0501078c9197df32ccff3f19ce7a78f64fa1b4ad722f208",
+      "sha256": "4885227af1468f2938161aba1a58cea8213213eaeee7258d24a89fe3aa91191a",
       "feature_count": 7087,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "power.supports",
+      "kind": "processed_vector",
+      "format": "geojson",
+      "path": "layers/power.supports.geojson",
+      "sha256": "98bdecbcdb0212b74d89b5cc89d8bd75bc8d095d0e85473559e85064fc60f6e1",
+      "feature_count": 12,
       "source_provenance": [
         {
           "source_id": "openstreetmap",

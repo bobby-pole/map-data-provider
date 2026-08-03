@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { isLinePresentationLayer, openStreetMapBasemap, presentationColor } from "./mapStyle";
+import { isLinePresentationLayer, openStreetMapBasemap, presentationColor, supportStyle, voltageLineColor } from "./mapStyle";
 
 describe("MapLibre presentation style policy", () => {
   it("renders line source layers as lines and asset layers as inspectable points", () => {
@@ -16,5 +16,11 @@ describe("MapLibre presentation style policy", () => {
   it("uses the standard OSM raster endpoint only as an attributed online basemap", () => {
     expect(openStreetMapBasemap.tileUrlTemplate).toBe("https://tile.openstreetmap.org/{z}/{x}/{y}.png");
     expect(openStreetMapBasemap.attribution).toContain("OpenStreetMap contributors");
+  });
+
+  it("keeps voltage buckets and source support classes visually distinct", () => {
+    expect(voltageLineColor).toContain("extra_high");
+    expect(supportStyle("tower")).toEqual({ color: "#f97316", radius: 5 });
+    expect(supportStyle("pole")).toEqual({ color: "#cbd5e1", radius: 3 });
   });
 });

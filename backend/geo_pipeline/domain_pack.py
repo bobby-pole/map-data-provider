@@ -24,7 +24,9 @@ PACK_DIRNAME = "domain-pack-v2"
 ARTIFACT_KINDS = {"native_vector", "native_raster", "remote_service", "processed_vector", "derived_vector", "representative_points"}
 FILE_KINDS = {"native_vector", "native_raster", "processed_vector", "derived_vector", "representative_points"}
 POWER_ASSETS_SOURCE = Path(__file__).resolve().parents[1] / "data/processed/rybnik_60km_power_node_points_display_clipped.geojson"
+POWER_SUPPORTS_SOURCE = Path(__file__).resolve().parents[1] / "data/fixtures/rybnik_60km/power/osm-power-supports.geojson"
 POWER_ASSETS_QUERY = "OSMnx power and utility-pole point features from the committed Rybnik 60 km AOI snapshot."
+POWER_SUPPORTS_QUERY = "Bounded OpenStreetMap power-support snapshot for the committed Rybnik 60 km AOI fixture."
 
 
 def domain_pack_root(aoi_id: str, domain: str, *, root: Path) -> Path:
@@ -108,6 +110,13 @@ def build_rybnik_power_domain_pack(*, root: Path) -> dict[str, Any]:
     )
     assets["metadata"]["readiness"] = legacy["readiness"]["readiness"]
     assets_bytes = json.dumps(assets, ensure_ascii=False, indent=2).encode()
+    supports_source = guard_source_access("openstreetmap", "local_import", lambda: _read_json(POWER_SUPPORTS_SOURCE))
+    supports = normalize_analytical_vector_layer(
+        supports_source,
+        metadata={**legacy["metadata"], "layer_id": "power.supports", "source_query": POWER_SUPPORTS_QUERY},
+    )
+    supports["metadata"]["readiness"] = legacy["readiness"]["readiness"]
+    supports_bytes = json.dumps(supports, ensure_ascii=False, indent=2).encode()
     representative_points = _representative_points_layer(legacy["layer"])
     representative_points_bytes = json.dumps(representative_points, ensure_ascii=False, indent=2).encode()
     analytical_provenance = [{"source_id": "openstreetmap", "contribution_role": "primary"}]
@@ -137,6 +146,9 @@ def build_rybnik_power_domain_pack(*, root: Path) -> dict[str, Any]:
             {"id": "power.assets", "kind": "processed_vector", "format": "geojson", "path": "layers/power.assets.geojson",
              "sha256": _digest(assets_bytes), "feature_count": assets["metadata"]["feature_count"],
              "source_provenance": analytical_provenance, "public_export": True},
+            {"id": "power.supports", "kind": "processed_vector", "format": "geojson", "path": "layers/power.supports.geojson",
+             "sha256": _digest(supports_bytes), "feature_count": supports["metadata"]["feature_count"],
+             "source_provenance": analytical_provenance, "public_export": True},
             {"id": "power.representative_points", "kind": "representative_points", "format": "geojson",
              "path": "layers/power.representative_points.geojson", "sha256": _digest(representative_points_bytes),
              "feature_count": representative_points["metadata"]["feature_count"], "source_provenance": analytical_provenance, "public_export": False},
@@ -150,7 +162,7 @@ def build_rybnik_power_domain_pack(*, root: Path) -> dict[str, Any]:
         "readiness": {"path": "readiness/readiness.json"},
     }
     pack = write_domain_pack("rybnik_60km", "power", root=root, manifest=manifest, files={
-        "layers/power.lines.geojson": layer_bytes, "layers/power.assets.geojson": assets_bytes,
+        "layers/power.lines.geojson": layer_bytes, "layers/power.assets.geojson": assets_bytes, "layers/power.supports.geojson": supports_bytes,
         "layers/power.representative_points.geojson": representative_points_bytes,
         "native/osm-source-evidence.json": source_evidence_bytes,
         "validation/metadata.json": metadata_bytes, "readiness/readiness.json": readiness_bytes,

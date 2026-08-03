@@ -19,6 +19,7 @@ import {
   sourceAvailabilityReportSchema,
   mapPresentationListResponseSchema,
   mapPresentationResponseSchema,
+  mapFeatureDetailResponseSchema,
 } from "../types/provider.js";
 
 describe("read-only AOI provider routes", () => {
@@ -193,7 +194,7 @@ describe("read-only AOI provider routes", () => {
       expect.objectContaining({ artifact: expect.objectContaining({ id: "power.lines", public_export: true }), layer: expect.objectContaining({ metadata: expect.objectContaining({ domain: "power" }) }) }),
       expect.objectContaining({ artifact: expect.objectContaining({ id: "power.assets", public_export: true }), layer: expect.objectContaining({ metadata: expect.objectContaining({ layer_id: "power.assets" }) }) }),
     ]));
-    expect(pack.layers.map((layer) => layer.artifact.kind)).toEqual(["processed_vector", "processed_vector"]);
+    expect(pack.layers.map((layer) => layer.artifact.kind)).toEqual(["processed_vector", "processed_vector", "processed_vector"]);
     expect(pack.source_provenance).toEqual([
       { source_id: "openstreetmap", contribution_role: "primary" },
       { source_id: "kiut_gesut_wms", contribution_role: "validation_reference" },
@@ -229,6 +230,23 @@ describe("read-only AOI provider routes", () => {
     const unbounded = await request(createApp()).get(archiveUrl);
     expect(unbounded.status).toBe(416);
     expect(providerErrorSchema.parse(unbounded.body)).toMatchObject({ error: "invalid_request" });
+  });
+
+  it("serves one validated public map feature without serializing its layer", async () => {
+    const response = await request(createApp()).get("/api/aoi/rybnik_60km/presentations/power/features/node%2F1528794574");
+
+    expect(response.status).toBe(200);
+    expect(mapFeatureDetailResponseSchema.parse(response.body)).toMatchObject({
+      artifact_id: "power.supports",
+      source_id: "node/1528794574",
+      feature: { properties: { asset_type: "tower", osm_tags: { power: "tower", operator: "Tauron" } } },
+    });
+    expect(JSON.stringify(response.body)).not.toContain("generator:method");
+
+    const malformed = await request(createApp()).get("/api/aoi/rybnik_60km/presentations/power/features/not-an-osm-id");
+    expect(malformed.status).toBe(422);
+    const missing = await request(createApp()).get("/api/aoi/rybnik_60km/presentations/power/features/node%2F1");
+    expect(missing.status).toBe(404);
   });
 
   it("discovers a fixture domain solely from its v2 manifest", async () => {

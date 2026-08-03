@@ -210,7 +210,9 @@ Then run the canonical offline quality gate from the repository root:
 ./scripts/verify_provider.sh
 ```
 
-The same script runs in GitHub Actions for every pull request and push to `main`. It covers Python pipeline stages and contracts, the FastAPI smoke check, Node API/build/lint, the layer-pack export, issue-review persistence and conflicts, plus frontend review tests/build/lint. It does not query live Overpass or WMS services.
+`verify_provider.sh` is the required local pre-PR gate for larger changes. It covers Python pipeline stages and contracts, the FastAPI smoke check, Node API/build/lint, the layer-pack export, issue-review persistence and conflicts, plus frontend review tests/build/lint. It does not query live Overpass or WMS services.
+
+GitHub Actions is intentionally faster: for every pull request and push to `main` it runs the Python, Node and frontend test suites, plus Node/frontend type-check/build and lint. It does not run the smoke check or the controlled negative probe.
 
 The gate also runs a controlled negative probe and confirms that an intentionally invalid issue-snapshot contract makes its pytest command fail. A probe that unexpectedly passes fails the overall gate.
 

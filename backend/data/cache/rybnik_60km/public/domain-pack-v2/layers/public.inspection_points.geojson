@@ -1,0 +1,98 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "cache_layout_version": "provider_cache/v1",
+    "geojson_contract_version": "provider_geojson/v1",
+    "aoi_id": "rybnik_60km",
+    "domain": "public",
+    "layer_id": "public.inspection_points",
+    "source": "OpenStreetMap",
+    "source_type": "analytical_vector",
+    "source_registry_id": "openstreetmap",
+    "source_url": "https://overpass-api.de/api/interpreter",
+    "source_query": "Bounded Overpass snapshot: explicit public-service amenity and office tags within the Rybnik 60 km AOI.",
+    "snapshot_at": "2026-08-03T20:30:00Z",
+    "pipeline_version": "geo_pipeline/public-services/v1",
+    "query_version": "public-osm/v1",
+    "validation_status_raw": "warning",
+    "quality_status": "warning",
+    "confidence": "medium",
+    "limitations": [
+      "OSM public-service completeness and tagging vary by area and facility type.",
+      "A facility tag is evidence of mapped semantics, not service availability, capacity, accessibility or operating status.",
+      "BDOT10k building geometry is retained only as topographic comparison context and cannot establish facility semantics.",
+      "No qualified PRG public-service facility class is enabled for this domain pack."
+    ],
+    "eligible_for_analysis": true,
+    "readiness": "usable_with_limitations",
+    "contract_version": "provider_geojson/v1",
+    "feature_count": 2
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/public-townhall-1",
+        "domain": "public",
+        "asset_type": "administration",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM public-service completeness and tagging vary by area and facility type.",
+          "A facility tag is evidence of mapped semantics, not service availability, capacity, accessibility or operating status.",
+          "BDOT10k building geometry is retained only as topographic comparison context and cannot establish facility semantics.",
+          "No qualified PRG public-service facility class is enabled for this domain pack."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Urząd Miasta Rybnika",
+          "website": "https://www.rybnik.eu/",
+          "amenity": "townhall"
+        },
+        "origin_artifact": "public.administration",
+        "origin_source_id": "way/public-townhall-1",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.542,
+          50.097750000000005
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/public-library-1",
+        "domain": "public",
+        "asset_type": "community_social",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM public-service completeness and tagging vary by area and facility type.",
+          "A facility tag is evidence of mapped semantics, not service availability, capacity, accessibility or operating status.",
+          "BDOT10k building geometry is retained only as topographic comparison context and cannot establish facility semantics.",
+          "No qualified PRG public-service facility class is enabled for this domain pack."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Biblioteka Publiczna",
+          "amenity": "library"
+        },
+        "origin_artifact": "public.community_social",
+        "origin_source_id": "way/public-library-1",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5301,
+          50.10025
+        ]
+      }
+    }
+  ]
+}

@@ -12,10 +12,11 @@ export function presentationColor(index: number): string {
 export const voltageLineColor: ExpressionSpecification = [
   "match", ["get", "voltage_bucket"],
   "low", "#84cc16",
-  "medium", "#eab308",
-  "high", "#f97316",
-  "extra_high", "#dc2626",
-  "#64748b",
+  "medium", "#c8a600",
+  "high_110", "#dc2626",
+  "high_220", "#d946ef",
+  "high_400", "#a855f7",
+  "#475569",
 ] as ExpressionSpecification;
 
 export function supportStyle(assetType: string | undefined): { color: string; radius: number } {

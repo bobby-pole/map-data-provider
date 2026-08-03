@@ -1048,7 +1048,10 @@
           "operator": "Tauron",
           "operator:wikidata": "Q2397198",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "ref": "GLM M0700",
+          "voltage": "20000;400",
+          "frequency": "50"
         }
       },
       "geometry": {
@@ -1255,12 +1258,13 @@
         "osm_tags": {
           "power": "substation",
           "name": "M0674",
-          "ref": "M0674",
+          "ref": "GLM M0674",
           "operator": "Tauron",
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
           "substation": "minor_distribution",
-          "source": "survey"
+          "source": "survey",
+          "frequency": "50"
         }
       },
       "geometry": {
@@ -1520,10 +1524,13 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "ref": "M0696",
+          "ref": "GLM M0696",
           "operator": "Tauron",
           "operator:wikidata": "Q2397198",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "voltage": "20000;400",
+          "frequency": "50",
+          "location": "indoor"
         }
       },
       "geometry": {
@@ -3103,7 +3110,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1966"
         }
       },
       "geometry": {
@@ -3136,7 +3144,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1981"
         }
       },
       "geometry": {
@@ -3476,7 +3485,8 @@
           "voltage": "15000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -3541,7 +3551,8 @@
           "voltage": "15000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Faktycznym właścicielem jest PGE."
         }
       },
       "geometry": {
@@ -4144,7 +4155,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -4867,7 +4879,8 @@
           "voltage": "20000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -4900,7 +4913,8 @@
           "voltage": "20000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1986"
         }
       },
       "geometry": {
@@ -6097,7 +6111,8 @@
           "voltage": "15000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -6130,7 +6145,8 @@
           "voltage": "15000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -6163,7 +6179,8 @@
           "voltage": "15000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -6658,7 +6675,8 @@
           "voltage": "20000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1981"
         }
       },
       "geometry": {
@@ -7871,7 +7889,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1979"
         }
       },
       "geometry": {
@@ -7968,7 +7987,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1979"
         }
       },
       "geometry": {
@@ -8001,7 +8021,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1984"
         }
       },
       "geometry": {
@@ -8034,7 +8055,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1982"
         }
       },
       "geometry": {
@@ -8197,7 +8219,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1986"
         }
       },
       "geometry": {
@@ -8230,7 +8253,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1986"
         }
       },
       "geometry": {
@@ -8328,7 +8352,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1968"
         }
       },
       "geometry": {
@@ -8362,7 +8387,8 @@
           "frequency": "50",
           "location": "indoor",
           "rating": "2x250 kVA",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Kable kier. KPOG I, K700, K359, KPOG II."
         }
       },
       "geometry": {
@@ -8395,7 +8421,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1966"
         }
       },
       "geometry": {
@@ -8428,7 +8455,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1966"
         }
       },
       "geometry": {
@@ -8460,7 +8488,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1966"
         }
       },
       "geometry": {
@@ -8526,7 +8555,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1966"
         }
       },
       "geometry": {
@@ -8591,7 +8621,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1966"
         }
       },
       "geometry": {
@@ -8623,7 +8654,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1966"
         }
       },
       "geometry": {
@@ -8657,7 +8689,8 @@
           "frequency": "50",
           "location": "indoor",
           "rating": "2x250 kVA",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Kable kier. K707 II, K355, K585, K707 I."
         }
       },
       "geometry": {
@@ -8690,7 +8723,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1966"
         }
       },
       "geometry": {
@@ -8723,7 +8757,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1966"
         }
       },
       "geometry": {
@@ -8756,7 +8791,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1966"
         }
       },
       "geometry": {
@@ -8788,7 +8824,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1965"
         }
       },
       "geometry": {
@@ -8821,7 +8858,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1965"
         }
       },
       "geometry": {
@@ -8854,7 +8892,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1966"
         }
       },
       "geometry": {
@@ -8887,7 +8926,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1966"
         }
       },
       "geometry": {
@@ -8920,7 +8960,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1966"
         }
       },
       "geometry": {
@@ -8954,7 +8995,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "distribution"
+          "substation": "distribution",
+          "start_date": "1966"
         }
       },
       "geometry": {
@@ -8987,7 +9029,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1970"
         }
       },
       "geometry": {
@@ -9020,7 +9063,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1968"
         }
       },
       "geometry": {
@@ -9053,7 +9097,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1967"
         }
       },
       "geometry": {
@@ -9279,7 +9324,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1969"
         }
       },
       "geometry": {
@@ -9376,7 +9422,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1968"
         }
       },
       "geometry": {
@@ -9409,7 +9456,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1969"
         }
       },
       "geometry": {
@@ -9474,7 +9522,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1969"
         }
       },
       "geometry": {
@@ -9507,7 +9556,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1970"
         }
       },
       "geometry": {
@@ -9669,7 +9719,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1980"
         }
       },
       "geometry": {
@@ -9832,7 +9883,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1967"
         }
       },
       "geometry": {
@@ -9865,7 +9917,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1966"
         }
       },
       "geometry": {
@@ -9898,7 +9951,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1966"
         }
       },
       "geometry": {
@@ -9931,7 +9985,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1969"
         }
       },
       "geometry": {
@@ -10174,9 +10229,9 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "name": "Rozdzielnia \"STR\" Piast Ruch II 20/6/0,4/0,23 kV",
-          "operator": "PGG S. A. oddz. KWK piast-ziemowit",
-          "voltage": "20000,_6000,_400,_230",
+          "name": "„STR” Piast Ruch II",
+          "operator": "PGG",
+          "voltage": "20000;6000;500;400",
           "substation": "industrial"
         }
       },
@@ -10277,7 +10332,8 @@
           "voltage": "15000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -10310,7 +10366,8 @@
           "voltage": "15000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -10376,7 +10433,8 @@
           "voltage": "15000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -10607,7 +10665,8 @@
           "voltage": "15000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -10990,7 +11049,8 @@
           "voltage": "15000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -11023,7 +11083,8 @@
           "voltage": "15000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -11055,7 +11116,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -11086,7 +11148,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -11212,7 +11275,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -11245,7 +11309,8 @@
           "voltage": "15000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -11311,7 +11376,8 @@
           "voltage": "15000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -11344,7 +11410,8 @@
           "voltage": "15000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -11597,7 +11664,8 @@
           "frequency": "50",
           "location": "outdoor",
           "substation": "transmission",
-          "source": "uhul:ortofoto"
+          "source": "uhul:ortofoto",
+          "wikidata": "Q113480413"
         }
       },
       "geometry": {
@@ -11631,7 +11699,8 @@
           "frequency": "50",
           "location": "outdoor",
           "substation": "transmission",
-          "source": "uhul:ortofoto"
+          "source": "uhul:ortofoto",
+          "wikidata": "Q55590496"
         }
       },
       "geometry": {
@@ -11665,7 +11734,8 @@
           "frequency": "50",
           "location": "outdoor",
           "substation": "transmission",
-          "source": "uhul:ortofoto"
+          "source": "uhul:ortofoto",
+          "wikidata": "Q121396823"
         }
       },
       "geometry": {
@@ -11700,7 +11770,8 @@
           "voltage": "220000;110000;6000",
           "frequency": "50",
           "location": "outdoor",
-          "substation": "distribution"
+          "substation": "transmission",
+          "start_date": "1969"
         }
       },
       "geometry": {
@@ -11796,7 +11867,8 @@
           "frequency": "50",
           "location": "outdoor",
           "substation": "transmission",
-          "source": "Ortofotomapa UM Katowice;Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice"
+          "source": "Ortofotomapa UM Katowice;Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice",
+          "start_date": "1987"
         }
       },
       "geometry": {
@@ -11931,7 +12003,8 @@
           "operator:wikidata": "Q1848025",
           "voltage": "3000",
           "substation": "traction",
-          "source": "cuzk:ruian"
+          "source": "cuzk:ruian",
+          "description": "spínací stanice 3 kV DC"
         }
       },
       "geometry": {
@@ -11992,13 +12065,15 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "name": "Stacja elektroenergetyczna 220kV „Bujaków”",
+          "name": "Stacja elektroenergetyczna 220kV „SE Bujaków”",
           "ref": "BUJ",
           "operator": "Polskie Sieci Elektroenergetyczne",
           "operator:short": "PSE",
           "operator:wikidata": "Q1749435",
           "voltage": "220000",
-          "substation": "transmission"
+          "substation": "transmission",
+          "frequency": "50",
+          "location": "outdoor"
         }
       },
       "geometry": {
@@ -12895,7 +12970,9 @@
           "voltage": "20000;400",
           "location": "indoor",
           "substation": "minor_distribution",
-          "source": "UM Katowice;Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice"
+          "source": "UM Katowice;Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice",
+          "description": "ul. Górniczego Stanu",
+          "start_date": "2005"
         }
       },
       "geometry": {
@@ -13177,7 +13254,7 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "name": "Stacja elektroenergetyczna 110kV „SP2”",
+          "name": "Stacja elektroenergetyczna 110kV „Huta Katowice SP2”",
           "ref": "SP23",
           "operator": "Tauron",
           "operator:wikidata": "Q2397198",
@@ -13734,7 +13811,8 @@
           "voltage": "3000",
           "location": "indoor",
           "substation": "traction",
-          "source": "cuzk:ruian"
+          "source": "cuzk:ruian",
+          "description": "spínací stanice 3 kV DC"
         }
       },
       "geometry": {
@@ -14303,7 +14381,8 @@
           "frequency": "50",
           "location": "outdoor",
           "rating": "2x25 MVA",
-          "substation": "transmission"
+          "substation": "transmission",
+          "description": "Tag rating odnosi się do transformatorów 110/15kV."
         }
       },
       "geometry": {
@@ -14820,7 +14899,8 @@
           "operator:wikidata": "Q1848025",
           "voltage": "3000",
           "substation": "traction",
-          "source": "cuzk:ruian"
+          "source": "cuzk:ruian",
+          "description": "spínací stanice 3 kV DC"
         }
       },
       "geometry": {
@@ -15040,7 +15120,8 @@
           "operator:wikidata": "Q1848025",
           "voltage": "3000",
           "substation": "traction",
-          "source": "cuzk:km"
+          "source": "cuzk:km",
+          "description": "spínací stanice 3 kV DC"
         }
       },
       "geometry": {
@@ -15585,7 +15666,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "zasilanie: GPZ Sowice p.15"
         }
       },
       "geometry": {
@@ -16027,7 +16109,8 @@
           "voltage": "110000;22000;3000",
           "location": "outdoor",
           "substation": "traction",
-          "source": "cuzk:km, mapbox satellite, local knowledge"
+          "source": "cuzk:km, mapbox satellite, local knowledge",
+          "description": "trakční napájecí stanice"
         }
       },
       "geometry": {
@@ -16497,12 +16580,16 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "name": "Stacja elektroenergetyczna \"Byczyna\" 400kV",
+          "name": "Stacja elektroenergetyczna 400/220kV „SE Byczyna”",
           "ref": "BYC",
           "operator": "Polskie Sieci Elektroenergetyczne",
           "operator:short": "PSE",
           "operator:wikidata": "Q1749435",
-          "voltage": "400000;220000"
+          "voltage": "400000;220000",
+          "description": "Obszar poprzedniej stacji napowietrznej). Obecnie wszystko znajduje się w budynku GIS",
+          "frequency": "50",
+          "location": "outdoor",
+          "substation": "transmission"
         }
       },
       "geometry": {
@@ -18235,7 +18322,8 @@
           "frequency": "50",
           "location": "outdoor",
           "rating": "2x31.5 MVA",
-          "substation": "transmission"
+          "substation": "transmission",
+          "start_date": "2009"
         }
       },
       "geometry": {
@@ -18668,7 +18756,8 @@
           "frequency": "50",
           "location": "outdoor",
           "substation": "distribution",
-          "source": "Ortofotomapa UM Katowice; Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice"
+          "source": "Ortofotomapa UM Katowice; Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice",
+          "start_date": "1987"
         }
       },
       "geometry": {
@@ -20710,7 +20799,8 @@
           "voltage": "110000;20000;6000",
           "frequency": "50",
           "location": "outdoor",
-          "substation": "transmission"
+          "substation": "transmission",
+          "start_date": "1960"
         }
       },
       "geometry": {
@@ -20745,7 +20835,8 @@
           "frequency": "50",
           "location": "outdoor",
           "substation": "transmission",
-          "source": "Ortofotomapa UM Katowice;Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice"
+          "source": "Ortofotomapa UM Katowice;Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice",
+          "start_date": "1984"
         }
       },
       "geometry": {
@@ -20841,7 +20932,9 @@
           "frequency": "50",
           "location": "outdoor",
           "substation": "transmission",
-          "source": "CUZK:KM;CUZK ortophoto;ceps_cr"
+          "source": "CUZK:KM;CUZK ortophoto;ceps_cr",
+          "wikidata": "Q124221223",
+          "start_date": "2024"
         }
       },
       "geometry": {
@@ -20937,7 +21030,8 @@
         "osm_tags": {
           "power": "substation",
           "name": "G241",
-          "operator": "wikidata=Q2397198"
+          "operator": "wikidata=Q2397198",
+          "operator:wikidata": "Q2397198"
         }
       },
       "geometry": {
@@ -21593,7 +21687,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -24855,7 +24950,8 @@
           "frequency": "50",
           "location": "outdoor",
           "substation": "transmission",
-          "source": "Ortofotomapa UM Katowice;Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice"
+          "source": "Ortofotomapa UM Katowice;Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice",
+          "start_date": "1977"
         }
       },
       "geometry": {
@@ -24890,7 +24986,8 @@
           "frequency": "50",
           "location": "outdoor",
           "substation": "distribution",
-          "source": "Ortofotomapa UM Katowice;Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice"
+          "source": "Ortofotomapa UM Katowice;Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice",
+          "start_date": "1976"
         }
       },
       "geometry": {
@@ -25028,7 +25125,8 @@
           "frequency": "50",
           "location": "outdoor",
           "substation": "transmission",
-          "source": "Ortofotomapa UM Katowice;Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice"
+          "source": "Ortofotomapa UM Katowice;Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice",
+          "start_date": "1991"
         }
       },
       "geometry": {
@@ -25198,7 +25296,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "110000;20000",
           "frequency": "50",
-          "substation": "transmission"
+          "substation": "transmission",
+          "image": "outdoor"
         }
       },
       "geometry": {
@@ -26943,7 +27042,8 @@
           "voltage": "110000;20000;6000",
           "location": "indoor",
           "substation": "distribution",
-          "source": "Ortofotomapa UM Katowice;Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice"
+          "source": "Ortofotomapa UM Katowice;Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice",
+          "start_date": "1969"
         }
       },
       "geometry": {
@@ -27196,7 +27296,8 @@
           "voltage": "110000;20000;6000",
           "location": "indoor",
           "substation": "transmission",
-          "source": "Ortofotomapa UM Katowice;Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice"
+          "source": "Ortofotomapa UM Katowice;Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice",
+          "start_date": "1994"
         }
       },
       "geometry": {
@@ -28298,7 +28399,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "2007"
         }
       },
       "geometry": {
@@ -28673,7 +28775,8 @@
           "voltage": "20000;400",
           "frequency": "50",
           "substation": "minor_distribution",
-          "source": "survey"
+          "source": "survey",
+          "start_date": "1979"
         }
       },
       "geometry": {
@@ -28899,7 +29002,8 @@
           "voltage": "20000;400",
           "frequency": "50",
           "substation": "minor_distribution",
-          "source": "UM Katowice"
+          "source": "UM Katowice",
+          "start_date": "1970"
         }
       },
       "geometry": {
@@ -29272,7 +29376,9 @@
           "voltage": "6000;400",
           "location": "indoor",
           "substation": "minor_distribution",
-          "source": "UM Katowice; Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice"
+          "source": "UM Katowice; Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice",
+          "description": "ul. Wojciecha 15",
+          "start_date": "1974"
         }
       },
       "geometry": {
@@ -29506,7 +29612,9 @@
           "voltage": "6000;400",
           "location": "indoor",
           "substation": "minor_distribution",
-          "source": "UM Katowice; Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice"
+          "source": "UM Katowice; Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice",
+          "description": "ul. Wojciecha 19",
+          "start_date": "1974"
         }
       },
       "geometry": {
@@ -29933,7 +30041,9 @@
           "voltage": "6000;400",
           "location": "indoor",
           "substation": "minor_distribution",
-          "source": "UM Katowice; Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice"
+          "source": "UM Katowice; Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice",
+          "description": "ul. Zamenhofa 34",
+          "start_date": "1994"
         }
       },
       "geometry": {
@@ -29966,7 +30076,8 @@
           "voltage": "6000;400",
           "location": "indoor",
           "substation": "minor_distribution",
-          "source": "UM Katowice; Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice"
+          "source": "UM Katowice; Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice",
+          "description": "ul. Przelotowa naprzeciw 37"
         }
       },
       "geometry": {
@@ -29999,7 +30110,9 @@
           "voltage": "6000;400",
           "location": "indoor",
           "substation": "minor_distribution",
-          "source": "UM Katowice"
+          "source": "UM Katowice",
+          "description": "ul. Bednarska 35",
+          "start_date": "1968"
         }
       },
       "geometry": {
@@ -30033,7 +30146,9 @@
           "frequency": "50",
           "location": "indoor",
           "substation": "minor_distribution",
-          "source": "UM Katowice; Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice"
+          "source": "UM Katowice; Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice",
+          "description": "ul. Kantorówny 16",
+          "start_date": "1953"
         }
       },
       "geometry": {
@@ -30067,7 +30182,9 @@
           "frequency": "50",
           "location": "indoor",
           "substation": "minor_distribution",
-          "source": "UM Katowice; Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice"
+          "source": "UM Katowice; Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice",
+          "description": "ul. Ratuszowa 9-11",
+          "start_date": "1994"
         }
       },
       "geometry": {
@@ -30573,7 +30690,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "2010"
         }
       },
       "geometry": {
@@ -30669,7 +30787,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1974"
         }
       },
       "geometry": {
@@ -30733,7 +30852,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1988"
         }
       },
       "geometry": {
@@ -30765,7 +30885,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1963"
         }
       },
       "geometry": {
@@ -30829,7 +30950,9 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Kable do stacji K846 i K466.",
+          "start_date": "1958"
         }
       },
       "geometry": {
@@ -30861,7 +30984,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1955"
         }
       },
       "geometry": {
@@ -30926,7 +31050,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "ul. Hallera - OSIEDLE HMN"
         }
       },
       "geometry": {
@@ -30991,7 +31116,8 @@
           "voltage": "20000;400",
           "frequency": "50",
           "substation": "minor_distribution",
-          "source": "UM Katowice"
+          "source": "UM Katowice",
+          "start_date": "2003"
         }
       },
       "geometry": {
@@ -31023,7 +31149,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "2003"
         }
       },
       "geometry": {
@@ -31056,7 +31183,8 @@
           "voltage": "20000;400",
           "frequency": "50",
           "substation": "minor_distribution",
-          "source": "UM Katowice"
+          "source": "UM Katowice",
+          "start_date": "2000"
         }
       },
       "geometry": {
@@ -31151,7 +31279,8 @@
           "voltage": "20000;400",
           "frequency": "50",
           "substation": "minor_distribution",
-          "source": "UM Katowice"
+          "source": "UM Katowice",
+          "start_date": "2000"
         }
       },
       "geometry": {
@@ -31183,7 +31312,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "2009"
         }
       },
       "geometry": {
@@ -31216,7 +31346,9 @@
           "voltage": "6000;400",
           "frequency": "50",
           "rating": "400 kVA",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Kable do stacji K276, K265 i stacji na stanie PKP.",
+          "start_date": "1969"
         }
       },
       "geometry": {
@@ -31375,7 +31507,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1967"
         }
       },
       "geometry": {
@@ -31439,7 +31572,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1961"
         }
       },
       "geometry": {
@@ -31505,7 +31639,9 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "ul. Markiefki 7 - BKSM",
+          "start_date": "1977"
         }
       },
       "geometry": {
@@ -31670,7 +31806,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "DOM KULTURY"
         }
       },
       "geometry": {
@@ -32089,7 +32226,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1980"
         }
       },
       "geometry": {
@@ -32121,7 +32259,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1991"
         }
       },
       "geometry": {
@@ -32153,7 +32292,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1971"
         }
       },
       "geometry": {
@@ -32216,7 +32356,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1961"
         }
       },
       "geometry": {
@@ -32248,7 +32389,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "2006"
         }
       },
       "geometry": {
@@ -32280,7 +32422,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1964"
         }
       },
       "geometry": {
@@ -32344,7 +32487,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1971"
         }
       },
       "geometry": {
@@ -32404,7 +32548,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1975"
         }
       },
       "geometry": {
@@ -32685,7 +32830,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1955"
         }
       },
       "geometry": {
@@ -32717,7 +32863,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1973"
         }
       },
       "geometry": {
@@ -32749,7 +32896,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1975"
         }
       },
       "geometry": {
@@ -32781,7 +32929,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1918"
         }
       },
       "geometry": {
@@ -32877,7 +33026,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1971"
         }
       },
       "geometry": {
@@ -33032,7 +33182,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1979"
         }
       },
       "geometry": {
@@ -33152,7 +33303,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1979"
         }
       },
       "geometry": {
@@ -33216,7 +33368,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1972"
         }
       },
       "geometry": {
@@ -33280,7 +33433,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1979"
         }
       },
       "geometry": {
@@ -33339,7 +33493,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1977"
         }
       },
       "geometry": {
@@ -33555,7 +33710,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "substation": "minor_distribution",
-          "source": "UM Katowice"
+          "source": "UM Katowice",
+          "start_date": "1983"
         }
       },
       "geometry": {
@@ -33779,7 +33935,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1975"
         }
       },
       "geometry": {
@@ -33812,7 +33969,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "substation": "minor_distribution",
-          "source": "UM Katowice"
+          "source": "UM Katowice",
+          "start_date": "1979"
         }
       },
       "geometry": {
@@ -33939,7 +34097,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1976"
         }
       },
       "geometry": {
@@ -33971,7 +34130,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "2011"
         }
       },
       "geometry": {
@@ -34004,7 +34164,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "substation": "minor_distribution",
-          "source": "UM Katowice"
+          "source": "UM Katowice",
+          "start_date": "1979"
         }
       },
       "geometry": {
@@ -34100,7 +34261,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1972"
         }
       },
       "geometry": {
@@ -34515,7 +34677,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1979"
         }
       },
       "geometry": {
@@ -34579,7 +34742,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "2001"
         }
       },
       "geometry": {
@@ -34642,7 +34806,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1968"
         }
       },
       "geometry": {
@@ -36776,7 +36941,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -37307,7 +37473,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -38549,7 +38716,8 @@
           "voltage": "110000;15000",
           "frequency": "50",
           "location": "outdoor",
-          "substation": "transmission"
+          "substation": "transmission",
+          "start_date": "2002"
         }
       },
       "geometry": {
@@ -38583,7 +38751,8 @@
           "voltage": "110000;15000",
           "frequency": "50",
           "location": "outdoor",
-          "substation": "transmission"
+          "substation": "transmission",
+          "start_date": "2002"
         }
       },
       "geometry": {
@@ -38617,7 +38786,8 @@
           "voltage": "110000;15000",
           "frequency": "50",
           "location": "outdoor",
-          "substation": "transmission"
+          "substation": "transmission",
+          "start_date": "2002"
         }
       },
       "geometry": {
@@ -38651,7 +38821,8 @@
           "voltage": "110000;15000",
           "frequency": "50",
           "location": "outdoor",
-          "substation": "transmission"
+          "substation": "transmission",
+          "start_date": "2002"
         }
       },
       "geometry": {
@@ -40010,7 +40181,8 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "source": "UM Jaworzno"
+          "source": "UM Jaworzno",
+          "start_date": "1987"
         }
       },
       "geometry": {
@@ -40037,7 +40209,8 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "source": "UM Jaworzno"
+          "source": "UM Jaworzno",
+          "start_date": "1988"
         }
       },
       "geometry": {
@@ -40065,7 +40238,8 @@
         "osm_tags": {
           "power": "substation",
           "substation": "minor_distribution",
-          "source": "UM Jaworzno"
+          "source": "UM Jaworzno",
+          "start_date": "1978"
         }
       },
       "geometry": {
@@ -40094,7 +40268,8 @@
           "power": "substation",
           "voltage": "230",
           "substation": "minor_distribution",
-          "source": "UM Jaworzno"
+          "source": "UM Jaworzno",
+          "start_date": "1991"
         }
       },
       "geometry": {
@@ -40124,7 +40299,8 @@
           "voltage": "20000;400",
           "location": "kiosk",
           "substation": "minor_distribution",
-          "source": "UM Jaworzno"
+          "source": "UM Jaworzno",
+          "start_date": "2001"
         }
       },
       "geometry": {
@@ -40151,7 +40327,8 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "source": "UM Jaworzno"
+          "source": "UM Jaworzno",
+          "start_date": "1972"
         }
       },
       "geometry": {
@@ -40178,7 +40355,8 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "source": "UM Jaworzno"
+          "source": "UM Jaworzno",
+          "start_date": "1982"
         }
       },
       "geometry": {
@@ -40233,7 +40411,8 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "source": "UM Jaworzno"
+          "source": "UM Jaworzno",
+          "start_date": "1993"
         }
       },
       "geometry": {
@@ -40265,7 +40444,8 @@
           "voltage": "20000;400",
           "frequency": "50",
           "substation": "minor_distribution",
-          "source": "UM Jaworzno"
+          "source": "UM Jaworzno",
+          "start_date": "1981"
         }
       },
       "geometry": {
@@ -40299,7 +40479,8 @@
           "voltage": "20000;400",
           "frequency": "50",
           "substation": "distribution",
-          "source": "UM Jaworzno"
+          "source": "UM Jaworzno",
+          "start_date": "1959"
         }
       },
       "geometry": {
@@ -40331,7 +40512,8 @@
           "voltage": "20000;400",
           "frequency": "50",
           "substation": "minor_distribution",
-          "source": "UM Jaworzno"
+          "source": "UM Jaworzno",
+          "start_date": "1987"
         }
       },
       "geometry": {
@@ -40358,7 +40540,8 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "source": "UM Jaworzno"
+          "source": "UM Jaworzno",
+          "start_date": "1990"
         }
       },
       "geometry": {
@@ -40417,7 +40600,8 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "source": "UM Jaworzno"
+          "source": "UM Jaworzno",
+          "start_date": "1995"
         }
       },
       "geometry": {
@@ -40500,7 +40684,8 @@
           "power": "substation",
           "voltage": "20000;400",
           "substation": "minor_distribution",
-          "source": "UM Jaworzno"
+          "source": "UM Jaworzno",
+          "start_date": "2011"
         }
       },
       "geometry": {
@@ -40535,7 +40720,8 @@
           "frequency": "50",
           "location": "indoor",
           "substation": "transmission",
-          "source": "UM Jaworzno"
+          "source": "UM Jaworzno",
+          "start_date": "1988"
         }
       },
       "geometry": {
@@ -40594,7 +40780,8 @@
           "voltage": "20000;400",
           "frequency": "50",
           "substation": "minor_distribution",
-          "source": "UM Jaworzno"
+          "source": "UM Jaworzno",
+          "start_date": "1974"
         }
       },
       "geometry": {
@@ -40623,7 +40810,8 @@
           "power": "substation",
           "location": "kiosk",
           "substation": "minor_distribution",
-          "source": "UM Jaworzno"
+          "source": "UM Jaworzno",
+          "start_date": "1991"
         }
       },
       "geometry": {
@@ -41125,7 +41313,8 @@
           "voltage": "110000;20000;6000",
           "frequency": "50",
           "location": "outdoor",
-          "substation": "transmission"
+          "substation": "transmission",
+          "start_date": "1971"
         }
       },
       "geometry": {
@@ -41724,7 +41913,8 @@
           "frequency": "50",
           "location": "outdoor",
           "substation": "traction",
-          "source": "cuzk:km, mapbox satellite, local knowledge"
+          "source": "cuzk:km, mapbox satellite, local knowledge",
+          "description": "trakční napájecí stanice"
         }
       },
       "geometry": {
@@ -41754,7 +41944,8 @@
           "voltage": "22000",
           "frequency": "50",
           "substation": "minor_distribution",
-          "source": "cuzk:ruian"
+          "source": "cuzk:ruian",
+          "start_date": "2010-08-26"
         }
       },
       "geometry": {
@@ -42626,7 +42817,8 @@
           "voltage": "15000;400",
           "frequency": "50",
           "substation": "minor_distribution",
-          "source": "Starostwo Powiatowe Będzin"
+          "source": "Starostwo Powiatowe Będzin",
+          "description": "Rozkówka-Grodziec"
         }
       },
       "geometry": {
@@ -42916,7 +43108,8 @@
           "power": "substation",
           "operator": "Tauron",
           "operator:wikidata": "Q2397198",
-          "source": "Starostwo Powiatowe Będzin"
+          "source": "Starostwo Powiatowe Będzin",
+          "description": "Tauron Ciepło GWC 4"
         }
       },
       "geometry": {
@@ -43625,7 +43818,8 @@
           "voltage": "22000",
           "frequency": "50",
           "substation": "minor_distribution",
-          "source": "cuzk:ruian"
+          "source": "cuzk:ruian",
+          "start_date": "2009-09-02"
         }
       },
       "geometry": {
@@ -44152,7 +44346,8 @@
           "voltage": "110000;20000;6000",
           "frequency": "50",
           "location": "indoor",
-          "substation": "transmission"
+          "substation": "transmission",
+          "start_date": "1972"
         }
       },
       "geometry": {
@@ -44366,7 +44561,9 @@
           "voltage": "110000",
           "location": "outdoor",
           "substation": "traction",
-          "source": "local_knowledge;cuzk:km, mapbox sattelite"
+          "source": "local_knowledge;cuzk:km, mapbox sattelite",
+          "name": "TNS Svinov",
+          "description": "trakční napájecí stanice"
         }
       },
       "geometry": {
@@ -44461,7 +44658,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -44598,9 +44796,12 @@
         "osm_tags": {
           "power": "substation",
           "name": "S336",
-          "ref": "S336",
+          "ref": "GLW S336",
           "substation": "minor_distribution",
-          "source": "geoportal.gov.pl:ortofoto"
+          "source": "geoportal.gov.pl:ortofoto",
+          "operator": "Tauron",
+          "operator:wikidata": "Q2397198",
+          "voltage": "15000;400"
         }
       },
       "geometry": {
@@ -44702,7 +44903,8 @@
           "frequency": "50",
           "location": "indoor",
           "substation": "transmission",
-          "source": "Ortofotomapa UM Katowice;Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice"
+          "source": "Ortofotomapa UM Katowice;Założenia do planu zaopatrzenia w ciepło, energię elektryczną i paliwa gazowe dla miasta Katowice",
+          "start_date": "1983"
         }
       },
       "geometry": {
@@ -44898,7 +45100,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "2020"
         }
       },
       "geometry": {
@@ -49403,13 +49606,15 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "name": "Stacja elektroenergetyczna 220/6kV „Czeczott”",
+          "name": "Stacja elektroenergetyczna 220/6kV „SE Czeczott” (w likwidacji)",
           "ref": "CZT",
           "operator": "Polskie Sieci Elektroenergetyczne",
           "operator:short": "PSE",
           "operator:wikidata": "Q1749435",
           "voltage": "220000;6000",
-          "frequency": "50"
+          "frequency": "50",
+          "location": "outdoor",
+          "substation": "industrial"
         }
       },
       "geometry": {
@@ -49654,7 +49859,7 @@
           "power": "substation",
           "name": "Stacja elektroenergetyczna 400/110kV „SE Rokitnica”",
           "ref": "ROK",
-          "operator": "Polskie Sieci Elektroenergetyczne",
+          "operator": "Polskie Sieci Elektroenergetyczne; TAURON Dystrybucja",
           "operator:short": "PSE",
           "operator:wikidata": "Q1749435",
           "voltage": "400000;110000",
@@ -52850,8 +53055,8 @@
           "power": "substation",
           "name": "Stacja elektroenergetyczna 110kV „Wentylatory Ziemowit”",
           "ref": "WZI3",
-          "operator": "PGG S.A. KWK Piast-Ziemowit Ruch Ziemowit",
-          "voltage": "110000/6000",
+          "operator": "PGG",
+          "voltage": "110000;6000",
           "frequency": "50",
           "location": "outdoor",
           "substation": "industrial"
@@ -52912,7 +53117,7 @@
           "power": "substation",
           "name": "Stacja elektroenergetyczna 110/6kV „Piast”",
           "ref": "PST3",
-          "operator": "PGG S.A. KWK Piast-Ziemowit Ruch Piast",
+          "operator": "PGG",
           "voltage": "110000;6000",
           "frequency": "50",
           "location": "outdoor",
@@ -53771,7 +53976,8 @@
           "frequency": "50",
           "location": "indoor",
           "substation": "minor_distribution",
-          "source": "cuzk:ruian"
+          "source": "cuzk:ruian",
+          "start_date": "2021-12-20"
         }
       },
       "geometry": {
@@ -54147,7 +54353,8 @@
           "voltage": "110000;20000;6000",
           "frequency": "50",
           "location": "outdoor",
-          "substation": "transmission"
+          "substation": "transmission",
+          "start_date": "1960"
         }
       },
       "geometry": {
@@ -54799,7 +55006,10 @@
         "osm_tags": {
           "power": "substation",
           "location": "indoor",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "operator": "Tauron",
+          "operator:wikidata": "Q2397198",
+          "voltage": "15000;400"
         }
       },
       "geometry": {
@@ -55032,7 +55242,9 @@
           "voltage": "22000;3000",
           "location": "outdoor",
           "substation": "traction",
-          "source": "cuzk:km, mapbox satellite, local knowledge"
+          "source": "cuzk:km, mapbox satellite, local knowledge",
+          "name": "TNS Opava",
+          "description": "trakční napájecí stanice"
         }
       },
       "geometry": {
@@ -55506,7 +55718,8 @@
           "voltage": "3000",
           "location": "outdoor",
           "substation": "traction",
-          "source": "cuzk:km, mapbox satellite, local knowledge"
+          "source": "cuzk:km, mapbox satellite, local knowledge",
+          "description": "trakční napájecí stanice"
         }
       },
       "geometry": {
@@ -56692,7 +56905,8 @@
         "osm_tags": {
           "power": "substation",
           "name": "G432",
-          "operator": "wikidata=Q2397198"
+          "operator": "wikidata=Q2397198",
+          "operator:wikidata": "Q2397198"
         }
       },
       "geometry": {
@@ -57174,7 +57388,8 @@
           "operator": "Tauron",
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "frequency": "50"
         }
       },
       "geometry": {
@@ -57391,7 +57606,8 @@
           "operator:wikidata": "Q7119525",
           "voltage": "3000",
           "frequency": "0",
-          "substation": "traction"
+          "substation": "traction",
+          "description": "Zasilacze: Czechowice 1 (30), Czechowice 2 (20), Oświęcim 1 (10), Oświęcim 2 (40)."
         }
       },
       "geometry": {
@@ -57628,7 +57844,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -58606,7 +58823,8 @@
           "voltage": "15000;400",
           "frequency": "50",
           "rating": "1420 kVA",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -58794,7 +59012,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -59200,8 +59419,12 @@
         "osm_tags": {
           "power": "substation",
           "ref": "BBW 59012;BBW 59013",
-          "operator": "Tauron",
-          "operator:wikidata": "Q2397198"
+          "operator": "Polskie Sieci Elektroenergetyczne",
+          "operator:wikidata": "Q1749435",
+          "description": "Zasilanie potrzeb własnych",
+          "operator:short": "PSE",
+          "voltage": "30000;15000;400",
+          "frequency": "50"
         }
       },
       "geometry": {
@@ -59612,7 +59835,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "location": "indoor"
         }
       },
       "geometry": {
@@ -60920,11 +61144,12 @@
         "osm_tags": {
           "power": "substation",
           "name": "Domy Polne",
-          "ref": "M0500",
+          "ref": "GLM M0500",
           "operator": "Tauron",
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "frequency": "50"
         }
       },
       "geometry": {
@@ -61011,11 +61236,12 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "ref": "M0578",
+          "ref": "GLM M0578",
           "operator": "Tauron",
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "frequency": "50"
         }
       },
       "geometry": {
@@ -61106,7 +61332,8 @@
           "operator": "Tauron",
           "operator:wikidata": "Q2397198",
           "substation": "minor_distribution",
-          "source": "survey"
+          "source": "survey",
+          "description": "rozdzielnia SN/nN Balbina II"
         }
       },
       "geometry": {
@@ -61164,7 +61391,8 @@
           "ref": "M0899",
           "operator": "Tauron",
           "substation": "minor_distribution",
-          "source": "survey"
+          "source": "survey",
+          "description": "rozdzielnia SN/nN (M0899)"
         }
       },
       "geometry": {
@@ -61195,7 +61423,8 @@
           "ref": "M0762",
           "operator": "Tauron",
           "operator:wikidata": "Q2397198",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "rozdzielnia SN/nN: 20kV / 0,4kV(M0762) połączenia: 1. 20 kV z EC Tychy pole 25 2. 20 kV z M0761"
         }
       },
       "geometry": {
@@ -61529,10 +61758,13 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "ref": "M0488",
+          "ref": "GLM M0488",
           "voltage": "20000;400",
           "substation": "minor_distribution",
-          "source": "gps"
+          "source": "gps",
+          "operator": "Tauron",
+          "operator:wikidata": "Q2397198",
+          "frequency": "50"
         }
       },
       "geometry": {
@@ -61702,9 +61934,12 @@
         "osm_tags": {
           "power": "substation",
           "name": "M0879",
-          "operator": "Tauron Dystrybucja",
-          "operator:wikidata": "Q138381342",
-          "substation": "minor_distribution"
+          "operator": "Tauron",
+          "operator:wikidata": "Q2397198",
+          "substation": "minor_distribution",
+          "ref": "GLM M0879",
+          "voltage": "20000;400",
+          "frequency": "50"
         }
       },
       "geometry": {
@@ -61731,11 +61966,12 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "ref": "M0592",
+          "ref": "GLM M0592",
           "operator": "Tauron",
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "frequency": "50"
         }
       },
       "geometry": {
@@ -61899,11 +62135,12 @@
         "osm_tags": {
           "power": "substation",
           "name": "Tuczarnia",
-          "ref": "M0593",
+          "ref": "GLM M0593",
           "operator": "Tauron",
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "frequency": "50"
         }
       },
       "geometry": {
@@ -61930,10 +62167,11 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "operator": "Tauron Dystrybucja",
-          "operator:wikidata": "Q138381342",
+          "operator": "Tauron",
+          "operator:wikidata": "Q2397198",
           "voltage": "20000",
-          "substation": "minor_distribution"
+          "substation": "distribution",
+          "frequency": "50"
         }
       },
       "geometry": {
@@ -62018,11 +62256,12 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "ref": "M0584",
+          "ref": "GLM M0584",
           "operator": "Tauron",
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "frequency": "50"
         }
       },
       "geometry": {
@@ -62377,11 +62616,11 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "name": "Stacja elektroenergetyczna 110/20kV „GPZ Lędziny”",
+          "name": "Stacja elektroenergetyczna 110/20/6kV „GPZ Lędziny”",
           "ref": "LED3",
-          "operator": "Tauron",
+          "operator": "Tauron, PGG KWK Ziemowit",
           "operator:wikidata": "Q2397198",
-          "voltage": "110000;20000",
+          "voltage": "110000;20000;6000",
           "frequency": "50",
           "location": "outdoor",
           "substation": "transmission"
@@ -62410,10 +62649,11 @@
         ],
         "eligible_for_analysis": true,
         "osm_tags": {
-          "power": "substation",
-          "name": "Rozdzielnia RG-1, 6 kV \"Pośrednia\"",
+          "power": "switchgear",
+          "name": "Rozdzielnia RG-1 „Pośrednia”",
           "voltage": "6000",
-          "substation": "generation"
+          "substation": "generation",
+          "frequency": "50"
         }
       },
       "geometry": {
@@ -62502,7 +62742,7 @@
         "osm_tags": {
           "power": "substation",
           "name": "Świerczewskiego",
-          "ref": "M0492",
+          "ref": "GLM M0492",
           "operator": "Tauron",
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
@@ -62534,11 +62774,12 @@
         "osm_tags": {
           "power": "substation",
           "name": "M0494",
-          "ref": "M0494",
+          "ref": "GLM M0494",
           "operator": "Tauron",
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "frequency": "50"
         }
       },
       "geometry": {
@@ -62566,9 +62807,12 @@
         "osm_tags": {
           "power": "substation",
           "name": "M0499",
-          "ref": "M0499",
+          "ref": "GLM M0499",
           "voltage": "20000;400",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "operator": "Tauron",
+          "operator:wikidata": "Q2397198",
+          "frequency": "50"
         }
       },
       "geometry": {
@@ -62596,7 +62840,7 @@
         "osm_tags": {
           "power": "substation",
           "name": "Lignoza",
-          "ref": "M0491",
+          "ref": "GLM M0491",
           "operator": "Tauron",
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
@@ -62628,11 +62872,12 @@
         "osm_tags": {
           "power": "substation",
           "name": "M0501",
-          "ref": "M0501",
+          "ref": "GLM M0501",
           "operator": "Tauron",
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "frequency": "50"
         }
       },
       "geometry": {
@@ -62691,9 +62936,12 @@
         "osm_tags": {
           "power": "substation",
           "name": "M779",
-          "ref": "M779",
+          "ref": "GLM M779",
           "voltage": "20000;400",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "operator": "Tauron",
+          "operator:wikidata": "Q2397198",
+          "frequency": "50"
         }
       },
       "geometry": {
@@ -62981,7 +63229,7 @@
         "osm_tags": {
           "power": "substation",
           "name": "M1305",
-          "ref": "M1305",
+          "ref": "GLM M1305",
           "operator": "Tauron",
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
@@ -63226,7 +63474,7 @@
         "osm_tags": {
           "power": "substation",
           "name": "M502",
-          "ref": "M0502",
+          "ref": "GLM M0502",
           "operator": "Tauron",
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
@@ -63314,7 +63562,7 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "ref": "M0493",
+          "ref": "GLM M0493",
           "operator": "Tauron",
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
@@ -63956,7 +64204,7 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "ref": "M1273",
+          "ref": "GLM M1273",
           "operator": "Tauron",
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
@@ -64422,7 +64670,8 @@
           "operator": "Tauron",
           "operator:wikidata": "Q2397198",
           "substation": "minor_distribution",
-          "source": "survey"
+          "source": "survey",
+          "description": "Podstacja S763 Pszczyna Obwodnica 2"
         }
       },
       "geometry": {
@@ -64891,7 +65140,8 @@
         "osm_tags": {
           "power": "substation",
           "substation": "minor_distribution",
-          "source": "cuzk:ruian"
+          "source": "cuzk:ruian",
+          "start_date": "2008-12-04"
         }
       },
       "geometry": {
@@ -64918,8 +65168,12 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "ref": "M0462",
-          "substation": "minor_distribution"
+          "ref": "GLM M0462",
+          "substation": "minor_distribution",
+          "operator": "Tauron",
+          "operator:wikidata": "Q2397198",
+          "voltage": "20000;400",
+          "frequency": "50"
         }
       },
       "geometry": {
@@ -65444,7 +65698,7 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "ref": "M0582",
+          "ref": "GLM M0582",
           "operator": "Tauron",
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
@@ -65635,7 +65889,8 @@
           "voltage": "15000;400",
           "frequency": "50",
           "rating": "100 kVA",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -66914,7 +67169,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Na stacji widnieje oznaczenie sugerujące napięcie 20kV, ale w rejonie kęckim napięcie to nie występuje."
         }
       },
       "geometry": {
@@ -67279,10 +67535,11 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "name": "Rozdzielnia przyszybowa RK-1, 6 kV (nieczynna)",
-          "operator": "PGG S. A. oddz. KWK piast-ziemowit",
+          "name": "Rozdzielnia przyszybowa RK-1",
+          "operator": "PGG",
           "voltage": "6000",
-          "substation": "industrial"
+          "substation": "industrial",
+          "frequency": "50"
         }
       },
       "geometry": {
@@ -70765,7 +71022,8 @@
           "frequency": "50",
           "location": "indoor",
           "substation": "transmission",
-          "source": "local knowledge;dokumentacja powykonawcza"
+          "source": "local knowledge;dokumentacja powykonawcza",
+          "start_date": "2019"
         }
       },
       "geometry": {
@@ -72603,7 +72861,8 @@
           "voltage": "110000;15000",
           "frequency": "50",
           "location": "outdoor",
-          "substation": "transmission"
+          "substation": "transmission",
+          "start_date": "2021"
         }
       },
       "geometry": {
@@ -72636,7 +72895,8 @@
           "voltage": "110000;15000",
           "frequency": "50",
           "location": "outdoor",
-          "substation": "transmission"
+          "substation": "transmission",
+          "start_date": "2021"
         }
       },
       "geometry": {
@@ -72669,7 +72929,8 @@
           "voltage": "110000;15000",
           "frequency": "50",
           "location": "outdoor",
-          "substation": "transmission"
+          "substation": "transmission",
+          "start_date": "2021"
         }
       },
       "geometry": {
@@ -72702,7 +72963,8 @@
           "voltage": "110000;15000",
           "frequency": "50",
           "location": "outdoor",
-          "substation": "transmission"
+          "substation": "transmission",
+          "start_date": "2021"
         }
       },
       "geometry": {
@@ -74371,7 +74633,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja do likwidacji, do zastąpienia przez nowoprojektowaną BBC23184."
         }
       },
       "geometry": {
@@ -74933,7 +75196,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -75228,10 +75492,11 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "name": "Rozdzielnia GSZ R-2, 6 kV",
-          "operator": "PGG S.A. KWK Piast-Ziemowit Ruch Piast",
+          "name": "Rozdzielnia GSZ R-2",
+          "operator": "PGG",
           "voltage": "6000",
-          "substation": "industrial"
+          "substation": "industrial",
+          "frequency": "50"
         }
       },
       "geometry": {
@@ -75347,7 +75612,8 @@
           "operator:wikidata": "Q7119525",
           "voltage": "30000;6000;3000",
           "frequency": "50;50;0",
-          "substation": "traction"
+          "substation": "traction",
+          "description": "Zasilanie z GPZ Bukowiec."
         }
       },
       "geometry": {
@@ -75700,7 +75966,8 @@
           "power": "substation",
           "name": "TS O13.3",
           "substation": "minor_distribution",
-          "source": "cuzk:ruian"
+          "source": "cuzk:ruian",
+          "start_date": "2015-10-13"
         }
       },
       "geometry": {
@@ -75729,7 +75996,8 @@
           "power": "substation",
           "name": "TS O13.3",
           "substation": "minor_distribution",
-          "source": "cuzk:ruian"
+          "source": "cuzk:ruian",
+          "start_date": "2015-10-13"
         }
       },
       "geometry": {
@@ -75988,11 +76256,12 @@
         ],
         "eligible_for_analysis": true,
         "osm_tags": {
-          "power": "substation",
-          "name": "Rozdzielnia GSZ R-1, 6 kV",
-          "operator": "PGG S.A. KWK PIAST-ZIEMOWIT Ruch Piast",
+          "power": "switchgear",
+          "name": "Rozdzielnia GSZ R-1",
+          "operator": "PGG",
           "voltage": "6000",
-          "substation": "industrial"
+          "substation": "industrial",
+          "frequency": "50"
         }
       },
       "geometry": {
@@ -76079,7 +76348,8 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "source": "cuzk:ruian"
+          "source": "cuzk:ruian",
+          "start_date": "2019-10-22"
         }
       },
       "geometry": {
@@ -77540,7 +77810,11 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "substation": "transformer"
+          "substation": "minor_distribution",
+          "ref": "GLW S470",
+          "operator": "Tauron",
+          "operator:wikidata": "Q2397198",
+          "voltage": "15000;400"
         }
       },
       "geometry": {
@@ -78866,7 +79140,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1964"
         }
       },
       "geometry": {
@@ -79509,7 +79784,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -80436,7 +80712,8 @@
           "voltage": "20000",
           "voltage:primary": "20000",
           "voltage:secondary": "400",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "operator:wikidata": "Q2397198"
         }
       },
       "geometry": {
@@ -80464,7 +80741,8 @@
         "osm_tags": {
           "power": "substation",
           "name": "G409",
-          "operator": "wikidata=Q2397198"
+          "operator": "wikidata=Q2397198",
+          "operator:wikidata": "Q2397198"
         }
       },
       "geometry": {
@@ -80492,7 +80770,8 @@
         "osm_tags": {
           "power": "substation",
           "name": "G408",
-          "operator": "wikidata=Q2397198"
+          "operator": "wikidata=Q2397198",
+          "operator:wikidata": "Q2397198"
         }
       },
       "geometry": {
@@ -80520,7 +80799,8 @@
         "osm_tags": {
           "power": "substation",
           "name": "G405",
-          "operator": "wikidata=Q2397198"
+          "operator": "wikidata=Q2397198",
+          "operator:wikidata": "Q2397198"
         }
       },
       "geometry": {
@@ -80955,7 +81235,8 @@
           "operator:wikidata": "Q7119525",
           "voltage": "15000;3000",
           "frequency": "50;0",
-          "substation": "traction"
+          "substation": "traction",
+          "description": "Zasilacze: Czechowice 1 (30), Czechowice 2 (20), Czeczott (130), Kosztowy 1 (230), Kosztowy 2 (240), Spytkowice 1 (10), Spytkowice 2 (40), Tory stacyjne (70), Trzebinia 1 (110), Trzebnia 2 (140)."
         }
       },
       "geometry": {
@@ -81199,7 +81480,8 @@
         "osm_tags": {
           "power": "substation",
           "name": "G71",
-          "operator": "wikidata=Q2397198"
+          "operator": "wikidata=Q2397198",
+          "operator:wikidata": "Q2397198"
         }
       },
       "geometry": {
@@ -81376,7 +81658,8 @@
           "voltage": "20000",
           "voltage:primary": "20000",
           "voltage:secondary": "400",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "operator:wikidata": "Q2397198"
         }
       },
       "geometry": {
@@ -82441,7 +82724,8 @@
           "name": "Stacja elektroenergetyczna 110kV FW Wielowieś",
           "voltage": "110000",
           "location": "outdoor",
-          "substation": "transmission"
+          "substation": "transmission",
+          "start_date": "2021"
         }
       },
       "geometry": {
@@ -82595,7 +82879,8 @@
           "voltage": "6000;400",
           "frequency": "50",
           "substation": "minor_distribution",
-          "source": "www.geoportal.gov.pl"
+          "source": "www.geoportal.gov.pl",
+          "start_date": "1991"
         }
       },
       "geometry": {
@@ -83304,7 +83589,8 @@
           "frequency": "50",
           "location": "outdoor",
           "rating": "25 MVA",
-          "substation": "transmission"
+          "substation": "transmission",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -84159,7 +84445,8 @@
           "voltage": "15000;400",
           "frequency": "50",
           "substation": "minor_distribution",
-          "source": "www.geoportal.gov.pl"
+          "source": "www.geoportal.gov.pl",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -84578,7 +84865,8 @@
           "operator:wikidata": "Q7119525",
           "voltage": "20000;3000",
           "frequency": "50;0",
-          "substation": "traction"
+          "substation": "traction",
+          "description": "Zasilacze: Oświęcim (40), Tory stacyjne 1 (20), Tory stacyjne 2 (30)."
         }
       },
       "geometry": {
@@ -85166,7 +85454,8 @@
           "power": "substation",
           "name": "TS O13.2",
           "substation": "minor_distribution",
-          "source": "cuzk:ruian"
+          "source": "cuzk:ruian",
+          "start_date": "2015-10-13"
         }
       },
       "geometry": {
@@ -86721,7 +87010,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja do likwidacji i zastąpienia przez nową stację 11476."
         }
       },
       "geometry": {
@@ -87007,7 +87297,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -89098,7 +89389,8 @@
           "operator:wikidata": "Q1848025",
           "voltage": "3000",
           "location": "indoor",
-          "substation": "traction"
+          "substation": "traction",
+          "description": "spínací stanice 3 kV DC"
         }
       },
       "geometry": {
@@ -89193,7 +89485,8 @@
           "voltage": "110000",
           "frequency": "50",
           "location": "outdoor",
-          "substation": "transmission"
+          "substation": "transmission",
+          "start_date": "2023"
         }
       },
       "geometry": {
@@ -89853,7 +90146,8 @@
           "voltage": "110000;20000",
           "frequency": "50",
           "location": "outdoor",
-          "substation": "transmission"
+          "substation": "transmission",
+          "start_date": "2024"
         }
       },
       "geometry": {
@@ -90458,7 +90752,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -91025,7 +91320,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -91088,7 +91384,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -91120,7 +91417,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -91248,7 +91546,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -93061,7 +93360,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -93407,7 +93707,8 @@
           "voltage": "110000;30000",
           "frequency": "50",
           "location": "outdoor",
-          "substation": "transmission"
+          "substation": "transmission",
+          "start_date": "2024"
         }
       },
       "geometry": {
@@ -93714,7 +94015,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -94650,7 +94952,8 @@
           "voltage": "15000;400",
           "frequency": "50",
           "rating": "160 kVA",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Docelowo do zastąpienia stacją słupową BBC 23119."
         }
       },
       "geometry": {
@@ -94682,7 +94985,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -95504,7 +95808,8 @@
           "voltage": "15000;400",
           "frequency": "50",
           "rating": "100 kVA",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "2019"
         }
       },
       "geometry": {
@@ -95779,7 +96084,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -95991,7 +96297,8 @@
           "voltage": "15000;400",
           "frequency": "50",
           "rating": "400 kVA",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1940"
         }
       },
       "geometry": {
@@ -96024,7 +96331,8 @@
           "voltage": "15000;400",
           "frequency": "50",
           "rating": "2x630 kVA",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -99744,7 +100052,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "2005"
         }
       },
       "geometry": {
@@ -102235,7 +102544,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -105654,7 +105964,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -105686,7 +105997,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -106611,7 +106923,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -107074,12 +107387,15 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "substation",
-          "operator": "SŽ",
+          "operator": "Správa železnic",
           "operator:wikidata": "Q1848025",
           "voltage": "3000",
           "location": "outdoor",
           "substation": "traction",
-          "source": "cuzk:km, mapbox satellite, local knowledge"
+          "source": "cuzk:km, mapbox satellite, local knowledge",
+          "name": "TNS Dětmarovice",
+          "description": "trakční napájecí stanice",
+          "operator:short": "SŽ"
         }
       },
       "geometry": {
@@ -107111,7 +107427,8 @@
           "voltage": "22000;3000",
           "location": "outdoor",
           "substation": "traction",
-          "source": "cuzk:km, mapbox satellite, local knowledge"
+          "source": "cuzk:km, mapbox satellite, local knowledge",
+          "description": "trakční napájecí stanice"
         }
       },
       "geometry": {
@@ -107143,7 +107460,9 @@
           "voltage": "22000;3000",
           "location": "outdoor",
           "substation": "traction",
-          "source": "cuzk:km, mapbox satellite, local knowledge"
+          "source": "cuzk:km, mapbox satellite, local knowledge",
+          "name": "TNS Český Těšín",
+          "description": "trakční napájecí stanice"
         }
       },
       "geometry": {
@@ -107175,7 +107494,8 @@
           "voltage": "22000",
           "frequency": "50",
           "location": "outdoor",
-          "substation": "distribution"
+          "substation": "distribution",
+          "description": "rozvodna čez"
         }
       },
       "geometry": {
@@ -107463,7 +107783,8 @@
           "operator:wikidata": "Q1848025",
           "voltage": "3000",
           "location": "indoor",
-          "substation": "traction"
+          "substation": "traction",
+          "description": "spínací stanice 3 kV DC"
         }
       },
       "geometry": {
@@ -108177,7 +108498,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -109089,7 +109411,8 @@
           "operator": "Tauron",
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "ref": "GLM M479"
         }
       },
       "geometry": {
@@ -109179,7 +109502,8 @@
           "operator": "Tauron",
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "frequency": "50"
         }
       },
       "geometry": {
@@ -110230,7 +110554,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja do przepięcia na 20kV."
         }
       },
       "geometry": {
@@ -120997,7 +121322,8 @@
           "frequency": "50",
           "location": "outdoor",
           "rating": "2x25 MVA",
-          "substation": "transmission"
+          "substation": "transmission",
+          "start_date": "2024"
         }
       },
       "geometry": {
@@ -121031,7 +121357,8 @@
           "frequency": "50",
           "location": "outdoor",
           "rating": "2x25 MVA",
-          "substation": "transmission"
+          "substation": "transmission",
+          "start_date": "2024"
         }
       },
       "geometry": {
@@ -121065,7 +121392,8 @@
           "frequency": "50",
           "location": "outdoor",
           "rating": "2x25 MVA",
-          "substation": "transmission"
+          "substation": "transmission",
+          "start_date": "2024"
         }
       },
       "geometry": {
@@ -121099,7 +121427,8 @@
           "frequency": "50",
           "location": "outdoor",
           "rating": "2x25 MVA",
-          "substation": "transmission"
+          "substation": "transmission",
+          "start_date": "2024"
         }
       },
       "geometry": {
@@ -122584,7 +122913,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "2025"
         }
       },
       "geometry": {
@@ -123134,7 +123464,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "start_date": "1977"
         }
       },
       "geometry": {
@@ -123673,7 +124004,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "20000;6000",
           "frequency": "50",
-          "substation": "distribution"
+          "substation": "distribution",
+          "description": "Napięcie 30kV zlikwidowane w 2017 r."
         }
       },
       "geometry": {
@@ -123931,7 +124263,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -124488,7 +124821,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -124520,7 +124854,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -124869,7 +125204,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -124964,7 +125300,8 @@
           "voltage": "15000;400",
           "frequency": "50",
           "rating": "630 kVA",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja do likwidacji, do zastąpienia przez nowoprojektowaną BBC23184."
         }
       },
       "geometry": {
@@ -125169,7 +125506,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -125200,7 +125538,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -125264,7 +125603,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -125296,7 +125636,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -125328,7 +125669,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -125426,7 +125768,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -125518,7 +125861,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -125550,7 +125894,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "20000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -125678,7 +126023,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "6000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -126317,7 +126663,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -126414,7 +126761,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -126446,7 +126794,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -126477,7 +126826,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -126509,7 +126859,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -126574,7 +126925,8 @@
           "voltage": "15000;400",
           "frequency": "50",
           "rating": "160 kVA",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja do likwidacji"
         }
       },
       "geometry": {
@@ -127182,7 +127534,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -127586,7 +127939,8 @@
           "operator:wikidata": "Q2397198",
           "voltage": "15000;400",
           "frequency": "50",
-          "substation": "minor_distribution"
+          "substation": "minor_distribution",
+          "description": "Stacja konsumencka"
         }
       },
       "geometry": {
@@ -131286,9 +131640,15 @@
         "osm_tags": {
           "power": "transformer",
           "name": "S692",
-          "ref": "S692",
+          "ref": "GLW S692",
           "voltage": "15000;400",
-          "transformer": "minor_distribution"
+          "transformer": "distribution",
+          "operator": "Tauron",
+          "operator:wikidata": "Q2397198",
+          "voltage:primary": "20000",
+          "voltage:secondary": "400",
+          "frequency": "50",
+          "phases": "3"
         }
       },
       "geometry": {
@@ -131558,7 +131918,13 @@
         "osm_tags": {
           "power": "transformer",
           "voltage:primary": "110000",
-          "frequency": "50"
+          "frequency": "50",
+          "operator": "Tauron",
+          "operator:wikidata": "Q2397198",
+          "voltage:secondary": "20000",
+          "phases": "3",
+          "location": "outdoor",
+          "transformer": "main"
         }
       },
       "geometry": {
@@ -131586,7 +131952,13 @@
         "osm_tags": {
           "power": "transformer",
           "voltage:primary": "110000",
-          "frequency": "50"
+          "frequency": "50",
+          "operator": "Tauron",
+          "operator:wikidata": "Q2397198",
+          "voltage:secondary": "20000",
+          "phases": "3",
+          "location": "outdoor",
+          "transformer": "main"
         }
       },
       "geometry": {
@@ -133578,7 +133950,13 @@
         ],
         "eligible_for_analysis": true,
         "osm_tags": {
-          "power": "transformer"
+          "power": "pole",
+          "operator": "Tauron",
+          "operator:wikidata": "Q2397198",
+          "voltage:primary": "20000",
+          "voltage:secondary": "400",
+          "frequency": "50",
+          "transformer": "distribution"
         }
       },
       "geometry": {
@@ -136202,7 +136580,11 @@
         "osm_tags": {
           "power": "transformer",
           "voltage:primary": "110000",
-          "location": "outdoor"
+          "location": "outdoor",
+          "voltage:secondary": "20000",
+          "frequency": "50",
+          "phases": "3",
+          "transformer": "main"
         }
       },
       "geometry": {
@@ -136230,7 +136612,11 @@
         "osm_tags": {
           "power": "transformer",
           "voltage:primary": "110000",
-          "location": "outdoor"
+          "location": "outdoor",
+          "voltage:secondary": "20000",
+          "frequency": "50",
+          "phases": "3",
+          "transformer": "main"
         }
       },
       "geometry": {
@@ -148500,7 +148886,13 @@
         ],
         "eligible_for_analysis": true,
         "osm_tags": {
-          "power": "transformer"
+          "power": "pole",
+          "ref": "OS 8183",
+          "operator": "ČEZ Distribuce",
+          "operator:wikidata": "Q11089971",
+          "voltage:primary": "22000",
+          "voltage:secondary": "400",
+          "transformer": "distribution"
         }
       },
       "geometry": {
@@ -148924,7 +149316,11 @@
           "voltage:primary": "110000",
           "frequency": "50",
           "location": "outdoor",
-          "transformer": "main"
+          "transformer": "main",
+          "operator": "Tauron",
+          "operator:wikidata": "Q2397198",
+          "voltage:secondary": "20000",
+          "phases": "3"
         }
       },
       "geometry": {
@@ -148954,7 +149350,11 @@
           "voltage:primary": "110000",
           "frequency": "50",
           "location": "outdoor",
-          "transformer": "main"
+          "transformer": "main",
+          "operator": "Tauron",
+          "operator:wikidata": "Q2397198",
+          "voltage:secondary": "20000",
+          "phases": "3"
         }
       },
       "geometry": {
@@ -149811,7 +150211,8 @@
           "voltage:secondary": "400",
           "frequency": "50",
           "phases": "3",
-          "transformer": "auxiliary"
+          "transformer": "auxiliary",
+          "description": "Transformator potrzeb własnych"
         }
       },
       "geometry": {
@@ -151166,7 +151567,8 @@
         "osm_tags": {
           "power": "transformer",
           "name": "Energoblok (NE)",
-          "source": "cuzk:ruian"
+          "source": "cuzk:ruian",
+          "name:en": "Energoblock (NE)"
         }
       },
       "geometry": {
@@ -151221,7 +151623,8 @@
         "osm_tags": {
           "power": "transformer",
           "name": "Energoblok (F)",
-          "source": "cuzk:ruian"
+          "source": "cuzk:ruian",
+          "name:en": "Energy Centre (F)"
         }
       },
       "geometry": {
@@ -152642,7 +153045,12 @@
           "operator": "Tauron Wytwarzanie",
           "operator:wikidata": "Q7688904",
           "plant:source": "coal",
-          "plant:output:electricity": "2255 MW"
+          "plant:output:electricity": "2255 MW",
+          "wikidata": "Q990952",
+          "wikipedia": "pl:Elektrownia Jaworzno",
+          "website": "https://www.tauron-wytwarzanie.pl/oddzialy/oddzial-jaworzno",
+          "plant:method": "combustion",
+          "start_date": "1953-01-01"
         }
       },
       "geometry": {
@@ -152674,7 +153082,8 @@
           "generator:method": "combustion",
           "generator:type": "coal",
           "plant:source": "coal",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "combustion"
         }
       },
       "geometry": {
@@ -152701,11 +153110,19 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "plant",
-          "name": "PGE Energia Ciepła Oddział w Rybniku",
+          "name": "PGE Energia Ciepła Oddział w Rybniku",
           "operator": "PGE",
           "operator:wikidata": "Q787714",
           "plant:source": "coal",
-          "plant:output:electricity": "1350 MW"
+          "plant:output:electricity": "900 MW",
+          "name:pl": "PGE Energia Ciepła Oddział w Rybniku",
+          "name:en": "Rybnik Power Plant",
+          "alt_name": "Elektrownia Rybnik",
+          "wikidata": "Q751203",
+          "wikipedia": "pl:Elektrownia Rybnik",
+          "website": "https://elrybnik.pgegiek.pl/o-oddziale",
+          "plant:method": "combustion",
+          "start_date": "1972"
         }
       },
       "geometry": {
@@ -152786,11 +153203,15 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "plant",
-          "name": "TAURON Ciepło Sp. z o.o. Zakład Wytwarzania Bielsko-Biała",
+          "name": "TAURON Ciepło Zakład Wytwarzania Bielsko-Biała",
           "operator": "Tauron Ciepło",
           "operator:wikidata": "Q138454475",
           "plant:source": "coal",
-          "plant:output:electricity": "77 MW"
+          "plant:output:electricity": "77 MW",
+          "wikidata": "Q9252382",
+          "wikipedia": "pl:Elektrociepłownia Bielsko-Biała",
+          "plant:method": "combustion",
+          "start_date": "1973"
         }
       },
       "geometry": {
@@ -152822,7 +153243,11 @@
           "operator": "ČEZ",
           "operator:wikidata": "Q336735",
           "plant:source": "coal",
-          "plant:output:electricity": "800 MW"
+          "plant:output:electricity": "800 MW",
+          "wikidata": "Q3435621",
+          "wikipedia": "cs:Elektrárna Dětmarovice",
+          "plant:method": "combustion",
+          "start_date": "1976"
         }
       },
       "geometry": {
@@ -152852,7 +153277,11 @@
           "name": "Elektrárna Třebovice",
           "plant:source": "coal",
           "plant:output:electricity": "180 MW",
-          "source": "https://www.gem.wiki/Trebovice_power_station"
+          "source": "https://www.gem.wiki/Trebovice_power_station",
+          "name:en": "Trebovice Power Plant",
+          "wikidata": "Q11878039",
+          "wikipedia": "cs:Elektrárna Třebovice",
+          "plant:method": "combustion"
         }
       },
       "geometry": {
@@ -152882,7 +153311,8 @@
           "name": "Ciepłownia Gliwice",
           "operator": "Przedsiębiorstwo Energetyki Cieplnej Gliwice",
           "plant:source": "coal",
-          "plant:output:electricity": "no"
+          "plant:output:electricity": "no",
+          "plant:method": "combustion"
         }
       },
       "geometry": {
@@ -152916,7 +153346,11 @@
           "generator:method": "combustion",
           "plant:source": "coal",
           "plant:output:electricity": "460 MW",
-          "source": "Starostwo Powiatowe Będzin"
+          "source": "Starostwo Powiatowe Będzin",
+          "wikidata": "Q8080403",
+          "wikipedia": "pl:Elektrownia Łagisza",
+          "plant:method": "combustion",
+          "start_date": "1963-09-28"
         }
       },
       "geometry": {
@@ -152946,7 +153380,10 @@
           "name": "Fortum Zabrze",
           "operator": "Fortum Power and Heat Polska Sp. z o.o.",
           "plant:source": "coal;biomass",
-          "plant:output:electricity": "138 MW"
+          "plant:output:electricity": "138 MW",
+          "wikidata": "Q11696555",
+          "wikipedia": "pl:Elektrociepłownia Zabrze",
+          "plant:method": "combustion"
         }
       },
       "geometry": {
@@ -152976,7 +153413,10 @@
           "name": "Fortum Zabrze",
           "operator": "Fortum Power and Heat Polska Sp. z o.o.",
           "plant:source": "coal;biomass",
-          "plant:output:electricity": "138 MW"
+          "plant:output:electricity": "138 MW",
+          "wikidata": "Q11696555",
+          "wikipedia": "pl:Elektrociepłownia Zabrze",
+          "plant:method": "combustion"
         }
       },
       "geometry": {
@@ -153005,7 +153445,8 @@
           "power": "plant",
           "name": "Teplárna Vítkovice",
           "plant:source": "coal",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "combustion"
         }
       },
       "geometry": {
@@ -153034,7 +153475,10 @@
           "power": "plant",
           "name": "EC Zagłębie Dąbrowskie",
           "plant:source": "coal",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "website": "https://www.eczd.pl/",
+          "plant:method": "combustion",
+          "start_date": "1913"
         }
       },
       "geometry": {
@@ -153063,7 +153507,10 @@
           "power": "plant",
           "name": "EC Zagłębie Dąbrowskie",
           "plant:source": "coal",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "website": "https://www.eczd.pl/",
+          "plant:method": "combustion",
+          "start_date": "1913"
         }
       },
       "geometry": {
@@ -153094,7 +153541,12 @@
           "operator": "Tauron Wytwarzanie",
           "operator:wikidata": "Q7688904",
           "plant:source": "coal",
-          "plant:output:electricity": "1155 MW"
+          "plant:output:electricity": "1155 MW",
+          "wikidata": "Q8080562",
+          "wikipedia": "pl:Elektrownia Łaziska",
+          "website": "https://www.tauron-wytwarzanie.pl/oddzialy/oddzial-laziska",
+          "plant:method": "combustion",
+          "start_date": "1917"
         }
       },
       "geometry": {
@@ -153127,7 +153579,11 @@
           "generator:method": "combustion",
           "plant:source": "coal",
           "plant:output:electricity": "208 MW",
-          "source": "Bing"
+          "source": "Bing",
+          "wikidata": "Q779196",
+          "wikipedia": "pl:Elektrociepłownia Chorzów",
+          "plant:method": "combustion",
+          "start_date": "1991-05-14"
         }
       },
       "geometry": {
@@ -153158,7 +153614,10 @@
           "operator": "Tauron Ciepło",
           "operator:wikidata": "Q138454475",
           "plant:source": "coal",
-          "plant:output:electricity": "135 MW"
+          "plant:output:electricity": "135 MW",
+          "wikidata": "Q6377825",
+          "wikipedia": "pl:Elektrociepłownia Katowice",
+          "plant:method": "combustion"
         }
       },
       "geometry": {
@@ -153187,7 +153646,8 @@
           "power": "plant",
           "name": "Ciepłownia Radzionków",
           "plant:source": "coal",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "combustion"
         }
       },
       "geometry": {
@@ -153217,7 +153677,9 @@
           "name": "ZC Julian-Ziętek",
           "operator": "Miejskie Przedsiębiorstwo Energetyki Cieplnej",
           "plant:source": "coal",
-          "plant:output:electricity": "no"
+          "plant:output:electricity": "no",
+          "website": "https://www.mpec-piekary.pl/informacje-technologiczne#tab-systemciepowniczyjulian-zitek",
+          "plant:method": "combustion"
         }
       },
       "geometry": {
@@ -153248,7 +153710,8 @@
           "operator": "PGNiG TERMIKA Energetyka Przemysłowa S.A.",
           "plant:source": "coal;gas",
           "plant:output:electricity": "38,3 MW",
-          "source": "UM Jastrzębie-Zdrój"
+          "source": "UM Jastrzębie-Zdrój",
+          "website": "https://www.ptep.pl/o-nas/zaklady/oddzial-moszczenica-1"
         }
       },
       "geometry": {
@@ -153276,7 +153739,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -153304,7 +153768,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -153332,7 +153797,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -153360,7 +153826,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -153389,7 +153856,8 @@
           "power": "plant",
           "plant:source": "solar",
           "plant:output:electricity": "yes",
-          "source": "bing"
+          "source": "bing",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -153416,7 +153884,8 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "plant",
-          "plant:source": "solar"
+          "plant:source": "solar",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -153445,7 +153914,8 @@
           "power": "plant",
           "name": "Mała elektrownia wodna Gliwice",
           "plant:source": "hydro",
-          "plant:output:electricity": "0,1 MW"
+          "plant:output:electricity": "0,1 MW",
+          "plant:method": "run-of-the-river"
         }
       },
       "geometry": {
@@ -153478,7 +153948,12 @@
           "operator:wikidata": "Q787714",
           "plant:source": "hydro",
           "plant:output:electricity": "540 MW",
-          "source": "Geoportal.gov.pl: Ortofoto"
+          "source": "Geoportal.gov.pl: Ortofoto",
+          "wikidata": "Q609296",
+          "wikipedia": "pl:Elektrownia Porąbka-Żar",
+          "website": "https://pgeeo.pl/Nasze-obiekty/Elektrownie-wodne/Zar",
+          "plant:method": "water-pumped-storage",
+          "start_date": "1979-12-31"
         }
       },
       "geometry": {
@@ -153538,7 +154013,10 @@
           "name": "Elektrownia Blachownia",
           "operator": "Tameh Polska Sp. z o.o.",
           "plant:source": "gas",
-          "plant:output:electricity": "83 MW"
+          "plant:output:electricity": "83 MW",
+          "wikidata": "Q9252492",
+          "wikipedia": "pl:Elektrownia Blachownia",
+          "plant:method": "combustion"
         }
       },
       "geometry": {
@@ -153565,9 +154043,11 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "plant",
-          "name": "Budowa elektrowni fotowoltaicznej",
+          "name": "Elektrownia fotowoltaiczna",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "description": "w trakcie budowy; numer_ewidencyjny_urzad\t6740.1.578.2022",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -153598,7 +154078,11 @@
           "operator": "Tauron Ciepło",
           "operator:wikidata": "Q138454475",
           "plant:source": "coal",
-          "plant:output:electricity": "55 MW"
+          "plant:output:electricity": "55 MW",
+          "wikidata": "Q9252380",
+          "wikipedia": "pl:Elektrociepłownia Bielsko-Północ",
+          "plant:method": "combustion",
+          "start_date": "1997"
         }
       },
       "geometry": {
@@ -153631,7 +154115,8 @@
           "generator:method": "run-of-the-river",
           "generator:type": "kaplan_turbine",
           "plant:source": "hydro",
-          "plant:output:electricity": "0,0485 MW"
+          "plant:output:electricity": "0,0485 MW",
+          "plant:method": "run-of-the-river"
         }
       },
       "geometry": {
@@ -153662,7 +154147,8 @@
           "operator": "Węglokoks Energia ZCP sp. z o.o",
           "plant:source": "gas",
           "plant:output:electricity": "yes",
-          "source": "European Urban Atlas"
+          "source": "European Urban Atlas",
+          "plant:method": "combustion"
         }
       },
       "geometry": {
@@ -153721,7 +154207,9 @@
           "operator": "Dalkia",
           "operator:wikidata": "Q3012420",
           "plant:source": "coal",
-          "plant:output:electricity": "no"
+          "plant:output:electricity": "no",
+          "website": "https://www.dalkiapolskaenergia.com",
+          "plant:method": "combustion"
         }
       },
       "geometry": {
@@ -153779,7 +154267,9 @@
           "name": "Farma fotowoltaiczna Mysłowice - Dziećkowice (etap I)",
           "operator": "Tauron",
           "plant:source": "solar",
-          "plant:output:electricity": "37 MW"
+          "plant:output:electricity": "37 MW",
+          "plant:method": "photovoltaic",
+          "start_date": "2023"
         }
       },
       "geometry": {
@@ -153807,7 +154297,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -153839,7 +154330,12 @@
           "operator:short": "PGE",
           "operator:wikidata": "Q787714",
           "plant:source": "hydro",
-          "plant:output:electricity": "12.520 MW"
+          "plant:output:electricity": "12.520 MW",
+          "wikidata": "Q609296",
+          "wikipedia": "pl:Elektrownia Porąbka-Żar",
+          "website": "https://pgeeo.pl/Nasze-obiekty/Elektrownie-wodne/Porabka",
+          "plant:method": "water-storage",
+          "start_date": "1979-01-06"
         }
       },
       "geometry": {
@@ -153867,7 +154363,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -153925,7 +154422,9 @@
           "name": "Elektrociepłownia Suszec",
           "operator": "PGNiG TERMIKA Energetyka Przemysłowa S.A. Oddział Suszec",
           "plant:source": "coal;gas",
-          "plant:output:electricity": "10,6 MW"
+          "plant:output:electricity": "10,6 MW",
+          "website": "https://www.ptep.pl/o-nas/zaklady/zaklad-suszec",
+          "plant:method": "combustion"
         }
       },
       "geometry": {
@@ -153955,7 +154454,9 @@
           "name": "Elektrociepłownia Pniówek",
           "operator": "PGNiG TERMIKA Energetyka Przemysłowa S.A. Oddział Pniówek",
           "plant:source": "coal;gas",
-          "plant:output:electricity": "14,3 MW"
+          "plant:output:electricity": "14,3 MW",
+          "website": "https://www.ptep.pl/o-nas/zaklady/oddzial-pniowek",
+          "plant:method": "combustion"
         }
       },
       "geometry": {
@@ -153985,7 +154486,9 @@
           "name": "Elektrociepłownia \"Zofiówka\"",
           "operator": "PGNiG TERMIKA Energetyka Przemysłowa S.A. Oddział „Zofiówka”",
           "plant:source": "coal",
-          "plant:output:electricity": "113 MW"
+          "plant:output:electricity": "113 MW",
+          "website": "https://www.ptep.pl/o-nas/zaklady/oddzial-zofiowka-1",
+          "plant:method": "combustion"
         }
       },
       "geometry": {
@@ -154014,7 +154517,8 @@
           "power": "plant",
           "name": "Elektrárna",
           "plant:source": "coal",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "combustion"
         }
       },
       "geometry": {
@@ -154043,7 +154547,11 @@
           "power": "plant",
           "operator": "Tauron",
           "plant:source": "solar",
-          "plant:output:electricity": "5 MW"
+          "plant:output:electricity": "5 MW",
+          "name": "Farma fotowoltaiczna Jaworzno",
+          "website": "https://ekoenergia.tauron.pl/elektrownie/elektrownie-sloneczne/jaworzno",
+          "plant:method": "photovoltaic",
+          "start_date": "2020"
         }
       },
       "geometry": {
@@ -154074,7 +154582,10 @@
           "operator": "Tauron Ciepło",
           "operator:wikidata": "Q138454475",
           "plant:source": "coal;biomass",
-          "plant:output:electricity": "105 MW"
+          "plant:output:electricity": "105 MW",
+          "name:pl": "Elektrociepłownia Tychy",
+          "name:en": "TYCHY-II power station",
+          "plant:method": "combustion"
         }
       },
       "geometry": {
@@ -154131,7 +154642,8 @@
           "name": "Elektrociepłownia Gliwice",
           "operator": "SFW Energia",
           "plant:source": "coal",
-          "plant:output:electricity": "1,580 MW"
+          "plant:output:electricity": "1,580 MW",
+          "plant:method": "combustion"
         }
       },
       "geometry": {
@@ -154159,7 +154671,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -154189,7 +154702,9 @@
           "name": "Elektrociepłownia Synthos Dwory",
           "plant:source": "coal;gas",
           "plant:output:electricity": "79 MW",
-          "source": "https://www.gem.wiki/Synthos_Oswiecim_power_station"
+          "source": "https://www.gem.wiki/Synthos_Oswiecim_power_station",
+          "name:en": "Synthos Dwory Power Plant",
+          "plant:method": "combustion"
         }
       },
       "geometry": {
@@ -154216,10 +154731,13 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "plant",
-          "name": "TAURON Wytwarzanie S.A. Farma fotowoltaiczna Jaworzno",
+          "name": "Farma fotowoltaiczna Jaworzno",
           "operator": "Tauron",
           "plant:source": "solar",
-          "plant:output:electricity": "5 MW"
+          "plant:output:electricity": "5 MW",
+          "website": "https://ekoenergia.tauron.pl/elektrownie/elektrownie-sloneczne/jaworzno",
+          "plant:method": "photovoltaic",
+          "start_date": "2020-12"
         }
       },
       "geometry": {
@@ -154247,7 +154765,9 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "4,14 kW"
+          "plant:output:electricity": "4,14 kW",
+          "plant:method": "photovoltaic",
+          "start_date": "2021-01"
         }
       },
       "geometry": {
@@ -154275,7 +154795,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -154305,7 +154826,10 @@
           "name": "Elektrociepłownia EC Nowa",
           "operator": "Tameh Polska Sp. z o.o.",
           "plant:source": "coal;gas",
-          "plant:output:electricity": "180 MW"
+          "plant:output:electricity": "180 MW",
+          "wikidata": "Q11696549",
+          "wikipedia": "pl:Elektrociepłownia EC Nowa",
+          "plant:method": "combustion"
         }
       },
       "geometry": {
@@ -154334,7 +154858,8 @@
           "power": "plant",
           "name": "Węglokoks Energia - żródło Nowy Wirek",
           "plant:source": "gas",
-          "plant:output:electricity": "8.8 MW"
+          "plant:output:electricity": "8.8 MW",
+          "plant:method": "combustion"
         }
       },
       "geometry": {
@@ -154362,7 +154887,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -154390,7 +154916,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -154418,7 +154945,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -154446,7 +154974,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -154476,7 +155005,8 @@
           "name": "Farma słoneczna Oświęcim",
           "operator": "Synthos",
           "plant:source": "solar",
-          "plant:output:electricity": "1 MW"
+          "plant:output:electricity": "1 MW",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -154505,7 +155035,8 @@
           "power": "plant",
           "name": "Fotowoltaika Lędziny",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -154534,7 +155065,8 @@
           "power": "plant",
           "name": "Fotowoltaika Czaniec",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -154563,7 +155095,8 @@
           "power": "plant",
           "name": "Farma słoneczna Tychy",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -154591,7 +155124,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -154619,7 +155153,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -154650,7 +155185,8 @@
           "operator": "Veolia",
           "operator:wikidata": "Q1632461",
           "plant:source": "coal",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "combustion"
         }
       },
       "geometry": {
@@ -154678,7 +155214,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "waste",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "combustion"
         }
       },
       "geometry": {
@@ -154706,7 +155243,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -154734,7 +155272,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -154762,7 +155301,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -154792,7 +155332,8 @@
           "name": "Dalkia Polska Energia S.A. Wydział XII - „Śląsk”",
           "operator": "Dalkia",
           "operator:wikidata": "Q3012420",
-          "plant:source": "coal"
+          "plant:source": "coal",
+          "plant:method": "combustion"
         }
       },
       "geometry": {
@@ -154821,7 +155362,8 @@
           "power": "plant",
           "plant:source": "solar",
           "plant:output:electricity": "yes",
-          "source": "www.geoportal.gov.pl"
+          "source": "www.geoportal.gov.pl",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -154849,7 +155391,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -154877,7 +155420,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -154905,7 +155449,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -154933,7 +155478,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -154961,7 +155507,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -154989,7 +155536,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "wind",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "wind_turbine"
         }
       },
       "geometry": {
@@ -155017,7 +155565,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -155045,7 +155594,9 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic",
+          "start_date": "2023-01-01"
         }
       },
       "geometry": {
@@ -155072,7 +155623,8 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "plant",
-          "plant:source": "solar"
+          "plant:source": "solar",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -155100,7 +155652,9 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic",
+          "start_date": "2023-11-15"
         }
       },
       "geometry": {
@@ -155128,7 +155682,9 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic",
+          "start_date": "2023+-11-15"
         }
       },
       "geometry": {
@@ -155156,7 +155712,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -155185,7 +155742,8 @@
           "power": "plant",
           "name": "Farma słoneczna Wyry",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -155213,7 +155771,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -155241,7 +155800,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "hydro",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "run-of-the-river"
         }
       },
       "geometry": {
@@ -155269,7 +155829,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -155297,7 +155858,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -155326,7 +155888,8 @@
           "power": "plant",
           "name": "Wielowieś 2",
           "plant:source": "solar",
-          "plant:output:electricity": "1 MW"
+          "plant:output:electricity": "1 MW",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -155355,7 +155918,8 @@
           "power": "plant",
           "name": "Wielowieś 1",
           "plant:source": "solar",
-          "plant:output:electricity": "1 MW"
+          "plant:output:electricity": "1 MW",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -155383,7 +155947,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -155411,7 +155976,9 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "coal",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "name:en": "Azoty Kedzierzyn Power Plant",
+          "plant:method": "combustion"
         }
       },
       "geometry": {
@@ -155466,7 +156033,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -155494,7 +156062,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -155522,7 +156091,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -155551,7 +156121,8 @@
           "power": "plant",
           "operator": "Tauron",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -155578,7 +156149,8 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "plant",
-          "plant:source": "solar"
+          "plant:source": "solar",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -155606,7 +156178,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -155634,7 +156207,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -155662,7 +156236,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -155691,7 +156266,8 @@
           "power": "plant",
           "operator": "Land Investment",
           "plant:source": "solar",
-          "plant:output:electricity": "1.1 MW"
+          "plant:output:electricity": "1.1 MW",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -155773,7 +156349,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -155801,7 +156378,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -155829,7 +156407,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -155857,7 +156436,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -155885,7 +156465,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -155913,7 +156494,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -155941,7 +156523,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -155969,7 +156552,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -155997,7 +156581,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -156053,7 +156638,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -156081,7 +156667,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -156109,7 +156696,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -156137,7 +156725,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -156165,7 +156754,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -156193,7 +156783,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -156220,7 +156811,8 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "plant",
-          "plant:source": "solar"
+          "plant:source": "solar",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -156247,7 +156839,8 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "plant",
-          "plant:source": "solar"
+          "plant:source": "solar",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -156274,7 +156867,8 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "plant",
-          "plant:source": "solar"
+          "plant:source": "solar",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -156301,7 +156895,8 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "power": "plant",
-          "plant:source": "solar"
+          "plant:source": "solar",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -156329,7 +156924,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -156493,7 +157089,8 @@
           "power": "plant",
           "name": "Energetika Trinec E3 Power Plant",
           "plant:source": "coal",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "combustion"
         }
       },
       "geometry": {
@@ -156521,7 +157118,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -156549,7 +157147,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -156577,7 +157176,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -156605,7 +157205,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -156633,7 +157234,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -156661,7 +157263,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -156689,7 +157292,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -156717,7 +157321,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -156772,7 +157377,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -156800,7 +157406,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -156828,7 +157435,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -156856,7 +157464,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -156884,7 +157493,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -156912,7 +157522,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "hydro",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "water-storage"
         }
       },
       "geometry": {
@@ -156994,7 +157605,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -157022,7 +157634,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -157050,7 +157663,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -157078,7 +157692,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -157106,7 +157721,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -157134,7 +157750,8 @@
         "osm_tags": {
           "power": "plant",
           "plant:source": "solar",
-          "plant:output:electricity": "yes"
+          "plant:output:electricity": "yes",
+          "plant:method": "photovoltaic"
         }
       },
       "geometry": {
@@ -172268,7 +172885,8 @@
         ],
         "eligible_for_analysis": true,
         "osm_tags": {
-          "power": "terminal"
+          "power": "terminal",
+          "description": "Linia 15 kV Skoczów"
         }
       },
       "geometry": {
@@ -172294,7 +172912,8 @@
         ],
         "eligible_for_analysis": true,
         "osm_tags": {
-          "power": "terminal"
+          "power": "terminal",
+          "description": "Linia 15 kV Cieszyn"
         }
       },
       "geometry": {
@@ -172502,7 +173121,8 @@
         ],
         "eligible_for_analysis": true,
         "osm_tags": {
-          "power": "terminal"
+          "power": "terminal",
+          "description": "Linia 15 kV Goleszów"
         }
       },
       "geometry": {
@@ -206330,7 +206950,8 @@
         "osm_tags": {
           "power": "switch",
           "operator": "Tauron",
-          "operator:wikidata": "Q2397198"
+          "operator:wikidata": "Q2397198",
+          "description": "Łącznik zawieszony w przewodach"
         }
       },
       "geometry": {
@@ -206749,7 +207370,8 @@
           "power": "switch",
           "operator": "Tauron",
           "operator:wikidata": "Q2397198",
-          "location": "overhead"
+          "location": "overhead",
+          "description": "Odłącznik napowietrzny, serii np. SZ24"
         }
       },
       "geometry": {

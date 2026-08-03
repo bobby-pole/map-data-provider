@@ -24,10 +24,11 @@ PACK_DIRNAME = "domain-pack-v2"
 ARTIFACT_KINDS = {"native_vector", "native_raster", "remote_service", "processed_vector", "derived_vector", "representative_points"}
 FILE_KINDS = {"native_vector", "native_raster", "processed_vector", "derived_vector", "representative_points"}
 POWER_ASSETS_SOURCE = Path(__file__).resolve().parents[1] / "data/processed/rybnik_60km_power_node_points_display_clipped.geojson"
-POWER_SUPPORTS_SOURCE = Path(__file__).resolve().parents[1] / "data/fixtures/rybnik_60km/power/osm-power-supports.geojson"
-POWER_RELATIONS_SOURCE = Path(__file__).resolve().parents[1] / "data/fixtures/rybnik_60km/power/osm-power-relation-evidence.json"
+POWER_SUPPORTS_SOURCE = Path(__file__).resolve().parents[1] / "data/fixtures/rybnik_60km/power/osm-power-supports-full.geojson"
+POWER_RELATIONS_SOURCE = Path(__file__).resolve().parents[1] / "data/fixtures/rybnik_60km/power/osm-power-circuit-evidence.json"
+POWER_ATTRIBUTES_SOURCE = Path(__file__).resolve().parents[1] / "data/fixtures/rybnik_60km/power/osm-power-attributes.json"
 POWER_ASSETS_QUERY = "OSMnx power and utility-pole point features from the committed Rybnik 60 km AOI snapshot."
-POWER_SUPPORTS_QUERY = "Bounded OpenStreetMap power-support snapshot for the committed Rybnik 60 km AOI fixture."
+POWER_SUPPORTS_QUERY = "Captured bounded OpenStreetMap power-support snapshot for the committed Rybnik 60 km AOI."
 
 
 def domain_pack_root(aoi_id: str, domain: str, *, root: Path) -> Path:
@@ -110,6 +111,8 @@ def build_rybnik_power_domain_pack(*, root: Path) -> dict[str, Any]:
         metadata={**legacy["metadata"], "layer_id": "power.assets", "source_query": POWER_ASSETS_QUERY},
     )
     assets["metadata"]["readiness"] = legacy["readiness"]["readiness"]
+    attributes_source = guard_source_access("openstreetmap", "local_import", lambda: _read_json(POWER_ATTRIBUTES_SOURCE))
+    _merge_osm_attributes(assets, attributes_source)
     assets_bytes = json.dumps(assets, ensure_ascii=False, indent=2).encode()
     supports_source = guard_source_access("openstreetmap", "local_import", lambda: _read_json(POWER_SUPPORTS_SOURCE))
     supports = normalize_analytical_vector_layer(
@@ -117,9 +120,13 @@ def build_rybnik_power_domain_pack(*, root: Path) -> dict[str, Any]:
         metadata={**legacy["metadata"], "layer_id": "power.supports", "source_query": POWER_SUPPORTS_QUERY},
     )
     supports["metadata"]["readiness"] = legacy["readiness"]["readiness"]
+    _merge_osm_attributes(supports, attributes_source)
     supports_bytes = json.dumps(supports, ensure_ascii=False, indent=2).encode()
     relation_evidence_bytes = json.dumps(guard_source_access("openstreetmap", "local_import", lambda: _read_json(POWER_RELATIONS_SOURCE)), ensure_ascii=False, indent=2).encode()
-    representative_points = _representative_points_layer(legacy["layer"])
+    lines = deepcopy(legacy["layer"])
+    _merge_osm_attributes(lines, attributes_source)
+    layer_bytes = json.dumps(lines, ensure_ascii=False, indent=2).encode()
+    representative_points = _representative_points_layer(lines)
     representative_points_bytes = json.dumps(representative_points, ensure_ascii=False, indent=2).encode()
     analytical_provenance = [{"source_id": "openstreetmap", "contribution_role": "primary"}]
     source_provenance = [
@@ -134,6 +141,8 @@ def build_rybnik_power_domain_pack(*, root: Path) -> dict[str, Any]:
             "snapshot_at": legacy["metadata"]["snapshot_at"],
             "pipeline_version": legacy["metadata"]["pipeline_version"],
             "query_version": legacy["metadata"]["query_version"],
+            "attribute_snapshot_at": attributes_source["snapshot_at"],
+            "attribute_source_checksum": attributes_source["source_checksum"],
         },
         ensure_ascii=False,
         indent=2,
@@ -189,6 +198,22 @@ def _representative_points_layer(layer: dict[str, Any]) -> dict[str, Any]:
     if errors:
         raise ValueError(f"Representative points violate the provider contract: {', '.join(errors)}")
     return points
+
+
+def _merge_osm_attributes(layer: dict[str, Any], evidence: dict[str, Any]) -> None:
+    attributes = evidence.get("attributes")
+    if not isinstance(attributes, dict):
+        raise ValueError("OSM attribute evidence requires an attributes mapping")
+    for feature in layer.get("features", []):
+        properties = feature.get("properties")
+        if not isinstance(properties, dict):
+            continue
+        source_id = properties.get("source_id")
+        source_tags = attributes.get(source_id)
+        if not isinstance(source_tags, dict):
+            continue
+        existing = properties.get("osm_tags")
+        properties["osm_tags"] = {**(existing if isinstance(existing, dict) else {}), **source_tags}
 
 
 def _read_json(path: Path) -> dict[str, Any]:

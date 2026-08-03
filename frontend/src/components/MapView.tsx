@@ -4,8 +4,8 @@ import type { Geometry } from "geojson";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Protocol } from "pmtiles";
 
-import { previewLayerKey, type PreviewLayer } from "../previewCatalog";
-import type { ProviderFeature } from "../types/api";
+import { popupDetails, previewLayerKey, type PreviewLayer } from "../previewCatalog";
+import type { MapCircuit, MapFeatureDetail, ProviderFeature } from "../types/api";
 import type { SelectedProviderFeature } from "../inspection";
 import { KIUT_MAX_ZOOM, KIUT_MIN_ZOOM, KIUT_WMS_URL, type KiutReferenceLayer } from "../kiutReference";
 import { ORTHOPHOTO_WMS_URL, orthophotoReference } from "../orthophotoReference";
@@ -17,8 +17,12 @@ maplibregl.addProtocol("pmtiles", pmtilesProtocol.tile);
 const PROVIDER_PREFIX = "provider:";
 const REFERENCE_PREFIX = "reference:";
 const BASEMAP_SOURCE_ID = "basemap:openstreetmap";
+const CIRCUIT_SOURCE_ID = "circuit:selected";
+const CIRCUIT_LINE_ID = "circuit:selected-line";
+const CIRCUIT_ENDPOINT_ID = "circuit:selected-endpoints";
 
 function providerLayerId(layer: PreviewLayer): string { return `${PROVIDER_PREFIX}${previewLayerKey(layer)}`; }
+function providerInteractiveLayerIds(layer: PreviewLayer): string[] { const id = providerLayerId(layer); return [id, `${id}-medium`, `${id}-low`]; }
 function providerSourceId(archiveUrl: string): string { return `${PROVIDER_PREFIX}archive:${archiveUrl.replace(/[^a-z0-9]/gi, "_")}`; }
 function wmsTileUrl(endpoint: string, wmsLayer: string, format: string): string {
   const parameters = new URLSearchParams({
@@ -28,12 +32,13 @@ function wmsTileUrl(endpoint: string, wmsLayer: string, format: string): string 
   return `${endpoint}?${parameters.toString().replace("%7Bbbox-epsg-3857%7D", "{bbox-epsg-3857}")}`;
 }
 
-export function MapView({ layers, references, orthophotoEnabled, basemapEnabled, onSelectFeature }: { layers: PreviewLayer[]; references: KiutReferenceLayer[]; orthophotoEnabled: boolean; basemapEnabled: boolean; onSelectFeature: (selected: SelectedProviderFeature) => void }) {
+export function MapView({ layers, references, orthophotoEnabled, basemapEnabled, selected, selectedDetail, selectedCircuit, onSelectFeature }: { layers: PreviewLayer[]; references: KiutReferenceLayer[]; orthophotoEnabled: boolean; basemapEnabled: boolean; selected: SelectedProviderFeature | null; selectedDetail: MapFeatureDetail | null; selectedCircuit: MapCircuit | null; onSelectFeature: (selected: SelectedProviderFeature) => void }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const layersRef = useRef(layers);
   const onSelectFeatureRef = useRef(onSelectFeature);
   const fittedArchiveRef = useRef<string | null>(null);
+  const popupRef = useRef<maplibregl.Popup | null>(null);
   const [mapReady, setMapReady] = useState(false);
 
   useEffect(() => { layersRef.current = layers; }, [layers]);
@@ -50,19 +55,21 @@ export function MapView({ layers, references, orthophotoEnabled, basemapEnabled,
     mapRef.current = map;
     map.once("load", () => setMapReady(true));
     map.on("click", (event) => {
-      const visibleIds = layersRef.current.map(providerLayerId).filter((id) => map.getLayer(id));
+      const visibleIds = layersRef.current.flatMap(providerInteractiveLayerIds).filter((id) => map.getLayer(id));
       const rendered = map.queryRenderedFeatures(event.point, { layers: visibleIds })[0];
       if (!rendered) return;
       const layer = layersRef.current.find((candidate) => candidate.artifact.source_layer === rendered.sourceLayer);
       if (!layer) return;
       const feature = asProviderFeature(rendered);
       onSelectFeatureRef.current({ layer, feature });
+      popupRef.current?.remove();
+      popupRef.current = new maplibregl.Popup({ closeButton: true, offset: 10 }).setLngLat(event.lngLat).setDOMContent(featurePopupContent(feature, layer)).addTo(map);
     });
     map.on("mousemove", (event) => {
-      const visibleIds = layersRef.current.map(providerLayerId).filter((id) => map.getLayer(id));
+      const visibleIds = layersRef.current.flatMap(providerInteractiveLayerIds).filter((id) => map.getLayer(id));
       map.getCanvas().style.cursor = visibleIds.length && map.queryRenderedFeatures(event.point, { layers: visibleIds }).length ? "pointer" : "";
     });
-    return () => { map.remove(); mapRef.current = null; };
+    return () => { popupRef.current?.remove(); map.remove(); mapRef.current = null; };
   }, []);
 
   useEffect(() => {
@@ -101,11 +108,16 @@ export function MapView({ layers, references, orthophotoEnabled, basemapEnabled,
         const id = providerLayerId(layer);
         const color = presentationColor(index);
         const isLine = isLinePresentationLayer(layer.artifact.source_layer);
-        map.addLayer(isLine ? {
-          id, type: "line", source: sourceId, "source-layer": layer.artifact.source_layer,
-          paint: { "line-color": voltageLineColor, "line-width": 4.5, "line-opacity": 0.9 },
-        } : {
-          id, type: "circle", source: sourceId, "source-layer": layer.artifact.source_layer,
+        if (isLine) {
+          const base = { type: "line" as const, source: sourceId, "source-layer": layer.artifact.source_layer, paint: { "line-color": voltageLineColor, "line-width": 4.5, "line-opacity": 0.9 } };
+          // At AOI scale retain only transmission circuits. Distribution
+          // circuits remain in the archive and appear as the viewer zooms in.
+          map.addLayer({ ...base, id, filter: ["all", ["!=", ["get", "voltage_bucket"], "medium"], ["!=", ["get", "voltage_bucket"], "low"]] });
+          map.addLayer({ ...base, id: `${id}-medium`, minzoom: 11, filter: ["==", ["get", "voltage_bucket"], "medium"] });
+          map.addLayer({ ...base, id: `${id}-low`, minzoom: 13, filter: ["==", ["get", "voltage_bucket"], "low"] });
+          map.addLayer({ id: `${id}-labels`, type: "symbol", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom: 12, filter: ["all", ["!=", ["get", "voltage_bucket"], "medium"], ["!=", ["get", "voltage_bucket"], "low"]], layout: { "symbol-placement": "line", "text-field": ["coalesce", ["get", "voltage_label"], ["get", "name"]], "text-size": 11, "text-max-angle": 35 }, paint: { "text-color": "#f8fafc", "text-halo-color": "#0f172a", "text-halo-width": 1.5 } });
+        } else map.addLayer({
+          id, type: "circle", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom: 12,
           paint: layer.artifact.artifact_id === "power.supports"
             ? { "circle-color": ["match", ["get", "asset_type"], "tower", "#f97316", "portal", "#facc15", "utility_pole", "#38bdf8", "#cbd5e1"], "circle-radius": ["match", ["get", "asset_type"], "tower", 5, "portal", 4.5, "utility_pole", 3.5, 3], "circle-stroke-width": 1.25, "circle-stroke-color": "#07111f", "circle-opacity": 0.9 }
             : { "circle-color": color, "circle-radius": 6, "circle-stroke-width": 1.25, "circle-stroke-color": "#07111f", "circle-opacity": 0.9 },
@@ -128,7 +140,61 @@ export function MapView({ layers, references, orthophotoEnabled, basemapEnabled,
     if (references.length && map.getZoom() < KIUT_MIN_ZOOM) map.setZoom(KIUT_MIN_ZOOM);
   }, [references, orthophotoEnabled, mapReady]);
 
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady) return;
+    if (map.getLayer(CIRCUIT_ENDPOINT_ID)) map.removeLayer(CIRCUIT_ENDPOINT_ID);
+    if (map.getLayer(CIRCUIT_LINE_ID)) map.removeLayer(CIRCUIT_LINE_ID);
+    if (map.getSource(CIRCUIT_SOURCE_ID)) map.removeSource(CIRCUIT_SOURCE_ID);
+    if (!selectedCircuit) return;
+    const members = selectedCircuit.members.filter((member) => member.geometry);
+    const lines = members.map((member) => ({ type: "Feature" as const, properties: { source_id: member.source_id, role: member.role }, geometry: member.geometry! }));
+    const endpoints = members.flatMap((member) => {
+      const coordinates = member.geometry!.coordinates;
+      return [coordinates[0], coordinates.at(-1)!].map((coordinate) => ({ type: "Feature" as const, properties: { source_id: member.source_id }, geometry: { type: "Point" as const, coordinates: coordinate } }));
+    });
+    map.addSource(CIRCUIT_SOURCE_ID, { type: "geojson", data: { type: "FeatureCollection", features: [...lines, ...endpoints] } });
+    map.addLayer({ id: CIRCUIT_LINE_ID, type: "line", source: CIRCUIT_SOURCE_ID, filter: ["==", ["geometry-type"], "LineString"], paint: { "line-color": "#facc15", "line-width": 8, "line-opacity": 0.88, "line-blur": 0.35 } });
+    map.addLayer({ id: CIRCUIT_ENDPOINT_ID, type: "circle", source: CIRCUIT_SOURCE_ID, filter: ["==", ["geometry-type"], "Point"], paint: { "circle-color": "#facc15", "circle-radius": 5, "circle-stroke-color": "#7c2d12", "circle-stroke-width": 2 } });
+  }, [mapReady, selectedCircuit]);
+
+  useEffect(() => {
+    if (!popupRef.current || !selected) return;
+    const detail = selectedDetail?.source_id === selected.feature.properties.source_id ? selectedDetail : null;
+    const feature = detail ? detail.feature : selected.feature;
+    popupRef.current.setDOMContent(featurePopupContent(feature, selected.layer));
+  }, [selected, selectedDetail]);
+
   return <div className="map" ref={containerRef} />;
+}
+
+function featurePopupContent(feature: ProviderFeature, layer: PreviewLayer): HTMLElement {
+  const details = popupDetails(feature, layer); const properties = feature.properties;
+  const tags = asStringRecord(properties.osm_tags);
+  const sourceId = typeof properties.source_id === "string" ? properties.source_id : "";
+  const sourceLink = /^((node|way|relation)\/\d+)$/.test(sourceId) ? `https://www.openstreetmap.org/${sourceId}` : null;
+  const links = [sourceLink ? `<a href="${sourceLink}" target="_blank" rel="noreferrer">OpenStreetMap object</a>` : "", externalLink(tags.website, "website"), wikipediaLink(tags.wikipedia), wikidataLink(tags.wikidata), externalLink(tags.image, "source image")].filter(Boolean).join(" · ");
+  const fields = ["power", "man_made", "voltage", "frequency", "ref", "operator", "circuits", "cables", "wires", "plant:source", "plant:method", "plant:output:electricity", "start_date", "description"]
+    .filter((name) => tags[name])
+    .map((name) => `<dt>${escapeHtml(name)}</dt><dd>${escapeHtml(tags[name]!)}</dd>`).join("");
+  const content = document.createElement("div"); content.className = "mapFeaturePopup";
+  content.innerHTML = `<strong>${escapeHtml(String(properties.name ?? tags.name ?? details.title))}</strong><span>${escapeHtml(String(properties.voltage_label ?? tags.voltage ?? "voltage unknown"))} · ${escapeHtml(String(tags.operator ?? details.source))}</span>${fields ? `<dl>${fields}</dl>` : ""}<small>${escapeHtml(sourceId)}</small>${links ? `<small class="popupLinks">${links}</small>` : ""}`;
+  return content;
+}
+function escapeHtml(value: string): string { return value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] ?? character); }
+function asStringRecord(value: unknown): Record<string, string> { return value && typeof value === "object" ? Object.fromEntries(Object.entries(value).filter((entry): entry is [string, string] => typeof entry[1] === "string")) : {}; }
+function externalLink(value: string | undefined, label: string): string {
+  if (!value) return "";
+  try { const url = new URL(value); return url.protocol === "https:" || url.protocol === "http:" ? `<a href="${escapeHtml(url.toString())}" target="_blank" rel="noreferrer">${label}</a>` : ""; } catch { return ""; }
+}
+function wikipediaLink(value: string | undefined): string {
+  if (!value) return "";
+  const [language, ...title] = value.split(":");
+  if (!/^[a-z-]{2,12}$/i.test(language) || !title.join(":")) return "";
+  return `<a href="https://${language}.wikipedia.org/wiki/${encodeURIComponent(title.join(":"))}" target="_blank" rel="noreferrer">Wikipedia</a>`;
+}
+function wikidataLink(value: string | undefined): string {
+  return value && /^Q\d+$/.test(value) ? `<a href="https://www.wikidata.org/wiki/${value}" target="_blank" rel="noreferrer">Wikidata</a>` : "";
 }
 
 function asProviderFeature(feature: MapGeoJSONFeature): ProviderFeature {

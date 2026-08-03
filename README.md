@@ -1,32 +1,32 @@
 # Map Data Quality Lab
 
-A source-aware geospatial data provider for downstream application.
+A source-aware geospatial data provider for GIS consumers.
 
-The goal is to make downstream application portable across areas of interest by providing OSM-derived infrastructure layers, cached data snapshots, source metadata, validation reports, confidence scoring and map-layer APIs. downstream application remains the operational UI, simulation and RAG system; this repo owns the upstream map-data layer.
+The goal is to make GIS consumers portable across areas of interest by providing OSM-derived infrastructure layers, cached data snapshots, source metadata, validation reports, confidence scoring and map-layer APIs. This repository owns the upstream map-data layer; operational systems remain outside its scope.
 
 ## What this project is
 
-Map Data Quality Lab is the map-data provider behind downstream application. Given an area of interest and an infrastructure domain, it prepares analytical map layers from available public sources, normalizes them into a stable contract, caches snapshots for reproducible demos, validates geometry and attributes, and exposes readiness metadata for downstream simulation.
+Map Data Quality Lab is a map-data provider. Given an area of interest and an infrastructure domain, it prepares analytical map layers from available public sources, normalizes them into a stable contract, caches snapshots for reproducible demos, validates geometry and attributes, and exposes readiness metadata for downstream use.
 
-This repository focuses on the upstream provider layer: fetch, cache, validate, score and explain infrastructure layers before downstream application uses them for downstream visualization and simulation.
+This repository focuses on the upstream provider layer: fetch, cache, validate, score and explain infrastructure layers before a GIS consumer uses them.
 
 Primary responsibilities:
 
 - AOI-based infrastructure layer preparation.
 - OSM/Overpass ingestion and cached snapshots.
-- GeoJSON normalization for downstream application consumers.
+- GeoJSON normalization for GIS consumers.
 - Source attribution, confidence and readiness metrics.
 - KIUT/GESUT WMS-style sources as reference overlays where available.
 - Manual seed layers as explicitly non-authoritative review inputs.
-- API contracts for downstream application map and simulation modules.
+- API contracts for map-data consumers.
 
 ## What this project is not
 
-This repo intentionally excludes the downstream application C2/RAG/simulation UI scope. It is not a defence dashboard, a wargaming UI, an AI assistant or the operator interface. Those responsibilities belong to downstream application. This provider answers what data exists, where it came from, how reliable it is and how it can be consumed.
+This repo intentionally excludes C2/RAG/simulation UI scope. It is not a defence dashboard, a wargaming UI, an AI assistant or an operator interface. This provider answers what data exists, where it came from, how reliable it is and how it can be consumed.
 
-## Intended relationship with downstream application
+## Intended relationship with consumers
 
-downstream application is the target consumer of this service as a geospatial backend:
+A consumer uses this service as a geospatial backend:
 
 ```text
 Map Data Quality Lab
@@ -37,16 +37,12 @@ Map Data Quality Lab
   -> readiness reports
   -> GeoJSON/API exports
 
-downstream application
-  -> 2D/3D operational map
-  -> infrastructure status visualization
-  -> disruption scenarios
-  -> cascading effects
-  -> response units
-  -> timeline and RAG
+GIS consumer
+  -> map, analysis or data product
+  -> chooses how to use source-aware output
 ```
 
-The intended contract is that downstream application can request infrastructure layers for a selected AOI without owning Overpass queries, source-specific tagging rules, KIUT/WMS limitations, caching or data-readiness logic.
+The intended contract is that a consumer can request infrastructure layers for a selected AOI without owning Overpass queries, source-specific tagging rules, KIUT/WMS limitations, caching or data-readiness logic.
 
 ## Provider demo flow
 
@@ -68,10 +64,10 @@ A compatible client requests the `power` or `emergency` domain for the Rybnik AO
 Map Data Quality Lab returns cached, normalized analytical layers with their metadata and readiness record. The power pack preserves OSM source evidence and a separate KIUT/GESUT reference-only WMS overlay. The emergency pack keeps OSM hospital/fire/police/ambulance-rescue geometry distinct from supplementary PRG police/fire unit-area representative points.
 The provider exposes source attribution, feature count, validation status, confidence and known limitations.
 Its source registry keeps manual inputs and KIUT/GESUT WMS references distinct from analytical vectors.
-The returned layer pack is ready for a provider-compatible client; actual downstream application consumption remains external integration work.
+The returned layer pack is ready for a provider-compatible client; consumer-specific integration remains external work.
 ```
 
-This is intentionally a provider scenario. Simulation, operator decisions and cascading effects happen in downstream application.
+This is intentionally a provider scenario. Simulation, operator decisions and cascading effects are outside this repository.
 
 ## Tech stack
 
@@ -109,7 +105,7 @@ See [the architecture documentation](./docs/architecture.md) for decisions and t
 
 ## Why this is not an OpenInfraMap clone
 
-[OpenInfraMap](https://openinframap.org/about) is a view of infrastructure mapped in OpenStreetMap. This repository solves a different problem: it prepares an AOI-scoped downstream data product. It normalizes OSM features into a versioned provider contract, preserves provenance, validates data quality, records confidence/readiness and review decisions, and exports a reproducible layer pack for another application.
+[OpenInfraMap](https://openinframap.org/about) is a view of infrastructure mapped in OpenStreetMap. This repository solves a different problem: it prepares an AOI-scoped provider data product. It normalizes OSM features into a versioned provider contract, preserves provenance, validates data quality, records confidence/readiness and review decisions, and exports a reproducible layer pack for another application.
 
 The dev-preview is an inspection surface for that provider workflow, not an attempt to reproduce a global infrastructure basemap or OpenInfraMap's cartographic experience.
 
@@ -117,12 +113,13 @@ The dev-preview is an inspection surface for that provider workflow, not an atte
 
 Core provider capabilities:
 
-- AOI/domain request model for `power` and `emergency` in Rybnik + 60 km.
+- MapLibre AOI settings with point/radius or bounded Polish administrative selections, including a deterministic PRG-labelled union of selected counties and gminas.
+- Catalogued AOI runtime profiles for `power`, `emergency`, `public`, `transport`, `bridges`, `water`, `gas`, `sewer` and `industrial`. Existing Rybnik fixture packs remain explicit demo fallbacks; unavailable AOI data is reported as a source gap, never as empty analytical vectors.
 - Layer Catalog with source, geometry type, AOI, feature count, confidence and access metadata.
 - Cached OSM-derived layer artifacts so normal reads do not depend on live Overpass availability.
 - Source-aware validation and readiness metrics that make data limitations visible instead of hiding them.
 - Explainable data-quality issues and a persistent review-state workflow.
-- Stable API/export contract for downstream application.
+- Stable API/export contract for GIS consumers.
 - MapLibre dev-preview with local PMTiles range reads, layer toggles and object inspection.
 - Documentation that explains OSM vectors, KIUT/GESUT reference overlays, manual seeds and QGIS verification.
 
@@ -135,7 +132,7 @@ Out of scope for this repo:
 - RAG/AI assistant.
 - Operational recommendations.
 
-Those belong to downstream application.
+Those belong to consumer-specific systems outside this repository.
 
 ## Local development
 
@@ -193,7 +190,7 @@ Issue evidence is generated by versioned quality rules and remains separate from
 - `GET /api/geodata/power/hexes/{level}`
 
 
-`POST /api/aoi/requests` is implemented for `rybnik_60km/power`. A cache is fresh for 24 hours from `snapshot_at`; a missing or stale cache invokes the Python worker with its offline fixture input and reports whether the result came from cache or refresh.
+`POST /api/aoi/requests` remains the legacy `rybnik_60km/power` compatibility path. `GET /api/aoi/catalog` returns the dated, source-labelled bounded PRG administrative selection catalogue. `POST /api/aoi/runtime-requests` accepts a `provider_aoi_request/v2` point/radius or administrative selection plus requested categories. It derives a deterministic request/cache identity, coalesces equivalent local requests, reuses a fresh local runtime result for 24 hours and returns an explicit source-aware result for each selected category. Only the already validated Rybnik fixture packs are `ready`; a different AOI or unfinished vertical slice remains `needs_source`, while KIUT/orthophoto contexts remain `reference_only`.
 
 ## Verification
 
@@ -234,9 +231,9 @@ uv run --offline python -m geo_pipeline.worker --aoi rybnik_60km --domain emerge
 
 ## Why this matters for map data tooling
 
-Production map data is incomplete, heterogeneous, source-dependent and uneven across locations. This project shows a practical workflow for turning raw public map data into a reusable provider contract: source labeling, cached snapshots, validation, metadata, confidence, readiness reports and map-layer APIs for downstream applications.
+Production map data is incomplete, heterogeneous, source-dependent and uneven across locations. This project shows a practical workflow for turning raw public map data into a reusable provider contract: source labeling, cached snapshots, validation, metadata, confidence, readiness reports and map-layer APIs for GIS consumers.
 
-The key product value is portability. downstream application can be pointed at a new AOI and request infrastructure layers, while the provider exposes whether OSM data is usable, incomplete or unsuitable for simulation.
+The key product value is portability. A GIS consumer can be pointed at a new AOI and request infrastructure layers, while the provider exposes whether OSM data is usable, incomplete or unsuitable for its declared use.
 
 ## Data attribution and reference overlays
 

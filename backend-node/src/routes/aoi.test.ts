@@ -149,6 +149,12 @@ describe("read-only AOI provider routes", () => {
     ]));
   });
 
+  it("rejects malformed runtime requests before a local worker is invoked", async () => {
+    const response = await request(createApp()).post("/api/aoi/runtime-requests").send({ aoi: { type: "point_radius" }, profiles: ["unknown"] });
+    expect(response.status).toBe(422);
+    expect(providerErrorSchema.parse(response.body)).toMatchObject({ error: "invalid_request" });
+  });
+
   it("returns the cached Rybnik power GeoJSON contract", async () => {
     const response = await request(createApp()).get("/api/aoi/rybnik_60km/layers/power");
 

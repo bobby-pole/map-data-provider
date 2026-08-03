@@ -18,6 +18,7 @@ import {
   type ProviderDataPaths,
 } from "../services/providerDataService.js";
 import { requestAoi } from "../services/aoiRequestService.js";
+import { getAdministrativeCatalog, submitRuntimeRequest } from "../services/aoiRuntimeService.js";
 import { getReviewedIssues, updateIssueReview, type IssueStorePaths } from "../services/issueReviewService.js";
 import {
   layerListResponseSchema,
@@ -36,10 +37,33 @@ import {
   mapFeatureDetailResponseSchema,
   mapCircuitDetailResponseSchema,
   mapCircuitListResponseSchema,
+  administrativeCatalogResponseSchema,
+  providerRuntimeRequestSchema,
+  providerRuntimeResponseSchema,
 } from "../types/provider.js";
 
 export function createAoiRouter(options?: { issueStorePaths?: IssueStorePaths; providerDataPaths?: ProviderDataPaths }) {
   const aoiRouter = Router();
+
+  aoiRouter.get("/catalog", async (_request, response) => {
+    try {
+      response.status(200).json(administrativeCatalogResponseSchema.parse(await getAdministrativeCatalog()));
+    } catch (error) {
+      respondWithProviderError(response, error);
+    }
+  });
+
+  aoiRouter.post("/runtime-requests", async (request, response) => {
+    try {
+      response.status(200).json(providerRuntimeResponseSchema.parse(await submitRuntimeRequest(providerRuntimeRequestSchema.parse(request.body))));
+    } catch (error) {
+      if (error instanceof Error && error.name === "ZodError") {
+        respondWithProviderError(response, new ProviderDataError("invalid_request", "Malformed AOI runtime request."));
+        return;
+      }
+      respondWithProviderError(response, error);
+    }
+  });
 
 aoiRouter.get("/:aoiId/presentations", async (request, response) => {
   try {

@@ -2,13 +2,13 @@
 
 ## Decision
 
-Map Data Quality Lab will be developed as a geospatial data provider for downstream application.
+Map Data Quality Lab is developed as a consumer-neutral geospatial data provider.
 
 The selected architecture is:
 
 - Node.js + Express + TypeScript for the provider API.
 - Python for the geospatial extraction and validation worker.
-- GeoJSON as the primary data contract between the provider and downstream application.
+- GeoJSON as the primary data contract between the provider and GIS consumers.
 - MVT packaged in PMTiles as a derived, offline-first map presentation read model.
 - Cached OSM-derived artifacts as the default read path for fast demos and repeatable results.
 - WMS/KIUT/GESUT only as reference overlays, not analytical vectors.
@@ -17,7 +17,7 @@ The selected architecture is:
 
 The provider has two different jobs.
 
-The service/API layer needs to expose stable REST contracts, validate requests, manage cache metadata, return GeoJSON quickly, provide readiness reports and integrate cleanly with downstream application and React tooling. Node.js, Express and TypeScript are a strong fit for REST services, cache orchestration, TypeScript contracts and frontend integration.
+The service/API layer needs to expose stable REST contracts, validate requests, manage cache metadata, return GeoJSON quickly, provide readiness reports and integrate cleanly with GIS consumers and React tooling. Node.js, Express and TypeScript are a strong fit for REST services, cache orchestration, TypeScript contracts and frontend integration.
 
 The geospatial processing layer needs to fetch OSM/Overpass data, parse and normalize tags, clip geometries to an AOI, validate geometry and attributes, and write GeoJSON/report artifacts. Python remains a better fit for this layer because OSMnx, GeoPandas, Shapely and PyProj provide mature geospatial processing tools.
 
@@ -33,10 +33,10 @@ The map preview has a separate, deliberately narrower read model. Python derives
 
 ## Target Flow
 
-This is the target consumer flow. The provider side is implemented in this repository; loading its export inside downstream application remains external integration work.
+This is the target consumer flow. The provider side is implemented in this repository; loading its export inside a consumer remains external integration work.
 
 ```text
-downstream application
+GIS consumer
   -> GET /api/aoi/{aoi_id}/layers/{domain}
 
 Node/Express provider
@@ -52,12 +52,12 @@ Python geospatial worker
   -> writes GeoJSON, metadata and readiness reports
 
 Node/Express provider
-  -> serves the generated artifacts to downstream application
+  -> serves the generated artifacts to the consumer
 ```
 
 ## Data Contract
 
-### downstream application GeoJSON Layer Contract v1
+### Provider GeoJSON Layer Contract v1
 
 The primary provider output is a GeoJSON `FeatureCollection` with provider-owned metadata. Version 1 is `provider_geojson/v1`; consumers integrate with the fields below rather than with raw Overpass or OSM tag conventions.
 
@@ -97,7 +97,7 @@ Each feature exposes these required provider-owned fields in `properties`:
 
 
 
-`osm_tags` is optional. It preserves useful source values such as `power`, `voltage`, `operator` or an original OSM `source` tag for inspection, but downstream application must not require it. A representative offline fixture lives at `backend/data/fixtures/rybnik_60km/power/contract-sample.geojson`; it is a contract sample, not the complete cache layout. `MDQ-004` introduces the canonical cache artifacts and metadata/readiness files.
+`osm_tags` is optional. It preserves useful source values such as `power`, `voltage`, `operator` or an original OSM `source` tag for inspection, but consumers must not require it. A representative offline fixture lives at `backend/data/fixtures/rybnik_60km/power/contract-sample.geojson`; it is a contract sample, not the complete cache layout. `MDQ-004` introduces the canonical cache artifacts and metadata/readiness files.
 
 ### Layer catalog provenance metadata
 
@@ -185,6 +185,8 @@ backend/data/cache/{aoi_id}/{domain}/
 
 `MDQ-020` defines `provider_aoi/v1` before generic adapter or API work. A bounded circle request records its EPSG:4326 boundary, source CRS, radius/area limits and request provenance; an approved administrative reference records its PRG identifier and offline fixture/snapshot provenance without claiming a live WFS read. The provider derives canonical AOI identity from normalized geometry, contract version and identity-relevant provenance. Cache paths accept only validated provider identifiers; `rybnik_60km` remains a compatibility alias and v1 cache key for the committed power snapshot while retaining its derived geometry identity.
 
+`MDQ-051` adds `provider_aoi_request/v2` above that stable v1 compatibility contract. The MapLibre settings panel accepts either a point/radius contained within Poland or a deterministic union of source-labelled units from the bounded PRG administrative catalogue. A request identity includes normalized true AOI geometry, PRG catalogue version/snapshot and unit IDs where relevant, ordered category/query versions and the pipeline version. The local runtime coalesces equivalent in-progress Node requests and caches a complete validated result for 24 hours below ignored `backend/cache/`; a failed run never replaces prior state. Each required OSM category has an explicit mapping and outcome. Existing `rybnik_60km` power/emergency artifacts are marked as demo fallbacks only; otherwise a source gap remains visible. BDOT10k is labelled topographic context, PRG is official administrative context, KIUT/orthophoto stay reference-only and NMT/NMPT remains raster-derived context. None enters an analytical-vector artifact through the runtime.
+
 `MDQ-022` introduces a Python adapter catalog and versioned OSM query catalog. The worker resolves an approved AOI/domain adapter before creating paths, returns its source registry ID and query version, and stages the v1 compatibility cache with its v2 domain pack before atomic replacement. Registered fixture adapters are `rybnik_60km/power` and `rybnik_60km/emergency`; each live acquisition path remains separately governed and emergency currently exposes no live refresh mode.
 
 ## Source Registry and Attribution
@@ -227,6 +229,8 @@ The Node/Express/TypeScript provider now serves typed, read-only local artifacts
 
 `POST /api/aoi/requests` currently supports only `rybnik_60km/power`, whose registered boundary reference uses EPSG:4326. The provider treats a cache as fresh for 24 hours after `snapshot_at`; a missing or stale cache invokes the Python worker fixture path and returns whether the artifact came from cache or refresh.
 
+`GET /api/aoi/catalog` returns the bounded offline PRG administrative selection catalogue. `POST /api/aoi/runtime-requests` validates `provider_aoi_request/v2`, then calls the local fixture-first worker only after validation. It returns the resolved AOI outline, deterministic request cache key, one outcome per selected category and source-labelled context/reference states. The route does not make a live Overpass, WMS or raster request; live acquisition remains a separately governed runtime path.
+
 
 `GET /api/aoi/:aoiId/domain-packs` and `GET /api/aoi/:aoiId/domain-packs/:domain` provide read-only `provider_domain_pack_read/v2` responses from registered manifests. Node validates request and manifest identity, pack-relative paths, source provenance, SHA-256 checksums, feature counts and provider GeoJSON metadata before returning any layer. The response exposes only explicitly public processed, derived or representative-point GeoJSON vectors. Native artifacts, rasters, remote services and reference-only records remain inside the cache as provenance evidence and cannot enter an analytical endpoint.
 
@@ -256,10 +260,10 @@ The first vertical slice is:
 AOI: rybnik_60km
 Domain: power
 Output: public OSM power-line and power-asset GeoJSON, private source/representative evidence, validation/readiness and KIUT reference provenance
-Consumer: downstream application
+Consumer: GIS consumer
 ```
 
-The current release implements the provider side of this slice: a cache-first Rybnik power request, source/readiness/issue contracts, durable review state, bounded `provider_pack/v1` compatibility, a multi-artifact power domain pack and manifest-driven v2 reads/exports. The MapLibre dev-preview derives its layer toggles, counts, voltage style, attribution and limitations from compact presentation metadata, resolves one selected feature into its validated source detail, and reads public MVT from local PMTiles ranges; KIUT remains a separate external reference-only overlay. The preview is a non-operational provider inspection tool, not a downstream application client. Consumer-side loading remains a separate repository task.
+The current release implements the provider side of this slice: a cache-first Rybnik power request, source/readiness/issue contracts, durable review state, bounded `provider_pack/v1` compatibility, a multi-artifact power domain pack and manifest-driven v2 reads/exports. The MapLibre dev-preview derives its layer toggles, counts, voltage style, attribution and limitations from compact presentation metadata, resolves one selected feature into its validated source detail, and reads public MVT from local PMTiles ranges; KIUT remains a separate external reference-only overlay. The preview is a non-operational provider inspection tool. Consumer-side loading remains a separate repository task.
 
 ## Repository Plan
 
@@ -283,7 +287,7 @@ backend/data/cache/{aoi_id}/{domain}/readiness.json
 ```
 
 - Record source query, attribution/license, snapshot timestamp, AOI, domain, feature count, pipeline/query version, validation status and known limitations.
-- Prefer cached reads for downstream consumption.
+- Prefer cached reads for consumer use.
 
 ### Phase 3 - Add Node/Express Provider API
 
@@ -304,13 +308,13 @@ backend/data/cache/{aoi_id}/{domain}/readiness.json
 - Align the map preview with provider contracts and source metadata.
 - Persist human review decisions separately from generated issue evidence.
 - Support the issue lifecycle `open -> acknowledged -> resolved | accepted | ignored`.
-- Keep the preview focused on data inspection rather than downstream application operational behavior.
+- Keep the preview focused on data inspection rather than consumer operational behavior.
 
 ### Phase 6 - Provider Release
 
 - Run the Python, Node and frontend verification baseline locally and in CI.
 - Publish provider setup, verification and integration documentation based only on implemented behavior.
-- Treat downstream application consumer integration as external follow-up work after this release.
+- Treat consumer integration as external follow-up work after this release.
 
 ### Phase 7 - Evidence-Driven Scale Options
 
@@ -321,7 +325,7 @@ backend/data/cache/{aoi_id}/{domain}/readiness.json
 
 ## Non-Goals
 
-- Do not move downstream application C2, RAG, attack simulation or operator UI into this repo.
+- Do not move C2, RAG, attack simulation or operator UI into this repo.
 - Do not treat KIUT/GESUT WMS as analytical vector data.
 - Do not rewrite the geospatial worker in Node just to use one language.
 - Do not build vector tiles before the GeoJSON/cache provider contract is stable.

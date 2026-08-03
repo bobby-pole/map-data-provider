@@ -33,6 +33,10 @@ def test_power_domain_pack_v2_preserves_v1_cache_compatibility(tmp_path: Path) -
     assert artifacts["power.osm_source_evidence"]["format"] == "json"
     assert representative_points["features"][0]["properties"]["source_id"] == "way/32043840"
     assert representative_points["features"][0]["properties"]["source_geometry_type"] == "LineString"
+    presentation = json.loads((pack_root / "presentation" / "manifest.json").read_text())
+    assert presentation["presentation_version"] == "provider_map_presentation/v1"
+    assert presentation["archive"]["format"] == "pmtiles"
+    assert {layer["artifact_id"] for layer in presentation["layers"]} == {"power.lines", "power.assets"}
     public = read_domain_pack("rybnik_60km", "power", root=tmp_path, public_export=True)["artifacts"]
     assert [artifact["id"] for artifact in public] == ["power.lines", "power.assets"]
 

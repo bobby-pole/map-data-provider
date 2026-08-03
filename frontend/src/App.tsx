@@ -12,18 +12,19 @@ import { orthophotoReference } from "./orthophotoReference";
 import "./index.css";
 
 export default function App() {
-  const { aoiId, domainPacks, issues, sourceAvailability, updateReview, error } = useProviderPreview();
+  const { aoiId, presentations, issues, sourceAvailability, updateReview, error } = useProviderPreview();
   const [enabledLayers, setEnabledLayers] = useState<Record<string, boolean>>({});
   const [selectedFeature, setSelectedFeature] = useState<SelectedProviderFeature | null>(null);
   const [enabledReferences, setEnabledReferences] = useState<Record<string, boolean>>({});
   const [orthophotoEnabled, setOrthophotoEnabled] = useState(false);
-  const catalog = useMemo(() => configuredPreviewLayers(domainPacks), [domainPacks]);
+  const [basemapEnabled, setBasemapEnabled] = useState(true);
+  const catalog = useMemo(() => configuredPreviewLayers(presentations), [presentations]);
   const visibleLayers = useMemo(
     () => catalog.filter((layer) => enabledLayers[previewLayerKey(layer)] ?? true),
     [catalog, enabledLayers],
   );
   const featureCount = useMemo(
-    () => visibleLayers.reduce((total, layer) => total + layer.layer.features.length, 0),
+    () => visibleLayers.reduce((total, layer) => total + layer.artifact.feature_count, 0),
     [visibleLayers],
   );
   const visibleReferences = useMemo(() => kiutReferenceLayers.filter((reference) => enabledReferences[reference.id] ?? false), [enabledReferences]);
@@ -40,8 +41,12 @@ export default function App() {
       <PreviewHeader aoiId={aoiId} featureCount={featureCount} />
       {error && <div className="error">Provider API error: {error}</div>}
       <section className="inspectorContent">
-        <div className="mapPanel"><MapView layers={visibleLayers} references={visibleReferences} orthophotoEnabled={orthophotoEnabled} onSelectFeature={selectFeature} /></div>
+        <div className="mapPanel"><MapView layers={visibleLayers} references={visibleReferences} orthophotoEnabled={orthophotoEnabled} basemapEnabled={basemapEnabled} onSelectFeature={selectFeature} /></div>
         <aside className="inspectorPanel">
+          <section className="inspectorSection">
+            <div className="sectionHeading"><h2>Map background</h2><span>{basemapEnabled ? "on" : "off"}</span></div>
+            <label className="layerToggle"><input type="checkbox" checked={basemapEnabled} onChange={(event) => setBasemapEnabled(event.target.checked)} /><span><strong>OpenStreetMap base map</strong><small>Online visual context only; it is not provider data and is unavailable offline.</small></span></label>
+          </section>
           <LayerCatalog
             layers={catalog}
             enabledLayers={enabledLayers}

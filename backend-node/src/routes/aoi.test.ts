@@ -17,6 +17,8 @@ import {
   domainPackReadResponseSchema,
   issueListResponseSchema,
   sourceAvailabilityReportSchema,
+  mapPresentationListResponseSchema,
+  mapPresentationResponseSchema,
 } from "../types/provider.js";
 
 describe("read-only AOI provider routes", () => {
@@ -196,6 +198,37 @@ describe("read-only AOI provider routes", () => {
       { source_id: "openstreetmap", contribution_role: "primary" },
       { source_id: "kiut_gesut_wms", contribution_role: "validation_reference" },
     ]);
+  });
+
+  it("serves compact MapLibre presentation metadata without loading public GeoJSON into the response", async () => {
+    const response = await request(createApp()).get("/api/aoi/rybnik_60km/presentations");
+
+    expect(response.status).toBe(200);
+    const listed = mapPresentationListResponseSchema.parse(response.body);
+    const [presentation] = listed.presentations;
+    expect(presentation && mapPresentationResponseSchema.parse(presentation)).toMatchObject({
+      domain: "power",
+      archive: expect.objectContaining({ format: "pmtiles", min_zoom: 7, max_zoom: 14 }),
+      layers: expect.arrayContaining([expect.objectContaining({ artifact_id: "power.lines", source_layer: "power_lines", feature_count: 16_505 })]),
+    });
+    expect(JSON.stringify(response.body)).not.toContain("way/32043840");
+    expect(JSON.stringify(response.body)).not.toContain("osm_tags");
+  });
+
+  it("serves PMTiles as a bounded byte range and rejects an unbounded archive request", async () => {
+    const archiveUrl = "/api/aoi/rybnik_60km/presentations/power/archive";
+    const partial = await request(createApp()).get(archiveUrl).set("range", "bytes=0-126");
+
+    expect(partial.status).toBe(206);
+    expect(partial.headers["accept-ranges"]).toBe("bytes");
+    expect(partial.headers["content-range"]).toMatch(/^bytes 0-126\/\d+$/);
+    expect(partial.headers.etag).toMatch(/^"[a-f0-9]{64}"$/);
+    expect(partial.headers["cache-control"]).toBe("public, max-age=0, must-revalidate");
+    expect(partial.headers["content-length"]).toBe("127");
+
+    const unbounded = await request(createApp()).get(archiveUrl);
+    expect(unbounded.status).toBe(416);
+    expect(providerErrorSchema.parse(unbounded.body)).toMatchObject({ error: "invalid_request" });
   });
 
   it("discovers a fixture domain solely from its v2 manifest", async () => {

@@ -7,6 +7,9 @@ import {
   getCachedReadiness,
   getDomainPack,
   getDomainPacks,
+  getMapPresentation,
+  getMapPresentationArchiveRange,
+  getMapPresentations,
   getSourcesForAoi,
   getSourceAvailability,
   type ProviderDataPaths,
@@ -25,10 +28,63 @@ import {
   issueListResponseSchema,
   issueReviewUpdateSchema,
   sourceAvailabilityReportSchema,
+  mapPresentationListResponseSchema,
+  mapPresentationResponseSchema,
 } from "../types/provider.js";
 
 export function createAoiRouter(options?: { issueStorePaths?: IssueStorePaths; providerDataPaths?: ProviderDataPaths }) {
   const aoiRouter = Router();
+
+aoiRouter.get("/:aoiId/presentations", async (request, response) => {
+  try {
+    response.status(200).json(mapPresentationListResponseSchema.parse({
+      response_version: "provider_map_presentation_list/v1",
+      aoi_id: request.params.aoiId,
+      presentations: await getMapPresentations(request.params.aoiId, options?.providerDataPaths),
+    }));
+  } catch (error) {
+    respondWithProviderError(response, error);
+  }
+});
+
+aoiRouter.get("/:aoiId/presentations/:domain", async (request, response) => {
+  try {
+    response.status(200).json(mapPresentationResponseSchema.parse(await getMapPresentation(
+      request.params.aoiId,
+      request.params.domain,
+      options?.providerDataPaths,
+    )));
+  } catch (error) {
+    respondWithProviderError(response, error);
+  }
+});
+
+aoiRouter.get("/:aoiId/presentations/:domain/archive", async (request, response) => {
+  try {
+    const archive = await getMapPresentationArchiveRange(
+      request.params.aoiId,
+      request.params.domain,
+      request.header("range"),
+      options?.providerDataPaths,
+    );
+    response.status(206)
+      .set({
+        "accept-ranges": "bytes",
+        "content-range": `bytes ${archive.start}-${archive.end}/${archive.totalSize}`,
+        "content-length": String(archive.bytes.length),
+        "content-type": "application/vnd.pmtiles",
+        etag: archive.etag,
+        "cache-control": "public, max-age=0, must-revalidate",
+      })
+      .send(archive.bytes);
+  } catch (error) {
+    if (error instanceof ProviderDataError && error.kind === "invalid_request" && error.message.includes("range")) {
+      response.status(416).set("content-range", "bytes */0").json(providerErrorSchema.parse({ error: error.kind, message: error.message }));
+      return;
+    }
+    respondWithProviderError(response, error);
+  }
+});
 
 aoiRouter.get("/:aoiId/domain-packs", async (request, response) => {
   try {

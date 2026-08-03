@@ -9,6 +9,7 @@ The selected architecture is:
 - Node.js + Express + TypeScript for the provider API.
 - Python for the geospatial extraction and validation worker.
 - GeoJSON as the primary data contract between the provider and downstream application.
+- MVT packaged in PMTiles as a derived, offline-first map presentation read model.
 - Cached OSM-derived artifacts as the default read path for fast demos and repeatable results.
 - WMS/KIUT/GESUT only as reference overlays, not analytical vectors.
 
@@ -27,6 +28,8 @@ Node is the product/service layer.
 Python is the geospatial processing layer.
 GeoJSON and JSON reports are the contract between them.
 ```
+
+The map preview has a separate, deliberately narrower read model. Python derives MVT only from manifest-approved public analytical GeoJSON and packages it into a versioned PMTiles archive. Node serves compact presentation metadata and archive byte ranges; MapLibre renders only requested tiles. An optional default-on OpenStreetMap raster base map supplies online visual context, but it is not provider data, not cached and not an offline dependency. This does not replace canonical GeoJSON exports or introduce a spatial database, a BBOX query API or live tile generation.
 
 ## Target Flow
 
@@ -174,6 +177,8 @@ backend/data/cache/{aoi_id}/{domain}/
 
 `MDQ-019` adds an additive `domain-pack-v2/manifest.json` under the same AOI/domain root. `provider_domain_pack/v2` can retain multiple role-named processed or derived vector layers, native vector/raster artifacts, remote-service records, validation/readiness files and ordered source provenance. File artifacts are constrained to the pack root and validated for existence, SHA-256 integrity and GeoJSON feature counts. Public-export selection admits only artifacts whose source provenance is qualified, analytical and distributable under `source_registry/v2`; WMS/WMTS reference imagery and pending or rejected candidates remain in the pack as evidence but are excluded. `MDQ-032` completes the committed Rybnik power pack with public OSM `power.lines` and `power.assets` layers, private dated OSM source evidence and line representative points, plus a private KIUT electricity `remote_service` record. KIUT cannot enter a public analytical artifact; the existing v1 cache remains compatible while the manifest is the generic v2 read source.
 
+`MDQ-047` adds `presentation/manifest.json`, `presentation/benchmark.json` and a version-3 PMTiles archive below the same domain-pack root. `provider_map_presentation/v1` records the parent domain-manifest digest, archive SHA-256/size/bounds/zoom range, compact layer descriptors, attribution, source provenance and the measured full-GeoJSON baseline. Generation checks every public input checksum and source-eligibility record before writing tiles; private evidence, manual/review material, WMS/raster references and non-exportable sources cannot enter the archive. The archive is a render derivative, not a replacement source or public GeoJSON export.
+
 `MDQ-020` defines `provider_aoi/v1` before generic adapter or API work. A bounded circle request records its EPSG:4326 boundary, source CRS, radius/area limits and request provenance; an approved administrative reference records its PRG identifier and offline fixture/snapshot provenance without claiming a live WFS read. The provider derives canonical AOI identity from normalized geometry, contract version and identity-relevant provenance. Cache paths accept only validated provider identifiers; `rybnik_60km` remains a compatibility alias and v1 cache key for the committed power snapshot while retaining its derived geometry identity.
 
 `MDQ-022` introduces a Python adapter catalog and versioned OSM query catalog. The worker resolves an approved AOI/domain adapter before creating paths, returns its source registry ID and query version, and stages the v1 compatibility cache with its v2 domain pack before atomic replacement. The first registered adapter remains `rybnik_60km/power`; no other domain acquisition is implied by the generic interface.
@@ -221,6 +226,8 @@ The Node/Express/TypeScript provider now serves typed, read-only local artifacts
 
 `GET /api/aoi/:aoiId/domain-packs` and `GET /api/aoi/:aoiId/domain-packs/:domain` provide read-only `provider_domain_pack_read/v2` responses from registered manifests. Node validates request and manifest identity, pack-relative paths, source provenance, SHA-256 checksums, feature counts and provider GeoJSON metadata before returning any layer. The response exposes only explicitly public processed, derived or representative-point GeoJSON vectors. Native artifacts, rasters, remote services and reference-only records remain inside the cache as provenance evidence and cannot enter an analytical endpoint.
 
+`GET /api/aoi/:aoiId/presentations` and `GET /api/aoi/:aoiId/presentations/:domain` provide compact `provider_map_presentation_read/v1` metadata without reading or serializing analytical GeoJSON collections. `GET /api/aoi/:aoiId/presentations/:domain/archive` requires one satisfiable HTTP byte range and responds with immutable PMTiles bytes, an ETag and `Content-Range`. Node validates presentation identity, parent-manifest digest, public-source provenance, archive size and SHA-256 before serving it. These routes are read-only and never invoke Python, Overpass, WMS or a tile generator.
+
 
 Implemented Node/Express provider endpoints:
 
@@ -234,6 +241,9 @@ Implemented Node/Express provider endpoints:
 - `PATCH /api/aoi/:aoiId/issues/:issueId/review`
 - `GET /api/aoi/:aoiId/domain-packs`
 - `GET /api/aoi/:aoiId/domain-packs/:domain`
+- `GET /api/aoi/:aoiId/presentations`
+- `GET /api/aoi/:aoiId/presentations/:domain`
+- `GET /api/aoi/:aoiId/presentations/:domain/archive` (HTTP range only)
 
 The first vertical slice is:
 
@@ -244,7 +254,7 @@ Output: public OSM power-line and power-asset GeoJSON, private source/representa
 Consumer: downstream application
 ```
 
-The current release implements the provider side of this slice: a cache-first Rybnik power request, source/readiness/issue contracts, durable review state, bounded `provider_pack/v1` compatibility, a multi-artifact power domain pack and manifest-driven v2 reads/exports. The dev-preview derives its two analytical layer toggles, counts, popup fields, attribution and limitations from the domain-pack response; KIUT remains a separate reference-only overlay. The preview is a non-operational provider inspection tool, not a downstream application client. Consumer-side loading remains a separate repository task.
+The current release implements the provider side of this slice: a cache-first Rybnik power request, source/readiness/issue contracts, durable review state, bounded `provider_pack/v1` compatibility, a multi-artifact power domain pack and manifest-driven v2 reads/exports. The MapLibre dev-preview derives its layer toggles, counts, popup fields, attribution and limitations from compact presentation metadata and reads public MVT from local PMTiles ranges; KIUT remains a separate external reference-only overlay. The preview is a non-operational provider inspection tool, not a downstream application client. Consumer-side loading remains a separate repository task.
 
 ## Repository Plan
 
@@ -301,7 +311,7 @@ backend/data/cache/{aoi_id}/{domain}/readiness.json
 
 - Add a job queue when direct CLI invocation becomes too limiting.
 - Add SQLite/PostGIS for metadata and larger AOI management if file cache becomes awkward.
-- Add vector tile export when GeoJSON becomes too heavy for large map rendering.
+- Extend the established PMTiles/MVT read model only when later measured domain or AOI needs require it; consider PostGIS only for dynamic AOIs or server-side spatial-query evidence.
 - Keep WMS reference overlays separate from analytical vector data.
 
 ## Non-Goals

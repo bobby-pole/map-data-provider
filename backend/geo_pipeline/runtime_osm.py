@@ -15,13 +15,14 @@ from geo_pipeline.contracts import normalize_analytical_vector_layer
 from geo_pipeline.domain_pack import build_map_presentation, domain_pack_root, read_domain_pack, write_domain_pack
 from geo_pipeline.emergency import category_for_osm_feature
 from geo_pipeline.public_services import category_for_osm_feature as public_category_for_osm_feature
-from geo_pipeline.transport import category_for_osm_feature as transport_category_for_osm_feature
+from geo_pipeline.transport import category_for_osm_feature as transport_category_for_osm_feature, road_class_for_osm_feature
 from geo_pipeline.extract import configure_osmnx, fetch_osm_features_geometry, sanitize_for_geojson
 from geo_pipeline.layers.power import _add_power_categories, _compact_power_properties
 from geo_pipeline.query_catalog import EMERGENCY_OSM_QUERY, PUBLIC_OSM_QUERY, POWER_OSM_QUERY, TRANSPORT_OSM_QUERY
 
 RUNTIME_PIPELINE_VERSION = "geo_pipeline/runtime-osm/v1"
 _QUERY_BY_DOMAIN = {"power": POWER_OSM_QUERY, "emergency": EMERGENCY_OSM_QUERY, "public": PUBLIC_OSM_QUERY, "transport": TRANSPORT_OSM_QUERY}
+
 
 
 def refresh_runtime_osm_domain(*, aoi: dict[str, Any], domain: str, root: Path) -> dict[str, Any]:
@@ -77,7 +78,13 @@ def _add_transport_categories(frame: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
         return frame
     enriched = frame.copy()
     enriched["provider_category"] = enriched.apply(lambda row: transport_category_for_osm_feature(dict(row)) or "other", axis=1)
-    return enriched[enriched["provider_category"] != "other"].copy()
+    filtered = enriched[enriched["provider_category"] != "other"].copy()
+    if not filtered.empty:
+        filtered["road_class"] = filtered.apply(
+            lambda row: road_class_for_osm_feature(dict(row)) if row.get("provider_category") == "roads" else None,
+            axis=1,
+        )
+    return filtered
 
 
 def _geojson_collection(frame: gpd.GeoDataFrame) -> dict[str, Any]:

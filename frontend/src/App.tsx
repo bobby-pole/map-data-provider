@@ -29,7 +29,7 @@ export default function App() {
   const { aoiId, presentations, issues, sourceAvailability, updateReview, error } = useProviderPreview(preparedAoiId);
   const catalog = useMemo(() => configuredPreviewLayers(presentations), [presentations]);
   const visibleLayers = useMemo(
-    () => catalog.filter((layer) => enabledLayers[previewLayerKey(layer)] ?? true),
+    () => catalog.filter((layer) => enabledLayers[previewLayerKey(layer)] ?? (layer.domain === "transport" ? false : true)),
     [catalog, enabledLayers],
   );
   const featureCount = useMemo(

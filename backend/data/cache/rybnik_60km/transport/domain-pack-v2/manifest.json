@@ -22,8 +22,8 @@
       "kind": "processed_vector",
       "format": "geojson",
       "path": "layers/transport.roads.geojson",
-      "sha256": "6f7ff7a361d939668668685b9919caa882ae9771ee5d6ec819b1ff8a3783de74",
-      "feature_count": 1,
+      "sha256": "2e494578c3452a961b9d80a8163b7fd6cb6d67733e3fcc51bd4d32a93de4e242",
+      "feature_count": 4,
       "source_provenance": [
         {
           "source_id": "openstreetmap",
@@ -82,8 +82,8 @@
       "kind": "derived_vector",
       "format": "geojson",
       "path": "layers/transport.inspection_points.geojson",
-      "sha256": "5d68d0aee3611db04508323ce813e6606ee85bccb3b8998cf29d2c745be2071b",
-      "feature_count": 2,
+      "sha256": "6b8b0a963e2ed08e393726dc8e4fbc83ac8bdcb9ba39c79a707f411582e4b0ca",
+      "feature_count": 5,
       "source_provenance": [
         {
           "source_id": "openstreetmap",
@@ -97,7 +97,7 @@
       "kind": "native_vector",
       "format": "json",
       "path": "native/osm-transport-source-evidence.json",
-      "sha256": "de64ae0afb28003abc2658e3b73aa749da3410928e8de86245c223e34cb1ffdc",
+      "sha256": "bb758669db55c635d52ce08183df661b10e816576da15a16ed45b76f323e1a81",
       "source_provenance": [
         {
           "source_id": "openstreetmap",

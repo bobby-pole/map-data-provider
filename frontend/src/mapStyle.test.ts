@@ -5,7 +5,10 @@ import { isLinePresentationLayer, openStreetMapBasemap, presentationColor, refer
 describe("MapLibre presentation style policy", () => {
   it("renders line source layers as lines and asset layers as inspectable points", () => {
     expect(isLinePresentationLayer("power_lines")).toBe(true);
+    expect(isLinePresentationLayer("transport.roads")).toBe(true);
+    expect(isLinePresentationLayer("transport.railways")).toBe(true);
     expect(isLinePresentationLayer("power_assets")).toBe(false);
+    expect(isLinePresentationLayer("transport.stations")).toBe(false);
   });
 
   it("uses a deterministic, bounded palette for manifest layers", () => {
@@ -18,7 +21,7 @@ describe("MapLibre presentation style policy", () => {
     expect(openStreetMapBasemap.attribution).toContain("OpenStreetMap contributors");
   });
 
-  it("keeps voltage buckets and source support classes visually distinct", () => {
+  it("keeps voltage buckets, road classes and source support classes visually distinct", () => {
     expect(voltageLineColor).toEqual(expect.arrayContaining(["high_110", "#dc2626", "high_220", "#d946ef", "high_400", "#a855f7"]));
     expect(supportStyle("tower")).toEqual({ color: "#f97316", radius: 5 });
     expect(supportStyle("pole")).toEqual({ color: "#cbd5e1", radius: 3 });

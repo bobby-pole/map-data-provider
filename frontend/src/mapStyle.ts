@@ -2,7 +2,7 @@ import type { ExpressionSpecification } from "maplibre-gl";
 
 /** Pure style policy so the MVT preview can be verified without a WebGL runtime. */
 export function isLinePresentationLayer(sourceLayer: string): boolean {
-  return sourceLayer.includes("line");
+  return sourceLayer.includes("line") || sourceLayer.endsWith(".roads") || sourceLayer.endsWith(".railways");
 }
 
 export function presentationColor(index: number): string {
@@ -17,6 +17,15 @@ export const voltageLineColor: ExpressionSpecification = [
   "high_220", "#d946ef",
   "high_400", "#a855f7",
   "#475569",
+] as ExpressionSpecification;
+
+export const roadLineColor: ExpressionSpecification = [
+  "match", ["get", "road_class"],
+  "major", "#ef4444",
+  "secondary", "#f59e0b",
+  "local", "#10b981",
+  "service", "#6b7280",
+  "#38bdf8",
 ] as ExpressionSpecification;
 
 export function supportStyle(assetType: string | undefined): { color: string; radius: number } {

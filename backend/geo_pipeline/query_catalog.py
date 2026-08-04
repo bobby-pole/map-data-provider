@@ -51,7 +51,7 @@ TRANSPORT_OSM_QUERY = OsmQueryDefinition(
     source_registry_id="openstreetmap",
     query_version="transport-osm/v1",
     tags={
-        "highway": ["motorway", "trunk", "primary"],
+        "highway": ["motorway", "trunk", "primary", "secondary", "tertiary", "unclassified", "residential", "living_street", "service"],
         "railway": ["rail", "station", "halt"],
         "aeroway": ["aerodrome", "helipad"],
     },

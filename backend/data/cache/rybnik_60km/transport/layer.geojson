@@ -26,7 +26,7 @@
     "eligible_for_analysis": true,
     "readiness": "usable_with_limitations",
     "contract_version": "provider_geojson/v1",
-    "feature_count": 4
+    "feature_count": 7
   },
   "features": [
     {
@@ -45,10 +45,12 @@
           "No qualified PRG transport network or facility class is enabled for this domain pack."
         ],
         "eligible_for_analysis": true,
+        "road_class": "major",
         "osm_tags": {
           "name": "ulica Rybnicka",
           "ref": "DK78",
-          "highway": "primary"
+          "highway": "primary",
+          "maxspeed": "50"
         }
       },
       "geometry": {
@@ -65,6 +67,118 @@
           [
             18.55,
             50.102
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/transport-road-2",
+        "domain": "transport",
+        "asset_type": "roads",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM transport mapping completeness and classification vary by area, operator and transport mode.",
+          "The bounded committed snapshot is fixture evidence for major transport infrastructure and not a statement of operational capacity or real-time schedule.",
+          "BDOT10k road and railway geometry is retained only as topographic comparison context and cannot establish transport service semantics alone.",
+          "No qualified PRG transport network or facility class is enabled for this domain pack."
+        ],
+        "eligible_for_analysis": true,
+        "road_class": "secondary",
+        "osm_tags": {
+          "name": "ulica Mikołowska",
+          "ref": "DW925",
+          "highway": "secondary",
+          "maxspeed": "50"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.545,
+            50.096
+          ],
+          [
+            18.555,
+            50.099
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/transport-road-3",
+        "domain": "transport",
+        "asset_type": "roads",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM transport mapping completeness and classification vary by area, operator and transport mode.",
+          "The bounded committed snapshot is fixture evidence for major transport infrastructure and not a statement of operational capacity or real-time schedule.",
+          "BDOT10k road and railway geometry is retained only as topographic comparison context and cannot establish transport service semantics alone.",
+          "No qualified PRG transport network or facility class is enabled for this domain pack."
+        ],
+        "eligible_for_analysis": true,
+        "road_class": "local",
+        "osm_tags": {
+          "name": "ulica Kościelna",
+          "highway": "residential",
+          "maxspeed": "30"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.541,
+            50.0965
+          ],
+          [
+            18.543,
+            50.0975
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/transport-road-4",
+        "domain": "transport",
+        "asset_type": "roads",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM transport mapping completeness and classification vary by area, operator and transport mode.",
+          "The bounded committed snapshot is fixture evidence for major transport infrastructure and not a statement of operational capacity or real-time schedule.",
+          "BDOT10k road and railway geometry is retained only as topographic comparison context and cannot establish transport service semantics alone.",
+          "No qualified PRG transport network or facility class is enabled for this domain pack."
+        ],
+        "eligible_for_analysis": true,
+        "road_class": "service",
+        "osm_tags": {
+          "name": "Droga dojazdowa dworcowa",
+          "highway": "service",
+          "access": "yes"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.5412,
+            50.0966
+          ],
+          [
+            18.5418,
+            50.0969
           ]
         ]
       }

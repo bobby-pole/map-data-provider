@@ -16,9 +16,9 @@ export function LayerCatalog({
         const key = previewLayerKey(layer);
         return <li key={key}>
           <label className="layerToggle">
-            <input type="checkbox" checked={enabledLayers[key] ?? true} onChange={(event) => onToggle(key, event.target.checked)} />
+            <input type="checkbox" checked={enabledLayers[key] ?? (layer.domain === "transport" ? false : true)} onChange={(event) => onToggle(key, event.target.checked)} />
             <span>
-              <strong>{layer.artifact.artifact_id === "power.supports" ? "Power supports" : layer.artifact.artifact_id}</strong>
+              <strong>{formatLayerTitle(layer.artifact.artifact_id)}</strong>
               <small>{layer.domain} · {layer.artifact.feature_count} features · {layer.artifact.readiness}</small>
               <small>{sourceAttribution(layer)}</small>
             </span>
@@ -27,4 +27,14 @@ export function LayerCatalog({
       })}</ul> : <p className="muted">Loading registered map-presentation manifests…</p>}
     </section>
   );
+}
+
+function formatLayerTitle(artifactId: string): string {
+  if (artifactId === "power.supports") return "Power supports";
+  if (artifactId === "transport.roads") return "Transport roads";
+  if (artifactId === "transport.railways") return "Transport railways";
+  if (artifactId === "transport.stations") return "Transport stations";
+  if (artifactId === "transport.aviation") return "Transport aviation";
+  if (artifactId === "transport.inspection_points") return "Transport inspection points";
+  return artifactId;
 }

@@ -100,6 +100,15 @@ DISPLAY_ATTRIBUTE_FIELDS = (
     "aeroway",
     "iata",
     "icao",
+    "ref",
+    "surface",
+    "maxspeed",
+    "lanes",
+    "bridge",
+    "tunnel",
+    "oneway",
+    "layer",
+    "access",
     "official_type",
     "iip_identifier",
     "version_from",
@@ -188,7 +197,7 @@ def _normalize_feature(feature: object, *, metadata: dict[str, Any]) -> dict[str
         "limitations": list(metadata["limitations"]),
         "eligible_for_analysis": metadata["eligible_for_analysis"],
     }
-    for field in ("source_geometry_type", "geometry_role", "source_response_sha256", "origin_artifact", "origin_source_id"):
+    for field in ("source_geometry_type", "geometry_role", "source_response_sha256", "origin_artifact", "origin_source_id", "road_class"):
         if raw_properties.get(field) is not None:
             properties[field] = raw_properties[field]
     if raw_tags:

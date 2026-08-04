@@ -27,6 +27,10 @@ PRESENTATION_PROPERTY_NAMES = (
     "source_id",
     "domain",
     "asset_type",
+    # Transport rendering is intentionally class-filtered in MapLibre.  Keep
+    # this normalized field in the compact MVT payload rather than requiring
+    # the client to infer it from unbounded raw OSM tags.
+    "road_class",
     "voltage_state",
     "voltage_bucket",
     "voltage_label",

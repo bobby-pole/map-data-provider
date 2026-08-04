@@ -4,12 +4,12 @@ import type { Geometry } from "geojson";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Protocol } from "pmtiles";
 
-import { popupDetails, previewLayerKey, type PreviewLayer } from "../previewCatalog";
+import { popupDetails, previewLayerKey, type PreviewLayer, type TransportRoadClass } from "../previewCatalog";
 import type { MapCircuit, MapFeatureDetail, ProviderFeature } from "../types/api";
 import type { SelectedProviderFeature } from "../inspection";
 import { KIUT_MAX_ZOOM, KIUT_MIN_ZOOM, KIUT_WMS_URL, type KiutReferenceLayer } from "../kiutReference";
 import { ORTHOPHOTO_WMS_URL, orthophotoReference } from "../orthophotoReference";
-import { isLinePresentationLayer, openStreetMapBasemap, presentationColor, referenceRasterInsertionPoint, voltageLineColor } from "../mapStyle";
+import { isLinePresentationLayer, openStreetMapBasemap, presentationColor, referenceRasterInsertionPoint, roadLineColor, voltageLineColor } from "../mapStyle";
 
 const pmtilesProtocol = new Protocol();
 maplibregl.addProtocol("pmtiles", pmtilesProtocol.tile);
@@ -20,6 +20,9 @@ const BASEMAP_SOURCE_ID = "basemap:openstreetmap";
 const CIRCUIT_SOURCE_ID = "circuit:selected";
 const CIRCUIT_LINE_ID = "circuit:selected-line";
 const CIRCUIT_ENDPOINT_ID = "circuit:selected-endpoints";
+const SELECTED_FEATURE_SOURCE_ID = "selected:feature";
+const SELECTED_FEATURE_LINE_ID = "selected:feature-line";
+const SELECTED_FEATURE_ENDPOINT_ID = "selected:feature-endpoints";
 const AOI_OUTLINE_SOURCE_ID = "aoi:selected";
 const AOI_OUTLINE_FILL_ID = "aoi:selected-fill";
 const AOI_OUTLINE_LINE_ID = "aoi:selected-line";
@@ -35,7 +38,7 @@ function wmsTileUrl(endpoint: string, wmsLayer: string, format: string): string 
   return `${endpoint}?${parameters.toString().replace("%7Bbbox-epsg-3857%7D", "{bbox-epsg-3857}")}`;
 }
 
-export function MapView({ layers, references, orthophotoEnabled, basemapEnabled, aoiOutline, selected, selectedDetail, selectedCircuit, onSelectFeature }: { layers: PreviewLayer[]; references: KiutReferenceLayer[]; orthophotoEnabled: boolean; basemapEnabled: boolean; aoiOutline: Geometry | null; selected: SelectedProviderFeature | null; selectedDetail: MapFeatureDetail | null; selectedCircuit: MapCircuit | null; onSelectFeature: (selected: SelectedProviderFeature) => void }) {
+export function MapView({ layers, transportRoadClasses, references, orthophotoEnabled, basemapEnabled, aoiOutline, selected, selectedDetail, selectedCircuit, onSelectFeature }: { layers: PreviewLayer[]; transportRoadClasses: Record<TransportRoadClass, boolean>; references: KiutReferenceLayer[]; orthophotoEnabled: boolean; basemapEnabled: boolean; aoiOutline: Geometry | null; selected: SelectedProviderFeature | null; selectedDetail: MapFeatureDetail | null; selectedCircuit: MapCircuit | null; onSelectFeature: (selected: SelectedProviderFeature) => void }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const layersRef = useRef(layers);
@@ -43,6 +46,7 @@ export function MapView({ layers, references, orthophotoEnabled, basemapEnabled,
   const fittedArchiveRef = useRef<string | null>(null);
   const popupRef = useRef<maplibregl.Popup | null>(null);
   const [mapReady, setMapReady] = useState(false);
+  const [currentZoom, setCurrentZoom] = useState(9);
 
   useEffect(() => { layersRef.current = layers; }, [layers]);
   useEffect(() => { onSelectFeatureRef.current = onSelectFeature; }, [onSelectFeature]);
@@ -56,7 +60,8 @@ export function MapView({ layers, references, orthophotoEnabled, basemapEnabled,
       style: { version: 8, sources: {}, layers: [{ id: "background", type: "background", paint: { "background-color": "#0b1728" } }] },
     });
     mapRef.current = map;
-    map.once("load", () => setMapReady(true));
+    map.once("load", () => { setCurrentZoom(map.getZoom()); setMapReady(true); });
+    map.on("zoom", () => setCurrentZoom(map.getZoom()));
     map.on("click", (event) => {
       const visibleIds = layersRef.current.flatMap(providerInteractiveLayerIds).filter((id) => map.getLayer(id));
       const rendered = map.queryRenderedFeatures(event.point, { layers: visibleIds })[0];
@@ -112,13 +117,18 @@ export function MapView({ layers, references, orthophotoEnabled, basemapEnabled,
         const color = presentationColor(index);
         const isLine = isLinePresentationLayer(layer.artifact.source_layer);
         if (isLine) {
-          const base = { type: "line" as const, source: sourceId, "source-layer": layer.artifact.source_layer, paint: { "line-color": voltageLineColor, "line-width": 4.5, "line-opacity": 0.9 } };
-          // At AOI scale retain only transmission circuits. Distribution
-          // circuits remain in the archive and appear as the viewer zooms in.
-          map.addLayer({ ...base, id, filter: ["all", ["!=", ["get", "voltage_bucket"], "medium"], ["!=", ["get", "voltage_bucket"], "low"]] });
-          map.addLayer({ ...base, id: `${id}-medium`, minzoom: 11, filter: ["==", ["get", "voltage_bucket"], "medium"] });
-          map.addLayer({ ...base, id: `${id}-low`, minzoom: 13, filter: ["==", ["get", "voltage_bucket"], "low"] });
-          map.addLayer({ id: `${id}-labels`, type: "symbol", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom: 12, filter: ["all", ["!=", ["get", "voltage_bucket"], "medium"], ["!=", ["get", "voltage_bucket"], "low"]], layout: { "symbol-placement": "line", "text-field": ["coalesce", ["get", "voltage_label"], ["get", "name"]], "text-size": 11, "text-max-angle": 35 }, paint: { "text-color": "#f8fafc", "text-halo-color": "#0f172a", "text-halo-width": 1.5 } });
+          if (layer.artifact.artifact_id === "transport.roads") {
+            const enabledRoadClasses = Object.entries(transportRoadClasses).filter(([, enabled]) => enabled).map(([roadClass]) => roadClass);
+            map.addLayer({ id, type: "line", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom: 11, filter: ["in", ["get", "road_class"], ["literal", enabledRoadClasses]], paint: { "line-color": roadLineColor, "line-width": 4, "line-opacity": 0.9 } });
+          } else if (layer.artifact.artifact_id === "transport.railways") {
+            map.addLayer({ id, type: "line", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom: 11, paint: { "line-color": "#cbd5e1", "line-width": 3.5, "line-dasharray": [3, 2], "line-opacity": 0.9 } });
+          } else {
+            const base = { type: "line" as const, source: sourceId, "source-layer": layer.artifact.source_layer, paint: { "line-color": voltageLineColor, "line-width": 4.5, "line-opacity": 0.9 } };
+            map.addLayer({ ...base, id, filter: ["all", ["!=", ["get", "voltage_bucket"], "medium"], ["!=", ["get", "voltage_bucket"], "low"]] });
+            map.addLayer({ ...base, id: `${id}-medium`, minzoom: 11, filter: ["==", ["get", "voltage_bucket"], "medium"] });
+            map.addLayer({ ...base, id: `${id}-low`, minzoom: 13, filter: ["==", ["get", "voltage_bucket"], "low"] });
+            map.addLayer({ id: `${id}-labels`, type: "symbol", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom: 12, filter: ["all", ["!=", ["get", "voltage_bucket"], "medium"], ["!=", ["get", "voltage_bucket"], "low"]], layout: { "symbol-placement": "line", "text-field": ["coalesce", ["get", "voltage_label"], ["get", "name"]], "text-size": 11, "text-max-angle": 35 }, paint: { "text-color": "#f8fafc", "text-halo-color": "#0f172a", "text-halo-width": 1.5 } });
+          }
         } else {
           const minzoom = layer.domain === "emergency" ? 7 : 12;
           const emergencyColor = ["match", ["get", "asset_type"], "hospital", "#e11d48", "fire_service", "#f97316", "police", "#2563eb", "ambulance_rescue", "#eab308", color] as ExpressionSpecification;
@@ -137,7 +147,7 @@ export function MapView({ layers, references, orthophotoEnabled, basemapEnabled,
         fittedArchiveRef.current = archiveUrl;
       }
     });
-  }, [layers, mapReady]);
+  }, [layers, mapReady, transportRoadClasses]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -179,13 +189,49 @@ export function MapView({ layers, references, orthophotoEnabled, basemapEnabled,
   }, [mapReady, selectedCircuit]);
 
   useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady) return;
+    if (map.getLayer(SELECTED_FEATURE_ENDPOINT_ID)) map.removeLayer(SELECTED_FEATURE_ENDPOINT_ID);
+    if (map.getLayer(SELECTED_FEATURE_LINE_ID)) map.removeLayer(SELECTED_FEATURE_LINE_ID);
+    if (map.getSource(SELECTED_FEATURE_SOURCE_ID)) map.removeSource(SELECTED_FEATURE_SOURCE_ID);
+    const detail = selectedDetail?.source_id === selected?.feature.properties.source_id ? selectedDetail : null;
+    const feature = detail ? detail.feature : selected?.feature;
+    if (!feature?.geometry || (feature.geometry.type !== "LineString" && feature.geometry.type !== "MultiLineString")) return;
+    const features: Array<{ type: "Feature"; properties: Record<string, unknown>; geometry: Geometry }> = [{ type: "Feature", properties: {}, geometry: feature.geometry }];
+    if (feature.geometry.type === "LineString") {
+      const coords = feature.geometry.coordinates;
+      if (coords.length > 0) {
+        features.push({ type: "Feature", properties: {}, geometry: { type: "Point", coordinates: coords[0] } });
+        features.push({ type: "Feature", properties: {}, geometry: { type: "Point", coordinates: coords[coords.length - 1] } });
+      }
+    }
+    map.addSource(SELECTED_FEATURE_SOURCE_ID, { type: "geojson", data: { type: "FeatureCollection", features } });
+    map.addLayer({ id: SELECTED_FEATURE_LINE_ID, type: "line", source: SELECTED_FEATURE_SOURCE_ID, filter: ["in", ["geometry-type"], ["literal", ["LineString", "MultiLineString"]]], paint: { "line-color": "#38bdf8", "line-width": 6.5, "line-opacity": 0.95 } });
+    map.addLayer({ id: SELECTED_FEATURE_ENDPOINT_ID, type: "circle", source: SELECTED_FEATURE_SOURCE_ID, filter: ["==", ["geometry-type"], "Point"], paint: { "circle-color": "#38bdf8", "circle-radius": 5.5, "circle-stroke-color": "#07111f", "circle-stroke-width": 2 } });
+  }, [mapReady, selected, selectedDetail]);
+
+  useEffect(() => {
     if (!popupRef.current || !selected) return;
     const detail = selectedDetail?.source_id === selected.feature.properties.source_id ? selectedDetail : null;
     const feature = detail ? detail.feature : selected.feature;
     popupRef.current.setDOMContent(featurePopupContent(feature, selected.layer));
   }, [selected, selectedDetail]);
 
-  return <div className="map" ref={containerRef} />;
+  const hasTransportLayers = layers.some((layer) => layer.domain === "transport");
+
+  return (
+    <div className="mapPanel">
+      {hasTransportLayers && currentZoom < 11 && (
+        <div className="zoomGuidanceBanner">
+          Zoom in (level 11+) to inspect transport road and railway network features.
+        </div>
+      )}
+      <output className="zoomLevelIndicator" aria-label="Current map zoom level">
+        Zoom {currentZoom.toFixed(1)}
+      </output>
+      <div className="map" ref={containerRef} />
+    </div>
+  );
 }
 
 function featurePopupContent(feature: ProviderFeature, layer: PreviewLayer): HTMLElement {
@@ -194,11 +240,16 @@ function featurePopupContent(feature: ProviderFeature, layer: PreviewLayer): HTM
   const sourceId = typeof properties.source_id === "string" ? properties.source_id : "";
   const sourceLink = /^((node|way|relation)\/\d+)$/.test(sourceId) ? `https://www.openstreetmap.org/${sourceId}` : null;
   const links = [sourceLink ? `<a href="${sourceLink}" target="_blank" rel="noreferrer">OpenStreetMap object</a>` : "", externalLink(tags.website, "website"), wikipediaLink(tags.wikipedia), wikidataLink(tags.wikidata), externalLink(tags.image, "source image")].filter(Boolean).join(" · ");
-  const fields = ["power", "man_made", "amenity", "healthcare", "emergency", "official_type", "iip_identifier", "jpt_id", "version_from", "voltage", "frequency", "ref", "operator", "circuits", "cables", "wires", "plant:source", "plant:method", "plant:output:electricity", "start_date", "description", "phone", "contact:phone", "opening_hours", "wheelchair"]
-    .filter((name) => tags[name])
-    .map((name) => `<dt>${escapeHtml(name)}</dt><dd>${escapeHtml(tags[name]!)}</dd>`).join("");
+  const fields = ["power", "man_made", "amenity", "healthcare", "emergency", "highway", "railway", "aeroway", "road_class", "ref", "surface", "maxspeed", "lanes", "bridge", "tunnel", "oneway", "official_type", "iip_identifier", "jpt_id", "version_from", "voltage", "frequency", "operator", "circuits", "cables", "wires", "plant:source", "plant:method", "plant:output:electricity", "start_date", "description", "phone", "contact:phone", "opening_hours", "wheelchair"]
+    .filter((name) => tags[name] || (name === "road_class" && typeof properties.road_class === "string"))
+    .map((name) => `<dt>${escapeHtml(name)}</dt><dd>${escapeHtml(String(tags[name] ?? properties[name] ?? ""))}</dd>`).join("");
   const content = document.createElement("div"); content.className = "mapFeaturePopup";
-  const classification = properties.domain === "power" ? String(properties.voltage_label ?? tags.voltage ?? "voltage unknown") : String(properties.asset_type ?? "feature").replaceAll("_", " ");
+  const roadClass = typeof properties.road_class === "string" ? properties.road_class : tags.highway;
+  const classification = properties.domain === "power"
+    ? String(properties.voltage_label ?? tags.voltage ?? "voltage unknown")
+    : properties.domain === "transport" && roadClass
+      ? `road (${roadClass})`
+      : String(properties.asset_type ?? "feature").replaceAll("_", " ");
   content.innerHTML = `<strong>${escapeHtml(String(properties.name ?? tags.name ?? details.title))}</strong><span>${escapeHtml(classification)} · ${escapeHtml(String(tags.operator ?? details.source))}</span>${fields ? `<dl>${fields}</dl>` : ""}<small>${escapeHtml(sourceId)}</small>${links ? `<small class="popupLinks">${links}</small>` : ""}`;
   return content;
 }

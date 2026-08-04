@@ -33,6 +33,58 @@
       "type": "Feature",
       "properties": {
         "element": "way",
+        "id": "transport-road-2",
+        "highway": "secondary",
+        "ref": "DW925",
+        "name": "ulica Mikołowska",
+        "maxspeed": "50"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [18.5450, 50.0960],
+          [18.5550, 50.0990]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "element": "way",
+        "id": "transport-road-3",
+        "highway": "residential",
+        "name": "ulica Kościelna",
+        "maxspeed": "30"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [18.5410, 50.0965],
+          [18.5430, 50.0975]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "element": "way",
+        "id": "transport-road-4",
+        "highway": "service",
+        "name": "Droga dojazdowa dworcowa",
+        "access": "yes"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [18.5412, 50.0966],
+          [18.5418, 50.0969]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "element": "way",
         "id": "transport-rail-1",
         "railway": "rail",
         "ref": "140",

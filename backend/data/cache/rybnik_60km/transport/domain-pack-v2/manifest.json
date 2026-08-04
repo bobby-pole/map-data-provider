@@ -22,8 +22,8 @@
       "kind": "processed_vector",
       "format": "geojson",
       "path": "layers/transport.roads.geojson",
-      "sha256": "6f7ff7a361d939668668685b9919caa882ae9771ee5d6ec819b1ff8a3783de74",
-      "feature_count": 1,
+      "sha256": "a3a682da14dc1db154263d0c58b793a77ac27a140d979a0d3ff6f539ec121c0a",
+      "feature_count": 4,
       "source_provenance": [
         {
           "source_id": "openstreetmap",
@@ -37,7 +37,7 @@
       "kind": "processed_vector",
       "format": "geojson",
       "path": "layers/transport.railways.geojson",
-      "sha256": "4cb358a63d316feb5b17a243d2a42e29c7e65b4714c825c45b75b6ac774eb823",
+      "sha256": "a000f8caebf4090c78528674895b2c1f28cff1cf34651d29a6d4eb35bb394701",
       "feature_count": 1,
       "source_provenance": [
         {
@@ -52,7 +52,7 @@
       "kind": "processed_vector",
       "format": "geojson",
       "path": "layers/transport.stations.geojson",
-      "sha256": "138fdd24e7638f7d6cd5ca3ff71660aeeaa379366f11b9c9cf5014c5c407f809",
+      "sha256": "deaf949255f6efe1af483044abd89adb637729ecb60520024ee828578478e97d",
       "feature_count": 1,
       "source_provenance": [
         {
@@ -67,7 +67,7 @@
       "kind": "processed_vector",
       "format": "geojson",
       "path": "layers/transport.aviation.geojson",
-      "sha256": "114073b6bb9144fb3fab800b3c8a12016e45bd12b59f20dea414a3bb20ead083",
+      "sha256": "0d4d220e8c315b618d8d3ed294f0fa0919d24bb0b1b340c584348f7fd213dfa6",
       "feature_count": 1,
       "source_provenance": [
         {
@@ -82,8 +82,8 @@
       "kind": "derived_vector",
       "format": "geojson",
       "path": "layers/transport.inspection_points.geojson",
-      "sha256": "5d68d0aee3611db04508323ce813e6606ee85bccb3b8998cf29d2c745be2071b",
-      "feature_count": 2,
+      "sha256": "6ffb7d0f161e04c6c02e678d293d9166d10b968d8db30455f8c372a43f6db6a9",
+      "feature_count": 5,
       "source_provenance": [
         {
           "source_id": "openstreetmap",
@@ -97,7 +97,7 @@
       "kind": "native_vector",
       "format": "json",
       "path": "native/osm-transport-source-evidence.json",
-      "sha256": "de64ae0afb28003abc2658e3b73aa749da3410928e8de86245c223e34cb1ffdc",
+      "sha256": "bb758669db55c635d52ce08183df661b10e816576da15a16ed45b76f323e1a81",
       "source_provenance": [
         {
           "source_id": "openstreetmap",

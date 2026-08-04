@@ -3,16 +3,28 @@ from pathlib import Path
 
 from geo_pipeline.cache import build_rybnik_transport_cache
 from geo_pipeline.domain_pack import build_rybnik_transport_domain_pack, read_domain_pack
-from geo_pipeline.transport import category_for_osm_feature
+from geo_pipeline.transport import category_for_osm_feature, road_class_for_osm_feature
 
 
 def test_category_for_osm_feature_normalizes_transport_tags_and_rejects_unmapped() -> None:
     assert category_for_osm_feature({"highway": "primary", "name": "Main Street"}) == "roads"
+    assert category_for_osm_feature({"highway": "secondary"}) == "roads"
+    assert category_for_osm_feature({"highway": "residential"}) == "roads"
+    assert category_for_osm_feature({"highway": "service"}) == "roads"
     assert category_for_osm_feature({"railway": "rail"}) == "railways"
     assert category_for_osm_feature({"railway": "station", "name": "Central Station"}) == "stations"
     assert category_for_osm_feature({"aeroway": "helipad"}) == "aviation"
     assert category_for_osm_feature({"building": "yes", "name": "Generic Building"}) is None
-    assert category_for_osm_feature({"highway": "residential"}) is None
+    assert category_for_osm_feature({"highway": "footway"}) is None
+
+
+def test_road_class_for_osm_feature_classifies_major_secondary_local_and_service() -> None:
+    assert road_class_for_osm_feature({"highway": "primary"}) == "major"
+    assert road_class_for_osm_feature({"highway": "secondary"}) == "secondary"
+    assert road_class_for_osm_feature({"highway": "tertiary"}) == "secondary"
+    assert road_class_for_osm_feature({"highway": "residential"}) == "local"
+    assert road_class_for_osm_feature({"highway": "service"}) == "service"
+    assert road_class_for_osm_feature({"highway": "footway"}) is None
 
 
 def test_transport_domain_pack_builds_independent_categories_and_inspection_points(tmp_path: Path) -> None:
@@ -29,7 +41,8 @@ def test_transport_domain_pack_builds_independent_categories_and_inspection_poin
     context = json.loads((pack_root / artifacts["transport.context_and_comparison"]["path"]).read_text(encoding="utf-8"))
 
     assert pack["domain_pack_version"] == "provider_domain_pack/v2"
-    assert roads["features"][0]["properties"]["asset_type"] == "roads"
+    road_classes = {f["properties"]["road_class"] for f in roads["features"]}
+    assert road_classes == {"major", "secondary", "local", "service"}
     assert railways["features"][0]["properties"]["asset_type"] == "railways"
     assert stations["features"][0]["properties"]["asset_type"] == "stations"
     assert aviation["features"][0]["properties"]["asset_type"] == "aviation"

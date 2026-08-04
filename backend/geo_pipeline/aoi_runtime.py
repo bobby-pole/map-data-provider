@@ -13,12 +13,15 @@ from shapely.geometry import mapping, shape
 from shapely.ops import unary_union
 
 from geo_pipeline.aoi import AoiResolutionError, MAX_AREA_SQ_M, WGS84, _resolved, resolve_aoi
+from geo_pipeline.query_catalog import TRANSPORT_OSM_QUERY
 
 AOI_REQUEST_CONTRACT_VERSION = "provider_aoi_request/v2"
 RUNTIME_CONTRACT_VERSION = "provider_runtime/v1"
 # Changing the pipeline version deliberately creates a new request-cache key.
-# v4 adds transport to live runtime refresh for non-demo AOIs.
-PIPELINE_VERSION = "geo_pipeline/runtime/v4"
+# v5 invalidates transport results created before the complete road taxonomy
+# was part of the provider contract. Transport's v3 query then independently
+# invalidates PMTiles payloads that lacked the normalized road_class field.
+PIPELINE_VERSION = "geo_pipeline/runtime/v5"
 CATALOG_PATH = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "aoi" / "prg_administrative_catalog.geojson"
 POLAND_BOUNDS = (14.05, 49.0, 24.25, 55.0)
 ProfileOutcome = Literal["ready", "needs_source", "reference_only", "pending_qualification"]
@@ -39,7 +42,7 @@ PROFILES: tuple[ProviderProfile, ...] = (
     ProviderProfile("power", "openstreetmap", "analytical", "analytical_vector", "power-osmnx/v1", {"power": ["line", "minor_line", "cable", "substation", "transformer", "plant", "generator"], "man_made": ["utility_pole"]}, True),
     ProviderProfile("emergency", "openstreetmap", "analytical", "analytical_vector", "emergency-osm/v1", {"amenity": ["hospital", "fire_station", "police", "ambulance_station"], "healthcare": ["hospital"], "emergency": ["ambulance_station", "mountain_rescue", "lifeguard_base"]}, True),
     ProviderProfile("public", "openstreetmap", "analytical", "analytical_vector", "public-osm/v1", {"amenity": ["townhall", "school", "college", "university", "kindergarten", "post_office", "community_centre", "social_facility", "library", "arts_centre"], "office": ["government"]}, True),
-    ProviderProfile("transport", "openstreetmap", "analytical", "analytical_vector", "transport-osm/v1", {"highway": ["motorway", "trunk", "primary"], "railway": ["rail", "station", "halt"], "aeroway": ["aerodrome", "helipad"]}, True),
+    ProviderProfile("transport", TRANSPORT_OSM_QUERY.source_registry_id, "analytical", "analytical_vector", TRANSPORT_OSM_QUERY.query_version, TRANSPORT_OSM_QUERY.tags, True),
     ProviderProfile("bridges", "openstreetmap", "analytical", "analytical_vector", "bridges-osm/v1", {"man_made": ["bridge"], "bridge": ["yes", "viaduct"]}),
     ProviderProfile("water", "openstreetmap", "analytical", "analytical_vector", "water-osm/v1", {"man_made": ["water_tower", "water_works"], "waterway": ["stream", "river", "canal"], "pipeline": ["water"]}),
     ProviderProfile("gas", "openstreetmap", "analytical", "analytical_vector", "gas-osm/v1", {"pipeline": ["gas"], "man_made": ["gasometer"]}),

@@ -1,12 +1,18 @@
 {
   "source_registry_id": "openstreetmap",
   "fixture": "data/fixtures/rybnik_60km/transport/osm-transport.geojson",
-  "sha256": "54c4f8baacd8bc72f3567ece59275c9ac47758e8ff1949a395cbee01db0481be",
+  "sha256": "10ab5004e25990a5cef8ecc041b30eddca1e028ffa4a2fac01a5a08099e40336",
   "category_mappings": {
     "roads": [
       "highway=motorway",
       "highway=trunk",
-      "highway=primary"
+      "highway=primary",
+      "highway=secondary",
+      "highway=tertiary",
+      "highway=unclassified",
+      "highway=residential",
+      "highway=living_street",
+      "highway=service"
     ],
     "railways": [
       "railway=rail"

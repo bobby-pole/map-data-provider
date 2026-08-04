@@ -49,9 +49,11 @@ PUBLIC_OSM_QUERY = OsmQueryDefinition(
 
 TRANSPORT_OSM_QUERY = OsmQueryDefinition(
     source_registry_id="openstreetmap",
-    query_version="transport-osm/v1",
+    # v3 invalidates v2 runtime artifacts whose PMTiles payload omitted the
+    # normalized road_class field required for client-side class filtering.
+    query_version="transport-osm/v3",
     tags={
-        "highway": ["motorway", "trunk", "primary"],
+        "highway": ["motorway", "trunk", "primary", "secondary", "tertiary", "unclassified", "residential", "living_street", "service"],
         "railway": ["rail", "station", "halt"],
         "aeroway": ["aerodrome", "helipad"],
     },

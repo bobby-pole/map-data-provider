@@ -30,15 +30,17 @@ def test_administrative_union_and_profile_order_have_one_request_identity() -> N
 
 
 def test_runtime_profiles_are_explicit_and_do_not_fabricate_non_fixture_data() -> None:
-    request = {"aoi": point_radius(), "profiles": ["power", "public", "water"]}
+    request = {"aoi": point_radius(), "profiles": ["power", "public", "transport", "water"]}
     outcomes = profile_outcomes(request)
 
-    assert [outcome["domain"] for outcome in outcomes] == ["power", "public", "water"]
+    assert [outcome["domain"] for outcome in outcomes] == ["power", "public", "transport", "water"]
     assert outcomes[0]["status"] == "ready"
     assert outcomes[0]["artifact_aoi_id"] == "rybnik_60km"
     assert outcomes[1]["status"] == "ready"
     assert outcomes[1]["artifact_aoi_id"] == "rybnik_60km"
-    assert outcomes[2]["tags"] == {"man_made": ["water_tower", "water_works"], "waterway": ["stream", "river", "canal"], "pipeline": ["water"]}
+    assert outcomes[2]["status"] == "ready"
+    assert outcomes[2]["artifact_aoi_id"] == "rybnik_60km"
+    assert outcomes[3]["tags"] == {"man_made": ["water_tower", "water_works"], "waterway": ["stream", "river", "canal"], "pipeline": ["water"]}
 
 
 def test_runtime_reuses_a_valid_local_request_cache(tmp_path) -> None:
@@ -105,6 +107,21 @@ def test_runtime_public_publication_keeps_semantic_categories_independent(tmp_pa
     assert inspection["features"][0]["properties"]["origin_artifact"] == "public.administration"
 
 
+def test_runtime_transport_publication_keeps_semantic_categories_independent(tmp_path) -> None:
+    aoi = resolve_runtime_request({"aoi": {"type": "administrative_selection", "unit_ids": ["county_rybnik_city"]}, "profiles": ["transport"]})["aoi"]
+    source = {"type": "FeatureCollection", "features": [
+        {"type": "Feature", "properties": {"element": "way", "id": 1, "provider_category": "roads", "highway": "primary", "name": "fixture road"}, "geometry": {"type": "LineString", "coordinates": [[18.49, 50.09], [18.50, 50.10]]}},
+        {"type": "Feature", "properties": {"element": "node", "id": 2, "provider_category": "stations", "railway": "station", "name": "fixture station"}, "geometry": {"type": "Point", "coordinates": [18.5, 50.1]}},
+    ]}
+
+    publish_runtime_osm_collection(aoi=aoi, domain="transport", source=source, query_version="transport-osm/v1", root=tmp_path)
+
+    pack = read_domain_pack(aoi["aoi_id"], "transport", root=tmp_path)
+    assert [artifact["id"] for artifact in pack["artifacts"]] == ["transport.roads", "transport.stations", "transport.inspection_points"]
+    inspection = json.loads((tmp_path / aoi["aoi_id"] / "transport" / "domain-pack-v2" / "layers" / "transport.inspection_points.geojson").read_text())
+    assert inspection["features"][0]["properties"]["origin_artifact"] == "transport.roads"
+
+
 @pytest.mark.parametrize(
     "runtime_payload",
     [
@@ -118,3 +135,24 @@ def test_runtime_public_publication_keeps_semantic_categories_independent(tmp_pa
 def test_invalid_runtime_requests_do_not_resolve_a_cache_identity(runtime_payload: dict[str, object]) -> None:
     with pytest.raises(RuntimeRequestError):
         resolve_runtime_request(runtime_payload)
+
+
+def test_live_worker_refreshes_transport_profile_for_non_demo_aoi(tmp_path, monkeypatch) -> None:
+    request = {"aoi": {"type": "administrative_selection", "unit_ids": ["county_rybnicki"]}, "profiles": ["transport"]}
+    calls = []
+
+    def mock_refresh(*, aoi, domain, root):
+        calls.append((aoi["aoi_id"], domain))
+        return {"status": "ready", "detail": "Bounded OpenStreetMap transport artifact acquired.", "artifact_aoi_id": aoi["aoi_id"], "cache_status": "fresh"}
+
+    import geo_pipeline.worker as worker_module
+    monkeypatch.setattr(worker_module, "refresh_runtime_osm_domain", mock_refresh)
+
+    response = run_runtime_worker(request=request, input_mode="live", cache_root=CACHE_DIR, runtime_root=tmp_path)
+
+    assert response["request_result"] == "refresh"
+    assert response["job_state"] == "ready"
+    assert response["outcomes"][0]["domain"] == "transport"
+    assert response["outcomes"][0]["status"] == "ready"
+    assert len(calls) == 1
+    assert calls[0][1] == "transport"

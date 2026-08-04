@@ -4,8 +4,15 @@ from pathlib import Path
 
 import pytest
 
-from geo_pipeline.cache import build_rybnik_emergency_cache, build_rybnik_public_cache, cache_paths
-from geo_pipeline.domain_pack import build_rybnik_emergency_domain_pack, build_rybnik_power_domain_pack, build_rybnik_public_domain_pack, read_domain_pack, validate_domain_pack
+from geo_pipeline.cache import build_rybnik_emergency_cache, build_rybnik_public_cache, build_rybnik_transport_cache, cache_paths
+from geo_pipeline.domain_pack import (
+    build_rybnik_emergency_domain_pack,
+    build_rybnik_power_domain_pack,
+    build_rybnik_public_domain_pack,
+    build_rybnik_transport_domain_pack,
+    read_domain_pack,
+    validate_domain_pack,
+)
 from geo_pipeline.public_services import category_for_osm_feature
 
 
@@ -118,4 +125,19 @@ def test_public_pack_keeps_facility_semantics_separate_from_buildings_and_publis
     assert context["comparison"][0]["outcome"] == "ambiguous"
     assert {artifact["id"] for artifact in read_domain_pack("rybnik_60km", "public", root=tmp_path, public_export=True)["artifacts"]} == {
         "public.administration", "public.education", "public.post", "public.community_social", "public.inspection_points",
+    }
+
+
+def test_transport_pack_keeps_semantics_separate_and_publishes_comparison_evidence(tmp_path: Path) -> None:
+    build_rybnik_transport_cache(root=tmp_path)
+    pack = build_rybnik_transport_domain_pack(root=tmp_path)
+    pack_root = tmp_path / "rybnik_60km" / "transport" / "domain-pack-v2"
+    artifacts = {artifact["id"]: artifact for artifact in pack["artifacts"]}
+    roads = json.loads((pack_root / artifacts["transport.roads"]["path"]).read_text())
+    inspection = json.loads((pack_root / artifacts["transport.inspection_points"]["path"]).read_text())
+
+    assert roads["features"][0]["geometry"]["type"] == "LineString"
+    assert inspection["features"][0]["properties"]["origin_artifact"] == "transport.roads"
+    assert {artifact["id"] for artifact in read_domain_pack("rybnik_60km", "transport", root=tmp_path, public_export=True)["artifacts"]} == {
+        "transport.roads", "transport.railways", "transport.stations", "transport.aviation", "transport.inspection_points",
     }

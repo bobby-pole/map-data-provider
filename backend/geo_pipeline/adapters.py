@@ -6,9 +6,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
 
-from geo_pipeline.cache import build_rybnik_emergency_cache, build_rybnik_power_cache, build_rybnik_public_cache
-from geo_pipeline.domain_pack import build_rybnik_emergency_domain_pack, build_rybnik_power_domain_pack, build_rybnik_public_domain_pack
-from geo_pipeline.query_catalog import EMERGENCY_OSM_QUERY, PUBLIC_OSM_QUERY, OsmQueryDefinition, POWER_OSM_QUERY
+from geo_pipeline.cache import build_rybnik_emergency_cache, build_rybnik_power_cache, build_rybnik_public_cache, build_rybnik_transport_cache
+from geo_pipeline.domain_pack import build_rybnik_emergency_domain_pack, build_rybnik_power_domain_pack, build_rybnik_public_domain_pack, build_rybnik_transport_domain_pack
+from geo_pipeline.query_catalog import EMERGENCY_OSM_QUERY, PUBLIC_OSM_QUERY, OsmQueryDefinition, POWER_OSM_QUERY, TRANSPORT_OSM_QUERY
 
 
 class AdapterError(ValueError):
@@ -70,10 +70,25 @@ PUBLIC_ADAPTER = DomainAdapter(
     build_domain_pack=lambda root: build_rybnik_public_domain_pack(root=root),
 )
 
+
+def _transport_live() -> None:
+    raise AdapterError("Use the AOI runtime path for bounded transport OSM acquisition; the fixture adapter is offline-only.")
+
+
+TRANSPORT_ADAPTER = DomainAdapter(
+    aoi_alias="rybnik_60km",
+    domain="transport",
+    query=TRANSPORT_OSM_QUERY,
+    build_fixture=lambda root: build_rybnik_transport_cache(root=root),
+    run_live=_transport_live,
+    build_domain_pack=lambda root: build_rybnik_transport_domain_pack(root=root),
+)
+
 _ADAPTERS = {
     (POWER_ADAPTER.aoi_alias, POWER_ADAPTER.domain): POWER_ADAPTER,
     (EMERGENCY_ADAPTER.aoi_alias, EMERGENCY_ADAPTER.domain): EMERGENCY_ADAPTER,
     (PUBLIC_ADAPTER.aoi_alias, PUBLIC_ADAPTER.domain): PUBLIC_ADAPTER,
+    (TRANSPORT_ADAPTER.aoi_alias, TRANSPORT_ADAPTER.domain): TRANSPORT_ADAPTER,
 }
 
 

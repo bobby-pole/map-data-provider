@@ -1,0 +1,24 @@
+{
+  "prg": {
+    "status": "needs_source",
+    "detail": "No qualified PRG facility or network class is enabled for transport semantics."
+  },
+  "bdot10k": {
+    "status": "context_only",
+    "detail": "BDOT10k roads and railways are topographic context and cannot independently establish transport service semantics."
+  },
+  "comparison": [
+    {
+      "outcome": "ambiguous",
+      "left": {
+        "source_id": "openstreetmap",
+        "feature_id": "way/transport-road-1"
+      },
+      "right": {
+        "source_id": "bdot10k",
+        "feature_id": null
+      },
+      "evidence": "topographic_context_cannot_establish_transport_semantics"
+    }
+  ]
+}

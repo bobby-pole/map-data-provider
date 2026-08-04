@@ -45,3 +45,14 @@ PUBLIC_OSM_QUERY = OsmQueryDefinition(
         "office": ["government"],
     },
 )
+
+
+TRANSPORT_OSM_QUERY = OsmQueryDefinition(
+    source_registry_id="openstreetmap",
+    query_version="transport-osm/v1",
+    tags={
+        "highway": ["motorway", "trunk", "primary"],
+        "railway": ["rail", "station", "halt"],
+        "aeroway": ["aerodrome", "helipad"],
+    },
+)

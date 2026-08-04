@@ -70,3 +70,15 @@ BRIDGES_OSM_QUERY = OsmQueryDefinition(
         "highway": ["viaduct"],
     },
 )
+
+
+WATER_OSM_QUERY = OsmQueryDefinition(
+    source_registry_id="openstreetmap",
+    query_version="water-osm/v1",
+    tags={
+        "waterway": ["river", "stream", "canal", "drain", "ditch"],
+        "pipeline": ["water"],
+        "man_made": ["water_works", "water_tower", "pumping_station", "pipeline"],
+        "amenity": ["water_point"],
+    },
+)

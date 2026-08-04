@@ -1,0 +1,24 @@
+{
+  "prg": {
+    "status": "needs_source",
+    "detail": "No qualified PRG water registry is enabled for water utility semantics."
+  },
+  "bdot10k": {
+    "status": "context_only",
+    "detail": "BDOT10k hydrography layers are topographic context and cannot independently establish water utility semantics."
+  },
+  "comparison": [
+    {
+      "outcome": "ambiguous",
+      "left": {
+        "source_id": "openstreetmap",
+        "feature_id": "way/waterway-1"
+      },
+      "right": {
+        "source_id": "bdot10k",
+        "feature_id": null
+      },
+      "evidence": "topographic_context_cannot_establish_water_semantics"
+    }
+  ]
+}

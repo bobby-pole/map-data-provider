@@ -269,7 +269,7 @@ Output: public OSM power-line and power-asset GeoJSON, private source/representa
 Consumer: GIS consumer
 ```
 
-The current release implements the provider side of this slice: a cache-first Rybnik power request, source/readiness/issue contracts, durable review state, bounded `provider_pack/v1` compatibility, a multi-artifact power domain pack and manifest-driven v2 reads/exports. The MapLibre dev-preview derives its layer toggles, counts, voltage style, attribution and limitations from compact presentation metadata, resolves one selected feature into its validated source detail, and reads public MVT from local PMTiles ranges; KIUT remains a separate external reference-only overlay. The preview is a non-operational provider inspection tool. Consumer-side loading remains a separate repository task.
+The current release implements the provider side of these domain slices (`power`, `emergency`, `public`, `transport`, `bridges`, `water`): cache-first requests, source/readiness/issue contracts, durable review state, bounded `provider_pack/v1` compatibility, multi-artifact domain packs and manifest-driven v2 reads/exports. The MapLibre dev-preview derives its layer toggles, counts, domain-specific styling, attribution and limitations from compact presentation metadata, resolves one selected feature into its validated source detail, and reads public MVT from local PMTiles ranges; KIUT remains a separate external reference-only overlay. The preview is a non-operational provider inspection tool. Consumer-side loading remains a separate repository task.
 
 ## Repository Plan
 

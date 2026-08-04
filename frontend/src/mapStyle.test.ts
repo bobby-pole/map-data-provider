@@ -7,6 +7,8 @@ describe("MapLibre presentation style policy", () => {
     expect(isLinePresentationLayer("power_lines")).toBe(true);
     expect(isLinePresentationLayer("transport.roads")).toBe(true);
     expect(isLinePresentationLayer("transport.railways")).toBe(true);
+    expect(isLinePresentationLayer("transport_roads")).toBe(true);
+    expect(isLinePresentationLayer("transport_railways")).toBe(true);
     expect(isLinePresentationLayer("power_assets")).toBe(false);
     expect(isLinePresentationLayer("transport.stations")).toBe(false);
   });

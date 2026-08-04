@@ -49,7 +49,10 @@ PUBLIC_OSM_QUERY = OsmQueryDefinition(
 
 TRANSPORT_OSM_QUERY = OsmQueryDefinition(
     source_registry_id="openstreetmap",
-    query_version="transport-osm/v1",
+    # v2 expands the delivered road taxonomy.  This version participates in
+    # the runtime request identity, so an older major-road-only artifact can
+    # never be returned as a valid result for the expanded profile.
+    query_version="transport-osm/v2",
     tags={
         "highway": ["motorway", "trunk", "primary", "secondary", "tertiary", "unclassified", "residential", "living_street", "service"],
         "railway": ["rail", "station", "halt"],

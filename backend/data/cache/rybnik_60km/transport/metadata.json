@@ -11,7 +11,7 @@
   "source_query": "Bounded Overpass snapshot: explicit transport highway, railway and aeroway tags within the Rybnik 60 km AOI.",
   "snapshot_at": "2026-08-03T21:00:00Z",
   "pipeline_version": "geo_pipeline/transport/v1",
-  "query_version": "transport-osm/v1",
+  "query_version": "transport-osm/v2",
   "validation_status_raw": "warning",
   "quality_status": "warning",
   "confidence": "medium",

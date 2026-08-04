@@ -17,6 +17,23 @@ export type PopupDetails = {
   limitations: string[];
 };
 
+export const transportRoadClasses = ["major", "secondary", "local", "service"] as const;
+export type TransportRoadClass = typeof transportRoadClasses[number];
+
+/** Network and representative geometry must be intentionally enabled. */
+export function defaultLayerEnabled(layer: PreviewLayer): boolean {
+  return layer.domain !== "transport";
+}
+
+export function transportRoadClassLabel(roadClass: TransportRoadClass): string {
+  return {
+    major: "Major roads",
+    secondary: "Secondary roads",
+    local: "Local roads",
+    service: "Service roads",
+  }[roadClass];
+}
+
 export function configuredPreviewLayers(presentations: MapPresentation[]): PreviewLayer[] {
   return presentations.flatMap((presentation) => presentation.layers.map((artifact) => ({
     artifact,

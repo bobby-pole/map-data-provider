@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { MapView } from "./components/MapView";
 import { useProviderPreview } from "./hooks/useApi";
-import { configuredPreviewLayers, previewLayerKey } from "./previewCatalog";
+import { configuredPreviewLayers, defaultLayerEnabled, previewLayerKey, type TransportRoadClass } from "./previewCatalog";
 import { FeatureDetails } from "./components/FeatureDetails";
 import { IssueReviewDrawer } from "./components/IssueReviewDrawer";
 import { LayerCatalog } from "./components/LayerCatalog";
@@ -15,6 +15,9 @@ import "./index.css";
 
 export default function App() {
   const [enabledLayers, setEnabledLayers] = useState<Record<string, boolean>>({});
+  const [enabledTransportRoadClasses, setEnabledTransportRoadClasses] = useState<Record<TransportRoadClass, boolean>>({
+    major: true, secondary: true, local: true, service: false,
+  });
   const [selectedFeature, setSelectedFeature] = useState<SelectedProviderFeature | null>(null);
   const [selectedDetail, setSelectedDetail] = useState<MapFeatureDetail | null>(null);
   const [selectedCircuit, setSelectedCircuit] = useState<MapCircuit | null>(null);
@@ -29,7 +32,7 @@ export default function App() {
   const { aoiId, presentations, issues, sourceAvailability, updateReview, error } = useProviderPreview(preparedAoiId);
   const catalog = useMemo(() => configuredPreviewLayers(presentations), [presentations]);
   const visibleLayers = useMemo(
-    () => catalog.filter((layer) => enabledLayers[previewLayerKey(layer)] ?? true),
+    () => catalog.filter((layer) => enabledLayers[previewLayerKey(layer)] ?? defaultLayerEnabled(layer)),
     [catalog, enabledLayers],
   );
   const featureCount = useMemo(
@@ -46,13 +49,16 @@ export default function App() {
       setSelectedCircuit(null);
     }
   }, [selectedFeature]);
+  const toggleTransportRoadClass = useCallback((roadClass: TransportRoadClass, enabled: boolean) => {
+    setEnabledTransportRoadClasses((current) => ({ ...current, [roadClass]: enabled }));
+  }, []);
 
   return (
     <main className="inspectorLayout">
       <PreviewHeader aoiId={runtimeResult?.aoi.aoi_id ?? aoiId} featureCount={featureCount} onSettingsClick={() => setSettingsOpen((current) => !current)} />
       {error && <div className="error">Provider API error: {error}</div>}
       <section className="inspectorContent">
-        <div className="mapPanel"><MapView layers={visibleLayers} references={visibleReferences} orthophotoEnabled={orthophotoEnabled} basemapEnabled={basemapEnabled} aoiOutline={runtimeResult?.aoi.geometry ?? null} selected={selectedFeature} selectedDetail={selectedDetail} selectedCircuit={selectedCircuit} onSelectFeature={selectFeature} /></div>
+        <div className="mapPanel"><MapView layers={visibleLayers} transportRoadClasses={enabledTransportRoadClasses} references={visibleReferences} orthophotoEnabled={orthophotoEnabled} basemapEnabled={basemapEnabled} aoiOutline={runtimeResult?.aoi.geometry ?? null} selected={selectedFeature} selectedDetail={selectedDetail} selectedCircuit={selectedCircuit} onSelectFeature={selectFeature} /></div>
         <aside className="inspectorPanel">
           {settingsOpen && <AoiSettings onApplied={(result) => { setRuntimeResult(result); setSelectedFeature(null); setSelectedDetail(null); setSelectedCircuit(null); setSettingsOpen(false); }} />}
           {runtimeResult && <section className="inspectorSection"><div className="sectionHeading"><h2>Preparation status</h2><span>{runtimeResult.request_result} · {runtimeResult.request_id}</span></div><ul className="layerList">{runtimeResult.outcomes.map((outcome) => <li key={outcome.domain}><strong>{outcome.domain}: {outcome.status}</strong><small>{outcome.detail}</small><small>{outcome.source_registry_id} · {outcome.output_kind} · {outcome.query_version}{outcome.artifact_aoi_id ? ` · artifact ${outcome.artifact_aoi_id}` : ""}</small></li>)}</ul><h3 className="contextHeading">Source context</h3><ul className="layerList">{runtimeResult.contexts.map((context, index) => <li key={`${context.domain}-${context.source_registry_id}-${index}`}><strong>{context.domain}: {context.status}</strong><small>{context.source_registry_id} · {context.output_kind}</small><small>{context.detail}</small></li>)}</ul></section>}
@@ -65,6 +71,8 @@ export default function App() {
             layers={catalog}
             enabledLayers={enabledLayers}
             onToggle={toggleLayer}
+            enabledTransportRoadClasses={enabledTransportRoadClasses}
+            onTransportRoadClassToggle={toggleTransportRoadClass}
           />
           <section className="inspectorSection">
             <div className="sectionHeading"><h2>KIUT reference overlays</h2><span>{visibleReferences.length}</span></div>

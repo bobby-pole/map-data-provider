@@ -4,7 +4,7 @@ import type { Geometry } from "geojson";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Protocol } from "pmtiles";
 
-import { popupDetails, previewLayerKey, type PreviewLayer } from "../previewCatalog";
+import { popupDetails, previewLayerKey, type PreviewLayer, type TransportRoadClass } from "../previewCatalog";
 import type { MapCircuit, MapFeatureDetail, ProviderFeature } from "../types/api";
 import type { SelectedProviderFeature } from "../inspection";
 import { KIUT_MAX_ZOOM, KIUT_MIN_ZOOM, KIUT_WMS_URL, type KiutReferenceLayer } from "../kiutReference";
@@ -38,7 +38,7 @@ function wmsTileUrl(endpoint: string, wmsLayer: string, format: string): string 
   return `${endpoint}?${parameters.toString().replace("%7Bbbox-epsg-3857%7D", "{bbox-epsg-3857}")}`;
 }
 
-export function MapView({ layers, references, orthophotoEnabled, basemapEnabled, aoiOutline, selected, selectedDetail, selectedCircuit, onSelectFeature }: { layers: PreviewLayer[]; references: KiutReferenceLayer[]; orthophotoEnabled: boolean; basemapEnabled: boolean; aoiOutline: Geometry | null; selected: SelectedProviderFeature | null; selectedDetail: MapFeatureDetail | null; selectedCircuit: MapCircuit | null; onSelectFeature: (selected: SelectedProviderFeature) => void }) {
+export function MapView({ layers, transportRoadClasses, references, orthophotoEnabled, basemapEnabled, aoiOutline, selected, selectedDetail, selectedCircuit, onSelectFeature }: { layers: PreviewLayer[]; transportRoadClasses: Record<TransportRoadClass, boolean>; references: KiutReferenceLayer[]; orthophotoEnabled: boolean; basemapEnabled: boolean; aoiOutline: Geometry | null; selected: SelectedProviderFeature | null; selectedDetail: MapFeatureDetail | null; selectedCircuit: MapCircuit | null; onSelectFeature: (selected: SelectedProviderFeature) => void }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const layersRef = useRef(layers);
@@ -117,9 +117,10 @@ export function MapView({ layers, references, orthophotoEnabled, basemapEnabled,
         const color = presentationColor(index);
         const isLine = isLinePresentationLayer(layer.artifact.source_layer);
         if (isLine) {
-          if (layer.artifact.source_layer === "transport.roads") {
-            map.addLayer({ id, type: "line", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom: 11, paint: { "line-color": roadLineColor, "line-width": 4, "line-opacity": 0.9 } });
-          } else if (layer.artifact.source_layer === "transport.railways") {
+          if (layer.artifact.artifact_id === "transport.roads") {
+            const enabledRoadClasses = Object.entries(transportRoadClasses).filter(([, enabled]) => enabled).map(([roadClass]) => roadClass);
+            map.addLayer({ id, type: "line", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom: 11, filter: ["in", ["get", "road_class"], ["literal", enabledRoadClasses]], paint: { "line-color": roadLineColor, "line-width": 4, "line-opacity": 0.9 } });
+          } else if (layer.artifact.artifact_id === "transport.railways") {
             map.addLayer({ id, type: "line", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom: 11, paint: { "line-color": "#cbd5e1", "line-width": 3.5, "line-dasharray": [3, 2], "line-opacity": 0.9 } });
           } else {
             const base = { type: "line" as const, source: sourceId, "source-layer": layer.artifact.source_layer, paint: { "line-color": voltageLineColor, "line-width": 4.5, "line-opacity": 0.9 } };
@@ -146,7 +147,7 @@ export function MapView({ layers, references, orthophotoEnabled, basemapEnabled,
         fittedArchiveRef.current = archiveUrl;
       }
     });
-  }, [layers, mapReady]);
+  }, [layers, mapReady, transportRoadClasses]);
 
   useEffect(() => {
     const map = mapRef.current;

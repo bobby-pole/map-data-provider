@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { configuredPreviewLayers, popupDetails, previewLayerKey, sourceAttribution } from "./previewCatalog";
+import { configuredPreviewLayers, defaultLayerEnabled, popupDetails, previewLayerKey, sourceAttribution, transportRoadClassLabel } from "./previewCatalog";
 import type { MapPresentation } from "./types/api";
 
 const fixturePresentation: MapPresentation = {
@@ -36,5 +36,13 @@ describe("manifest-driven preview catalog", () => {
       readiness: "usable_with_limitations",
       limitations: ["Feature limitation."],
     });
+  });
+
+  it("keeps transport layers opt-in and gives every road class an explicit label", () => {
+    const transportLayers = configuredPreviewLayers([{ ...fixturePresentation, domain: "transport" }]);
+    expect(defaultLayerEnabled(transportLayers[0]!)).toBe(false);
+    expect(defaultLayerEnabled(configuredPreviewLayers([fixturePresentation])[0]!)).toBe(true);
+    expect(transportRoadClassLabel("secondary")).toBe("Secondary roads");
+    expect(transportRoadClassLabel("service")).toBe("Service roads");
   });
 });

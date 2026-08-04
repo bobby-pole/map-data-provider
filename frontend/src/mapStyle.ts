@@ -2,7 +2,9 @@ import type { ExpressionSpecification } from "maplibre-gl";
 
 /** Pure style policy so the MVT preview can be verified without a WebGL runtime. */
 export function isLinePresentationLayer(sourceLayer: string): boolean {
-  return sourceLayer.includes("line") || sourceLayer.endsWith(".roads") || sourceLayer.endsWith(".railways");
+  return sourceLayer.includes("line")
+    || sourceLayer.endsWith(".roads") || sourceLayer.endsWith(".railways")
+    || sourceLayer.endsWith("_roads") || sourceLayer.endsWith("_railways");
 }
 
 export function presentationColor(index: number): string {

@@ -7,6 +7,7 @@ from geo_pipeline.aoi_runtime import RuntimeRequestError, administrative_catalog
 from geo_pipeline.config import CACHE_DIR
 from geo_pipeline.domain_pack import read_domain_pack
 from geo_pipeline.runtime_osm import publish_runtime_osm_collection
+from geo_pipeline.query_catalog import TRANSPORT_OSM_QUERY
 from geo_pipeline.worker import run_runtime_worker
 
 
@@ -40,6 +41,8 @@ def test_runtime_profiles_are_explicit_and_do_not_fabricate_non_fixture_data() -
     assert outcomes[1]["artifact_aoi_id"] == "rybnik_60km"
     assert outcomes[2]["status"] == "ready"
     assert outcomes[2]["artifact_aoi_id"] == "rybnik_60km"
+    assert outcomes[2]["query_version"] == "transport-osm/v2"
+    assert outcomes[2]["tags"] == TRANSPORT_OSM_QUERY.tags
     assert outcomes[3]["tags"] == {"man_made": ["water_tower", "water_works"], "waterway": ["stream", "river", "canal"], "pipeline": ["water"]}
 
 
@@ -110,14 +113,19 @@ def test_runtime_public_publication_keeps_semantic_categories_independent(tmp_pa
 def test_runtime_transport_publication_keeps_semantic_categories_independent(tmp_path) -> None:
     aoi = resolve_runtime_request({"aoi": {"type": "administrative_selection", "unit_ids": ["county_rybnik_city"]}, "profiles": ["transport"]})["aoi"]
     source = {"type": "FeatureCollection", "features": [
-        {"type": "Feature", "properties": {"element": "way", "id": 1, "provider_category": "roads", "highway": "primary", "name": "fixture road"}, "geometry": {"type": "LineString", "coordinates": [[18.49, 50.09], [18.50, 50.10]]}},
+        {"type": "Feature", "properties": {"element": "way", "id": 1, "provider_category": "roads", "road_class": "major", "highway": "primary", "name": "fixture major road"}, "geometry": {"type": "LineString", "coordinates": [[18.49, 50.09], [18.50, 50.10]]}},
+        {"type": "Feature", "properties": {"element": "way", "id": 3, "provider_category": "roads", "road_class": "secondary", "highway": "tertiary", "name": "fixture secondary road"}, "geometry": {"type": "LineString", "coordinates": [[18.50, 50.10], [18.51, 50.11]]}},
+        {"type": "Feature", "properties": {"element": "way", "id": 4, "provider_category": "roads", "road_class": "local", "highway": "residential", "name": "fixture local road"}, "geometry": {"type": "LineString", "coordinates": [[18.51, 50.11], [18.52, 50.12]]}},
+        {"type": "Feature", "properties": {"element": "way", "id": 5, "provider_category": "roads", "road_class": "service", "highway": "service", "name": "fixture service road"}, "geometry": {"type": "LineString", "coordinates": [[18.52, 50.12], [18.53, 50.13]]}},
         {"type": "Feature", "properties": {"element": "node", "id": 2, "provider_category": "stations", "railway": "station", "name": "fixture station"}, "geometry": {"type": "Point", "coordinates": [18.5, 50.1]}},
     ]}
 
-    publish_runtime_osm_collection(aoi=aoi, domain="transport", source=source, query_version="transport-osm/v1", root=tmp_path)
+    publish_runtime_osm_collection(aoi=aoi, domain="transport", source=source, query_version="transport-osm/v2", root=tmp_path)
 
     pack = read_domain_pack(aoi["aoi_id"], "transport", root=tmp_path)
     assert [artifact["id"] for artifact in pack["artifacts"]] == ["transport.roads", "transport.stations", "transport.inspection_points"]
+    roads = json.loads((tmp_path / aoi["aoi_id"] / "transport" / "domain-pack-v2" / "layers" / "transport.roads.geojson").read_text())
+    assert {feature["properties"]["road_class"] for feature in roads["features"]} == {"major", "secondary", "local", "service"}
     inspection = json.loads((tmp_path / aoi["aoi_id"] / "transport" / "domain-pack-v2" / "layers" / "transport.inspection_points.geojson").read_text())
     assert inspection["features"][0]["properties"]["origin_artifact"] == "transport.roads"
 

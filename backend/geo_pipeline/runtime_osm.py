@@ -20,7 +20,7 @@ from geo_pipeline.extract import configure_osmnx, fetch_osm_features_geometry, s
 from geo_pipeline.layers.power import _add_power_categories, _compact_power_properties
 from geo_pipeline.query_catalog import EMERGENCY_OSM_QUERY, PUBLIC_OSM_QUERY, POWER_OSM_QUERY, TRANSPORT_OSM_QUERY
 
-RUNTIME_PIPELINE_VERSION = "geo_pipeline/runtime-osm/v1"
+RUNTIME_PIPELINE_VERSION = "geo_pipeline/runtime-osm/v2"
 _QUERY_BY_DOMAIN = {"power": POWER_OSM_QUERY, "emergency": EMERGENCY_OSM_QUERY, "public": PUBLIC_OSM_QUERY, "transport": TRANSPORT_OSM_QUERY}
 
 

@@ -40,6 +40,9 @@ label { display: grid; gap: 6px; color: #cbd5e1; font-size: 13px; }
 .layerToggle input { accent-color: #38bdf8; margin-top: 3px; }
 .layerToggle strong, .layerToggle small { display: block; }
 .layerToggle small { color: #9fb0c7; margin-top: 3px; line-height: 1.3; }
+.roadClassControls { display: grid; gap: 3px; margin: 0 8px 8px 34px; }
+.roadClassToggle { grid-template-columns: auto 1fr; align-items: center; color: #9fb0c7; font-size: 12px; }
+.roadClassToggle input { accent-color: #38bdf8; }
 dl { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: 6px 10px; margin: 0; font-size: 13px; }
 dt { color: #9fb0c7; overflow-wrap: anywhere; }
 dd { margin: 0; text-align: right; overflow-wrap: anywhere; }

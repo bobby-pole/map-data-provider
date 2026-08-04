@@ -58,3 +58,15 @@ TRANSPORT_OSM_QUERY = OsmQueryDefinition(
         "aeroway": ["aerodrome", "helipad"],
     },
 )
+
+
+BRIDGES_OSM_QUERY = OsmQueryDefinition(
+    source_registry_id="openstreetmap",
+    query_version="bridges-osm/v1",
+    tags={
+        "bridge": ["yes", "viaduct", "aqueduct", "boardwalk"],
+        "man_made": ["bridge"],
+        "railway": ["level_crossing", "crossing"],
+        "highway": ["viaduct"],
+    },
+)

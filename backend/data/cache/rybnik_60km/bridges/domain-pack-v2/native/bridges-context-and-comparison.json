@@ -1,0 +1,24 @@
+{
+  "prg": {
+    "status": "needs_source",
+    "detail": "No qualified PRG bridge or crossing registry is enabled for bridge semantics."
+  },
+  "bdot10k": {
+    "status": "context_only",
+    "detail": "BDOT10k bridge and culvert layers are topographic context and cannot independently establish bridge semantics."
+  },
+  "comparison": [
+    {
+      "outcome": "ambiguous",
+      "left": {
+        "source_id": "openstreetmap",
+        "feature_id": "way/bridge-1"
+      },
+      "right": {
+        "source_id": "bdot10k",
+        "feature_id": null
+      },
+      "evidence": "topographic_context_cannot_establish_bridge_semantics"
+    }
+  ]
+}

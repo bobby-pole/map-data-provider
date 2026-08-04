@@ -15,7 +15,15 @@ from shapely.geometry import mapping, shape
 
 from geo_pipeline.aoi import validate_cache_key
 from geo_pipeline.cache import cache_paths, read_cached_layer
+from geo_pipeline.config import CACHE_DIR as DOMAIN_PACKS_DIR
 from geo_pipeline.contracts import normalize_analytical_vector_layer, validate_provider_geojson
+from geo_pipeline.bridges import (
+    BRIDGES_FIXTURE,
+    BRIDGES_LIMITATIONS,
+    FACILITY_MAPPINGS as BRIDGES_FACILITY_MAPPINGS,
+    bridges_osm_metadata,
+    build_osm_bridges_layers,
+)
 from geo_pipeline.emergency import (
     EMERGENCY_FIXTURE,
     EMERGENCY_LIMITATIONS,
@@ -51,11 +59,12 @@ POWER_ASSETS_QUERY = "OSMnx power and utility-pole point features from the commi
 POWER_SUPPORTS_QUERY = "Captured bounded OpenStreetMap power-support snapshot for the committed Rybnik 60 km AOI."
 
 
-def domain_pack_root(aoi_id: str, domain: str, *, root: Path) -> Path:
-    return root / validate_cache_key(aoi_id) / domain / PACK_DIRNAME
+def domain_pack_root(aoi_id: str, domain: str, *, root: Path | None = None) -> Path:
+    effective_root = DOMAIN_PACKS_DIR if root is None else root
+    return effective_root / validate_cache_key(aoi_id) / domain / PACK_DIRNAME
 
 
-def read_domain_pack(aoi_id: str, domain: str, *, root: Path, public_export: bool = False) -> dict[str, Any]:
+def read_domain_pack(aoi_id: str, domain: str, *, root: Path | None = None, public_export: bool = False) -> dict[str, Any]:
     pack_root = domain_pack_root(aoi_id, domain, root=root)
     manifest_path = pack_root / "manifest.json"
     if not manifest_path.exists():
@@ -91,7 +100,7 @@ def validate_domain_pack(manifest: dict[str, Any], *, pack_root: Path, public_ex
         _safe_file(pack_root, record["path"])
 
 
-def write_domain_pack(aoi_id: str, domain: str, *, root: Path, manifest: dict[str, Any], files: dict[str, bytes]) -> dict[str, Any]:
+def write_domain_pack(aoi_id: str, domain: str, *, root: Path | None = None, manifest: dict[str, Any], files: dict[str, bytes]) -> dict[str, Any]:
     target = domain_pack_root(aoi_id, domain, root=root)
     staging = target.parent / f".{PACK_DIRNAME}-staging-{uuid.uuid4().hex}"
     try:
@@ -423,6 +432,76 @@ def build_rybnik_transport_domain_pack(*, root: Path) -> dict[str, Any]:
     return pack
 
 
+def build_rybnik_bridges_domain_pack(*, root: Path) -> dict[str, Any]:
+    """Build the bridges pack without deriving operational criticality or connectivity from topographic context."""
+    legacy = read_cached_layer(cache_paths("rybnik_60km", "bridges", root=root))
+    readiness = legacy["readiness"]["readiness"]
+    layers = build_osm_bridges_layers(readiness=readiness)
+    osm_provenance = [{"source_id": "openstreetmap", "contribution_role": "primary"}]
+    source_provenance = [
+        *osm_provenance,
+        {"source_id": "prg_wfs", "contribution_role": "supplementary"},
+        {"source_id": "bdot10k", "contribution_role": "supplementary"},
+    ]
+    files: dict[str, bytes] = {
+        "validation/metadata.json": json.dumps(legacy["metadata"], ensure_ascii=False, indent=2).encode(),
+        "readiness/readiness.json": json.dumps(legacy["readiness"], ensure_ascii=False, indent=2).encode(),
+    }
+    artifacts: list[dict[str, Any]] = []
+    for category, layer in layers.items():
+        path = f"layers/bridges.{category}.geojson"
+        payload = json.dumps(layer, ensure_ascii=False, indent=2).encode()
+        files[path] = payload
+        artifacts.append({
+            "id": f"bridges.{category}", "kind": "processed_vector", "format": "geojson", "path": path,
+            "sha256": _digest(payload), "feature_count": layer["metadata"]["feature_count"],
+            "source_provenance": osm_provenance, "public_export": True
+        })
+
+    points = _bridges_representative_points(layers)
+    points_payload = json.dumps(points, ensure_ascii=False, indent=2).encode()
+    files["layers/bridges.inspection_points.geojson"] = points_payload
+    artifacts.append({
+        "id": "bridges.inspection_points", "kind": "derived_vector", "format": "geojson", "path": "layers/bridges.inspection_points.geojson",
+        "sha256": _digest(points_payload), "feature_count": points["metadata"]["feature_count"],
+        "source_provenance": osm_provenance, "public_export": True
+    })
+
+    evidence = {
+        "source_registry_id": "openstreetmap",
+        "fixture": str(BRIDGES_FIXTURE.relative_to(Path(__file__).resolve().parents[1])),
+        "sha256": _digest(BRIDGES_FIXTURE.read_bytes()),
+        "category_mappings": {category: [f"{key}={value}" for key, value in mappings] for category, mappings in BRIDGES_FACILITY_MAPPINGS.items()},
+        "topographic_rule": "BDOT10k bridge or culvert objects without OSM bridge semantics are topographic context and not bridge analytical vectors.",
+        "limitations": BRIDGES_LIMITATIONS,
+    }
+    evidence_payload = json.dumps(evidence, ensure_ascii=False, indent=2).encode()
+    files["native/osm-bridges-source-evidence.json"] = evidence_payload
+    artifacts.append({
+        "id": "bridges.osm_source_evidence", "kind": "native_vector", "format": "json", "path": "native/osm-bridges-source-evidence.json",
+        "sha256": _digest(evidence_payload), "source_provenance": osm_provenance, "public_export": False
+    })
+
+    context = {
+        "prg": {"status": "needs_source", "detail": "No qualified PRG bridge or crossing registry is enabled for bridge semantics."},
+        "bdot10k": {"status": "context_only", "detail": "BDOT10k bridge and culvert layers are topographic context and cannot independently establish bridge semantics."},
+        "comparison": [{"outcome": "ambiguous", "left": {"source_id": "openstreetmap", "feature_id": "way/bridge-1"}, "right": {"source_id": "bdot10k", "feature_id": None}, "evidence": "topographic_context_cannot_establish_bridge_semantics"}],
+    }
+    context_payload = json.dumps(context, ensure_ascii=False, indent=2).encode()
+    files["native/bridges-context-and-comparison.json"] = context_payload
+    artifacts.append({
+        "id": "bridges.context_and_comparison", "kind": "native_vector", "format": "json", "path": "native/bridges-context-and-comparison.json",
+        "sha256": _digest(context_payload), "source_provenance": [{"source_id": "prg_wfs", "contribution_role": "supplementary"}, {"source_id": "bdot10k", "contribution_role": "supplementary"}], "public_export": False
+    })
+    manifest = {
+        "domain_pack_version": DOMAIN_PACK_VERSION, "aoi_id": "rybnik_60km", "domain": "bridges", "source_provenance": source_provenance,
+        "artifacts": artifacts, "validation": {"path": "validation/metadata.json"}, "readiness": {"path": "readiness/readiness.json"}
+    }
+    pack = write_domain_pack("rybnik_60km", "bridges", root=root, manifest=manifest, files=files)
+    build_map_presentation(pack_root=domain_pack_root("rybnik_60km", "bridges", root=root), manifest=pack)
+    return pack
+
+
 def _representative_points_layer(layer: dict[str, Any]) -> dict[str, Any]:
     metadata = {**deepcopy(layer["metadata"]), "layer_id": "power.representative_points"}
     features = []
@@ -495,6 +574,25 @@ def _transport_representative_points(layers: dict[str, dict[str, Any]]) -> dict[
     errors = validate_provider_geojson(points)
     if errors:
         raise ValueError(f"Transport representative points violate the provider contract: {', '.join(errors)}")
+    return points
+
+
+def _bridges_representative_points(layers: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    first = next(iter(layers.values()))
+    metadata = {**deepcopy(first["metadata"]), "layer_id": "bridges.inspection_points"}
+    features = []
+    for category, layer in layers.items():
+        for feature in layer["features"]:
+            geometry = shape(feature["geometry"])
+            if geometry.geom_type == "Point":
+                continue
+            properties = {**deepcopy(feature["properties"]), "origin_artifact": f"bridges.{category}", "origin_source_id": feature["properties"]["source_id"], "source_geometry_type": geometry.geom_type}
+            features.append({"type": "Feature", "properties": properties, "geometry": mapping(geometry.representative_point())})
+    metadata["feature_count"] = len(features)
+    points = {"type": "FeatureCollection", "metadata": metadata, "features": features}
+    errors = validate_provider_geojson(points)
+    if errors:
+        raise ValueError(f"Bridges representative points violate the provider contract: {', '.join(errors)}")
     return points
 
 

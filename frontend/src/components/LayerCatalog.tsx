@@ -46,5 +46,9 @@ function formatLayerTitle(artifactId: string): string {
   if (artifactId === "transport.stations") return "Transport stations";
   if (artifactId === "transport.aviation") return "Transport aviation";
   if (artifactId === "transport.inspection_points") return "Transport inspection points";
+  if (artifactId === "bridges.bridges") return "Bridges";
+  if (artifactId === "bridges.viaducts") return "Viaducts";
+  if (artifactId === "bridges.crossings") return "Crossings";
+  if (artifactId === "bridges.inspection_points") return "Bridge inspection points";
   return artifactId;
 }

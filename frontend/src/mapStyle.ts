@@ -4,7 +4,9 @@ import type { ExpressionSpecification } from "maplibre-gl";
 export function isLinePresentationLayer(sourceLayer: string): boolean {
   return sourceLayer.includes("line")
     || sourceLayer.endsWith(".roads") || sourceLayer.endsWith(".railways")
-    || sourceLayer.endsWith("_roads") || sourceLayer.endsWith("_railways");
+    || sourceLayer.endsWith("_roads") || sourceLayer.endsWith("_railways")
+    || sourceLayer.endsWith(".bridges") || sourceLayer.endsWith(".viaducts")
+    || sourceLayer.endsWith("_bridges") || sourceLayer.endsWith("_viaducts");
 }
 
 export function presentationColor(index: number): string {
@@ -28,6 +30,13 @@ export const roadLineColor: ExpressionSpecification = [
   "local", "#10b981",
   "service", "#6b7280",
   "#38bdf8",
+] as ExpressionSpecification;
+
+export const bridgeLineColor: ExpressionSpecification = [
+  "match", ["get", "asset_type"],
+  "bridges", "#0284c7",
+  "viaducts", "#a855f7",
+  "#0284c7",
 ] as ExpressionSpecification;
 
 export function supportStyle(assetType: string | undefined): { color: string; radius: number } {

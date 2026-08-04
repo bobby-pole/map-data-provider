@@ -122,16 +122,24 @@ export function MapView({ layers, transportRoadClasses, references, orthophotoEn
             map.addLayer({ id, type: "line", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom: 11, filter: ["in", ["get", "road_class"], ["literal", enabledRoadClasses]], paint: { "line-color": roadLineColor, "line-width": 4, "line-opacity": 0.9 } });
           } else if (layer.artifact.artifact_id === "transport.railways") {
             map.addLayer({ id, type: "line", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom: 11, paint: { "line-color": "#cbd5e1", "line-width": 3.5, "line-dasharray": [3, 2], "line-opacity": 0.9 } });
-          } else {
+          } else if (layer.artifact.artifact_id === "bridges.bridges") {
+            map.addLayer({ id, type: "line", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom: 10, paint: { "line-color": "#0284c7", "line-width": 5, "line-opacity": 0.95 } });
+            map.addLayer({ id: `${id}-labels`, type: "symbol", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom: 11, filter: ["has", "name"], layout: { "symbol-placement": "line", "text-field": ["get", "name"], "text-size": 11, "text-max-angle": 35 }, paint: { "text-color": "#e0f2fe", "text-halo-color": "#0369a1", "text-halo-width": 1.5 } });
+          } else if (layer.artifact.artifact_id === "bridges.viaducts") {
+            map.addLayer({ id, type: "line", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom: 10, paint: { "line-color": "#a855f7", "line-width": 5, "line-opacity": 0.95 } });
+            map.addLayer({ id: `${id}-labels`, type: "symbol", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom: 11, filter: ["has", "name"], layout: { "symbol-placement": "line", "text-field": ["get", "name"], "text-size": 11, "text-max-angle": 35 }, paint: { "text-color": "#f3e8ff", "text-halo-color": "#6b21a8", "text-halo-width": 1.5 } });
+          } else if (layer.domain === "power" || layer.artifact.source_layer.includes("power")) {
             const base = { type: "line" as const, source: sourceId, "source-layer": layer.artifact.source_layer, paint: { "line-color": voltageLineColor, "line-width": 4.5, "line-opacity": 0.9 } };
             map.addLayer({ ...base, id, filter: ["all", ["!=", ["get", "voltage_bucket"], "medium"], ["!=", ["get", "voltage_bucket"], "low"]] });
             map.addLayer({ ...base, id: `${id}-medium`, minzoom: 11, filter: ["==", ["get", "voltage_bucket"], "medium"] });
             map.addLayer({ ...base, id: `${id}-low`, minzoom: 13, filter: ["==", ["get", "voltage_bucket"], "low"] });
             map.addLayer({ id: `${id}-labels`, type: "symbol", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom: 12, filter: ["all", ["!=", ["get", "voltage_bucket"], "medium"], ["!=", ["get", "voltage_bucket"], "low"]], layout: { "symbol-placement": "line", "text-field": ["coalesce", ["get", "voltage_label"], ["get", "name"]], "text-size": 11, "text-max-angle": 35 }, paint: { "text-color": "#f8fafc", "text-halo-color": "#0f172a", "text-halo-width": 1.5 } });
+          } else {
+            map.addLayer({ id, type: "line", source: sourceId, "source-layer": layer.artifact.source_layer, paint: { "line-color": color, "line-width": 4, "line-opacity": 0.9 } });
           }
         } else {
           const minzoom = layer.domain === "emergency" ? 7 : 12;
-          const emergencyColor = ["match", ["get", "asset_type"], "hospital", "#e11d48", "fire_service", "#f97316", "police", "#2563eb", "ambulance_rescue", "#eab308", color] as ExpressionSpecification;
+          const emergencyColor = ["match", ["get", "asset_type"], "hospital", "#e11d48", "fire_service", "#f97316", "police", "#2563eb", "ambulance_rescue", "#eab308", "crossings", "#f59e0b", color] as ExpressionSpecification;
           const supportPaint: CircleLayerSpecification["paint"] = { "circle-color": ["match", ["get", "asset_type"], "tower", "#f97316", "portal", "#facc15", "utility_pole", "#38bdf8", "#cbd5e1"] as ExpressionSpecification, "circle-radius": ["match", ["get", "asset_type"], "tower", 5, "portal", 4.5, "utility_pole", 3.5, 3] as ExpressionSpecification, "circle-stroke-width": 1.25, "circle-stroke-color": "#07111f", "circle-opacity": 0.9 };
           const pointPaint: CircleLayerSpecification["paint"] = layer.artifact.artifact_id === "power.supports"
             ? supportPaint

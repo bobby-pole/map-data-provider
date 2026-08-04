@@ -16,7 +16,7 @@ export function LayerCatalog({
         const key = previewLayerKey(layer);
         return <li key={key}>
           <label className="layerToggle">
-            <input type="checkbox" checked={enabledLayers[key] ?? (layer.domain === "transport" ? false : true)} onChange={(event) => onToggle(key, event.target.checked)} />
+            <input type="checkbox" checked={enabledLayers[key] ?? true} onChange={(event) => onToggle(key, event.target.checked)} />
             <span>
               <strong>{formatLayerTitle(layer.artifact.artifact_id)}</strong>
               <small>{layer.domain} · {layer.artifact.feature_count} features · {layer.artifact.readiness}</small>

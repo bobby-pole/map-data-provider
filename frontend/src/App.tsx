@@ -23,13 +23,13 @@ export default function App() {
   const [basemapEnabled, setBasemapEnabled] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [runtimeResult, setRuntimeResult] = useState<ProviderRuntimeResponse | null>(null);
-  const preparedAoiId = runtimeResult?.outcomes.some((outcome) => outcome.status === "ready" && outcome.artifact_aoi_id === runtimeResult.aoi.aoi_id)
+  const preparedAoiId = runtimeResult?.outcomes.some((outcome) => outcome.status === "ready")
     ? runtimeResult.aoi.aoi_id
     : undefined;
   const { aoiId, presentations, issues, sourceAvailability, updateReview, error } = useProviderPreview(preparedAoiId);
   const catalog = useMemo(() => configuredPreviewLayers(presentations), [presentations]);
   const visibleLayers = useMemo(
-    () => catalog.filter((layer) => enabledLayers[previewLayerKey(layer)] ?? (layer.domain === "transport" ? false : true)),
+    () => catalog.filter((layer) => enabledLayers[previewLayerKey(layer)] ?? true),
     [catalog, enabledLayers],
   );
   const featureCount = useMemo(

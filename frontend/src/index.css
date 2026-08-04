@@ -40,6 +40,9 @@ label { display: grid; gap: 6px; color: #cbd5e1; font-size: 13px; }
 .layerToggle input { accent-color: #38bdf8; margin-top: 3px; }
 .layerToggle strong, .layerToggle small { display: block; }
 .layerToggle small { color: #9fb0c7; margin-top: 3px; line-height: 1.3; }
+.roadClassControls { display: grid; gap: 3px; margin: 0 8px 8px 34px; }
+.roadClassToggle { grid-template-columns: auto 1fr; align-items: center; color: #9fb0c7; font-size: 12px; }
+.roadClassToggle input { accent-color: #38bdf8; }
 dl { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: 6px 10px; margin: 0; font-size: 13px; }
 dt { color: #9fb0c7; overflow-wrap: anywhere; }
 dd { margin: 0; text-align: right; overflow-wrap: anywhere; }
@@ -90,8 +93,11 @@ dd { margin: 0; text-align: right; overflow-wrap: anywhere; }
 .aoiUnits fieldset { border: 1px solid #1e3555; border-radius: 8px; margin: 8px 0; padding: 4px; }
 .aoiUnits legend { color: #9fb0c7; font-size: 12px; text-transform: capitalize; }
 .categoryGrid { display: grid; grid-template-columns: 1fr 1fr; margin: 8px 0; }
-.categoryGrid .layerToggle { padding: 4px; }
+.mapPanel { position: relative; }
+.zoomGuidanceBanner { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); background: rgba(11, 23, 40, 0.92); border: 1px solid #0284c7; color: #7dd3fc; padding: 8px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; pointer-events: none; z-index: 10; box-shadow: 0 4px 14px rgba(0,0,0,0.4); }
+.zoomLevelIndicator { position: absolute; right: 12px; bottom: 28px; z-index: 10; margin: 0; border: 1px solid #1e3555; border-radius: 6px; background: rgba(7, 17, 31, 0.9); color: #e5edf7; padding: 5px 8px; font-size: 12px; font-weight: 700; pointer-events: none; }
 .contextHeading { margin: 14px 0 0; color: #9fb0c7; font-size: 12px; text-transform: uppercase; letter-spacing: .07em; }
+.selectedLineGeometry { margin-top: 14px; }
 
 @media (max-width: 900px) {
   .inspectorLayout { padding: 12px; }

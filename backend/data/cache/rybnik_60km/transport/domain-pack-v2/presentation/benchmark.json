@@ -1,1 +1,1 @@
-{"baseline":{"delivery":"full_geojson_to_leaflet","feature_count":6,"payload_bytes":15044},"benchmark_version":"provider_map_presentation_benchmark/v1","presentation":{"addressed_tiles":14,"archive_bytes":42283,"delivery":"pmtiles_mvt_range_reads","max_zoom":14,"min_zoom":7}}
+{"baseline":{"delivery":"full_geojson_to_leaflet","feature_count":12,"payload_bytes":22940},"benchmark_version":"provider_map_presentation_benchmark/v1","presentation":{"addressed_tiles":14,"archive_bytes":49842,"delivery":"pmtiles_mvt_range_reads","max_zoom":14,"min_zoom":7}}

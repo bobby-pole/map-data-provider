@@ -20,10 +20,22 @@ TRANSPORT_LIMITATIONS = [
 ]
 
 FACILITY_MAPPINGS: dict[str, tuple[tuple[str, str], ...]] = {
-    "roads": (("highway", "motorway"), ("highway", "trunk"), ("highway", "primary")),
+    "roads": (
+        ("highway", "motorway"), ("highway", "trunk"), ("highway", "primary"),
+        ("highway", "secondary"), ("highway", "tertiary"),
+        ("highway", "unclassified"), ("highway", "residential"), ("highway", "living_street"),
+        ("highway", "service"),
+    ),
     "railways": (("railway", "rail"),),
     "stations": (("railway", "station"), ("railway", "halt")),
     "aviation": (("aeroway", "aerodrome"), ("aeroway", "helipad")),
+}
+
+ROAD_CLASS_MAPPINGS: dict[str, tuple[tuple[str, str], ...]] = {
+    "major": (("highway", "motorway"), ("highway", "trunk"), ("highway", "primary")),
+    "secondary": (("highway", "secondary"), ("highway", "tertiary")),
+    "local": (("highway", "unclassified"), ("highway", "residential"), ("highway", "living_street")),
+    "service": (("highway", "service"),),
 }
 
 
@@ -35,6 +47,13 @@ def category_for_osm_feature(properties: dict[str, Any]) -> str | None:
     for category, mappings in FACILITY_MAPPINGS.items():
         if any(properties.get(key) == value for key, value in mappings):
             return category
+    return None
+
+
+def road_class_for_osm_feature(properties: dict[str, Any]) -> str | None:
+    for road_class, mappings in ROAD_CLASS_MAPPINGS.items():
+        if any(properties.get(key) == value for key, value in mappings):
+            return road_class
     return None
 
 
@@ -51,7 +70,12 @@ def categorized_osm_features() -> dict[str, list[dict[str, Any]]]:
         category = category_for_osm_feature(properties)
         if category is None:
             raise ValueError("Transport OSM fixture contains a feature without an allow-listed facility mapping")
-        categorized[category].append({**deepcopy(feature), "properties": {**deepcopy(properties), "provider_category": category}})
+        props = {**deepcopy(properties), "provider_category": category}
+        if category == "roads":
+            road_class = road_class_for_osm_feature(properties)
+            if road_class:
+                props["road_class"] = road_class
+        categorized[category].append({**deepcopy(feature), "properties": props})
     if any(not category_features for category_features in categorized.values()):
         missing = sorted(category for category, category_features in categorized.items() if not category_features)
         raise ValueError(f"Transport OSM fixture is missing required categories: {', '.join(missing)}")
@@ -72,7 +96,7 @@ def transport_osm_metadata(*, layer_id: str, readiness: str) -> dict[str, Any]:
         "source_query": "Bounded Overpass snapshot: explicit transport highway, railway and aeroway tags within the Rybnik 60 km AOI.",
         "snapshot_at": TRANSPORT_SNAPSHOT_AT,
         "pipeline_version": "geo_pipeline/transport/v1",
-        "query_version": "transport-osm/v1",
+        "query_version": "transport-osm/v3",
         "validation_status_raw": "warning",
         "quality_status": "warning",
         "confidence": "medium",

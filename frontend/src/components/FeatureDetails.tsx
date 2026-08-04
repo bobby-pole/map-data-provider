@@ -55,6 +55,17 @@ export function FeatureDetails({ aoiId, selected, selectedCircuit, onDetailChang
       {selected.layer.domain === "power" && <><h4>Verified circuits</h4>
         {activeCircuits?.state === "available" ? <ul className="circuitList">{activeCircuits.circuits.map((circuit) => <li key={circuit.relation_id}><button type="button" className={selectedCircuit?.relation_id === circuit.relation_id ? "circuitButton active" : "circuitButton"} onClick={() => chooseCircuit(circuit.relation_id)}><strong>{String(circuit.tags.name ?? circuit.relation_id)}</strong><small>{formatVoltage(circuit.tags.voltage)} · {circuit.member_count} committed members</small></button></li>)}</ul> : <p className="muted">No committed OSM circuit relation contains this delivered feature.</p>}
         {selectedCircuit && <section className="selectedCircuit"><h4>Selected circuit</h4><dl><dt>name</dt><dd>{String(selectedCircuit.tags.name ?? selectedCircuit.relation_id)}</dd><dt>voltage</dt><dd>{formatVoltage(selectedCircuit.tags.voltage)}</dd><dt>operator</dt><dd>{String(selectedCircuit.tags.operator ?? "unknown")}</dd></dl><details><summary>Verified member endpoints ({selectedCircuit.members.length})</summary><ul>{selectedCircuit.members.map((member) => <li key={member.source_id}><strong>{member.role || "member"}</strong> {member.source_id}<small>{member.endpoint_evidence ? `${member.endpoint_evidence.start} → ${member.endpoint_evidence.end}` : member.availability ?? "No committed endpoint evidence."}</small></li>)}</ul></details><p className="muted">Highlighted on map. Only committed member geometry is drawn; this is not a flow or cascade model.</p></section>}</>}
+      {selected.feature.geometry?.type === "LineString" && (
+        <section className="selectedLineGeometry">
+          <h4>Verified endpoints</h4>
+          <dl>
+            <dt>start</dt><dd>{(selected.feature.geometry.coordinates[0] as number[]).map((c) => c.toFixed(5)).join(", ")}</dd>
+            <dt>end</dt><dd>{((selected.feature.geometry.coordinates as number[][]).at(-1) ?? []).map((c) => c.toFixed(5)).join(", ")}</dd>
+            {typeof selected.feature.properties.road_class === "string" && <><dt>road class</dt><dd>{selected.feature.properties.road_class}</dd></>}
+          </dl>
+          <p className="muted">Highlighted on map. Geometry endpoints reflect original OSM LineString coordinates; no network routing or connectivity is inferred.</p>
+        </section>
+      )}
       {error && <p className="error inlineError">{error}</p>}
     </section>
   );

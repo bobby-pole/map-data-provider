@@ -1,0 +1,67 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [18.5412, 50.0934],
+          [18.5435, 50.0945]
+        ]
+      },
+      "properties": {
+        "source_id": "way/101001",
+        "element": "way",
+        "id": 101001,
+        "bridge": "yes",
+        "highway": "primary",
+        "name": "Most Zamkowy",
+        "ref": "DK78",
+        "layer": "1",
+        "maxweight": "40",
+        "structure": "beam",
+        "surface": "asphalt"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [18.5520, 50.0880],
+          [18.5560, 50.0895]
+        ]
+      },
+      "properties": {
+        "source_id": "way/101002",
+        "element": "way",
+        "id": 101002,
+        "bridge": "viaduct",
+        "highway": "trunk",
+        "name": "Wiadukt Śląski",
+        "ref": "DK81",
+        "layer": "1",
+        "maxheight": "4.5",
+        "structure": "viaduct",
+        "surface": "asphalt"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [18.5470, 50.0910]
+      },
+      "properties": {
+        "source_id": "node/202001",
+        "element": "node",
+        "id": 202001,
+        "railway": "level_crossing",
+        "name": "Przejazd kolejowy ul. Mikołowska",
+        "ref": "KM 14.2",
+        "crossing": "uncontrolled"
+      }
+    }
+  ]
+}

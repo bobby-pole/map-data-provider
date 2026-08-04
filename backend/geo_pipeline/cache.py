@@ -15,6 +15,7 @@ from geo_pipeline.contracts import (
     normalize_analytical_vector_layer,
     validate_provider_geojson,
 )
+from geo_pipeline.bridges import build_osm_bridges_cache_layer, bridges_osm_metadata
 from geo_pipeline.emergency import build_osm_emergency_cache_layer, emergency_osm_metadata
 from geo_pipeline.public_services import build_osm_public_services_cache_layer, public_services_osm_metadata
 from geo_pipeline.transport import build_osm_transport_cache_layer, transport_osm_metadata
@@ -43,8 +44,9 @@ class CachePaths:
     readiness: Path
 
 
-def cache_paths(aoi_id: str, domain: str, *, root: Path = CACHE_DIR) -> CachePaths:
-    cache_root = root / validate_cache_key(aoi_id) / domain
+def cache_paths(aoi_id: str, domain: str, *, root: Path | None = None) -> CachePaths:
+    effective_root = CACHE_DIR if root is None else root
+    cache_root = effective_root / validate_cache_key(aoi_id) / domain
     return CachePaths(
         root=cache_root,
         layer=cache_root / "layer.geojson",
@@ -171,6 +173,20 @@ def build_rybnik_transport_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
         "highest_issue_severity": "medium", "feature_count": metadata["feature_count"], "evaluated_at": metadata["snapshot_at"],
     }
     paths = cache_paths("rybnik_60km", "transport", root=root)
+    _write_cache(paths, layer=layer, metadata=metadata, readiness=readiness)
+    return read_cached_layer(paths)
+
+
+def build_rybnik_bridges_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
+    """Build a v1-compatible bridges cache from committed OSM evidence."""
+    layer = build_osm_bridges_cache_layer(readiness="usable_with_limitations")
+    metadata = {**bridges_osm_metadata(layer_id="bridges.osm_structures", readiness="usable_with_limitations"), "feature_count": layer["metadata"]["feature_count"]}
+    readiness = {
+        "cache_layout_version": CACHE_LAYOUT_VERSION, "aoi_id": "rybnik_60km", "domain": "bridges",
+        "layer_id": "bridges.osm_structures", "readiness": "usable_with_limitations", "quality_status": "warning",
+        "highest_issue_severity": "medium", "feature_count": metadata["feature_count"], "evaluated_at": metadata["snapshot_at"],
+    }
+    paths = cache_paths("rybnik_60km", "bridges", root=root)
     _write_cache(paths, layer=layer, metadata=metadata, readiness=readiness)
     return read_cached_layer(paths)
 

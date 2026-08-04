@@ -32,6 +32,13 @@ export const roadLineColor: ExpressionSpecification = [
   "#38bdf8",
 ] as ExpressionSpecification;
 
+export const bridgeLineColor: ExpressionSpecification = [
+  "match", ["get", "asset_type"],
+  "bridges", "#0284c7",
+  "viaducts", "#a855f7",
+  "#0284c7",
+] as ExpressionSpecification;
+
 export function supportStyle(assetType: string | undefined): { color: string; radius: number } {
   if (assetType === "tower") return { color: "#f97316", radius: 5 };
   if (assetType === "portal") return { color: "#facc15", radius: 4.5 };

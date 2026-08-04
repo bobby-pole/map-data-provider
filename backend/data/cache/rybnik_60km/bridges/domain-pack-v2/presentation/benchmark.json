@@ -1,0 +1,1 @@
+{"baseline":{"delivery":"full_geojson_to_leaflet","feature_count":5,"payload_bytes":12121},"benchmark_version":"provider_map_presentation_benchmark/v1","presentation":{"addressed_tiles":11,"archive_bytes":28839,"delivery":"pmtiles_mvt_range_reads","max_zoom":14,"min_zoom":7}}

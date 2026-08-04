@@ -4,7 +4,9 @@ import type { ExpressionSpecification } from "maplibre-gl";
 export function isLinePresentationLayer(sourceLayer: string): boolean {
   return sourceLayer.includes("line")
     || sourceLayer.endsWith(".roads") || sourceLayer.endsWith(".railways")
-    || sourceLayer.endsWith("_roads") || sourceLayer.endsWith("_railways");
+    || sourceLayer.endsWith("_roads") || sourceLayer.endsWith("_railways")
+    || sourceLayer.endsWith(".bridges") || sourceLayer.endsWith(".viaducts")
+    || sourceLayer.endsWith("_bridges") || sourceLayer.endsWith("_viaducts");
 }
 
 export function presentationColor(index: number): string {

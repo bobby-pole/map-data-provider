@@ -213,7 +213,8 @@
         "eligible_for_analysis": true,
         "osm_tags": {
           "name": "Straż Miejska w Rybniku",
-          "amenity": "police"
+          "amenity": "police",
+          "building": "yes"
         }
       },
       "geometry": {

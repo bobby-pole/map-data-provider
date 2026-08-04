@@ -22,7 +22,7 @@
       "kind": "processed_vector",
       "format": "geojson",
       "path": "layers/transport.roads.geojson",
-      "sha256": "a69bb7dde9012f23c4ac8fd7880e4f7cc7cab28d43719ab2235e27c8a8a1a484",
+      "sha256": "a3a682da14dc1db154263d0c58b793a77ac27a140d979a0d3ff6f539ec121c0a",
       "feature_count": 4,
       "source_provenance": [
         {
@@ -37,7 +37,7 @@
       "kind": "processed_vector",
       "format": "geojson",
       "path": "layers/transport.railways.geojson",
-      "sha256": "d0064f3904cbe0879905bf44f714ce8b7d302c06836d9d1b9fe5c0a1ab7430c7",
+      "sha256": "a000f8caebf4090c78528674895b2c1f28cff1cf34651d29a6d4eb35bb394701",
       "feature_count": 1,
       "source_provenance": [
         {
@@ -52,7 +52,7 @@
       "kind": "processed_vector",
       "format": "geojson",
       "path": "layers/transport.stations.geojson",
-      "sha256": "28603f42b942c225a25014beacde6451ae9f5bb1d08723e51c267ebf758b4871",
+      "sha256": "deaf949255f6efe1af483044abd89adb637729ecb60520024ee828578478e97d",
       "feature_count": 1,
       "source_provenance": [
         {
@@ -67,7 +67,7 @@
       "kind": "processed_vector",
       "format": "geojson",
       "path": "layers/transport.aviation.geojson",
-      "sha256": "21d0cd6b8a5f2801f6a59c9eb9e1a0847c8b4c2b84a02b9e26f089cafaa92631",
+      "sha256": "0d4d220e8c315b618d8d3ed294f0fa0919d24bb0b1b340c584348f7fd213dfa6",
       "feature_count": 1,
       "source_provenance": [
         {
@@ -82,7 +82,7 @@
       "kind": "derived_vector",
       "format": "geojson",
       "path": "layers/transport.inspection_points.geojson",
-      "sha256": "1ea150548c56aa479bdb0be05ce419c1657f7b87a0c22039a63869ce0df72775",
+      "sha256": "6ffb7d0f161e04c6c02e678d293d9166d10b968d8db30455f8c372a43f6db6a9",
       "feature_count": 5,
       "source_provenance": [
         {

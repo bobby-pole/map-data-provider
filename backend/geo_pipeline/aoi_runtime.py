@@ -19,7 +19,8 @@ AOI_REQUEST_CONTRACT_VERSION = "provider_aoi_request/v2"
 RUNTIME_CONTRACT_VERSION = "provider_runtime/v1"
 # Changing the pipeline version deliberately creates a new request-cache key.
 # v5 invalidates transport results created before the complete road taxonomy
-# was part of the provider contract.
+# was part of the provider contract. Transport's v3 query then independently
+# invalidates PMTiles payloads that lacked the normalized road_class field.
 PIPELINE_VERSION = "geo_pipeline/runtime/v5"
 CATALOG_PATH = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "aoi" / "prg_administrative_catalog.geojson"
 POLAND_BOUNDS = (14.05, 49.0, 24.25, 55.0)

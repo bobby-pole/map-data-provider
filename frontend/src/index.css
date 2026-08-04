@@ -95,6 +95,7 @@ dd { margin: 0; text-align: right; overflow-wrap: anywhere; }
 .categoryGrid { display: grid; grid-template-columns: 1fr 1fr; margin: 8px 0; }
 .mapPanel { position: relative; }
 .zoomGuidanceBanner { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); background: rgba(11, 23, 40, 0.92); border: 1px solid #0284c7; color: #7dd3fc; padding: 8px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; pointer-events: none; z-index: 10; box-shadow: 0 4px 14px rgba(0,0,0,0.4); }
+.zoomLevelIndicator { position: absolute; right: 12px; bottom: 28px; z-index: 10; margin: 0; border: 1px solid #1e3555; border-radius: 6px; background: rgba(7, 17, 31, 0.9); color: #e5edf7; padding: 5px 8px; font-size: 12px; font-weight: 700; pointer-events: none; }
 .contextHeading { margin: 14px 0 0; color: #9fb0c7; font-size: 12px; text-transform: uppercase; letter-spacing: .07em; }
 .selectedLineGeometry { margin-top: 14px; }
 

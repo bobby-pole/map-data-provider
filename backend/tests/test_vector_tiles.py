@@ -31,7 +31,7 @@ def _fixture_pack(tmp_path: Path) -> tuple[Path, dict]:
     layers_root = pack_root / "layers"
     layers_root.mkdir(parents=True)
     lines = _layer("power.lines", {
-        "type": "Feature", "properties": {"source": "OpenStreetMap", "source_id": "way/1", "domain": "power", "asset_type": "line", "confidence": "medium", "limitations": ["Fixture-only MVT evidence."], "osm_tags": {"voltage": "220000"}},
+        "type": "Feature", "properties": {"source": "OpenStreetMap", "source_id": "way/1", "domain": "power", "asset_type": "line", "road_class": "major", "confidence": "medium", "limitations": ["Fixture-only MVT evidence."], "osm_tags": {"voltage": "220000"}},
         "geometry": {"type": "LineString", "coordinates": [[18.45, 50.1], [18.55, 50.2]]},
     })
     assets = _layer("power.assets", {
@@ -81,6 +81,7 @@ def test_public_layers_build_deterministic_mvt_pmtiles_with_compact_properties(t
     assert "osm_tags" not in properties
     assert properties["voltage_bucket"] == "high_220"
     assert properties["voltage_label"] == "220 kV"
+    assert properties["road_class"] == "major"
     assert read_map_presentation(pack_root=pack_root, manifest=manifest)["archive"]["size_bytes"] == len(first_bytes)
 
 

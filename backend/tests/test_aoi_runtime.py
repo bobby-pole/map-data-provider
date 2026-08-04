@@ -41,7 +41,7 @@ def test_runtime_profiles_are_explicit_and_do_not_fabricate_non_fixture_data() -
     assert outcomes[1]["artifact_aoi_id"] == "rybnik_60km"
     assert outcomes[2]["status"] == "ready"
     assert outcomes[2]["artifact_aoi_id"] == "rybnik_60km"
-    assert outcomes[2]["query_version"] == "transport-osm/v2"
+    assert outcomes[2]["query_version"] == "transport-osm/v3"
     assert outcomes[2]["tags"] == TRANSPORT_OSM_QUERY.tags
     assert outcomes[3]["tags"] == {"man_made": ["water_tower", "water_works"], "waterway": ["stream", "river", "canal"], "pipeline": ["water"]}
 
@@ -120,7 +120,7 @@ def test_runtime_transport_publication_keeps_semantic_categories_independent(tmp
         {"type": "Feature", "properties": {"element": "node", "id": 2, "provider_category": "stations", "railway": "station", "name": "fixture station"}, "geometry": {"type": "Point", "coordinates": [18.5, 50.1]}},
     ]}
 
-    publish_runtime_osm_collection(aoi=aoi, domain="transport", source=source, query_version="transport-osm/v2", root=tmp_path)
+    publish_runtime_osm_collection(aoi=aoi, domain="transport", source=source, query_version="transport-osm/v3", root=tmp_path)
 
     pack = read_domain_pack(aoi["aoi_id"], "transport", root=tmp_path)
     assert [artifact["id"] for artifact in pack["artifacts"]] == ["transport.roads", "transport.stations", "transport.inspection_points"]

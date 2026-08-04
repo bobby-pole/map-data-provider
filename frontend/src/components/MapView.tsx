@@ -60,7 +60,7 @@ export function MapView({ layers, transportRoadClasses, references, orthophotoEn
       style: { version: 8, sources: {}, layers: [{ id: "background", type: "background", paint: { "background-color": "#0b1728" } }] },
     });
     mapRef.current = map;
-    map.once("load", () => setMapReady(true));
+    map.once("load", () => { setCurrentZoom(map.getZoom()); setMapReady(true); });
     map.on("zoom", () => setCurrentZoom(map.getZoom()));
     map.on("click", (event) => {
       const visibleIds = layersRef.current.flatMap(providerInteractiveLayerIds).filter((id) => map.getLayer(id));
@@ -226,6 +226,9 @@ export function MapView({ layers, transportRoadClasses, references, orthophotoEn
           Zoom in (level 11+) to inspect transport road and railway network features.
         </div>
       )}
+      <output className="zoomLevelIndicator" aria-label="Current map zoom level">
+        Zoom {currentZoom.toFixed(1)}
+      </output>
       <div className="map" ref={containerRef} />
     </div>
   );

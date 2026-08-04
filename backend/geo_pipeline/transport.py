@@ -96,7 +96,7 @@ def transport_osm_metadata(*, layer_id: str, readiness: str) -> dict[str, Any]:
         "source_query": "Bounded Overpass snapshot: explicit transport highway, railway and aeroway tags within the Rybnik 60 km AOI.",
         "snapshot_at": TRANSPORT_SNAPSHOT_AT,
         "pipeline_version": "geo_pipeline/transport/v1",
-        "query_version": "transport-osm/v2",
+        "query_version": "transport-osm/v3",
         "validation_status_raw": "warning",
         "quality_status": "warning",
         "confidence": "medium",

@@ -1,0 +1,71 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "cache_layout_version": "provider_cache/v1",
+    "geojson_contract_version": "provider_geojson/v1",
+    "aoi_id": "rybnik_60km",
+    "domain": "water",
+    "layer_id": "water.pipelines",
+    "source": "OpenStreetMap",
+    "source_type": "analytical_vector",
+    "source_registry_id": "openstreetmap",
+    "source_url": "https://overpass-api.de/api/interpreter",
+    "source_query": "Bounded Overpass snapshot: explicit water facility, pipeline and waterway tags within the Rybnik 60 km AOI.",
+    "snapshot_at": "2026-08-04T23:00:00Z",
+    "pipeline_version": "geo_pipeline/water/v1",
+    "query_version": "water-osm/v1",
+    "validation_status_raw": "warning",
+    "quality_status": "warning",
+    "confidence": "medium",
+    "limitations": [
+      "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+      "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+      "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+      "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+    ],
+    "eligible_for_analysis": true,
+    "readiness": "usable_with_limitations",
+    "contract_version": "provider_geojson/v1",
+    "feature_count": 1
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/301002",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Magistrala Wodociągowa Rybnik",
+          "operator": "PWiK Rybnik",
+          "pipeline": "water",
+          "substance": "water",
+          "diameter": "500"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.53,
+            50.095
+          ],
+          [
+            18.545,
+            50.1
+          ]
+        ]
+      }
+    }
+  ]
+}

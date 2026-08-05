@@ -1,0 +1,27 @@
+{
+  "cache_layout_version": "provider_cache/v1",
+  "geojson_contract_version": "provider_geojson/v1",
+  "aoi_id": "rybnik_60km",
+  "domain": "water",
+  "layer_id": "water.osm_facilities",
+  "source": "OpenStreetMap",
+  "source_type": "analytical_vector",
+  "source_registry_id": "openstreetmap",
+  "source_url": "https://overpass-api.de/api/interpreter",
+  "source_query": "Bounded Overpass snapshot: explicit water facility, pipeline and waterway tags within the Rybnik 60 km AOI.",
+  "snapshot_at": "2026-08-04T23:00:00Z",
+  "pipeline_version": "geo_pipeline/water/v1",
+  "query_version": "water-osm/v1",
+  "validation_status_raw": "warning",
+  "quality_status": "warning",
+  "confidence": "medium",
+  "limitations": [
+    "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+    "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+    "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+    "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+  ],
+  "eligible_for_analysis": true,
+  "readiness": "usable_with_limitations",
+  "feature_count": 3
+}

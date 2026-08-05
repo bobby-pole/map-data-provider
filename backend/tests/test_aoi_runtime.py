@@ -7,7 +7,7 @@ from geo_pipeline.aoi_runtime import RuntimeRequestError, administrative_catalog
 from geo_pipeline.config import CACHE_DIR
 from geo_pipeline.domain_pack import read_domain_pack
 from geo_pipeline.runtime_osm import publish_runtime_osm_collection
-from geo_pipeline.query_catalog import TRANSPORT_OSM_QUERY
+from geo_pipeline.query_catalog import TRANSPORT_OSM_QUERY, WATER_OSM_QUERY
 from geo_pipeline.worker import run_runtime_worker
 
 
@@ -43,7 +43,9 @@ def test_runtime_profiles_are_explicit_and_do_not_fabricate_non_fixture_data() -
     assert outcomes[2]["artifact_aoi_id"] == "rybnik_60km"
     assert outcomes[2]["query_version"] == "transport-osm/v3"
     assert outcomes[2]["tags"] == TRANSPORT_OSM_QUERY.tags
-    assert outcomes[3]["tags"] == {"man_made": ["water_tower", "water_works"], "waterway": ["stream", "river", "canal"], "pipeline": ["water"]}
+    assert outcomes[3]["status"] == "ready"
+    assert outcomes[3]["artifact_aoi_id"] == "rybnik_60km"
+    assert outcomes[3]["tags"] == WATER_OSM_QUERY.tags
 
 
 def test_runtime_reuses_a_valid_local_request_cache(tmp_path) -> None:

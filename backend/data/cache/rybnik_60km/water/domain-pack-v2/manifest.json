@@ -1,0 +1,119 @@
+{
+  "domain_pack_version": "provider_domain_pack/v2",
+  "aoi_id": "rybnik_60km",
+  "domain": "water",
+  "source_provenance": [
+    {
+      "source_id": "openstreetmap",
+      "contribution_role": "primary"
+    },
+    {
+      "source_id": "prg_wfs",
+      "contribution_role": "supplementary"
+    },
+    {
+      "source_id": "bdot10k",
+      "contribution_role": "supplementary"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "water.facilities",
+      "kind": "processed_vector",
+      "format": "geojson",
+      "path": "layers/water.facilities.geojson",
+      "sha256": "369f5b93c391eb67dc9e0ab117c86afe8dbba5ca2f86f988c6924643cd5ca42b",
+      "feature_count": 1,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "water.pipelines",
+      "kind": "processed_vector",
+      "format": "geojson",
+      "path": "layers/water.pipelines.geojson",
+      "sha256": "d6911a2a2040ce01180da0699827562cb9f7d88e1f8be415bd666228cf4df98d",
+      "feature_count": 1,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "water.waterways",
+      "kind": "processed_vector",
+      "format": "geojson",
+      "path": "layers/water.waterways.geojson",
+      "sha256": "ca6827ef6febf5f1ccd956c8ffdda1c34ead31593bac4ddcaecd2cfcd771670f",
+      "feature_count": 1,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "water.inspection_points",
+      "kind": "derived_vector",
+      "format": "geojson",
+      "path": "layers/water.inspection_points.geojson",
+      "sha256": "46945089e62a1de447e47bd08a34ea9d7bf2a32b1f558c0b35879907bd38f479",
+      "feature_count": 2,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "water.osm_source_evidence",
+      "kind": "native_vector",
+      "format": "json",
+      "path": "native/osm-water-source-evidence.json",
+      "sha256": "4f303484004cbfdeb1e668d55ac8ff3134050db08432a23e15ff08f17585c3e8",
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": false
+    },
+    {
+      "id": "water.context_and_comparison",
+      "kind": "native_vector",
+      "format": "json",
+      "path": "native/water-context-and-comparison.json",
+      "sha256": "d87a6b2802542e16f859276742f05940cb5d4e1e4a0837acf1cf26f5e86e78e9",
+      "source_provenance": [
+        {
+          "source_id": "prg_wfs",
+          "contribution_role": "supplementary"
+        },
+        {
+          "source_id": "bdot10k",
+          "contribution_role": "supplementary"
+        }
+      ],
+      "public_export": false
+    }
+  ],
+  "validation": {
+    "path": "validation/metadata.json"
+  },
+  "readiness": {
+    "path": "readiness/readiness.json"
+  }
+}

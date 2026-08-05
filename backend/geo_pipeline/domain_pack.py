@@ -24,6 +24,13 @@ from geo_pipeline.bridges import (
     bridges_osm_metadata,
     build_osm_bridges_layers,
 )
+from geo_pipeline.water import (
+    WATER_FIXTURE,
+    WATER_LIMITATIONS,
+    FACILITY_MAPPINGS as WATER_FACILITY_MAPPINGS,
+    build_osm_water_layers,
+    water_osm_metadata,
+)
 from geo_pipeline.emergency import (
     EMERGENCY_FIXTURE,
     EMERGENCY_LIMITATIONS,
@@ -502,6 +509,76 @@ def build_rybnik_bridges_domain_pack(*, root: Path) -> dict[str, Any]:
     return pack
 
 
+def build_rybnik_water_domain_pack(*, root: Path) -> dict[str, Any]:
+    """Build the water pack without deriving hydraulic flood risk or flow models from raw terrain context."""
+    legacy = read_cached_layer(cache_paths("rybnik_60km", "water", root=root))
+    readiness = legacy["readiness"]["readiness"]
+    layers = build_osm_water_layers(readiness=readiness)
+    osm_provenance = [{"source_id": "openstreetmap", "contribution_role": "primary"}]
+    source_provenance = [
+        *osm_provenance,
+        {"source_id": "prg_wfs", "contribution_role": "supplementary"},
+        {"source_id": "bdot10k", "contribution_role": "supplementary"},
+    ]
+    files: dict[str, bytes] = {
+        "validation/metadata.json": json.dumps(legacy["metadata"], ensure_ascii=False, indent=2).encode(),
+        "readiness/readiness.json": json.dumps(legacy["readiness"], ensure_ascii=False, indent=2).encode(),
+    }
+    artifacts: list[dict[str, Any]] = []
+    for category, layer in layers.items():
+        path = f"layers/water.{category}.geojson"
+        payload = json.dumps(layer, ensure_ascii=False, indent=2).encode()
+        files[path] = payload
+        artifacts.append({
+            "id": f"water.{category}", "kind": "processed_vector", "format": "geojson", "path": path,
+            "sha256": _digest(payload), "feature_count": layer["metadata"]["feature_count"],
+            "source_provenance": osm_provenance, "public_export": True
+        })
+
+    points = _water_representative_points(layers)
+    points_payload = json.dumps(points, ensure_ascii=False, indent=2).encode()
+    files["layers/water.inspection_points.geojson"] = points_payload
+    artifacts.append({
+        "id": "water.inspection_points", "kind": "derived_vector", "format": "geojson", "path": "layers/water.inspection_points.geojson",
+        "sha256": _digest(points_payload), "feature_count": points["metadata"]["feature_count"],
+        "source_provenance": osm_provenance, "public_export": True
+    })
+
+    evidence = {
+        "source_registry_id": "openstreetmap",
+        "fixture": str(WATER_FIXTURE.relative_to(Path(__file__).resolve().parents[1])),
+        "sha256": _digest(WATER_FIXTURE.read_bytes()),
+        "category_mappings": {category: [f"{key}={value}" for key, value in mappings] for category, mappings in WATER_FACILITY_MAPPINGS.items()},
+        "topographic_rule": "BDOT10k hydrographic lines without OSM water semantics are topographic context and not water analytical vectors.",
+        "limitations": WATER_LIMITATIONS,
+    }
+    evidence_payload = json.dumps(evidence, ensure_ascii=False, indent=2).encode()
+    files["native/osm-water-source-evidence.json"] = evidence_payload
+    artifacts.append({
+        "id": "water.osm_source_evidence", "kind": "native_vector", "format": "json", "path": "native/osm-water-source-evidence.json",
+        "sha256": _digest(evidence_payload), "source_provenance": osm_provenance, "public_export": False
+    })
+
+    context = {
+        "prg": {"status": "needs_source", "detail": "No qualified PRG water registry is enabled for water utility semantics."},
+        "bdot10k": {"status": "context_only", "detail": "BDOT10k hydrography layers are topographic context and cannot independently establish water utility semantics."},
+        "comparison": [{"outcome": "ambiguous", "left": {"source_id": "openstreetmap", "feature_id": "way/waterway-1"}, "right": {"source_id": "bdot10k", "feature_id": None}, "evidence": "topographic_context_cannot_establish_water_semantics"}],
+    }
+    context_payload = json.dumps(context, ensure_ascii=False, indent=2).encode()
+    files["native/water-context-and-comparison.json"] = context_payload
+    artifacts.append({
+        "id": "water.context_and_comparison", "kind": "native_vector", "format": "json", "path": "native/water-context-and-comparison.json",
+        "sha256": _digest(context_payload), "source_provenance": [{"source_id": "prg_wfs", "contribution_role": "supplementary"}, {"source_id": "bdot10k", "contribution_role": "supplementary"}], "public_export": False
+    })
+    manifest = {
+        "domain_pack_version": DOMAIN_PACK_VERSION, "aoi_id": "rybnik_60km", "domain": "water", "source_provenance": source_provenance,
+        "artifacts": artifacts, "validation": {"path": "validation/metadata.json"}, "readiness": {"path": "readiness/readiness.json"}
+    }
+    pack = write_domain_pack("rybnik_60km", "water", root=root, manifest=manifest, files=files)
+    build_map_presentation(pack_root=domain_pack_root("rybnik_60km", "water", root=root), manifest=pack)
+    return pack
+
+
 def _representative_points_layer(layer: dict[str, Any]) -> dict[str, Any]:
     metadata = {**deepcopy(layer["metadata"]), "layer_id": "power.representative_points"}
     features = []
@@ -593,6 +670,25 @@ def _bridges_representative_points(layers: dict[str, dict[str, Any]]) -> dict[st
     errors = validate_provider_geojson(points)
     if errors:
         raise ValueError(f"Bridges representative points violate the provider contract: {', '.join(errors)}")
+    return points
+
+
+def _water_representative_points(layers: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    first = next(iter(layers.values()))
+    metadata = {**deepcopy(first["metadata"]), "layer_id": "water.inspection_points"}
+    features = []
+    for category, layer in layers.items():
+        for feature in layer["features"]:
+            geometry = shape(feature["geometry"])
+            if geometry.geom_type == "Point":
+                continue
+            properties = {**deepcopy(feature["properties"]), "origin_artifact": f"water.{category}", "origin_source_id": feature["properties"]["source_id"], "source_geometry_type": geometry.geom_type}
+            features.append({"type": "Feature", "properties": properties, "geometry": mapping(geometry.representative_point())})
+    metadata["feature_count"] = len(features)
+    points = {"type": "FeatureCollection", "metadata": metadata, "features": features}
+    errors = validate_provider_geojson(points)
+    if errors:
+        raise ValueError(f"Water representative points violate the provider contract: {', '.join(errors)}")
     return points
 
 

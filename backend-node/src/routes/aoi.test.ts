@@ -323,7 +323,7 @@ describe("read-only AOI provider routes", () => {
   });
 
   it("returns 404 for a missing cached domain", async () => {
-    const response = await request(createApp()).get("/api/aoi/rybnik_60km/layers/water");
+    const response = await request(createApp()).get("/api/aoi/rybnik_60km/layers/gas");
 
     expect(response.status).toBe(404);
     expect(providerErrorSchema.parse(response.body)).toMatchObject({ error: "not_found" });

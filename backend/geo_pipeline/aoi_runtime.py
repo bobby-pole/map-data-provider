@@ -13,14 +13,14 @@ from shapely.geometry import mapping, shape
 from shapely.ops import unary_union
 
 from geo_pipeline.aoi import AoiResolutionError, MAX_AREA_SQ_M, WGS84, _resolved, resolve_aoi
-from geo_pipeline.query_catalog import TRANSPORT_OSM_QUERY
+from geo_pipeline.query_catalog import TRANSPORT_OSM_QUERY, WATER_OSM_QUERY
 
 AOI_REQUEST_CONTRACT_VERSION = "provider_aoi_request/v2"
 RUNTIME_CONTRACT_VERSION = "provider_runtime/v1"
 # Changing the pipeline version deliberately creates a new request-cache key.
-# v6 invalidates runtime results created before the bridges domain pack
+# v7 invalidates runtime results created before the water domain pack
 # was completed and registered for live acquisition.
-PIPELINE_VERSION = "geo_pipeline/runtime/v6"
+PIPELINE_VERSION = "geo_pipeline/runtime/v7"
 CATALOG_PATH = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "aoi" / "prg_administrative_catalog.geojson"
 POLAND_BOUNDS = (14.05, 49.0, 24.25, 55.0)
 ProfileOutcome = Literal["ready", "needs_source", "reference_only", "pending_qualification"]
@@ -43,7 +43,7 @@ PROFILES: tuple[ProviderProfile, ...] = (
     ProviderProfile("public", "openstreetmap", "analytical", "analytical_vector", "public-osm/v1", {"amenity": ["townhall", "school", "college", "university", "kindergarten", "post_office", "community_centre", "social_facility", "library", "arts_centre"], "office": ["government"]}, True),
     ProviderProfile("transport", TRANSPORT_OSM_QUERY.source_registry_id, "analytical", "analytical_vector", TRANSPORT_OSM_QUERY.query_version, TRANSPORT_OSM_QUERY.tags, True),
     ProviderProfile("bridges", "openstreetmap", "analytical", "analytical_vector", "bridges-osm/v1", {"man_made": ["bridge"], "bridge": ["yes", "viaduct", "aqueduct", "boardwalk"], "railway": ["level_crossing", "crossing"], "highway": ["viaduct"]}, True),
-    ProviderProfile("water", "openstreetmap", "analytical", "analytical_vector", "water-osm/v1", {"man_made": ["water_tower", "water_works"], "waterway": ["stream", "river", "canal"], "pipeline": ["water"]}),
+    ProviderProfile("water", WATER_OSM_QUERY.source_registry_id, "analytical", "analytical_vector", WATER_OSM_QUERY.query_version, WATER_OSM_QUERY.tags, True),
     ProviderProfile("gas", "openstreetmap", "analytical", "analytical_vector", "gas-osm/v1", {"pipeline": ["gas"], "man_made": ["gasometer"]}),
     ProviderProfile("sewer", "openstreetmap", "analytical", "analytical_vector", "sewer-osm/v1", {"man_made": ["wastewater_plant", "pumping_station"], "pipeline": ["sewer"]}),
     ProviderProfile("industrial", "openstreetmap", "analytical", "analytical_vector", "industrial-osm/v1", {"landuse": ["industrial"], "man_made": ["works"], "industrial": ["factory", "works"]}),

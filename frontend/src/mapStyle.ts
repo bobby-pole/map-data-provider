@@ -6,7 +6,9 @@ export function isLinePresentationLayer(sourceLayer: string): boolean {
     || sourceLayer.endsWith(".roads") || sourceLayer.endsWith(".railways")
     || sourceLayer.endsWith("_roads") || sourceLayer.endsWith("_railways")
     || sourceLayer.endsWith(".bridges") || sourceLayer.endsWith(".viaducts")
-    || sourceLayer.endsWith("_bridges") || sourceLayer.endsWith("_viaducts");
+    || sourceLayer.endsWith("_bridges") || sourceLayer.endsWith("_viaducts")
+    || sourceLayer.endsWith(".waterways") || sourceLayer.endsWith(".pipelines")
+    || sourceLayer.endsWith("_waterways") || sourceLayer.endsWith("_pipelines");
 }
 
 export function presentationColor(index: number): string {

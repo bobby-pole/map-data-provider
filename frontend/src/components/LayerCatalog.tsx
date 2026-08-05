@@ -50,5 +50,9 @@ function formatLayerTitle(artifactId: string): string {
   if (artifactId === "bridges.viaducts") return "Viaducts";
   if (artifactId === "bridges.crossings") return "Crossings";
   if (artifactId === "bridges.inspection_points") return "Bridge inspection points";
+  if (artifactId === "water.facilities") return "Water facilities";
+  if (artifactId === "water.pipelines") return "Water pipelines";
+  if (artifactId === "water.waterways") return "Watercourses";
+  if (artifactId === "water.inspection_points") return "Water inspection points";
   return artifactId;
 }

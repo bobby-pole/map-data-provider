@@ -1,0 +1,31 @@
+{
+  "source_registry_id": "openstreetmap",
+  "fixture": "data/fixtures/rybnik_60km/water/osm-water.geojson",
+  "sha256": "af359dc9c5afab682c7435f10079ee235328f4c22d0491c8fb19005ae162fa9e",
+  "category_mappings": {
+    "facilities": [
+      "man_made=water_works",
+      "man_made=water_tower",
+      "man_made=pumping_station",
+      "amenity=water_point"
+    ],
+    "pipelines": [
+      "pipeline=water",
+      "man_made=pipeline"
+    ],
+    "waterways": [
+      "waterway=river",
+      "waterway=stream",
+      "waterway=canal",
+      "waterway=drain",
+      "waterway=ditch"
+    ]
+  },
+  "topographic_rule": "BDOT10k hydrographic lines without OSM water semantics are topographic context and not water analytical vectors.",
+  "limitations": [
+    "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+    "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+    "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+    "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+  ]
+}

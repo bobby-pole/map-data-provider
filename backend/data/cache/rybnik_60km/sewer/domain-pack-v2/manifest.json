@@ -1,0 +1,104 @@
+{
+  "domain_pack_version": "provider_domain_pack/v2",
+  "aoi_id": "rybnik_60km",
+  "domain": "sewer",
+  "source_provenance": [
+    {
+      "source_id": "openstreetmap",
+      "contribution_role": "primary"
+    },
+    {
+      "source_id": "prg_wfs",
+      "contribution_role": "supplementary"
+    },
+    {
+      "source_id": "bdot10k",
+      "contribution_role": "supplementary"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "sewer.facilities",
+      "kind": "processed_vector",
+      "format": "geojson",
+      "path": "layers/sewer.facilities.geojson",
+      "sha256": "5f6e949fcbb2d3085bb5ac2f1422c1ccd43f673436378287ada29507700767a4",
+      "feature_count": 1,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "sewer.pipelines",
+      "kind": "processed_vector",
+      "format": "geojson",
+      "path": "layers/sewer.pipelines.geojson",
+      "sha256": "2d8f7bf9c70eb6e367326f0cb71d709aa207624b1abe466053c3158cd432d57a",
+      "feature_count": 1,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "sewer.inspection_points",
+      "kind": "derived_vector",
+      "format": "geojson",
+      "path": "layers/sewer.inspection_points.geojson",
+      "sha256": "38bfba728ab6ae81942adb9d6bcd50f0ad26097ab06b9d3fcd5dfed86c62a3fc",
+      "feature_count": 1,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "sewer.osm_source_evidence",
+      "kind": "native_vector",
+      "format": "json",
+      "path": "native/osm-sewer-source-evidence.json",
+      "sha256": "8f45fd53e2025e58fdfd14505c6772b47663b573530e3e6fa666abdfe8aeffda",
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": false
+    },
+    {
+      "id": "sewer.context_and_comparison",
+      "kind": "native_vector",
+      "format": "json",
+      "path": "native/sewer-context-and-comparison.json",
+      "sha256": "d9298024d993d50482737f9dd7cd0dde00593dddea1caa63f2c31943e79997c6",
+      "source_provenance": [
+        {
+          "source_id": "prg_wfs",
+          "contribution_role": "supplementary"
+        },
+        {
+          "source_id": "bdot10k",
+          "contribution_role": "supplementary"
+        }
+      ],
+      "public_export": false
+    }
+  ],
+  "validation": {
+    "path": "validation/metadata.json"
+  },
+  "readiness": {
+    "path": "readiness/readiness.json"
+  }
+}

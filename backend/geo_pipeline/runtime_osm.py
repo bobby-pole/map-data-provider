@@ -16,15 +16,16 @@ from geo_pipeline.domain_pack import build_map_presentation, domain_pack_root, r
 from geo_pipeline.bridges import category_for_osm_feature as bridges_category_for_osm_feature
 from geo_pipeline.water import category_for_osm_feature as water_category_for_osm_feature
 from geo_pipeline.gas import category_for_osm_feature as gas_category_for_osm_feature
+from geo_pipeline.sewer import category_for_osm_feature as sewer_category_for_osm_feature
 from geo_pipeline.emergency import category_for_osm_feature
 from geo_pipeline.public_services import category_for_osm_feature as public_category_for_osm_feature
 from geo_pipeline.transport import category_for_osm_feature as transport_category_for_osm_feature, road_class_for_osm_feature
 from geo_pipeline.extract import configure_osmnx, fetch_osm_features_geometry, sanitize_for_geojson
 from geo_pipeline.layers.power import _add_power_categories, _compact_power_properties
-from geo_pipeline.query_catalog import BRIDGES_OSM_QUERY, EMERGENCY_OSM_QUERY, GAS_OSM_QUERY, PUBLIC_OSM_QUERY, POWER_OSM_QUERY, TRANSPORT_OSM_QUERY, WATER_OSM_QUERY
+from geo_pipeline.query_catalog import BRIDGES_OSM_QUERY, EMERGENCY_OSM_QUERY, GAS_OSM_QUERY, PUBLIC_OSM_QUERY, POWER_OSM_QUERY, SEWER_OSM_QUERY, TRANSPORT_OSM_QUERY, WATER_OSM_QUERY
 
 RUNTIME_PIPELINE_VERSION = "geo_pipeline/runtime-osm/v3"
-_QUERY_BY_DOMAIN = {"power": POWER_OSM_QUERY, "emergency": EMERGENCY_OSM_QUERY, "public": PUBLIC_OSM_QUERY, "transport": TRANSPORT_OSM_QUERY, "bridges": BRIDGES_OSM_QUERY, "water": WATER_OSM_QUERY, "gas": GAS_OSM_QUERY}
+_QUERY_BY_DOMAIN = {"power": POWER_OSM_QUERY, "emergency": EMERGENCY_OSM_QUERY, "public": PUBLIC_OSM_QUERY, "transport": TRANSPORT_OSM_QUERY, "bridges": BRIDGES_OSM_QUERY, "water": WATER_OSM_QUERY, "gas": GAS_OSM_QUERY, "sewer": SEWER_OSM_QUERY}
 
 
 def refresh_runtime_osm_domain(*, aoi: dict[str, Any], domain: str, root: Path) -> dict[str, Any]:
@@ -47,8 +48,10 @@ def refresh_runtime_osm_domain(*, aoi: dict[str, Any], domain: str, root: Path) 
         raw = _add_bridges_categories(raw)
     elif domain == "water":
         raw = _add_water_categories(raw)
-    else:
+    elif domain == "gas":
         raw = _add_gas_categories(raw)
+    else:
+        raw = _add_sewer_categories(raw)
     source = _clip_to_aoi(_geojson_collection(raw), aoi["geometry"])
     return publish_runtime_osm_collection(
         aoi=aoi,
@@ -142,6 +145,14 @@ def _add_gas_categories(frame: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
         return frame
     enriched = frame.copy()
     enriched["provider_category"] = enriched.apply(lambda row: gas_category_for_osm_feature(dict(row)) or "other", axis=1)
+    return enriched[enriched["provider_category"] != "other"].copy()
+
+
+def _add_sewer_categories(frame: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
+    if frame.empty:
+        return frame
+    enriched = frame.copy()
+    enriched["provider_category"] = enriched.apply(lambda row: sewer_category_for_osm_feature(dict(row)) or "other", axis=1)
     return enriched[enriched["provider_category"] != "other"].copy()
 
 

@@ -1,0 +1,74 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "cache_layout_version": "provider_cache/v1",
+    "geojson_contract_version": "provider_geojson/v1",
+    "aoi_id": "rybnik_60km",
+    "domain": "sewer",
+    "layer_id": "sewer.pipelines",
+    "source": "OpenStreetMap",
+    "source_type": "analytical_vector",
+    "source_registry_id": "openstreetmap",
+    "source_url": "https://overpass-api.de/api/interpreter",
+    "source_query": "Fixture contract evidence for sewer-osm/v2: wastewater_plant, septic_tank, pipeline=sewer, and explicit sewer/wastewater tags.",
+    "snapshot_at": "2026-08-07T15:30:00Z",
+    "pipeline_version": "geo_pipeline/sewer/v2",
+    "query_version": "sewer-osm/v2",
+    "validation_status_raw": "warning",
+    "quality_status": "warning",
+    "confidence": "medium",
+    "limitations": [
+      "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+      "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 60 km OSM snapshot or an operational hydraulic flow model.",
+      "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+      "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+    ],
+    "eligible_for_analysis": true,
+    "readiness": "usable_with_limitations",
+    "contract_version": "provider_geojson/v1",
+    "feature_count": 1
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/701001",
+        "domain": "sewer",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 60 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Kolektor Ściekowy Rybnik-Południe",
+          "operator": "PWiK Rybnik",
+          "pipeline": "sewer",
+          "substance": "sewerage"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.53,
+            50.085
+          ],
+          [
+            18.542,
+            50.089
+          ],
+          [
+            18.551,
+            50.094
+          ]
+        ]
+      }
+    }
+  ]
+}

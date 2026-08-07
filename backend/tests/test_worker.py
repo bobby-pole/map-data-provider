@@ -82,6 +82,20 @@ def test_gas_fixture_worker_publishes_the_versioned_explicit_semantics_profile(t
     ]
 
 
+def test_sewer_fixture_worker_publishes_the_versioned_explicit_semantics_profile(tmp_path: Path) -> None:
+    result = run_worker(aoi="rybnik_60km", domain="sewer", input_mode="fixture", cache_root=tmp_path)
+    manifest = read_domain_pack("rybnik_60km", "sewer", root=tmp_path)
+
+    assert result == {
+        "status": "ok", "aoi_id": "rybnik_60km", "domain": "sewer", "input": "fixture", "refreshed": True,
+        "source_registry_id": "openstreetmap", "query_version": "sewer-osm/v2", "feature_count": 2,
+        "readiness": "usable_with_limitations",
+    }
+    assert [artifact["id"] for artifact in manifest["artifacts"][:3]] == [
+        "sewer.facilities", "sewer.pipelines", "sewer.inspection_points",
+    ]
+
+
 def test_worker_rejects_unsupported_target_without_creating_cache(tmp_path: Path) -> None:
     try:
         run_worker(aoi="unknown", domain="power", input_mode="fixture", cache_root=tmp_path)

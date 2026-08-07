@@ -1,0 +1,24 @@
+{
+  "prg": {
+    "status": "needs_source",
+    "detail": "No qualified PRG sewer registry is enabled for sewer utility semantics."
+  },
+  "bdot10k": {
+    "status": "context_only",
+    "detail": "BDOT10k layers do not independently establish sewer utility semantics."
+  },
+  "comparison": [
+    {
+      "outcome": "ambiguous",
+      "left": {
+        "source_id": "openstreetmap",
+        "feature_id": "way/sewer-1"
+      },
+      "right": {
+        "source_id": "bdot10k",
+        "feature_id": null
+      },
+      "evidence": "topographic_context_cannot_establish_sewer_semantics"
+    }
+  ]
+}

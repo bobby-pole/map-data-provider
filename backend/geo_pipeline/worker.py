@@ -64,16 +64,19 @@ def run_runtime_worker(*, request: dict[str, Any], input_mode: str, cache_root: 
     state_path = state_root / f"{resolved['cache_key']}.json"
     cached = _read_fresh_runtime_state(state_path)
     if cached is not None:
-        return {**cached, "request_result": "cache"}
+        try:
+            _validate_ready_runtime_artifacts(cached["outcomes"], cache_root)
+        except Exception:
+            # A fresh state record is not enough: missing or corrupt artifacts
+            # are a cache miss and must follow the normal refresh/failure path.
+            cached = None
+        if cached is not None:
+            return {**cached, "request_result": "cache"}
     try:
         outcomes = profile_outcomes(request, fixture_mode=input_mode == "fixture")
         if input_mode == "live":
             outcomes = _refresh_live_runtime_outcomes(resolved, outcomes, cache_root)
-        # A ready fixture outcome is only valid when its existing domain-pack
-        # still passes the same manifest validation as normal read routes.
-        for outcome in outcomes:
-            if outcome["status"] == "ready":
-                read_domain_pack("rybnik_60km", outcome["domain"], root=cache_root)
+        _validate_ready_runtime_artifacts(outcomes, cache_root)
         response = {"status": "ok", **resolved, "outcomes": outcomes, "contexts": context_outcomes(request), "job_state": "ready", "request_result": "refresh", "cached_at": _utc_timestamp()}
         _write_runtime_state(state_path, response)
         return response
@@ -85,12 +88,27 @@ def run_runtime_worker(*, request: dict[str, Any], input_mode: str, cache_root: 
         raise WorkerError(EXIT_WORKER_FAILURE, "worker_failed", str(error)) from error
 
 
+def _validate_ready_runtime_artifacts(outcomes: list[dict[str, Any]], cache_root: Path) -> None:
+    """Validate every ready runtime result against its own published pack."""
+    for outcome in outcomes:
+        if outcome["status"] != "ready":
+            continue
+        artifact_aoi_id = outcome.get("artifact_aoi_id")
+        if not isinstance(artifact_aoi_id, str):
+            raise WorkerError(
+                EXIT_WORKER_FAILURE,
+                "invalid_runtime_artifact",
+                f"Ready {outcome['domain']} outcome has no validated artifact AOI identity.",
+            )
+        read_domain_pack(artifact_aoi_id, outcome["domain"], root=cache_root)
+
+
 def _refresh_live_runtime_outcomes(resolved: dict[str, Any], outcomes: list[dict[str, Any]], cache_root: Path) -> list[dict[str, Any]]:
     refreshed = []
     for outcome in outcomes:
         # The committed Rybnik demo remains a deterministic fixture fallback.
         # Every other requested qualified OSM AOI uses a bounded refresh.
-        if outcome["domain"] in {"power", "emergency", "public", "transport", "bridges", "water"} and outcome["artifact_aoi_id"] is None:
+        if outcome["domain"] in {"power", "emergency", "public", "transport", "bridges", "water", "gas"} and outcome["artifact_aoi_id"] is None:
             refreshed.append({**outcome, **refresh_runtime_osm_domain(aoi=resolved["aoi"], domain=outcome["domain"], root=cache_root)})
         else:
             refreshed.append(outcome)
@@ -122,6 +140,10 @@ def _is_complete_runtime_state(payload: dict[str, Any]) -> bool:
         and "artifact_aoi_id" in outcome
         and (isinstance(outcome["artifact_aoi_id"], str) or outcome["artifact_aoi_id"] is None)
         and outcome.get("cache_status") in {"fresh", "missing"}
+        and all(
+            field in outcome and (isinstance(outcome[field], int) and outcome[field] >= 0 or outcome[field] is None)
+            for field in ("queried_feature_count", "accepted_feature_count", "derived_feature_count")
+        )
         for outcome in payload["outcomes"]
     )
 

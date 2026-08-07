@@ -82,3 +82,17 @@ WATER_OSM_QUERY = OsmQueryDefinition(
         "amenity": ["water_point"],
     },
 )
+
+
+GAS_OSM_QUERY = OsmQueryDefinition(
+    source_registry_id="openstreetmap",
+    # OSMnx expands entries in this catalog as an OR query.  Request the
+    # explicit gas substance instead of every man_made=pipeline feature in a
+    # 60 km AOI; category normalization composes the required tag pairs.
+    query_version="gas-osm/v2",
+    tags={
+        "pipeline": ["gas", "valve"],
+        "man_made": ["gasometer", "gas_station"],
+        "substance": ["gas"],
+    },
+)

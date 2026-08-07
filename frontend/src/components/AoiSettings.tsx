@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import type { AdministrativeCatalog, ProviderRuntimeResponse, RuntimeCategory } from "../types/api";
-import { buildRuntimeRequest } from "../aoiSettings";
+import { buildRuntimeRequest, providerResponseMessage, runtimeRequestError } from "../aoiSettings";
 
 const categories: RuntimeCategory[] = ["power", "emergency", "public", "transport", "bridges", "water", "gas", "sewer", "industrial"];
 
@@ -23,7 +23,7 @@ export function AoiSettings({ onApplied }: { onApplied: (result: ProviderRuntime
 
   useEffect(() => {
     void fetch("/api/aoi/catalog").then(async (response) => {
-      if (!response.ok) throw new Error(`Administrative catalogue: HTTP ${response.status}`);
+      if (!response.ok) throw new Error(await providerResponseMessage(response, `Administrative catalogue could not be read (HTTP ${response.status}).`));
       return response.json() as Promise<AdministrativeCatalog>;
     }).then(setCatalog).catch((reason: unknown) => setError(reason instanceof Error ? reason.message : String(reason)));
   }, []);
@@ -41,10 +41,13 @@ export function AoiSettings({ onApplied }: { onApplied: (result: ProviderRuntime
     try {
       const runtimeRequest = buildRuntimeRequest(mode, { longitude, latitude, radius, unitIds }, selectedCategories);
       const response = await fetch("/api/aoi/runtime-requests", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(runtimeRequest) });
-      if (!response.ok) throw new Error(`AOI request: HTTP ${response.status}`);
+      if (!response.ok) throw new Error(await runtimeRequestError(response));
       onApplied(await response.json() as ProviderRuntimeResponse);
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : String(reason));
+      const message = reason instanceof Error ? reason.message : String(reason);
+      setError(message.startsWith("No new AOI snapshot was published;")
+        ? message
+        : `AOI preparation could not be completed. No new snapshot was published; the existing map was left unchanged. ${message}`);
     } finally { setBusy(false); }
   }
 
@@ -52,9 +55,9 @@ export function AoiSettings({ onApplied }: { onApplied: (result: ProviderRuntime
     <div className="sectionHeading"><h2>AOI settings</h2><span>Poland only</span></div>
     <div className="modeButtons"><button type="button" className={mode === "point_radius" ? "active" : ""} onClick={() => setMode("point_radius")}>Point + radius</button><button type="button" className={mode === "administrative_selection" ? "active" : ""} onClick={() => setMode("administrative_selection")}>Administrative area</button></div>
     {mode === "point_radius" ? <div className="aoiFields"><label>Longitude<input value={longitude} onChange={(event) => setLongitude(event.target.value)} inputMode="decimal" /></label><label>Latitude<input value={latitude} onChange={(event) => setLatitude(event.target.value)} inputMode="decimal" /></label><label>Radius (m)<input value={radius} onChange={(event) => setRadius(event.target.value)} inputMode="numeric" /></label></div> : <div className="aoiUnits">{(["voivodeship", "county", "gmina"] as const).map((kind) => <fieldset key={kind}><legend>{kind}</legend>{unitsByKind[kind].map((unit) => <label className="layerToggle" key={unit.id}><input type="checkbox" checked={unitIds.includes(unit.id)} onChange={(event) => toggleUnit(unit.id, event.target.checked)} /><span><strong>{unit.name}</strong><small>PRG {unit.prg_id}</small></span></label>)}</fieldset>)}</div>}
-    <p className="muted">Power, emergency, public and transport use qualified on-demand OSM acquisition, then cache a bounded provider artifact. Other categories remain visible source gaps until their domain adapters are complete.</p>
+    <p className="muted">Apply AOI checks the local snapshot cache first. A fresh match is reused; only a miss or an expired snapshot starts bounded OSM acquisition. If acquisition fails, no partial artifact replaces the current map.</p>
     <div className="categoryGrid">{categories.map((category) => <label className="layerToggle" key={category}><input type="checkbox" checked={selectedCategories.includes(category)} onChange={(event) => toggleCategory(category, event.target.checked)} /><span><strong>{category}</strong></span></label>)}</div>
-    <button type="button" disabled={busy || selectedCategories.length === 0 || (mode === "administrative_selection" && unitIds.length === 0)} onClick={() => void apply()}>{busy ? "Preparing…" : "Apply AOI"}</button>
+    <button type="button" disabled={busy || selectedCategories.length === 0 || (mode === "administrative_selection" && unitIds.length === 0)} onClick={() => void apply()}>{busy ? "Checking cache / acquiring OSM…" : "Apply AOI"}</button>
     {error && <p className="inlineError error">{error}</p>}
   </section>;
 }

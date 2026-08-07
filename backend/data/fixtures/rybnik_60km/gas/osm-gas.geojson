@@ -1,0 +1,41 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [18.5250, 50.0900],
+          [18.5400, 50.0950],
+          [18.5550, 50.1000]
+        ]
+      },
+      "properties": {
+        "source_id": "way/501001",
+        "element": "way",
+        "id": 501001,
+        "man_made": "pipeline",
+        "substance": "gas",
+        "pressure": "high",
+        "name": "Gazociąg Wysokiego Ciśnienia Rybnik",
+        "operator": "Polska Spółka Gazownictwa"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [18.5350, 50.0920]
+      },
+      "properties": {
+        "source_id": "node/601001",
+        "element": "node",
+        "id": 601001,
+        "man_made": "gasometer",
+        "name": "Stacja Gazowa Rybnik-Centrum",
+        "operator": "PSG Sp. z o.o."
+      }
+    }
+  ]
+}

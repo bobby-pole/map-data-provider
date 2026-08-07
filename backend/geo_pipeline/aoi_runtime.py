@@ -13,14 +13,14 @@ from shapely.geometry import mapping, shape
 from shapely.ops import unary_union
 
 from geo_pipeline.aoi import AoiResolutionError, MAX_AREA_SQ_M, WGS84, _resolved, resolve_aoi
-from geo_pipeline.query_catalog import TRANSPORT_OSM_QUERY, WATER_OSM_QUERY
+from geo_pipeline.query_catalog import GAS_OSM_QUERY, TRANSPORT_OSM_QUERY, WATER_OSM_QUERY
 
 AOI_REQUEST_CONTRACT_VERSION = "provider_aoi_request/v2"
 RUNTIME_CONTRACT_VERSION = "provider_runtime/v1"
 # Changing the pipeline version deliberately creates a new request-cache key.
-# v7 invalidates runtime results created before the water domain pack
-# was completed and registered for live acquisition.
-PIPELINE_VERSION = "geo_pipeline/runtime/v7"
+# v9 adds explicit runtime acquisition counts so a cache hit cannot hide
+# whether the selected AOI actually produced more source features.
+PIPELINE_VERSION = "geo_pipeline/runtime/v9"
 CATALOG_PATH = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "aoi" / "prg_administrative_catalog.geojson"
 POLAND_BOUNDS = (14.05, 49.0, 24.25, 55.0)
 ProfileOutcome = Literal["ready", "needs_source", "reference_only", "pending_qualification"]
@@ -44,7 +44,7 @@ PROFILES: tuple[ProviderProfile, ...] = (
     ProviderProfile("transport", TRANSPORT_OSM_QUERY.source_registry_id, "analytical", "analytical_vector", TRANSPORT_OSM_QUERY.query_version, TRANSPORT_OSM_QUERY.tags, True),
     ProviderProfile("bridges", "openstreetmap", "analytical", "analytical_vector", "bridges-osm/v1", {"man_made": ["bridge"], "bridge": ["yes", "viaduct", "aqueduct", "boardwalk"], "railway": ["level_crossing", "crossing"], "highway": ["viaduct"]}, True),
     ProviderProfile("water", WATER_OSM_QUERY.source_registry_id, "analytical", "analytical_vector", WATER_OSM_QUERY.query_version, WATER_OSM_QUERY.tags, True),
-    ProviderProfile("gas", "openstreetmap", "analytical", "analytical_vector", "gas-osm/v1", {"pipeline": ["gas"], "man_made": ["gasometer"]}),
+    ProviderProfile("gas", GAS_OSM_QUERY.source_registry_id, "analytical", "analytical_vector", GAS_OSM_QUERY.query_version, GAS_OSM_QUERY.tags, True),
     ProviderProfile("sewer", "openstreetmap", "analytical", "analytical_vector", "sewer-osm/v1", {"man_made": ["wastewater_plant", "pumping_station"], "pipeline": ["sewer"]}),
     ProviderProfile("industrial", "openstreetmap", "analytical", "analytical_vector", "industrial-osm/v1", {"landuse": ["industrial"], "man_made": ["works"], "industrial": ["factory", "works"]}),
 )
@@ -102,7 +102,16 @@ def profile_outcomes(request: dict[str, Any], *, fixture_mode: bool = True) -> l
             status = "needs_source"
             detail = "No AOI-matching fixture artifact is committed; live acquisition and domain vertical-slice semantics remain explicit separate work."
             artifact_aoi_id = None
-        outcomes.append({**descriptor, "status": status, "detail": detail, "artifact_aoi_id": artifact_aoi_id, "cache_status": "fresh" if status == "ready" else "missing"})
+        outcomes.append({
+            **descriptor,
+            "status": status,
+            "detail": detail,
+            "artifact_aoi_id": artifact_aoi_id,
+            "cache_status": "fresh" if status == "ready" else "missing",
+            "queried_feature_count": None,
+            "accepted_feature_count": None,
+            "derived_feature_count": None,
+        })
     return outcomes
 
 

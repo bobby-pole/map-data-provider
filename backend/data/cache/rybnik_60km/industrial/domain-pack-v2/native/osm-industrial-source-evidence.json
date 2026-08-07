@@ -1,0 +1,30 @@
+{
+  "source_registry_id": "openstreetmap",
+  "fixture": "data/fixtures/rybnik_60km/industrial/osm-industrial.geojson",
+  "sha256": "d56f465596c58db0bdbcaee6f371652d4f42df3249de97e28ab0065802e0351b",
+  "category_mappings": {
+    "land_use": [
+      "landuse=industrial"
+    ],
+    "facilities": [
+      "industrial=factory",
+      "industrial=works"
+    ],
+    "works": [
+      "man_made=works"
+    ],
+    "building_context": [
+      "building=industrial"
+    ],
+    "military_context": [
+      "landuse=military",
+      "military=danger_area",
+      "military=base"
+    ]
+  },
+  "category_rules": {
+    "industrial.facilities": "landuse=industrial",
+    "industrial.works": "man_made=works, industrial=factory, or industrial=works"
+  },
+  "limitations": "OSM industrial facilities might lack complete boundary semantics. Fixture is bounded to Rybnik 60km."
+}

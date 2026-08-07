@@ -1,0 +1,494 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "cache_layout_version": "provider_cache/v1",
+    "geojson_contract_version": "provider_geojson/v1",
+    "aoi_id": "rybnik_60km",
+    "domain": "industrial",
+    "layer_id": "industrial.facilities",
+    "source": "OpenStreetMap",
+    "source_type": "analytical_vector",
+    "source_registry_id": "openstreetmap",
+    "source_url": "https://overpass-api.de/api/interpreter",
+    "source_query": "Fixture contract evidence for industrial-osm/v1",
+    "snapshot_at": "2026-08-07T18:12:17.661584Z",
+    "pipeline_version": "geo_pipeline/industrial/v1",
+    "query_version": "industrial-osm/v2",
+    "validation_status_raw": "warning",
+    "quality_status": "warning",
+    "confidence": "medium",
+    "limitations": [
+      "OSM industrial facilities might lack complete boundary semantics. Fixture is bounded to Rybnik 60km."
+    ],
+    "eligible_for_analysis": true,
+    "feature_count": 6,
+    "readiness": "usable_with_limitations",
+    "contract_version": "provider_geojson/v1"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "relation/17904654",
+        "domain": "industrial",
+        "asset_type": "unknown",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM industrial facilities might lack complete boundary semantics. Fixture is bounded to Rybnik 60km."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Katowicka Specjalna Strefa Ekonomiczna - Kompleks 6 Knurów",
+          "image": "http://invest.slaskie.pl/uploads/oferty_images/67b5f8cfe1982e1f7967535888294fac.jpg",
+          "source": "OpenStreetMap",
+          "contact:phone": "+48 32 231 89 10",
+          "contact:email": "gliwice@ksse.com.pl"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.6407837,
+              50.232655
+            ],
+            [
+              18.6414714,
+              50.2330856
+            ],
+            [
+              18.6417413,
+              50.2332547
+            ],
+            [
+              18.6421384,
+              50.2335033
+            ],
+            [
+              18.6432461,
+              50.2342133
+            ],
+            [
+              18.6440268,
+              50.2342141
+            ],
+            [
+              18.644659,
+              50.2338029
+            ],
+            [
+              18.6453222,
+              50.2333711
+            ],
+            [
+              18.6456323,
+              50.2331674
+            ],
+            [
+              18.6463739,
+              50.2326877
+            ],
+            [
+              18.64633,
+              50.2325204
+            ],
+            [
+              18.6459884,
+              50.2325838
+            ],
+            [
+              18.6447729,
+              50.2318523
+            ],
+            [
+              18.6441067,
+              50.2314332
+            ],
+            [
+              18.6431985,
+              50.2307332
+            ],
+            [
+              18.6426312,
+              50.2302803
+            ],
+            [
+              18.6424141,
+              50.230107
+            ],
+            [
+              18.6421052,
+              50.2298604
+            ],
+            [
+              18.6413066,
+              50.2292127
+            ],
+            [
+              18.6407171,
+              50.2287171
+            ],
+            [
+              18.6399756,
+              50.2281211
+            ],
+            [
+              18.6397474,
+              50.2281666
+            ],
+            [
+              18.6390867,
+              50.2297389
+            ],
+            [
+              18.6389773,
+              50.2302771
+            ],
+            [
+              18.6390581,
+              50.230864
+            ],
+            [
+              18.6392959,
+              50.2314174
+            ],
+            [
+              18.6397332,
+              50.2319252
+            ],
+            [
+              18.6398597,
+              50.2320243
+            ],
+            [
+              18.6403036,
+              50.2323722
+            ],
+            [
+              18.6407837,
+              50.232655
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/169393048",
+        "domain": "industrial",
+        "asset_type": "unknown",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM industrial facilities might lack complete boundary semantics. Fixture is bounded to Rybnik 60km."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "source": "OpenStreetMap",
+          "building": "industrial"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.4694937,
+              50.2757879
+            ],
+            [
+              18.4697811,
+              50.275926
+            ],
+            [
+              18.4707842,
+              50.2750685
+            ],
+            [
+              18.4708204,
+              50.2750376
+            ],
+            [
+              18.4705468,
+              50.2749029
+            ],
+            [
+              18.4694937,
+              50.2757879
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/169393059",
+        "domain": "industrial",
+        "asset_type": "unknown",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM industrial facilities might lack complete boundary semantics. Fixture is bounded to Rybnik 60km."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "source": "OpenStreetMap",
+          "building": "industrial"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.4686469,
+              50.2760835
+            ],
+            [
+              18.4683814,
+              50.2759587
+            ],
+            [
+              18.4682771,
+              50.2760412
+            ],
+            [
+              18.468007,
+              50.2759035
+            ],
+            [
+              18.4685376,
+              50.2754587
+            ],
+            [
+              18.4694687,
+              50.2746728
+            ],
+            [
+              18.470012,
+              50.2749381
+            ],
+            [
+              18.4686469,
+              50.2760835
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/903969851",
+        "domain": "industrial",
+        "asset_type": "unknown",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM industrial facilities might lack complete boundary semantics. Fixture is bounded to Rybnik 60km."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "source": "OpenStreetMap"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              19.1085101,
+              50.2898732
+            ],
+            [
+              19.1087072,
+              50.2900915
+            ],
+            [
+              19.1088749,
+              50.2902434
+            ],
+            [
+              19.1093762,
+              50.2900211
+            ],
+            [
+              19.1095487,
+              50.2899438
+            ],
+            [
+              19.109588,
+              50.2897646
+            ],
+            [
+              19.1092521,
+              50.2894729
+            ],
+            [
+              19.1085612,
+              50.2889043
+            ],
+            [
+              19.107967,
+              50.2890767
+            ],
+            [
+              19.1082474,
+              50.2894047
+            ],
+            [
+              19.1082486,
+              50.2894943
+            ],
+            [
+              19.1085101,
+              50.2898732
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/906791646",
+        "domain": "industrial",
+        "asset_type": "unknown",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM industrial facilities might lack complete boundary semantics. Fixture is bounded to Rybnik 60km."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "website": "https://fornit.pl",
+          "description": "Fabryka Mebli",
+          "start_date": "1981",
+          "source": "OpenStreetMap",
+          "building": "warehouse",
+          "phone": "+48 32 6161188",
+          "email": "biuro@fornit.pl"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              19.3502936,
+              50.2178409
+            ],
+            [
+              19.3503992,
+              50.2178153
+            ],
+            [
+              19.350494,
+              50.2177923
+            ],
+            [
+              19.3503677,
+              50.2175568
+            ],
+            [
+              19.3501658,
+              50.2175999
+            ],
+            [
+              19.3501843,
+              50.2176348
+            ],
+            [
+              19.3502936,
+              50.2178409
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1481704845",
+        "domain": "industrial",
+        "asset_type": "unknown",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM industrial facilities might lack complete boundary semantics. Fixture is bounded to Rybnik 60km."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "source": "OpenStreetMap"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.9240348,
+            50.2649782
+          ],
+          [
+            18.9259212,
+            50.2655083
+          ],
+          [
+            18.9273523,
+            50.2641517
+          ],
+          [
+            18.9278726,
+            50.2638503
+          ],
+          [
+            18.9280434,
+            50.2634604
+          ],
+          [
+            18.9282385,
+            50.2620986
+          ],
+          [
+            18.9273523,
+            50.2619219
+          ],
+          [
+            18.9261326,
+            50.2619842
+          ],
+          [
+            18.9261082,
+            50.2618335
+          ],
+          [
+            18.9253846,
+            50.2618647
+          ],
+          [
+            18.9244902,
+            50.262109
+          ],
+          [
+            18.9244576,
+            50.263528
+          ],
+          [
+            18.9240348,
+            50.2649782
+          ]
+        ]
+      }
+    }
+  ]
+}

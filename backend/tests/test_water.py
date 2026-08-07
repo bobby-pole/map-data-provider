@@ -4,18 +4,37 @@ from pathlib import Path
 from geo_pipeline.water import category_for_osm_feature
 from geo_pipeline.cache import build_rybnik_water_cache
 from geo_pipeline.domain_pack import build_rybnik_water_domain_pack, read_domain_pack
+from geo_pipeline.query_catalog import WATER_OSM_QUERY
 
 
 def test_category_for_osm_feature_normalizes_water_tags_and_rejects_unmapped() -> None:
     assert category_for_osm_feature({"man_made": "water_works", "name": "SUW Gzel"}) == "facilities"
     assert category_for_osm_feature({"man_made": "water_tower"}) == "facilities"
     assert category_for_osm_feature({"man_made": "pumping_station", "pumping": "water"}) == "facilities"
+    assert category_for_osm_feature({"man_made": "pumping_station", "substance": "water"}) == "facilities"
     assert category_for_osm_feature({"amenity": "water_point"}) == "facilities"
     assert category_for_osm_feature({"pipeline": "water", "substance": "water"}) == "pipelines"
+    assert category_for_osm_feature({"man_made": "pipeline", "substance": "water"}) == "pipelines"
     assert category_for_osm_feature({"waterway": "river", "name": "Ruda"}) == "waterways"
     assert category_for_osm_feature({"waterway": "stream"}) == "waterways"
     assert category_for_osm_feature({"building": "yes", "name": "Generic House"}) is None
     assert category_for_osm_feature({"highway": "footway"}) is None
+    assert category_for_osm_feature({"man_made": "pipeline", "substance": "gas"}) is None
+    assert category_for_osm_feature({"man_made": "pipeline"}) is None
+    assert category_for_osm_feature({"man_made": "pumping_station", "pumping": "sewage"}) is None
+    assert category_for_osm_feature({"man_made": "pumping_station"}) is None
+
+
+def test_water_query_retrieves_only_explicit_water_semantics() -> None:
+    assert WATER_OSM_QUERY.query_version == "water-osm/v2"
+    assert WATER_OSM_QUERY.tags == {
+        "waterway": ["river", "stream", "canal", "drain", "ditch"],
+        "pipeline": ["water"],
+        "man_made": ["water_works", "water_tower"],
+        "amenity": ["water_point"],
+        "pumping": ["water"],
+        "substance": ["water"],
+    }
 
 
 def test_water_domain_pack_builds_independent_categories_and_inspection_points(tmp_path: Path) -> None:

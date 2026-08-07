@@ -13,14 +13,14 @@ from shapely.geometry import mapping, shape
 from shapely.ops import unary_union
 
 from geo_pipeline.aoi import AoiResolutionError, MAX_AREA_SQ_M, WGS84, _resolved, resolve_aoi
-from geo_pipeline.query_catalog import GAS_OSM_QUERY, TRANSPORT_OSM_QUERY, WATER_OSM_QUERY
+from geo_pipeline.query_catalog import GAS_OSM_QUERY, POWER_OSM_QUERY, TRANSPORT_OSM_QUERY, WATER_OSM_QUERY
 
 AOI_REQUEST_CONTRACT_VERSION = "provider_aoi_request/v2"
 RUNTIME_CONTRACT_VERSION = "provider_runtime/v1"
 # Changing the pipeline version deliberately creates a new request-cache key.
-# v9 adds explicit runtime acquisition counts so a cache hit cannot hide
-# whether the selected AOI actually produced more source features.
-PIPELINE_VERSION = "geo_pipeline/runtime/v9"
+# v10 invalidates cached water results created before the runtime required
+# explicit water semantics for generic pipelines and pumping stations.
+PIPELINE_VERSION = "geo_pipeline/runtime/v10"
 CATALOG_PATH = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "aoi" / "prg_administrative_catalog.geojson"
 POLAND_BOUNDS = (14.05, 49.0, 24.25, 55.0)
 ProfileOutcome = Literal["ready", "needs_source", "reference_only", "pending_qualification"]
@@ -38,7 +38,7 @@ class ProviderProfile:
 
 
 PROFILES: tuple[ProviderProfile, ...] = (
-    ProviderProfile("power", "openstreetmap", "analytical", "analytical_vector", "power-osmnx/v1", {"power": ["line", "minor_line", "cable", "substation", "transformer", "plant", "generator"], "man_made": ["utility_pole"]}, True),
+    ProviderProfile("power", POWER_OSM_QUERY.source_registry_id, "analytical", "analytical_vector", POWER_OSM_QUERY.query_version, POWER_OSM_QUERY.tags, True),
     ProviderProfile("emergency", "openstreetmap", "analytical", "analytical_vector", "emergency-osm/v1", {"amenity": ["hospital", "fire_station", "police", "ambulance_station"], "healthcare": ["hospital"], "emergency": ["ambulance_station", "mountain_rescue", "lifeguard_base"]}, True),
     ProviderProfile("public", "openstreetmap", "analytical", "analytical_vector", "public-osm/v1", {"amenity": ["townhall", "school", "college", "university", "kindergarten", "post_office", "community_centre", "social_facility", "library", "arts_centre"], "office": ["government"]}, True),
     ProviderProfile("transport", TRANSPORT_OSM_QUERY.source_registry_id, "analytical", "analytical_vector", TRANSPORT_OSM_QUERY.query_version, TRANSPORT_OSM_QUERY.tags, True),

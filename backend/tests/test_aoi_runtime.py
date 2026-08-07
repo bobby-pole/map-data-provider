@@ -7,7 +7,7 @@ from geo_pipeline.aoi_runtime import RuntimeRequestError, administrative_catalog
 from geo_pipeline.config import CACHE_DIR
 from geo_pipeline.domain_pack import read_domain_pack
 from geo_pipeline.runtime_osm import publish_runtime_osm_collection
-from geo_pipeline.query_catalog import GAS_OSM_QUERY, TRANSPORT_OSM_QUERY, WATER_OSM_QUERY
+from geo_pipeline.query_catalog import GAS_OSM_QUERY, POWER_OSM_QUERY, TRANSPORT_OSM_QUERY, WATER_OSM_QUERY
 from geo_pipeline.worker import run_runtime_worker
 
 
@@ -39,6 +39,7 @@ def test_runtime_profiles_are_explicit_and_do_not_fabricate_non_fixture_data() -
     assert all(outcome["status"] == "ready" and outcome["artifact_aoi_id"] == "rybnik_60km" for outcome in outcomes)
     assert by_domain["transport"]["query_version"] == "transport-osm/v3"
     assert by_domain["transport"]["tags"] == TRANSPORT_OSM_QUERY.tags
+    assert by_domain["power"]["tags"] == POWER_OSM_QUERY.tags
     assert by_domain["water"]["tags"] == WATER_OSM_QUERY.tags
     assert by_domain["gas"]["query_version"] == "gas-osm/v2"
     assert by_domain["gas"]["tags"] == GAS_OSM_QUERY.tags

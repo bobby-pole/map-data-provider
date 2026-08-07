@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { createRuntimeRequestCoordinator } from "./aoiRuntimeService.js";
+import { createRuntimeRequestCoordinator, workerFailureMessage } from "./aoiRuntimeService.js";
 import { type ProviderRuntimeRequest, providerRuntimeResponseSchema } from "../types/provider.js";
 
 const request: ProviderRuntimeRequest = { aoi: { type: "administrative_selection", unit_ids: ["county_rybnik_city", "county_rybnicki"] }, profiles: ["power", "water"] };
@@ -25,5 +25,10 @@ describe("runtime request coordinator", () => {
     expect(calls).toBe(1);
     release?.();
     await expect(Promise.all([first, equivalent])).resolves.toEqual([response, response]);
+  });
+
+  it("preserves structured worker failures without exposing raw subprocess output", () => {
+    expect(workerFailureMessage({ stderr: '{"status":"error","code":"worker_failed","message":"Overpass timed out."}' }, "fallback")).toBe("worker_failed: Overpass timed out.");
+    expect(workerFailureMessage({ stderr: "not-json" }, "Safe fallback.")).toBe("Safe fallback.");
   });
 });

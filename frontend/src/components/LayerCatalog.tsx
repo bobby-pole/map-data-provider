@@ -54,5 +54,8 @@ function formatLayerTitle(artifactId: string): string {
   if (artifactId === "water.pipelines") return "Water pipelines";
   if (artifactId === "water.waterways") return "Watercourses";
   if (artifactId === "water.inspection_points") return "Water inspection points";
+  if (artifactId === "gas.facilities") return "Gas facilities";
+  if (artifactId === "gas.pipelines") return "Gas pipelines";
+  if (artifactId === "gas.inspection_points") return "Gas inspection points";
   return artifactId;
 }

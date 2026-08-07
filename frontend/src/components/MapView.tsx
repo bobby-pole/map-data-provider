@@ -134,6 +134,9 @@ export function MapView({ layers, transportRoadClasses, references, orthophotoEn
           } else if (layer.artifact.artifact_id === "water.pipelines") {
             map.addLayer({ id, type: "line", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom: 10, paint: { "line-color": "#06b6d4", "line-width": 4, "line-dasharray": [4, 2], "line-opacity": 0.95 } });
             map.addLayer({ id: `${id}-labels`, type: "symbol", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom: 11, filter: ["has", "name"], layout: { "symbol-placement": "line", "text-field": ["get", "name"], "text-size": 11, "text-max-angle": 35 }, paint: { "text-color": "#cffafe", "text-halo-color": "#0e7490", "text-halo-width": 1.5 } });
+          } else if (layer.artifact.artifact_id === "gas.pipelines") {
+            map.addLayer({ id, type: "line", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom: 10, paint: { "line-color": "#f97316", "line-width": 4, "line-dasharray": [4, 2], "line-opacity": 0.95 } });
+            map.addLayer({ id: `${id}-labels`, type: "symbol", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom: 11, filter: ["has", "name"], layout: { "symbol-placement": "line", "text-field": ["get", "name"], "text-size": 11, "text-max-angle": 35 }, paint: { "text-color": "#ffedd5", "text-halo-color": "#c2410c", "text-halo-width": 1.5 } });
           } else if (layer.domain === "power" || layer.artifact.source_layer.includes("power")) {
             const base = { type: "line" as const, source: sourceId, "source-layer": layer.artifact.source_layer, paint: { "line-color": voltageLineColor, "line-width": 4.5, "line-opacity": 0.9 } };
             map.addLayer({ ...base, id, filter: ["all", ["!=", ["get", "voltage_bucket"], "medium"], ["!=", ["get", "voltage_bucket"], "low"]] });
@@ -144,7 +147,7 @@ export function MapView({ layers, transportRoadClasses, references, orthophotoEn
             map.addLayer({ id, type: "line", source: sourceId, "source-layer": layer.artifact.source_layer, paint: { "line-color": color, "line-width": 4, "line-opacity": 0.9 } });
           }
         } else {
-          const minzoom = layer.domain === "emergency" ? 7 : 12;
+          const minzoom = (layer.domain === "emergency" || layer.domain === "gas") ? 9 : 12;
           const emergencyColor = ["match", ["get", "asset_type"], "hospital", "#e11d48", "fire_service", "#f97316", "police", "#2563eb", "ambulance_rescue", "#eab308", "crossings", "#f59e0b", "facilities", "#0ea5e9", color] as ExpressionSpecification;
           const supportPaint: CircleLayerSpecification["paint"] = { "circle-color": ["match", ["get", "asset_type"], "tower", "#f97316", "portal", "#facc15", "utility_pole", "#38bdf8", "#cbd5e1"] as ExpressionSpecification, "circle-radius": ["match", ["get", "asset_type"], "tower", 5, "portal", 4.5, "utility_pole", 3.5, 3] as ExpressionSpecification, "circle-stroke-width": 1.25, "circle-stroke-color": "#07111f", "circle-opacity": 0.9 };
           const pointPaint: CircleLayerSpecification["paint"] = layer.artifact.artifact_id === "power.supports"
@@ -254,7 +257,7 @@ function featurePopupContent(feature: ProviderFeature, layer: PreviewLayer): HTM
   const sourceId = typeof properties.source_id === "string" ? properties.source_id : "";
   const sourceLink = /^((node|way|relation)\/\d+)$/.test(sourceId) ? `https://www.openstreetmap.org/${sourceId}` : null;
   const links = [sourceLink ? `<a href="${sourceLink}" target="_blank" rel="noreferrer">OpenStreetMap object</a>` : "", externalLink(tags.website, "website"), wikipediaLink(tags.wikipedia), wikidataLink(tags.wikidata), externalLink(tags.image, "source image")].filter(Boolean).join(" · ");
-  const fields = ["power", "man_made", "amenity", "healthcare", "emergency", "highway", "railway", "aeroway", "road_class", "ref", "surface", "maxspeed", "lanes", "bridge", "tunnel", "oneway", "waterway", "pipeline", "substance", "diameter", "pumping", "official_type", "iip_identifier", "jpt_id", "version_from", "voltage", "frequency", "operator", "circuits", "cables", "wires", "plant:source", "plant:method", "plant:output:electricity", "start_date", "description", "phone", "contact:phone", "opening_hours", "wheelchair"]
+  const fields = ["power", "man_made", "amenity", "healthcare", "emergency", "highway", "railway", "aeroway", "road_class", "ref", "surface", "maxspeed", "lanes", "bridge", "tunnel", "oneway", "waterway", "pipeline", "substance", "diameter", "pumping", "gas", "pressure", "official_type", "iip_identifier", "jpt_id", "version_from", "voltage", "frequency", "operator", "circuits", "cables", "wires", "plant:source", "plant:method", "plant:output:electricity", "start_date", "description", "phone", "contact:phone", "opening_hours", "wheelchair"]
     .filter((name) => tags[name] || (name === "road_class" && typeof properties.road_class === "string"))
     .map((name) => `<dt>${escapeHtml(name)}</dt><dd>${escapeHtml(String(tags[name] ?? properties[name] ?? ""))}</dd>`).join("");
   const content = document.createElement("div"); content.className = "mapFeaturePopup";

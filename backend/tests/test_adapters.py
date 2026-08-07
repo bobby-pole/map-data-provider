@@ -32,6 +32,16 @@ def test_public_services_are_registered_through_an_explicit_osm_query_catalog() 
     assert adapter.query.tags["office"] == ["government"]
 
 
+def test_gas_is_registered_through_an_explicit_and_bounded_osm_query_catalog() -> None:
+    adapter = resolve_adapter("rybnik_60km", "gas")
+
+    assert adapter in registered_adapters()
+    assert adapter.query.source_registry_id == "openstreetmap"
+    assert adapter.query.query_version == "gas-osm/v2"
+    assert adapter.query.tags["pipeline"] == ["gas", "valve"]
+    assert "pipeline" not in adapter.query.tags["man_made"]
+
+
 def test_unsupported_targets_fail_before_any_cache_path_is_published(tmp_path: Path) -> None:
     with pytest.raises(AdapterError, match="Unsupported registered AOI/domain target"):
         resolve_adapter("unknown", "power")

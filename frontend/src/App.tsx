@@ -13,6 +13,24 @@ import { orthophotoReference } from "./orthophotoReference";
 import type { MapCircuit, MapFeatureDetail, ProviderRuntimeResponse } from "./types/api";
 import "./index.css";
 
+function preparationSummary(result: ProviderRuntimeResponse): string {
+  const preparation = result.request_result === "cache"
+    ? "Reused a fresh local snapshot; no remote OSM request was made."
+    : "Acquired and validated a new bounded OSM snapshot for this AOI.";
+  const radius = result.aoi.constraints.radius_m;
+  const scope = result.aoi.input_type === "circle" && typeof radius === "number"
+    ? ` Circle AOI radius: ${radius >= 1_000 ? `${radius / 1_000} km` : `${radius} m`}.`
+    : " Administrative AOI selection.";
+  return `${preparation}${scope}`;
+}
+
+function outcomeCountSummary(outcome: ProviderRuntimeResponse["outcomes"][number]): string {
+  if ([outcome.queried_feature_count, outcome.accepted_feature_count, outcome.derived_feature_count].some((count) => count === null)) {
+    return "Feature counts are unavailable for this committed fixture.";
+  }
+  return `OSM candidates: ${outcome.queried_feature_count} · accepted analytical objects: ${outcome.accepted_feature_count} · derived inspection points: ${outcome.derived_feature_count}.`;
+}
+
 export default function App() {
   const [enabledLayers, setEnabledLayers] = useState<Record<string, boolean>>({});
   const [enabledTransportRoadClasses, setEnabledTransportRoadClasses] = useState<Record<TransportRoadClass, boolean>>({
@@ -61,7 +79,7 @@ export default function App() {
         <div className="mapPanel"><MapView layers={visibleLayers} transportRoadClasses={enabledTransportRoadClasses} references={visibleReferences} orthophotoEnabled={orthophotoEnabled} basemapEnabled={basemapEnabled} aoiOutline={runtimeResult?.aoi.geometry ?? null} selected={selectedFeature} selectedDetail={selectedDetail} selectedCircuit={selectedCircuit} onSelectFeature={selectFeature} /></div>
         <aside className="inspectorPanel">
           {settingsOpen && <AoiSettings onApplied={(result) => { setRuntimeResult(result); setSelectedFeature(null); setSelectedDetail(null); setSelectedCircuit(null); setSettingsOpen(false); }} />}
-          {runtimeResult && <section className="inspectorSection"><div className="sectionHeading"><h2>Preparation status</h2><span>{runtimeResult.request_result} · {runtimeResult.request_id}</span></div><ul className="layerList">{runtimeResult.outcomes.map((outcome) => <li key={outcome.domain}><strong>{outcome.domain}: {outcome.status}</strong><small>{outcome.detail}</small><small>{outcome.source_registry_id} · {outcome.output_kind} · {outcome.query_version}{outcome.artifact_aoi_id ? ` · artifact ${outcome.artifact_aoi_id}` : ""}</small></li>)}</ul><h3 className="contextHeading">Source context</h3><ul className="layerList">{runtimeResult.contexts.map((context, index) => <li key={`${context.domain}-${context.source_registry_id}-${index}`}><strong>{context.domain}: {context.status}</strong><small>{context.source_registry_id} · {context.output_kind}</small><small>{context.detail}</small></li>)}</ul></section>}
+          {runtimeResult && <section className="inspectorSection"><div className="sectionHeading"><h2>Preparation status</h2><span>{runtimeResult.request_result} · {runtimeResult.request_id}</span></div><p className="muted">{preparationSummary(runtimeResult)}</p><ul className="layerList">{runtimeResult.outcomes.map((outcome) => <li key={outcome.domain}><strong>{outcome.domain}: {outcome.status}</strong><small>{outcome.detail}</small><small>{outcomeCountSummary(outcome)}</small><small>{outcome.source_registry_id} · {outcome.output_kind} · {outcome.query_version}{outcome.artifact_aoi_id ? ` · artifact ${outcome.artifact_aoi_id}` : ""}</small></li>)}</ul><h3 className="contextHeading">Source context</h3><ul className="layerList">{runtimeResult.contexts.map((context, index) => <li key={`${context.domain}-${context.source_registry_id}-${index}`}><strong>{context.domain}: {context.status}</strong><small>{context.source_registry_id} · {context.output_kind}</small><small>{context.detail}</small></li>)}</ul></section>}
           <section className="inspectorSection">
             <div className="sectionHeading"><h2>Map background</h2><span>{basemapEnabled ? "on" : "off"}</span></div>
             <label className="layerToggle"><input type="checkbox" checked={basemapEnabled} onChange={(event) => setBasemapEnabled(event.target.checked)} /><span><strong>OpenStreetMap base map</strong><small>Online visual context only; it is not provider data and is unavailable offline.</small></span></label>

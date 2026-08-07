@@ -7,7 +7,7 @@ from geo_pipeline.aoi_runtime import RuntimeRequestError, administrative_catalog
 from geo_pipeline.config import CACHE_DIR
 from geo_pipeline.domain_pack import read_domain_pack
 from geo_pipeline.runtime_osm import publish_runtime_osm_collection
-from geo_pipeline.query_catalog import GAS_OSM_QUERY, POWER_OSM_QUERY, TRANSPORT_OSM_QUERY, WATER_OSM_QUERY
+from geo_pipeline.query_catalog import GAS_OSM_QUERY, POWER_OSM_QUERY, SEWER_OSM_QUERY, TRANSPORT_OSM_QUERY, WATER_OSM_QUERY
 from geo_pipeline.worker import run_runtime_worker
 
 
@@ -31,11 +31,11 @@ def test_administrative_union_and_profile_order_have_one_request_identity() -> N
 
 
 def test_runtime_profiles_are_explicit_and_do_not_fabricate_non_fixture_data() -> None:
-    request = {"aoi": point_radius(), "profiles": ["power", "public", "transport", "water", "gas"]}
+    request = {"aoi": point_radius(), "profiles": ["power", "public", "transport", "water", "gas", "sewer"]}
     outcomes = profile_outcomes(request)
     by_domain = {outcome["domain"]: outcome for outcome in outcomes}
 
-    assert set(by_domain) == {"power", "public", "transport", "water", "gas"}
+    assert set(by_domain) == {"power", "public", "transport", "water", "gas", "sewer"}
     assert all(outcome["status"] == "ready" and outcome["artifact_aoi_id"] == "rybnik_60km" for outcome in outcomes)
     assert by_domain["transport"]["query_version"] == "transport-osm/v3"
     assert by_domain["transport"]["tags"] == TRANSPORT_OSM_QUERY.tags
@@ -43,6 +43,8 @@ def test_runtime_profiles_are_explicit_and_do_not_fabricate_non_fixture_data() -
     assert by_domain["water"]["tags"] == WATER_OSM_QUERY.tags
     assert by_domain["gas"]["query_version"] == "gas-osm/v2"
     assert by_domain["gas"]["tags"] == GAS_OSM_QUERY.tags
+    assert by_domain["sewer"]["query_version"] == SEWER_OSM_QUERY.query_version
+    assert by_domain["sewer"]["tags"] == SEWER_OSM_QUERY.tags
     assert all(outcome["queried_feature_count"] is None and outcome["accepted_feature_count"] is None and outcome["derived_feature_count"] is None for outcome in outcomes)
 
 
@@ -137,6 +139,21 @@ def test_runtime_public_publication_keeps_semantic_categories_independent(tmp_pa
     assert inspection["features"][0]["properties"]["origin_artifact"] == "public.administration"
 
 
+def test_runtime_sewer_publication_keeps_explicit_semantic_categories_independent(tmp_path) -> None:
+    aoi = resolve_runtime_request({"aoi": {"type": "administrative_selection", "unit_ids": ["county_rybnik_city"]}, "profiles": ["sewer"]})["aoi"]
+    source = {"type": "FeatureCollection", "features": [
+        {"type": "Feature", "properties": {"element": "way", "id": 1, "provider_category": "pipelines", "pipeline": "sewer", "substance": "sewerage", "name": "fixture sewer"}, "geometry": {"type": "LineString", "coordinates": [[18.49, 50.09], [18.50, 50.10]]}},
+        {"type": "Feature", "properties": {"element": "node", "id": 2, "provider_category": "facilities", "man_made": "wastewater_plant", "name": "fixture treatment plant"}, "geometry": {"type": "Point", "coordinates": [18.5, 50.1]}},
+    ]}
+
+    publish_runtime_osm_collection(aoi=aoi, domain="sewer", source=source, query_version=SEWER_OSM_QUERY.query_version, root=tmp_path)
+
+    pack = read_domain_pack(aoi["aoi_id"], "sewer", root=tmp_path)
+    assert [artifact["id"] for artifact in pack["artifacts"]] == ["sewer.pipelines", "sewer.facilities", "sewer.inspection_points"]
+    inspection = json.loads((tmp_path / aoi["aoi_id"] / "sewer" / "domain-pack-v2" / "layers" / "sewer.inspection_points.geojson").read_text())
+    assert inspection["features"][0]["properties"]["origin_artifact"] == "sewer.pipelines"
+
+
 def test_runtime_transport_publication_keeps_semantic_categories_independent(tmp_path) -> None:
     aoi = resolve_runtime_request({"aoi": {"type": "administrative_selection", "unit_ids": ["county_rybnik_city"]}, "profiles": ["transport"]})["aoi"]
     source = {"type": "FeatureCollection", "features": [
@@ -215,3 +232,24 @@ def test_live_worker_refreshes_gas_profile_for_non_demo_aoi(tmp_path, monkeypatc
     assert response["outcomes"][0]["status"] == "ready"
     assert calls and calls[0][1] == "gas"
     assert validated == [(response["aoi"]["aoi_id"], "gas", CACHE_DIR)]
+
+
+def test_live_worker_refreshes_sewer_profile_for_non_demo_aoi(tmp_path, monkeypatch) -> None:
+    request = {"aoi": {"type": "administrative_selection", "unit_ids": ["county_rybnicki"]}, "profiles": ["sewer"]}
+    calls = []
+    validated = []
+
+    def mock_refresh(*, aoi, domain, root):
+        calls.append((aoi["aoi_id"], domain))
+        return {"status": "ready", "detail": "Bounded OpenStreetMap sewer artifact acquired.", "artifact_aoi_id": aoi["aoi_id"], "cache_status": "fresh", "queried_feature_count": 4, "accepted_feature_count": 2, "derived_feature_count": 1}
+
+    import geo_pipeline.worker as worker_module
+    monkeypatch.setattr(worker_module, "refresh_runtime_osm_domain", mock_refresh)
+    monkeypatch.setattr(worker_module, "read_domain_pack", lambda aoi_id, domain, *, root: validated.append((aoi_id, domain, root)))
+
+    response = run_runtime_worker(request=request, input_mode="live", cache_root=CACHE_DIR, runtime_root=tmp_path)
+
+    assert response["outcomes"][0]["domain"] == "sewer"
+    assert response["outcomes"][0]["status"] == "ready"
+    assert calls and calls[0][1] == "sewer"
+    assert validated == [(response["aoi"]["aoi_id"], "sewer", CACHE_DIR)]

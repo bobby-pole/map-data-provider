@@ -137,6 +137,9 @@ export function MapView({ layers, transportRoadClasses, references, orthophotoEn
           } else if (layer.artifact.artifact_id === "gas.pipelines") {
             map.addLayer({ id, type: "line", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom: 10, paint: { "line-color": "#f97316", "line-width": 4, "line-dasharray": [4, 2], "line-opacity": 0.95 } });
             map.addLayer({ id: `${id}-labels`, type: "symbol", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom: 11, filter: ["has", "name"], layout: { "symbol-placement": "line", "text-field": ["get", "name"], "text-size": 11, "text-max-angle": 35 }, paint: { "text-color": "#ffedd5", "text-halo-color": "#c2410c", "text-halo-width": 1.5 } });
+          } else if (layer.artifact.artifact_id === "sewer.pipelines") {
+            map.addLayer({ id, type: "line", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom: 10, paint: { "line-color": "#78350f", "line-width": 4, "line-dasharray": [4, 2], "line-opacity": 0.95 } });
+            map.addLayer({ id: `${id}-labels`, type: "symbol", source: sourceId, "source-layer": layer.artifact.source_layer, minzoom: 11, filter: ["has", "name"], layout: { "symbol-placement": "line", "text-field": ["get", "name"], "text-size": 11, "text-max-angle": 35 }, paint: { "text-color": "#fef3c7", "text-halo-color": "#451a03", "text-halo-width": 1.5 } });
           } else if (layer.domain === "power" || layer.artifact.source_layer.includes("power")) {
             const base = { type: "line" as const, source: sourceId, "source-layer": layer.artifact.source_layer, paint: { "line-color": voltageLineColor, "line-width": 4.5, "line-opacity": 0.9 } };
             map.addLayer({ ...base, id, filter: ["all", ["!=", ["get", "voltage_bucket"], "medium"], ["!=", ["get", "voltage_bucket"], "low"]] });
@@ -147,7 +150,7 @@ export function MapView({ layers, transportRoadClasses, references, orthophotoEn
             map.addLayer({ id, type: "line", source: sourceId, "source-layer": layer.artifact.source_layer, paint: { "line-color": color, "line-width": 4, "line-opacity": 0.9 } });
           }
         } else {
-          const minzoom = (layer.domain === "emergency" || layer.domain === "gas") ? 9 : 12;
+          const minzoom = (layer.domain === "emergency" || layer.domain === "gas" || layer.domain === "sewer") ? 9 : 12;
           const emergencyColor = ["match", ["get", "asset_type"], "hospital", "#e11d48", "fire_service", "#f97316", "police", "#2563eb", "ambulance_rescue", "#eab308", "crossings", "#f59e0b", "facilities", "#0ea5e9", color] as ExpressionSpecification;
           const supportPaint: CircleLayerSpecification["paint"] = { "circle-color": ["match", ["get", "asset_type"], "tower", "#f97316", "portal", "#facc15", "utility_pole", "#38bdf8", "#cbd5e1"] as ExpressionSpecification, "circle-radius": ["match", ["get", "asset_type"], "tower", 5, "portal", 4.5, "utility_pole", 3.5, 3] as ExpressionSpecification, "circle-stroke-width": 1.25, "circle-stroke-color": "#07111f", "circle-opacity": 0.9 };
           const pointPaint: CircleLayerSpecification["paint"] = layer.artifact.artifact_id === "power.supports"

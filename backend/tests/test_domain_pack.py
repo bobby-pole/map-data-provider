@@ -4,12 +4,13 @@ from pathlib import Path
 
 import pytest
 
-from geo_pipeline.cache import build_rybnik_emergency_cache, build_rybnik_gas_cache, build_rybnik_public_cache, build_rybnik_transport_cache, cache_paths
+from geo_pipeline.cache import build_rybnik_emergency_cache, build_rybnik_gas_cache, build_rybnik_public_cache, build_rybnik_sewer_cache, build_rybnik_transport_cache, cache_paths
 from geo_pipeline.domain_pack import (
     build_rybnik_emergency_domain_pack,
     build_rybnik_gas_domain_pack,
     build_rybnik_power_domain_pack,
     build_rybnik_public_domain_pack,
+    build_rybnik_sewer_domain_pack,
     build_rybnik_transport_domain_pack,
     read_domain_pack,
     validate_domain_pack,
@@ -156,4 +157,19 @@ def test_gas_pack_keeps_semantics_separate_and_publishes_comparison_evidence(tmp
     assert inspection["features"][0]["properties"]["origin_artifact"] == "gas.pipelines"
     assert {artifact["id"] for artifact in read_domain_pack("rybnik_60km", "gas", root=tmp_path, public_export=True)["artifacts"]} == {
         "gas.facilities", "gas.pipelines", "gas.inspection_points",
+    }
+
+
+def test_sewer_pack_keeps_semantics_separate_and_publishes_comparison_evidence(tmp_path: Path) -> None:
+    build_rybnik_sewer_cache(root=tmp_path)
+    pack = build_rybnik_sewer_domain_pack(root=tmp_path)
+    pack_root = tmp_path / "rybnik_60km" / "sewer" / "domain-pack-v2"
+    artifacts = {artifact["id"]: artifact for artifact in pack["artifacts"]}
+    pipelines = json.loads((pack_root / artifacts["sewer.pipelines"]["path"]).read_text())
+    inspection = json.loads((pack_root / artifacts["sewer.inspection_points"]["path"]).read_text())
+
+    assert pipelines["features"][0]["geometry"]["type"] in ("LineString", "MultiLineString")
+    assert inspection["features"][0]["properties"]["origin_artifact"] == "sewer.pipelines"
+    assert {artifact["id"] for artifact in read_domain_pack("rybnik_60km", "sewer", root=tmp_path, public_export=True)["artifacts"]} == {
+        "sewer.facilities", "sewer.pipelines", "sewer.inspection_points",
     }

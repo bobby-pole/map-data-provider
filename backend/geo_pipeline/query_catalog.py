@@ -102,3 +102,20 @@ GAS_OSM_QUERY = OsmQueryDefinition(
         "substance": ["gas"],
     },
 )
+
+
+SEWER_OSM_QUERY = OsmQueryDefinition(
+    source_registry_id="openstreetmap",
+    # OSMnx expands tag groups with OR semantics.  Generic pumping stations,
+    # manholes and drainage lines are not sewer evidence without explicit
+    # wastewater tags, so acquire the semantic tags and compose pairs during
+    # normalization instead of querying each broad man_made representation.
+    query_version="sewer-osm/v2",
+    tags={
+        "pipeline": ["sewer"],
+        "man_made": ["wastewater_plant", "septic_tank"],
+        "pumping": ["sewer", "wastewater"],
+        "substance": ["sewerage", "wastewater"],
+        "utility": ["sewer"],
+    },
+)

@@ -470,6 +470,26 @@ export const domainPackListResponseSchema = z
   })
   .strict();
 
+export const domainExportOutcomeSchema = z
+  .object({
+    domain: runtimeProfileSchema,
+    status: z.enum(["ready", "needs_source", "failed"]),
+    detail: z.string().min(1),
+    has_domain_pack: z.boolean(),
+  })
+  .strict();
+
+export const multiDomainExportResponseSchema = z
+  .object({
+    export_version: z.literal("provider_multi_domain_export/v2"),
+    aoi_id: providerIdentifierSchema,
+    exported_at: z.string().datetime(),
+    domain_outcomes: z.array(domainExportOutcomeSchema),
+    domain_packs: z.array(domainPackReadResponseSchema),
+    issues: z.array(reviewedIssueSchema),
+  })
+  .strict();
+
 const presentationBoundsSchema = z.tuple([
   z.number().min(-180).max(180),
   z.number().min(-90).max(90),
@@ -596,6 +616,7 @@ export type SourceRegistry = z.infer<typeof sourceRegistrySchema>;
 export type SourceRegistryV2 = z.infer<typeof sourceRegistryV2Schema>;
 export type DomainPackReadResponse = z.infer<typeof domainPackReadResponseSchema>;
 export type DomainPackLayer = z.infer<typeof domainPackLayerSchema>;
+export type MultiDomainExportResponse = z.infer<typeof multiDomainExportResponseSchema>;
 export type MapPresentationManifest = z.infer<typeof mapPresentationManifestSchema>;
 export type MapPresentationResponse = z.infer<typeof mapPresentationResponseSchema>;
 export type MapFeatureDetailResponse = z.infer<typeof mapFeatureDetailResponseSchema>;

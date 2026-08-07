@@ -119,3 +119,16 @@ SEWER_OSM_QUERY = OsmQueryDefinition(
         "utility": ["sewer"],
     },
 )
+
+
+INDUSTRIAL_OSM_QUERY = OsmQueryDefinition(
+    source_registry_id="openstreetmap",
+    query_version="industrial-osm/v2",
+    tags={
+        "landuse": ["industrial", "military"],
+        "man_made": ["works"],
+        "industrial": ["factory", "works"],
+        "building": ["industrial"],
+        "military": ["danger_area", "base"],
+    },
+)

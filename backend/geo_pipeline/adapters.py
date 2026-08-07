@@ -6,9 +6,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
 
-from geo_pipeline.cache import build_rybnik_bridges_cache, build_rybnik_emergency_cache, build_rybnik_gas_cache, build_rybnik_power_cache, build_rybnik_public_cache, build_rybnik_sewer_cache, build_rybnik_transport_cache, build_rybnik_water_cache
-from geo_pipeline.domain_pack import build_rybnik_bridges_domain_pack, build_rybnik_emergency_domain_pack, build_rybnik_gas_domain_pack, build_rybnik_power_domain_pack, build_rybnik_public_domain_pack, build_rybnik_sewer_domain_pack, build_rybnik_transport_domain_pack, build_rybnik_water_domain_pack
-from geo_pipeline.query_catalog import BRIDGES_OSM_QUERY, EMERGENCY_OSM_QUERY, GAS_OSM_QUERY, PUBLIC_OSM_QUERY, OsmQueryDefinition, POWER_OSM_QUERY, SEWER_OSM_QUERY, TRANSPORT_OSM_QUERY, WATER_OSM_QUERY
+from geo_pipeline.cache import build_rybnik_bridges_cache, build_rybnik_emergency_cache, build_rybnik_gas_cache, build_rybnik_power_cache, build_rybnik_public_cache, build_rybnik_sewer_cache, build_rybnik_transport_cache, build_rybnik_water_cache, build_rybnik_industrial_cache
+from geo_pipeline.domain_pack import build_rybnik_bridges_domain_pack, build_rybnik_emergency_domain_pack, build_rybnik_gas_domain_pack, build_rybnik_power_domain_pack, build_rybnik_public_domain_pack, build_rybnik_sewer_domain_pack, build_rybnik_transport_domain_pack, build_rybnik_water_domain_pack, build_rybnik_industrial_domain_pack
+from geo_pipeline.query_catalog import BRIDGES_OSM_QUERY, EMERGENCY_OSM_QUERY, GAS_OSM_QUERY, PUBLIC_OSM_QUERY, OsmQueryDefinition, POWER_OSM_QUERY, SEWER_OSM_QUERY, TRANSPORT_OSM_QUERY, WATER_OSM_QUERY, INDUSTRIAL_OSM_QUERY
 
 
 class AdapterError(ValueError):
@@ -140,6 +140,20 @@ SEWER_ADAPTER = DomainAdapter(
     build_domain_pack=lambda root: build_rybnik_sewer_domain_pack(root=root),
 )
 
+
+def _industrial_live() -> None:
+    raise AdapterError("Use the AOI runtime path for bounded industrial OSM acquisition; the fixture adapter is offline-only.")
+
+
+INDUSTRIAL_ADAPTER = DomainAdapter(
+    aoi_alias="rybnik_60km",
+    domain="industrial",
+    query=INDUSTRIAL_OSM_QUERY,
+    build_fixture=lambda root: build_rybnik_industrial_cache(root=root),
+    run_live=_industrial_live,
+    build_domain_pack=lambda root: build_rybnik_industrial_domain_pack(root=root),
+)
+
 _ADAPTERS = {
     (POWER_ADAPTER.aoi_alias, POWER_ADAPTER.domain): POWER_ADAPTER,
     (EMERGENCY_ADAPTER.aoi_alias, EMERGENCY_ADAPTER.domain): EMERGENCY_ADAPTER,
@@ -149,6 +163,7 @@ _ADAPTERS = {
     (WATER_ADAPTER.aoi_alias, WATER_ADAPTER.domain): WATER_ADAPTER,
     (GAS_ADAPTER.aoi_alias, GAS_ADAPTER.domain): GAS_ADAPTER,
     (SEWER_ADAPTER.aoi_alias, SEWER_ADAPTER.domain): SEWER_ADAPTER,
+    (INDUSTRIAL_ADAPTER.aoi_alias, INDUSTRIAL_ADAPTER.domain): INDUSTRIAL_ADAPTER,
 }
 
 

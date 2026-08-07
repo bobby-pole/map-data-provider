@@ -14,3 +14,19 @@ export function buildRuntimeRequest(
   if (![longitude, latitude, radius_m].every(Number.isFinite)) throw new Error("Point/radius AOI requires finite coordinates and radius.");
   return { aoi: { type: "point_radius", longitude, latitude, radius_m }, profiles: [...new Set(profiles)].sort() as RuntimeCategory[] };
 }
+
+export async function providerResponseMessage(response: Response, fallback: string): Promise<string> {
+  let message = fallback;
+  try {
+    const payload = await response.json() as { error?: unknown; message?: unknown };
+    if (typeof payload.message === "string" && payload.message) message = payload.message;
+  } catch {
+    // The caller-provided fallback remains human-readable.
+  }
+  return message;
+}
+
+export async function runtimeRequestError(response: Response): Promise<string> {
+  const message = await providerResponseMessage(response, `AOI preparation failed (HTTP ${response.status}).`);
+  return `No new AOI snapshot was published; the existing map was left unchanged. ${message}`;
+}

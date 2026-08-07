@@ -15,15 +15,16 @@ from geo_pipeline.contracts import normalize_analytical_vector_layer
 from geo_pipeline.domain_pack import build_map_presentation, domain_pack_root, read_domain_pack, write_domain_pack
 from geo_pipeline.bridges import category_for_osm_feature as bridges_category_for_osm_feature
 from geo_pipeline.water import category_for_osm_feature as water_category_for_osm_feature
+from geo_pipeline.gas import category_for_osm_feature as gas_category_for_osm_feature
 from geo_pipeline.emergency import category_for_osm_feature
 from geo_pipeline.public_services import category_for_osm_feature as public_category_for_osm_feature
 from geo_pipeline.transport import category_for_osm_feature as transport_category_for_osm_feature, road_class_for_osm_feature
 from geo_pipeline.extract import configure_osmnx, fetch_osm_features_geometry, sanitize_for_geojson
 from geo_pipeline.layers.power import _add_power_categories, _compact_power_properties
-from geo_pipeline.query_catalog import BRIDGES_OSM_QUERY, EMERGENCY_OSM_QUERY, PUBLIC_OSM_QUERY, POWER_OSM_QUERY, TRANSPORT_OSM_QUERY, WATER_OSM_QUERY
+from geo_pipeline.query_catalog import BRIDGES_OSM_QUERY, EMERGENCY_OSM_QUERY, GAS_OSM_QUERY, PUBLIC_OSM_QUERY, POWER_OSM_QUERY, TRANSPORT_OSM_QUERY, WATER_OSM_QUERY
 
-RUNTIME_PIPELINE_VERSION = "geo_pipeline/runtime-osm/v2"
-_QUERY_BY_DOMAIN = {"power": POWER_OSM_QUERY, "emergency": EMERGENCY_OSM_QUERY, "public": PUBLIC_OSM_QUERY, "transport": TRANSPORT_OSM_QUERY, "bridges": BRIDGES_OSM_QUERY, "water": WATER_OSM_QUERY}
+RUNTIME_PIPELINE_VERSION = "geo_pipeline/runtime-osm/v3"
+_QUERY_BY_DOMAIN = {"power": POWER_OSM_QUERY, "emergency": EMERGENCY_OSM_QUERY, "public": PUBLIC_OSM_QUERY, "transport": TRANSPORT_OSM_QUERY, "bridges": BRIDGES_OSM_QUERY, "water": WATER_OSM_QUERY, "gas": GAS_OSM_QUERY}
 
 
 def refresh_runtime_osm_domain(*, aoi: dict[str, Any], domain: str, root: Path) -> dict[str, Any]:
@@ -33,6 +34,7 @@ def refresh_runtime_osm_domain(*, aoi: dict[str, Any], domain: str, root: Path) 
         raise ValueError(f"Runtime OSM acquisition is not enabled for domain: {domain}")
     configure_osmnx()
     raw = sanitize_for_geojson(fetch_osm_features_geometry(aoi["geometry"], query.tags))
+    queried_feature_count = len(raw)
     if domain == "power":
         raw = _compact_power_properties(_add_power_categories(raw))
     elif domain == "emergency":
@@ -43,23 +45,50 @@ def refresh_runtime_osm_domain(*, aoi: dict[str, Any], domain: str, root: Path) 
         raw = _add_transport_categories(raw)
     elif domain == "bridges":
         raw = _add_bridges_categories(raw)
-    else:
+    elif domain == "water":
         raw = _add_water_categories(raw)
+    else:
+        raw = _add_gas_categories(raw)
     source = _clip_to_aoi(_geojson_collection(raw), aoi["geometry"])
-    return publish_runtime_osm_collection(aoi=aoi, domain=domain, source=source, query_version=query.query_version, root=root)
+    return publish_runtime_osm_collection(
+        aoi=aoi,
+        domain=domain,
+        source=source,
+        query_version=query.query_version,
+        root=root,
+        queried_feature_count=queried_feature_count,
+    )
 
 
-def publish_runtime_osm_collection(*, aoi: dict[str, Any], domain: str, source: dict[str, Any], query_version: str, root: Path) -> dict[str, Any]:
+def publish_runtime_osm_collection(*, aoi: dict[str, Any], domain: str, source: dict[str, Any], query_version: str, root: Path, queried_feature_count: int | None = None) -> dict[str, Any]:
     """Publish already-acquired OSM GeoJSON; kept separate for offline contract tests."""
     layers = _domain_layers(domain, source)
     if not layers:
-        return {"status": "needs_source", "detail": "The qualified OpenStreetMap query returned no renderable features inside this AOI.", "artifact_aoi_id": None, "cache_status": "missing"}
+        return {
+            "status": "needs_source",
+            "detail": "The qualified OpenStreetMap query returned no renderable features inside this AOI.",
+            "artifact_aoi_id": None,
+            "cache_status": "missing",
+            "queried_feature_count": queried_feature_count if queried_feature_count is not None else len(source["features"]),
+            "accepted_feature_count": 0,
+            "derived_feature_count": 0,
+        }
     snapshot_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
     manifest, files = _pack_payload(aoi=aoi, domain=domain, query_version=query_version, snapshot_at=snapshot_at, layers=layers)
     pack = write_domain_pack(aoi["aoi_id"], domain, root=root, manifest=manifest, files=files)
     build_map_presentation(pack_root=domain_pack_root(aoi["aoi_id"], domain, root=root), manifest=pack)
     read_domain_pack(aoi["aoi_id"], domain, root=root)
-    return {"status": "ready", "detail": "A bounded OpenStreetMap runtime artifact was acquired, validated and cached for this AOI.", "artifact_aoi_id": aoi["aoi_id"], "cache_status": "fresh"}
+    derived_feature_count = len(layers.get(f"{domain}.inspection_points", []))
+    accepted_feature_count = sum(len(features) for layer_id, features in layers.items() if layer_id != f"{domain}.inspection_points")
+    return {
+        "status": "ready",
+        "detail": "A bounded OpenStreetMap runtime artifact was acquired, validated and cached for this AOI.",
+        "artifact_aoi_id": aoi["aoi_id"],
+        "cache_status": "fresh",
+        "queried_feature_count": queried_feature_count if queried_feature_count is not None else accepted_feature_count,
+        "accepted_feature_count": accepted_feature_count,
+        "derived_feature_count": derived_feature_count,
+    }
 
 
 def _add_emergency_categories(frame: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
@@ -105,6 +134,14 @@ def _add_water_categories(frame: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
         return frame
     enriched = frame.copy()
     enriched["provider_category"] = enriched.apply(lambda row: water_category_for_osm_feature(dict(row)) or "other", axis=1)
+    return enriched[enriched["provider_category"] != "other"].copy()
+
+
+def _add_gas_categories(frame: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
+    if frame.empty:
+        return frame
+    enriched = frame.copy()
+    enriched["provider_category"] = enriched.apply(lambda row: gas_category_for_osm_feature(dict(row)) or "other", axis=1)
     return enriched[enriched["provider_category"] != "other"].copy()
 
 

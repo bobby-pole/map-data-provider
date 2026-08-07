@@ -32,7 +32,7 @@ export async function getAdministrativeCatalog(): Promise<unknown> {
     const { stdout } = await execFileAsync("uv", ["run", "--offline", "python", "-c", "from geo_pipeline.aoi_runtime import administrative_catalog; import json; print(json.dumps(administrative_catalog()))"], { cwd: new URL("../../../backend/", import.meta.url) });
     return JSON.parse(stdout);
   } catch (error) {
-    throw new ProviderDataError("worker_failed", error instanceof Error ? error.message : "Administrative catalogue worker failed.");
+    throw new ProviderDataError("worker_failed", workerFailureMessage(error, "Administrative catalogue could not be read."));
   }
 }
 
@@ -41,8 +41,27 @@ async function runRuntimeWorker(request: ProviderRuntimeRequest) {
     const { stdout } = await execFileAsync("uv", ["run", "--offline", "python", "-m", "geo_pipeline.worker", "--runtime-request", JSON.stringify(request), "--input", "live"], { cwd: new URL("../../../backend/", import.meta.url), maxBuffer: 1024 * 1024, timeout: 240_000 });
     return providerRuntimeResponseSchema.parse(JSON.parse(stdout));
   } catch (error) {
-    throw new ProviderDataError("worker_failed", error instanceof Error ? error.message : "AOI runtime worker failed.");
+    throw new ProviderDataError(
+      "worker_failed",
+      workerFailureMessage(error, "AOI preparation failed before a new snapshot could be published."),
+    );
   }
+}
+
+export function workerFailureMessage(error: unknown, fallback: string): string {
+  const stderr = error && typeof error === "object" && "stderr" in error ? (error as { stderr?: unknown }).stderr : undefined;
+  const text = typeof stderr === "string" ? stderr.trim() : Buffer.isBuffer(stderr) ? stderr.toString("utf8").trim() : "";
+  if (text) {
+    try {
+      const payload = JSON.parse(text) as { status?: unknown; code?: unknown; message?: unknown };
+      if (payload.status === "error" && typeof payload.code === "string" && typeof payload.message === "string") {
+        return `${payload.code}: ${payload.message}`;
+      }
+    } catch {
+      // Do not expose unstructured subprocess output to the API.
+    }
+  }
+  return fallback;
 }
 
 function canonicalJson(value: unknown): string {

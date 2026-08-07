@@ -7,7 +7,7 @@ from geo_pipeline.aoi_runtime import RuntimeRequestError, administrative_catalog
 from geo_pipeline.config import CACHE_DIR
 from geo_pipeline.domain_pack import read_domain_pack
 from geo_pipeline.runtime_osm import publish_runtime_osm_collection
-from geo_pipeline.query_catalog import TRANSPORT_OSM_QUERY, WATER_OSM_QUERY
+from geo_pipeline.query_catalog import GAS_OSM_QUERY, TRANSPORT_OSM_QUERY, WATER_OSM_QUERY
 from geo_pipeline.worker import run_runtime_worker
 
 
@@ -31,26 +31,26 @@ def test_administrative_union_and_profile_order_have_one_request_identity() -> N
 
 
 def test_runtime_profiles_are_explicit_and_do_not_fabricate_non_fixture_data() -> None:
-    request = {"aoi": point_radius(), "profiles": ["power", "public", "transport", "water"]}
+    request = {"aoi": point_radius(), "profiles": ["power", "public", "transport", "water", "gas"]}
     outcomes = profile_outcomes(request)
+    by_domain = {outcome["domain"]: outcome for outcome in outcomes}
 
-    assert [outcome["domain"] for outcome in outcomes] == ["power", "public", "transport", "water"]
-    assert outcomes[0]["status"] == "ready"
-    assert outcomes[0]["artifact_aoi_id"] == "rybnik_60km"
-    assert outcomes[1]["status"] == "ready"
-    assert outcomes[1]["artifact_aoi_id"] == "rybnik_60km"
-    assert outcomes[2]["status"] == "ready"
-    assert outcomes[2]["artifact_aoi_id"] == "rybnik_60km"
-    assert outcomes[2]["query_version"] == "transport-osm/v3"
-    assert outcomes[2]["tags"] == TRANSPORT_OSM_QUERY.tags
-    assert outcomes[3]["status"] == "ready"
-    assert outcomes[3]["artifact_aoi_id"] == "rybnik_60km"
-    assert outcomes[3]["tags"] == WATER_OSM_QUERY.tags
+    assert set(by_domain) == {"power", "public", "transport", "water", "gas"}
+    assert all(outcome["status"] == "ready" and outcome["artifact_aoi_id"] == "rybnik_60km" for outcome in outcomes)
+    assert by_domain["transport"]["query_version"] == "transport-osm/v3"
+    assert by_domain["transport"]["tags"] == TRANSPORT_OSM_QUERY.tags
+    assert by_domain["water"]["tags"] == WATER_OSM_QUERY.tags
+    assert by_domain["gas"]["query_version"] == "gas-osm/v2"
+    assert by_domain["gas"]["tags"] == GAS_OSM_QUERY.tags
+    assert all(outcome["queried_feature_count"] is None and outcome["accepted_feature_count"] is None and outcome["derived_feature_count"] is None for outcome in outcomes)
 
 
-def test_runtime_reuses_a_valid_local_request_cache(tmp_path) -> None:
+def test_runtime_reuses_only_a_valid_local_request_cache(tmp_path, monkeypatch) -> None:
     request = {"aoi": point_radius(), "profiles": ["power", "public"]}
     first = run_runtime_worker(request=request, input_mode="fixture", cache_root=CACHE_DIR, runtime_root=tmp_path)
+    validated = []
+    import geo_pipeline.worker as worker_module
+    monkeypatch.setattr(worker_module, "read_domain_pack", lambda aoi_id, domain, *, root: validated.append((aoi_id, domain, root)))
     second = run_runtime_worker(request=request, input_mode="fixture", cache_root=CACHE_DIR, runtime_root=tmp_path)
 
     assert first["request_result"] == "refresh"
@@ -58,6 +58,7 @@ def test_runtime_reuses_a_valid_local_request_cache(tmp_path) -> None:
     assert first["cached_at"].endswith("Z")
     assert second["request_result"] == "cache"
     assert second["outcomes"] == first["outcomes"]
+    assert validated == [("rybnik_60km", "power", CACHE_DIR), ("rybnik_60km", "public", CACHE_DIR)]
 
 
 def test_runtime_ignores_incomplete_legacy_local_cache_and_refreshes_it(tmp_path) -> None:
@@ -77,6 +78,21 @@ def test_runtime_ignores_incomplete_legacy_local_cache_and_refreshes_it(tmp_path
     assert response["outcomes"][0]["artifact_aoi_id"] == "rybnik_60km"
 
 
+def test_runtime_ignores_cache_without_acquisition_counts(tmp_path) -> None:
+    request = {"aoi": point_radius(), "profiles": ["gas"]}
+    first = run_runtime_worker(request=request, input_mode="fixture", cache_root=CACHE_DIR, runtime_root=tmp_path)
+    state_path = tmp_path / "provider-runtime-v1" / f"{first['cache_key']}.json"
+    stale = json.loads(state_path.read_text(encoding="utf-8"))
+    for field in ("queried_feature_count", "accepted_feature_count", "derived_feature_count"):
+        stale["outcomes"][0].pop(field)
+    state_path.write_text(json.dumps(stale), encoding="utf-8")
+
+    refreshed = run_runtime_worker(request=request, input_mode="fixture", cache_root=CACHE_DIR, runtime_root=tmp_path)
+
+    assert refreshed["request_result"] == "refresh"
+    assert refreshed["outcomes"][0]["accepted_feature_count"] is None
+
+
 def test_non_osm_contexts_remain_source_labelled_and_non_vector() -> None:
     contexts = context_outcomes({"aoi": {"type": "administrative_selection", "unit_ids": ["county_rybnik_city"]}, "profiles": ["water", "gas"]})
     assert {record["source_registry_id"] for record in contexts} >= {"prg_wfs", "bdot10k", "kiut_gesut_wms", "geoportal_orthophoto", "nmt_nmpt"}
@@ -93,7 +109,15 @@ def test_runtime_power_publication_builds_a_valid_pmtiles_domain_pack(tmp_path) 
 
     result = publish_runtime_osm_collection(aoi=aoi, domain="power", source=source, query_version="power-osm/v1", root=tmp_path)
 
-    assert result == {"status": "ready", "detail": "A bounded OpenStreetMap runtime artifact was acquired, validated and cached for this AOI.", "artifact_aoi_id": aoi["aoi_id"], "cache_status": "fresh"}
+    assert result == {
+        "status": "ready",
+        "detail": "A bounded OpenStreetMap runtime artifact was acquired, validated and cached for this AOI.",
+        "artifact_aoi_id": aoi["aoi_id"],
+        "cache_status": "fresh",
+        "queried_feature_count": 2,
+        "accepted_feature_count": 2,
+        "derived_feature_count": 0,
+    }
     assert [artifact["id"] for artifact in read_domain_pack(aoi["aoi_id"], "power", root=tmp_path)["artifacts"]] == ["power.lines", "power.assets"]
 
 
@@ -150,13 +174,15 @@ def test_invalid_runtime_requests_do_not_resolve_a_cache_identity(runtime_payloa
 def test_live_worker_refreshes_transport_profile_for_non_demo_aoi(tmp_path, monkeypatch) -> None:
     request = {"aoi": {"type": "administrative_selection", "unit_ids": ["county_rybnicki"]}, "profiles": ["transport"]}
     calls = []
+    validated = []
 
     def mock_refresh(*, aoi, domain, root):
         calls.append((aoi["aoi_id"], domain))
-        return {"status": "ready", "detail": "Bounded OpenStreetMap transport artifact acquired.", "artifact_aoi_id": aoi["aoi_id"], "cache_status": "fresh"}
+        return {"status": "ready", "detail": "Bounded OpenStreetMap transport artifact acquired.", "artifact_aoi_id": aoi["aoi_id"], "cache_status": "fresh", "queried_feature_count": 4, "accepted_feature_count": 3, "derived_feature_count": 2}
 
     import geo_pipeline.worker as worker_module
     monkeypatch.setattr(worker_module, "refresh_runtime_osm_domain", mock_refresh)
+    monkeypatch.setattr(worker_module, "read_domain_pack", lambda aoi_id, domain, *, root: validated.append((aoi_id, domain, root)))
 
     response = run_runtime_worker(request=request, input_mode="live", cache_root=CACHE_DIR, runtime_root=tmp_path)
 
@@ -166,3 +192,25 @@ def test_live_worker_refreshes_transport_profile_for_non_demo_aoi(tmp_path, monk
     assert response["outcomes"][0]["status"] == "ready"
     assert len(calls) == 1
     assert calls[0][1] == "transport"
+    assert validated == [(response["aoi"]["aoi_id"], "transport", CACHE_DIR)]
+
+
+def test_live_worker_refreshes_gas_profile_for_non_demo_aoi(tmp_path, monkeypatch) -> None:
+    request = {"aoi": {"type": "administrative_selection", "unit_ids": ["county_rybnicki"]}, "profiles": ["gas"]}
+    calls = []
+    validated = []
+
+    def mock_refresh(*, aoi, domain, root):
+        calls.append((aoi["aoi_id"], domain))
+        return {"status": "ready", "detail": "Bounded OpenStreetMap gas artifact acquired.", "artifact_aoi_id": aoi["aoi_id"], "cache_status": "fresh", "queried_feature_count": 4, "accepted_feature_count": 3, "derived_feature_count": 2}
+
+    import geo_pipeline.worker as worker_module
+    monkeypatch.setattr(worker_module, "refresh_runtime_osm_domain", mock_refresh)
+    monkeypatch.setattr(worker_module, "read_domain_pack", lambda aoi_id, domain, *, root: validated.append((aoi_id, domain, root)))
+
+    response = run_runtime_worker(request=request, input_mode="live", cache_root=CACHE_DIR, runtime_root=tmp_path)
+
+    assert response["outcomes"][0]["domain"] == "gas"
+    assert response["outcomes"][0]["status"] == "ready"
+    assert calls and calls[0][1] == "gas"
+    assert validated == [(response["aoi"]["aoi_id"], "gas", CACHE_DIR)]

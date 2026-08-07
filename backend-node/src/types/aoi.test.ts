@@ -35,8 +35,8 @@ describe("provider_aoi/v1 contracts", () => {
     expect(providerRuntimeResponseSchema.parse({
       status: "ok", request_contract_version: "provider_aoi_request/v2", request_id: "request_fixture", cache_key: "request_fixture", pipeline_version: "geo_pipeline/runtime/v1", job_state: "ready", request_result: "refresh", cached_at: "2026-08-03T00:00:00Z",
       aoi: { aoi_contract_version: "provider_aoi/v1", aoi_id: "aoi_fixture", cache_key: "aoi_fixture", geometry: { type: "Polygon", coordinates: [] }, geometry_crs: "EPSG:4326", input_type: "circle", source_crs: "EPSG:4326", boundary_provenance: {}, constraints: { max_area_sq_m: 1, min_radius_m: 1, max_radius_m: 1 }, aliases: [] },
-      profiles: [{ domain: "water", source_registry_id: "openstreetmap", source_role: "analytical", output_kind: "analytical_vector", query_version: "water-osm/v1", tags: { pipeline: ["water"] } }],
-      outcomes: [{ domain: "water", source_registry_id: "openstreetmap", source_role: "analytical", output_kind: "analytical_vector", query_version: "water-osm/v1", tags: { pipeline: ["water"] }, status: "needs_source", artifact_aoi_id: null, cache_status: "missing", queried_feature_count: 0, accepted_feature_count: 0, derived_feature_count: 0, detail: "No fixture data." }],
+      profiles: [{ domain: "water", source_registry_id: "openstreetmap", source_role: "analytical", output_kind: "analytical_vector", query_version: "water-osm/v2", tags: { pipeline: ["water"] } }],
+      outcomes: [{ domain: "water", source_registry_id: "openstreetmap", source_role: "analytical", output_kind: "analytical_vector", query_version: "water-osm/v2", tags: { pipeline: ["water"] }, status: "needs_source", artifact_aoi_id: null, cache_status: "missing", queried_feature_count: 0, accepted_feature_count: 0, derived_feature_count: 0, detail: "No fixture data." }],
       contexts: [{ domain: "water", source_registry_id: "kiut_gesut_wms", output_kind: "reference_descriptor", status: "reference_only", detail: "Rendered reference." }],
     })).toMatchObject({ outcomes: [{ domain: "water", status: "needs_source" }] });
   });

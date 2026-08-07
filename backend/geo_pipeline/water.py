@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from geo_pipeline.contracts import normalize_analytical_vector_layer
+from geo_pipeline.query_catalog import WATER_OSM_QUERY
 from geo_pipeline.source_registry import guard_source_access
 
 WATER_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_60km" / "water" / "osm-water.geojson"
@@ -21,9 +22,9 @@ WATER_LIMITATIONS = [
 
 FACILITY_MAPPINGS: dict[str, tuple[tuple[str, str], ...]] = {
     "facilities": (
-        ("man_made", "water_works"), ("man_made", "water_tower"), ("man_made", "pumping_station"), ("amenity", "water_point"),
+        ("man_made", "water_works"), ("man_made", "water_tower"), ("amenity", "water_point"),
     ),
-    "pipelines": (("pipeline", "water"), ("man_made", "pipeline")),
+    "pipelines": (("pipeline", "water"),),
     "waterways": (
         ("waterway", "river"), ("waterway", "stream"), ("waterway", "canal"), ("waterway", "drain"), ("waterway", "ditch"),
     ),
@@ -38,6 +39,12 @@ def category_for_osm_feature(properties: dict[str, Any]) -> str | None:
     for category, mappings in FACILITY_MAPPINGS.items():
         if any(properties.get(key) == value for key, value in mappings):
             return category
+    if properties.get("man_made") == "pumping_station" and properties.get("pumping") == "water":
+        return "facilities"
+    if properties.get("man_made") == "pumping_station" and properties.get("substance") == "water":
+        return "facilities"
+    if properties.get("man_made") == "pipeline" and properties.get("substance") == "water":
+        return "pipelines"
     return None
 
 
@@ -75,8 +82,8 @@ def water_osm_metadata(*, layer_id: str, readiness: str) -> dict[str, Any]:
         "source_url": "https://overpass-api.de/api/interpreter",
         "source_query": "Bounded Overpass snapshot: explicit water facility, pipeline and waterway tags within the Rybnik 60 km AOI.",
         "snapshot_at": WATER_SNAPSHOT_AT,
-        "pipeline_version": "geo_pipeline/water/v1",
-        "query_version": "water-osm/v1",
+        "pipeline_version": "geo_pipeline/water/v2",
+        "query_version": WATER_OSM_QUERY.query_version,
         "validation_status_raw": "warning",
         "quality_status": "warning",
         "confidence": "medium",

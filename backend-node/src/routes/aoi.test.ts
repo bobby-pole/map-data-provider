@@ -22,6 +22,7 @@ import {
   mapFeatureDetailResponseSchema,
   mapCircuitDetailResponseSchema,
   mapCircuitListResponseSchema,
+  multiDomainExportResponseSchema,
 } from "../types/provider.js";
 
 describe("read-only AOI provider routes", () => {
@@ -225,6 +226,80 @@ describe("read-only AOI provider routes", () => {
       { source_id: "kiut_gesut_wms", contribution_role: "validation_reference" },
     ]);
   }, 10_000);
+
+  it("serves a multi-domain export with filtering and issues", async () => {
+    const response = await request(createApp()).get("/api/aoi/rybnik_60km/export?domains=power,emergency");
+    expect(response.status).toBe(200);
+    const exportData = multiDomainExportResponseSchema.parse(response.body);
+    expect(exportData.export_version).toBe("provider_multi_domain_export/v2");
+    expect(exportData.aoi_id).toBe("rybnik_60km");
+    expect(exportData.domain_outcomes).toHaveLength(2);
+    expect(exportData.domain_outcomes).toEqual(expect.arrayContaining([
+      { domain: "power", status: "ready", detail: expect.stringMatching(/available/i), has_domain_pack: true },
+      { domain: "emergency", status: "ready", detail: expect.stringMatching(/available/i), has_domain_pack: true },
+    ]));
+    expect(exportData.domain_packs.length).toBe(2);
+    expect(exportData.domain_packs.map((p) => p.domain)).toEqual(expect.arrayContaining(["power", "emergency"]));
+    expect(Array.isArray(exportData.issues)).toBe(true);
+  }, 10_000);
+
+  it("serves a complete 9-domain multi-domain export when all required domains are requested", async () => {
+    const response = await request(createApp()).get("/api/aoi/rybnik_60km/export?domains=power,emergency,public,transport,bridges,water,gas,sewer,industrial");
+    expect(response.status).toBe(200);
+    const exportData = multiDomainExportResponseSchema.parse(response.body);
+    expect(exportData.domain_outcomes).toHaveLength(9);
+    expect(exportData.domain_packs).toHaveLength(9);
+  }, 15_000);
+
+  it("rejects multi-domain export requests with missing or empty domains parameter or empty segments", async () => {
+    const res1 = await request(createApp()).get("/api/aoi/rybnik_60km/export");
+    expect(res1.status).toBe(422);
+    expect(providerErrorSchema.parse(res1.body)).toMatchObject({ error: "invalid_request" });
+
+    const res2 = await request(createApp()).get("/api/aoi/rybnik_60km/export?domains=");
+    expect(res2.status).toBe(422);
+    expect(providerErrorSchema.parse(res2.body)).toMatchObject({ error: "invalid_request" });
+
+    const res3 = await request(createApp()).get("/api/aoi/rybnik_60km/export?domains=power,,water");
+    expect(res3.status).toBe(422);
+    expect(providerErrorSchema.parse(res3.body)).toMatchObject({ error: "invalid_request" });
+
+    const res4 = await request(createApp()).get("/api/aoi/rybnik_60km/export?domains=power,");
+    expect(res4.status).toBe(422);
+    expect(providerErrorSchema.parse(res4.body)).toMatchObject({ error: "invalid_request" });
+
+    const res5 = await request(createApp()).get("/api/aoi/rybnik_60km/export?domains=,power");
+    expect(res5.status).toBe(422);
+    expect(providerErrorSchema.parse(res5.body)).toMatchObject({ error: "invalid_request" });
+  });
+
+  it("rejects multi-domain export requests with unallowed or unknown domain parameters", async () => {
+    const response = await request(createApp()).get("/api/aoi/rybnik_60km/export?domains=power,unknown_domain");
+    expect(response.status).toBe(422);
+    expect(providerErrorSchema.parse(response.body)).toMatchObject({ error: "invalid_request" });
+  });
+
+  it("deduplicates requested domain parameters", async () => {
+    const response = await request(createApp()).get("/api/aoi/rybnik_60km/export?domains=power,power");
+    expect(response.status).toBe(200);
+    const exportData = multiDomainExportResponseSchema.parse(response.body);
+    expect(exportData.domain_outcomes).toHaveLength(1);
+    expect(exportData.domain_outcomes[0]?.domain).toBe("power");
+    expect(exportData.domain_packs).toHaveLength(1);
+  });
+
+  it("handles missing cached domain packs by returning explicit needs_source outcomes without failing HTTP status", async () => {
+    const { app } = await writeFixtureDomainPack();
+    const response = await request(app).get("/api/aoi/fixture_aoi/export?domains=water,power");
+    expect(response.status).toBe(200);
+    const exportData = multiDomainExportResponseSchema.parse(response.body);
+    expect(exportData.domain_outcomes).toEqual([
+      { domain: "water", status: "ready", detail: "Domain pack for 'water' is available.", has_domain_pack: true },
+      { domain: "power", status: "needs_source", detail: "Domain pack for 'power' is not cached or unavailable.", has_domain_pack: false },
+    ]);
+    expect(exportData.domain_packs).toHaveLength(1);
+    expect(exportData.domain_packs[0]?.domain).toBe("water");
+  });
 
   it("serves compact MapLibre presentation metadata without loading public GeoJSON into the response", async () => {
     const response = await request(createApp()).get("/api/aoi/rybnik_60km/presentations");

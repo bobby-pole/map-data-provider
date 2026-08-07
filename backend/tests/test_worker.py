@@ -139,3 +139,29 @@ def test_partial_adapter_output_does_not_replace_a_valid_cache(tmp_path: Path, m
     assert error.value.code == "worker_failed"
     assert target.layer.read_bytes() == before
     assert read_domain_pack("rybnik_60km", "power", root=tmp_path)["domain_pack_version"] == "provider_domain_pack/v2"
+
+
+def test_refresh_live_runtime_outcomes_isolates_domain_refresh_failure(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    resolved = {
+        "aoi": {"aoi_id": "custom_aoi"},
+    }
+    outcomes = [
+        {"domain": "power", "artifact_aoi_id": None},
+        {"domain": "water", "artifact_aoi_id": None},
+    ]
+
+    def mock_refresh(aoi, domain, root):
+        if domain == "water":
+            raise RuntimeError("Overpass network timeout")
+        return {"status": "ready", "artifact_aoi_id": "custom_aoi", "cache_status": "fresh"}
+
+    monkeypatch.setattr(worker, "refresh_runtime_osm_domain", mock_refresh)
+
+    res = worker._refresh_live_runtime_outcomes(resolved, outcomes, tmp_path)
+
+    assert len(res) == 2
+    assert res[0]["domain"] == "power"
+    assert res[0]["status"] == "ready"
+    assert res[1]["domain"] == "water"
+    assert res[1]["status"] == "needs_source"
+    assert "Live acquisition for domain 'water' failed" in res[1]["detail"]

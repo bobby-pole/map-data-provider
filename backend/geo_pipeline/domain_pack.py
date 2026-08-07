@@ -45,6 +45,13 @@ from geo_pipeline.sewer import (
     build_osm_sewer_layers,
     sewer_osm_metadata,
 )
+from geo_pipeline.industrial import (
+    INDUSTRIAL_FIXTURE,
+    INDUSTRIAL_LIMITATIONS,
+    INDUSTRIAL_FACILITY_MAPPINGS,
+    build_osm_industrial_layers,
+    industrial_osm_metadata,
+)
 from geo_pipeline.emergency import (
     EMERGENCY_FIXTURE,
     EMERGENCY_LIMITATIONS,
@@ -746,6 +753,81 @@ def build_rybnik_sewer_domain_pack(*, root: Path) -> dict[str, Any]:
     return pack
 
 
+def build_rybnik_industrial_domain_pack(*, root: Path) -> dict[str, Any]:
+    """Build the industrial pack with explicit industrial semantics."""
+    legacy = read_cached_layer(cache_paths("rybnik_60km", "industrial", root=root))
+    readiness = legacy["readiness"]["readiness"]
+    layers = build_osm_industrial_layers(readiness=readiness)
+    osm_provenance = [{"source_id": "openstreetmap", "contribution_role": "primary"}]
+    source_provenance = [*osm_provenance]
+    files: dict[str, bytes] = {
+        "validation/metadata.json": json.dumps(legacy["metadata"], ensure_ascii=False, indent=2).encode(),
+        "readiness/readiness.json": json.dumps(legacy["readiness"], ensure_ascii=False, indent=2).encode(),
+    }
+    artifacts: list[dict[str, Any]] = []
+    for category, layer in layers.items():
+        path = f"layers/industrial.{category}.geojson"
+        payload = json.dumps(layer, ensure_ascii=False, indent=2).encode()
+        files[path] = payload
+        artifacts.append({
+            "id": f"industrial.{category}", "kind": "processed_vector", "format": "geojson", "path": path,
+            "sha256": _digest(payload), "feature_count": layer["metadata"]["feature_count"],
+            "source_provenance": osm_provenance, "public_export": True
+        })
+
+    points = _industrial_representative_points(layers)
+    points_payload = json.dumps(points, ensure_ascii=False, indent=2).encode()
+    files["layers/industrial.inspection_points.geojson"] = points_payload
+    artifacts.append({
+        "id": "industrial.inspection_points", "kind": "derived_vector", "format": "geojson", "path": "layers/industrial.inspection_points.geojson",
+        "sha256": _digest(points_payload), "feature_count": points["metadata"]["feature_count"],
+        "source_provenance": osm_provenance, "public_export": True
+    })
+
+    evidence = {
+        "source_registry_id": "openstreetmap",
+        "fixture": str(INDUSTRIAL_FIXTURE.relative_to(Path(__file__).resolve().parents[1])),
+        "sha256": _digest(INDUSTRIAL_FIXTURE.read_bytes()),
+        "category_mappings": {category: [f"{key}={value}" for key, value in mappings] for category, mappings in INDUSTRIAL_FACILITY_MAPPINGS.items()},
+        "category_rules": {
+            "industrial.facilities": "landuse=industrial",
+            "industrial.works": "man_made=works, industrial=factory, or industrial=works",
+        },
+        "limitations": INDUSTRIAL_LIMITATIONS,
+    }
+    evidence_payload = json.dumps(evidence, ensure_ascii=False, indent=2).encode()
+    files["native/osm-industrial-source-evidence.json"] = evidence_payload
+    artifacts.append({
+        "id": "industrial.osm_source_evidence", "kind": "native_vector", "format": "json", "path": "native/osm-industrial-source-evidence.json",
+        "sha256": _digest(evidence_payload), "source_provenance": osm_provenance, "public_export": False
+    })
+
+    context = {
+        "prg": {"status": "needs_source", "detail": "No qualified PRG facility class is enabled for industrial semantics."},
+        "bdot10k": {"status": "context_only", "detail": "BDOT10k industrial areas and military complexes provide topographic context and cannot independently establish operational semantics."},
+        "comparison": [{"outcome": "ambiguous", "left": {"source_id": "openstreetmap", "feature_id": "way/industrial-1"}, "right": {"source_id": "bdot10k", "feature_id": None}, "evidence": "topographic_context_cannot_establish_industrial_semantics"}],
+    }
+    context_payload = json.dumps(context, ensure_ascii=False, indent=2).encode()
+    files["native/industrial-context-and-comparison.json"] = context_payload
+    artifacts.append({
+        "id": "industrial.context_and_comparison", "kind": "native_vector", "format": "json", "path": "native/industrial-context-and-comparison.json",
+        "sha256": _digest(context_payload), "source_provenance": [{"source_id": "prg_wfs", "contribution_role": "supplementary"}, {"source_id": "bdot10k", "contribution_role": "supplementary"}], "public_export": False
+    })
+
+    source_provenance = [
+        *osm_provenance,
+        {"source_id": "bdot10k", "contribution_role": "supplementary"},
+    ]
+
+    manifest = {
+        "domain_pack_version": DOMAIN_PACK_VERSION, "aoi_id": "rybnik_60km", "domain": "industrial", "source_provenance": source_provenance,
+        "artifacts": artifacts, "validation": {"path": "validation/metadata.json"}, "readiness": {"path": "readiness/readiness.json"}
+    }
+    pack = write_domain_pack("rybnik_60km", "industrial", root=root, manifest=manifest, files=files)
+    build_map_presentation(pack_root=domain_pack_root("rybnik_60km", "industrial", root=root), manifest=pack)
+    return pack
+
+
 def _representative_points_layer(layer: dict[str, Any]) -> dict[str, Any]:
     metadata = {**deepcopy(layer["metadata"]), "layer_id": "power.representative_points"}
     features = []
@@ -894,6 +976,25 @@ def _sewer_representative_points(layers: dict[str, dict[str, Any]]) -> dict[str,
     errors = validate_provider_geojson(points)
     if errors:
         raise ValueError(f"Sewer representative points violate the provider contract: {', '.join(errors)}")
+    return points
+
+
+def _industrial_representative_points(layers: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    first = next(iter(layers.values()))
+    metadata = {**deepcopy(first["metadata"]), "layer_id": "industrial.inspection_points"}
+    features = []
+    for category, layer in layers.items():
+        for feature in layer["features"]:
+            geometry = shape(feature["geometry"])
+            if geometry.geom_type == "Point":
+                continue
+            properties = {**deepcopy(feature["properties"]), "origin_artifact": f"industrial.{category}", "origin_source_id": feature["properties"]["source_id"], "source_geometry_type": geometry.geom_type}
+            features.append({"type": "Feature", "properties": properties, "geometry": mapping(geometry.representative_point())})
+    metadata["feature_count"] = len(features)
+    points = {"type": "FeatureCollection", "metadata": metadata, "features": features}
+    errors = validate_provider_geojson(points)
+    if errors:
+        raise ValueError(f"Industrial representative points violate the provider contract: {', '.join(errors)}")
     return points
 
 

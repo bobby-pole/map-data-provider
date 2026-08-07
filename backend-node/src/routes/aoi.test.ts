@@ -336,11 +336,10 @@ describe("read-only AOI provider routes", () => {
     expect(response.body.layers).toBeUndefined();
   });
 
-  it("returns 404 for a missing cached domain", async () => {
-    const response = await request(createApp()).get("/api/aoi/rybnik_60km/layers/industrial");
-
-    expect(response.status).toBe(404);
-    expect(providerErrorSchema.parse(response.body)).toMatchObject({ error: "not_found" });
+  it("returns 200 for the cached industrial domain pack", async () => {
+    const response = await request(createApp()).get("/api/aoi/rybnik_60km/domain-packs/industrial");
+    expect(response.status).toBe(200);
+    expect(domainPackReadResponseSchema.parse(response.body).domain).toBe("industrial");
   });
 
   it("returns 422 for a malformed AOI", async () => {

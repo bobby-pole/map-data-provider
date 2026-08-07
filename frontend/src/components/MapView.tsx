@@ -150,7 +150,7 @@ export function MapView({ layers, transportRoadClasses, references, orthophotoEn
             map.addLayer({ id, type: "line", source: sourceId, "source-layer": layer.artifact.source_layer, paint: { "line-color": color, "line-width": 4, "line-opacity": 0.9 } });
           }
         } else {
-          const minzoom = (layer.domain === "emergency" || layer.domain === "gas" || layer.domain === "sewer") ? 9 : 12;
+          const minzoom = (layer.domain === "emergency" || layer.domain === "gas" || layer.domain === "sewer" || layer.domain === "industrial") ? 9 : 12;
           const emergencyColor = ["match", ["get", "asset_type"], "hospital", "#e11d48", "fire_service", "#f97316", "police", "#2563eb", "ambulance_rescue", "#eab308", "crossings", "#f59e0b", "facilities", "#0ea5e9", color] as ExpressionSpecification;
           const supportPaint: CircleLayerSpecification["paint"] = { "circle-color": ["match", ["get", "asset_type"], "tower", "#f97316", "portal", "#facc15", "utility_pole", "#38bdf8", "#cbd5e1"] as ExpressionSpecification, "circle-radius": ["match", ["get", "asset_type"], "tower", 5, "portal", 4.5, "utility_pole", 3.5, 3] as ExpressionSpecification, "circle-stroke-width": 1.25, "circle-stroke-color": "#07111f", "circle-opacity": 0.9 };
           const pointPaint: CircleLayerSpecification["paint"] = layer.artifact.artifact_id === "power.supports"

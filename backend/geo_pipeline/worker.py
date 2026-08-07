@@ -109,7 +109,20 @@ def _refresh_live_runtime_outcomes(resolved: dict[str, Any], outcomes: list[dict
         # The committed Rybnik demo remains a deterministic fixture fallback.
         # Every other requested qualified OSM AOI uses a bounded refresh.
         if outcome["domain"] in {"power", "emergency", "public", "transport", "bridges", "water", "gas", "sewer", "industrial"} and outcome["artifact_aoi_id"] is None:
-            refreshed.append({**outcome, **refresh_runtime_osm_domain(aoi=resolved["aoi"], domain=outcome["domain"], root=cache_root)})
+            try:
+                res = refresh_runtime_osm_domain(aoi=resolved["aoi"], domain=outcome["domain"], root=cache_root)
+                refreshed.append({**outcome, **res})
+            except Exception as error:
+                refreshed.append({
+                    **outcome,
+                    "status": "needs_source",
+                    "detail": f"Live acquisition for domain '{outcome['domain']}' failed: {error}",
+                    "cache_status": "missing",
+                    "artifact_aoi_id": None,
+                    "queried_feature_count": None,
+                    "accepted_feature_count": None,
+                    "derived_feature_count": None,
+                })
         else:
             refreshed.append(outcome)
     return refreshed

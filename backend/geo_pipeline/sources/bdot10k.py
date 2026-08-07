@@ -32,6 +32,7 @@ BDOT10K_CLASS_MAPPING: dict[str, dict[str, str]] = {
     "OT_BUBD_A": {"source_role": "building_context", "geometry_family": "polygon", "label": "building"},
     "OT_KUPG_A": {"source_role": "industrial_context", "geometry_family": "polygon", "label": "industrial_economic_complex"},
     "OT_KUPG_P": {"source_role": "industrial_context", "geometry_family": "point", "label": "industrial_economic_complex"},
+    "OT_PTKM_A": {"source_role": "military_context", "geometry_family": "polygon", "label": "military_complex"},
 }
 BDOT10K_REQUIRED_FIELDS = frozenset({"idIIP"})
 BDOT10K_SELECTED_FIELDS = ("idIIP", "x_kod", "nazwa", "geometry")

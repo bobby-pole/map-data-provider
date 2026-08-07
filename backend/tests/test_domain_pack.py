@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from geo_pipeline.cache import build_rybnik_emergency_cache, build_rybnik_gas_cache, build_rybnik_public_cache, build_rybnik_sewer_cache, build_rybnik_transport_cache, cache_paths
+from geo_pipeline.cache import build_rybnik_emergency_cache, build_rybnik_gas_cache, build_rybnik_public_cache, build_rybnik_sewer_cache, build_rybnik_transport_cache, build_rybnik_industrial_cache, cache_paths
 from geo_pipeline.domain_pack import (
     build_rybnik_emergency_domain_pack,
     build_rybnik_gas_domain_pack,
@@ -12,6 +12,7 @@ from geo_pipeline.domain_pack import (
     build_rybnik_public_domain_pack,
     build_rybnik_sewer_domain_pack,
     build_rybnik_transport_domain_pack,
+    build_rybnik_industrial_domain_pack,
     read_domain_pack,
     validate_domain_pack,
 )
@@ -49,6 +50,18 @@ def test_power_domain_pack_v2_preserves_v1_cache_compatibility(tmp_path: Path) -
     assert {layer["artifact_id"] for layer in presentation["layers"]} == {"power.lines", "power.assets", "power.supports"}
     public = read_domain_pack("rybnik_60km", "power", root=tmp_path, public_export=True)["artifacts"]
     assert [artifact["id"] for artifact in public] == ["power.lines", "power.assets", "power.supports"]
+
+
+def test_industrial_domain_pack_synthesizes_industrial_facilities(tmp_path: Path) -> None:
+    build_rybnik_industrial_cache(root=tmp_path)
+    pack = build_rybnik_industrial_domain_pack(root=tmp_path)
+    artifacts = {artifact["id"]: artifact for artifact in pack["artifacts"]}
+    assert {"industrial.land_use", "industrial.facilities", "industrial.works", "industrial.building_context", "industrial.military_context", "industrial.inspection_points", "industrial.osm_source_evidence", "industrial.context_and_comparison"} == set(artifacts)
+    assert artifacts["industrial.osm_source_evidence"]["format"] == "json"
+
+    presentation = json.loads((tmp_path / "rybnik_60km" / "industrial" / "domain-pack-v2" / "presentation" / "manifest.json").read_text())
+    assert {layer["artifact_id"] for layer in presentation["layers"]} == {"industrial.land_use", "industrial.facilities", "industrial.works", "industrial.building_context", "industrial.military_context", "industrial.inspection_points"}
+    assert presentation["archive"]["format"] == "pmtiles"
 
 
 def test_domain_pack_rejects_escape_checksum_and_count_mismatch(tmp_path: Path) -> None:

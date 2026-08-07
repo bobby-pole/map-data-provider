@@ -60,5 +60,8 @@ function formatLayerTitle(artifactId: string): string {
   if (artifactId === "sewer.facilities") return "Sewer facilities";
   if (artifactId === "sewer.pipelines") return "Sewer pipelines";
   if (artifactId === "sewer.inspection_points") return "Sewer inspection points";
+  if (artifactId === "industrial.facilities") return "Industrial facilities";
+  if (artifactId === "industrial.works") return "Industrial works";
+  if (artifactId === "industrial.inspection_points") return "Industrial inspection points";
   return artifactId;
 }

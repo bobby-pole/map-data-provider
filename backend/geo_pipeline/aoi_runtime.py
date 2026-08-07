@@ -13,14 +13,12 @@ from shapely.geometry import mapping, shape
 from shapely.ops import unary_union
 
 from geo_pipeline.aoi import AoiResolutionError, MAX_AREA_SQ_M, WGS84, _resolved, resolve_aoi
-from geo_pipeline.query_catalog import GAS_OSM_QUERY, POWER_OSM_QUERY, SEWER_OSM_QUERY, TRANSPORT_OSM_QUERY, WATER_OSM_QUERY
+from geo_pipeline.query_catalog import GAS_OSM_QUERY, POWER_OSM_QUERY, SEWER_OSM_QUERY, TRANSPORT_OSM_QUERY, WATER_OSM_QUERY, INDUSTRIAL_OSM_QUERY
 
 AOI_REQUEST_CONTRACT_VERSION = "provider_aoi_request/v2"
 RUNTIME_CONTRACT_VERSION = "provider_runtime/v1"
-# Changing the pipeline version deliberately creates a new request-cache key.
-# v12 invalidates sewer results that admitted drainage/stormwater candidates
-# before the runtime required explicit wastewater semantics.
-PIPELINE_VERSION = "geo_pipeline/runtime/v12"
+# v13 adds the industrial domain pack.
+PIPELINE_VERSION = "geo_pipeline/runtime/v13"
 CATALOG_PATH = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "aoi" / "prg_administrative_catalog.geojson"
 POLAND_BOUNDS = (14.05, 49.0, 24.25, 55.0)
 ProfileOutcome = Literal["ready", "needs_source", "reference_only", "pending_qualification"]
@@ -46,7 +44,7 @@ PROFILES: tuple[ProviderProfile, ...] = (
     ProviderProfile("water", WATER_OSM_QUERY.source_registry_id, "analytical", "analytical_vector", WATER_OSM_QUERY.query_version, WATER_OSM_QUERY.tags, True),
     ProviderProfile("gas", GAS_OSM_QUERY.source_registry_id, "analytical", "analytical_vector", GAS_OSM_QUERY.query_version, GAS_OSM_QUERY.tags, True),
     ProviderProfile("sewer", SEWER_OSM_QUERY.source_registry_id, "analytical", "analytical_vector", SEWER_OSM_QUERY.query_version, SEWER_OSM_QUERY.tags, True),
-    ProviderProfile("industrial", "openstreetmap", "analytical", "analytical_vector", "industrial-osm/v1", {"landuse": ["industrial"], "man_made": ["works"], "industrial": ["factory", "works"]}),
+    ProviderProfile("industrial", INDUSTRIAL_OSM_QUERY.source_registry_id, "analytical", "analytical_vector", INDUSTRIAL_OSM_QUERY.query_version, INDUSTRIAL_OSM_QUERY.tags, True),
 )
 _PROFILE_BY_DOMAIN = {profile.domain: profile for profile in PROFILES}
 

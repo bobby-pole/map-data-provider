@@ -74,12 +74,18 @@ BRIDGES_OSM_QUERY = OsmQueryDefinition(
 
 WATER_OSM_QUERY = OsmQueryDefinition(
     source_registry_id="openstreetmap",
-    query_version="water-osm/v1",
+    # OSMnx expands entries as an OR query.  Do not acquire every generic
+    # man_made=pipeline or pumping_station object: a water classification
+    # requires an explicit water tag and can otherwise admit gas or sewer
+    # infrastructure into this domain.
+    query_version="water-osm/v2",
     tags={
         "waterway": ["river", "stream", "canal", "drain", "ditch"],
         "pipeline": ["water"],
-        "man_made": ["water_works", "water_tower", "pumping_station", "pipeline"],
+        "man_made": ["water_works", "water_tower"],
         "amenity": ["water_point"],
+        "pumping": ["water"],
+        "substance": ["water"],
     },
 )
 

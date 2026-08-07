@@ -6,12 +6,10 @@
     "facilities": [
       "man_made=water_works",
       "man_made=water_tower",
-      "man_made=pumping_station",
       "amenity=water_point"
     ],
     "pipelines": [
-      "pipeline=water",
-      "man_made=pipeline"
+      "pipeline=water"
     ],
     "waterways": [
       "waterway=river",
@@ -21,6 +19,11 @@
       "waterway=ditch"
     ]
   },
+  "category_rules": {
+    "water.facilities": "man_made=pumping_station requires pumping=water or substance=water.",
+    "water.pipelines": "man_made=pipeline requires substance=water; pipeline=water remains an explicit legacy representation."
+  },
+  "water_semantics_rule": "Generic pipelines and pumping stations without explicit water semantics are excluded to prevent gas or sewer attribution.",
   "topographic_rule": "BDOT10k hydrographic lines without OSM water semantics are topographic context and not water analytical vectors.",
   "limitations": [
     "OSM water infrastructure and waterway mapping completeness varies by area and operator.",

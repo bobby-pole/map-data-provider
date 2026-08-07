@@ -556,6 +556,11 @@ def build_rybnik_water_domain_pack(*, root: Path) -> dict[str, Any]:
         "fixture": str(WATER_FIXTURE.relative_to(Path(__file__).resolve().parents[1])),
         "sha256": _digest(WATER_FIXTURE.read_bytes()),
         "category_mappings": {category: [f"{key}={value}" for key, value in mappings] for category, mappings in WATER_FACILITY_MAPPINGS.items()},
+        "category_rules": {
+            "water.facilities": "man_made=pumping_station requires pumping=water or substance=water.",
+            "water.pipelines": "man_made=pipeline requires substance=water; pipeline=water remains an explicit legacy representation.",
+        },
+        "water_semantics_rule": "Generic pipelines and pumping stations without explicit water semantics are excluded to prevent gas or sewer attribution.",
         "topographic_rule": "BDOT10k hydrographic lines without OSM water semantics are topographic context and not water analytical vectors.",
         "limitations": WATER_LIMITATIONS,
     }

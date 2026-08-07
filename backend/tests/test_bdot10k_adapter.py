@@ -142,7 +142,7 @@ def test_unknown_class_checksum_and_schema_drift_fail_clearly(tmp_path: Path) ->
 
 def test_mapping_is_narrow_and_uses_only_supported_geometry_families() -> None:
     assert set(BDOT10K_CLASS_MAPPING) == {
-        "OT_SKDR_L", "OT_BUIN_L", "OT_SWRS_L", "OT_BUBD_A", "OT_KUPG_A", "OT_KUPG_P"
+        "OT_SKDR_L", "OT_BUIN_L", "OT_SWRS_L", "OT_BUBD_A", "OT_KUPG_A", "OT_KUPG_P", "OT_PTKM_A"
     }
     assert {definition["geometry_family"] for definition in BDOT10K_CLASS_MAPPING.values()} == {
         "line", "point", "polygon"

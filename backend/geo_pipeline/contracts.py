@@ -118,6 +118,8 @@ DISPLAY_ATTRIBUTE_FIELDS = (
     "substance",
     "diameter",
     "pumping",
+    "gas",
+    "pressure",
     "official_type",
     "iip_identifier",
     "version_from",

@@ -146,6 +146,7 @@ describe("read-only AOI provider routes", () => {
     expect(layerListResponseSchema.parse(response.body).layers).toEqual(expect.arrayContaining([
       expect.objectContaining({ domain: "power", feature_count: 16_505, source_type: "analytical_vector" }),
       expect.objectContaining({ domain: "emergency", feature_count: 4, source_type: "analytical_vector" }),
+      expect.objectContaining({ domain: "gas", feature_count: 2, source_type: "analytical_vector" }),
     ]));
   });
 
@@ -162,6 +163,19 @@ describe("read-only AOI provider routes", () => {
     const layer = providerLayerResponseSchema.parse(response.body);
     expect(layer.metadata).toMatchObject({ aoi_id: "rybnik_60km", domain: "power", feature_count: 16_505 });
     expect(layer.features).toHaveLength(16_505);
+  });
+
+  it("returns the versioned Rybnik gas contract with explicit fixture limitations", async () => {
+    const response = await request(createApp()).get("/api/aoi/rybnik_60km/layers/gas");
+
+    expect(response.status).toBe(200);
+    const layer = providerLayerResponseSchema.parse(response.body);
+    expect(layer.metadata).toMatchObject({
+      aoi_id: "rybnik_60km", domain: "gas", feature_count: 2, query_version: "gas-osm/v2",
+    });
+    expect(layer.metadata.limitations).toEqual(expect.arrayContaining([
+      expect.stringMatching(/not a complete Rybnik 60 km OSM snapshot/i),
+    ]));
   });
 
   it("returns cached readiness without invoking a worker", async () => {
@@ -323,7 +337,7 @@ describe("read-only AOI provider routes", () => {
   });
 
   it("returns 404 for a missing cached domain", async () => {
-    const response = await request(createApp()).get("/api/aoi/rybnik_60km/layers/gas");
+    const response = await request(createApp()).get("/api/aoi/rybnik_60km/layers/sewer");
 
     expect(response.status).toBe(404);
     expect(providerErrorSchema.parse(response.body)).toMatchObject({ error: "not_found" });

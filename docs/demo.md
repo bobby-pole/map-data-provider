@@ -100,21 +100,38 @@ pnpm run dev
 
 Open `http://localhost:5173`. The MapLibre preview draws public power data from the local PMTiles archive over the default-on OpenStreetMap base map. The base map is online visual context only: turn it off to verify the local PMTiles view, and do not expect it offline. Power lines use deterministic voltage colours; toggle the separate Power supports layer and zoom to 12 for towers, portals and utility poles, or 14 for ordinary poles. Click a visible feature to inspect source, confidence, limitations and its validated OSM source tags in the single inspector panel. KIUT and orthophoto toggles remain optional external WMS references and are not available offline. Generated rule evidence remains separate from persisted human decisions and never rewrites readiness.
 
-## 6. Close with the system boundary — 20 seconds
+## 6. Export multi-domain provider package — 30 seconds
+
+Request a consolidated export payload for all 9 supported domains (`power`, `emergency`, `public`, `transport`, `bridges`, `water`, `gas`, `sewer`, `industrial`):
+
+```bash
+curl -sS "http://127.0.0.1:3001/api/aoi/rybnik_60km/export?domains=power,emergency,public,transport,bridges,water,gas,sewer,industrial" \
+  | jq '{
+      export_version,
+      aoi_id,
+      domain_outcomes: [.domain_outcomes[] | {domain, status, has_domain_pack}],
+      domain_pack_count: (.domain_packs | length),
+      issue_count: (.issues | length)
+    }'
+```
+
+The response conforms to `provider_multi_domain_export/v2`. It isolates per-domain failures into explicit `domain_outcomes`, filters public GeoJSON domain packs, attaches reviewed issue evidence matching requested domains, and deduplicates requested domain parameters.
+
+## 7. Close with the system boundary — 20 seconds
 
 The demonstrated path is:
 
 ```text
-AOI/domain request
-  -> cache-first provider orchestration
-  -> OSM-derived, normalized GeoJSON
+AOI/multi-domain request
+  -> cache-first provider orchestration across 9 domains
+  -> OSM/BDOT10k-derived, normalized GeoJSON
   -> validation, provenance, confidence and readiness
   -> derived MVT/PMTiles map presentation
   -> explainable issue evidence and review state
-  -> provider_pack/v1 export
+  -> provider_multi_domain_export/v2 export
 ```
 
-This repository owns that upstream data workflow. The export is ready for a provider-compatible client, but actual cross-repository consumption is not claimed by this release.
+This repository owns that upstream data workflow. The multi-domain export is ready for a provider-compatible client, but actual cross-repository consumption is not claimed by this release.
 
 ## Optional: demonstrate cache refresh after the core demo
 

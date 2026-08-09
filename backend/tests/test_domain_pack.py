@@ -186,3 +186,18 @@ def test_sewer_pack_keeps_semantics_separate_and_publishes_comparison_evidence(t
     assert {artifact["id"] for artifact in read_domain_pack("rybnik_60km", "sewer", root=tmp_path, public_export=True)["artifacts"]} == {
         "sewer.facilities", "sewer.pipelines", "sewer.inspection_points",
     }
+
+
+import os
+
+if os.environ.get("MDQ_REJECT_MALFORMED_PACK_PROBE") == "1":
+    def test_probe_malformed_domain_pack_rejection_failure() -> None:
+        malformed_manifest = {"domain_pack_version": "invalid_version"}
+        valid = False
+        try:
+            validate_domain_pack(malformed_manifest)
+            valid = True
+        except ValueError:
+            valid = False
+        assert valid, "Probe intentionally failed: malformed domain pack manifest must be rejected."
+

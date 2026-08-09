@@ -241,10 +241,12 @@ The Node/Express/TypeScript provider now serves typed, read-only local artifacts
 
 `POST /api/aoi/requests` currently supports only `rybnik_60km/power`, whose registered boundary reference uses EPSG:4326. The provider treats a cache as fresh for 24 hours after `snapshot_at`; a missing or stale cache invokes the Python worker fixture path and returns whether the artifact came from cache or refresh.
 
-`GET /api/aoi/catalog` returns the bounded offline PRG administrative selection catalogue. `POST /api/aoi/runtime-requests` validates `provider_aoi_request/v2`, then calls the local runtime worker only after validation. A cache miss for qualified `power`, `emergency`, `public`, `transport` or `bridges` makes a bounded live OSM/Overpass request, then publishes a validated local domain pack and PMTiles presentation; it makes no WMS or raster request. Other profiles remain typed source gaps until their separately governed adapters are complete.
+`GET /api/aoi/catalog` returns the bounded offline PRG administrative selection catalogue. `POST /api/aoi/runtime-requests` validates `provider_aoi_request/v2`, then calls the local runtime worker only after validation. A cache miss for any of the 9 qualified profiles (`power`, `emergency`, `public`, `transport`, `bridges`, `water`, `gas`, `sewer`, `industrial`) makes a bounded live OSM/Overpass request, then publishes a validated local domain pack and PMTiles presentation; it makes no WMS or raster request. Other profiles remain typed source gaps until their separately governed adapters are complete.
 
 
 `GET /api/aoi/:aoiId/domain-packs` and `GET /api/aoi/:aoiId/domain-packs/:domain` provide read-only `provider_domain_pack_read/v2` responses from registered manifests. Node validates request and manifest identity, pack-relative paths, source provenance, SHA-256 checksums, feature counts and provider GeoJSON metadata before returning any layer. The response exposes only explicitly public processed, derived or representative-point GeoJSON vectors. Native artifacts, rasters, remote services and reference-only records remain inside the cache as provenance evidence and cannot enter an analytical endpoint.
+
+`GET /api/aoi/:aoiId/export` provides a consolidated multi-domain export payload conforming to `provider_multi_domain_export/v2`. The route accepts a mandatory `domains` parameter (e.g., `GET /api/aoi/:aoiId/export?domains=power,emergency,public,transport,bridges,water,gas,sewer,industrial`), validates requested domains against an allow-list of profiles, rejects empty domain segments with HTTP 422 `invalid_request`, deduplicates requested profiles, and attaches explicit per-domain outcomes (`ready` vs `needs_source`), public GeoJSON domain packs, and relevant reviewed issues filtered by requested domains.
 
 `GET /api/aoi/:aoiId/presentations` and `GET /api/aoi/:aoiId/presentations/:domain` provide compact `provider_map_presentation_read/v1` metadata without reading or serializing analytical GeoJSON collections. `GET /api/aoi/:aoiId/presentations/:domain/features/:sourceId` returns one validated source-detail feature and its allow-listed attributes; it validates an OSM `node`, `way` or `relation` ID and never returns an entire layer. `GET /api/aoi/:aoiId/presentations/:domain/archive` requires one satisfiable HTTP byte range and responds with checked PMTiles bytes, an ETag and `Content-Range`. Node validates presentation identity, parent-manifest digest, public-source provenance, archive size and SHA-256 before serving it. These routes are read-only and never invoke Python, Overpass, WMS or a tile generator.
 
@@ -261,6 +263,7 @@ Implemented Node/Express provider endpoints:
 - `PATCH /api/aoi/:aoiId/issues/:issueId/review`
 - `GET /api/aoi/:aoiId/domain-packs`
 - `GET /api/aoi/:aoiId/domain-packs/:domain`
+- `GET /api/aoi/:aoiId/export`
 - `GET /api/aoi/:aoiId/presentations`
 - `GET /api/aoi/:aoiId/presentations/:domain`
 - `GET /api/aoi/:aoiId/presentations/:domain/features/:sourceId`
@@ -275,7 +278,7 @@ Output: public OSM power-line and power-asset GeoJSON, private source/representa
 Consumer: GIS consumer
 ```
 
-The current release implements the provider side of these domain slices (`power`, `emergency`, `public`, `transport`, `bridges`, `water`): cache-first requests, source/readiness/issue contracts, durable review state, bounded `provider_pack/v1` compatibility, multi-artifact domain packs and manifest-driven v2 reads/exports. The MapLibre dev-preview derives its layer toggles, counts, domain-specific styling, attribution and limitations from compact presentation metadata, resolves one selected feature into its validated source detail, and reads public MVT from local PMTiles ranges; KIUT remains a separate external reference-only overlay. The preview is a non-operational provider inspection tool. Consumer-side loading remains a separate repository task.
+The current release implements the provider side of all 9 required domain slices (`power`, `emergency`, `public`, `transport`, `bridges`, `water`, `gas`, `sewer`, `industrial`): cache-first requests, source/readiness/issue contracts, durable review state, bounded multi-artifact domain packs, manifest-driven v2 reads/exports, and `provider_multi_domain_export/v2` consolidation. The MapLibre dev-preview derives its layer toggles, counts, domain-specific styling, attribution and limitations from compact presentation metadata, resolves one selected feature into its validated source detail, and reads public MVT from local PMTiles ranges; KIUT remains a separate external reference-only overlay. The preview is a non-operational provider inspection tool. Consumer-side loading remains a separate repository task.
 
 ## Repository Plan
 

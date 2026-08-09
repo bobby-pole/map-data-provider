@@ -525,4 +525,11 @@ describe("read-only AOI provider routes", () => {
     const issue = issueListResponseSchema.parse(response.body).issues.find((item) => item.id === "DQ-MANUAL-SEEDS-NON-AUTHORITATIVE");
     expect(issue?.review.status).toBe("open");
   });
+
+  if (process.env.MDQ_REJECT_MALFORMED_EXPORT_PROBE === "1") {
+    it("probe: expects malformed export query to be accepted (intentionally fails)", async () => {
+      const res = await request(createApp()).get("/api/aoi/rybnik_60km/export?domains=power,,water");
+      expect(res.status).toBe(200);
+    });
+  }
 });

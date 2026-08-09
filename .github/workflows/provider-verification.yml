@@ -27,6 +27,13 @@ jobs:
         with:
           python-version-file: backend/.python-version
 
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Install Python dependencies
+        working-directory: backend
+        run: uv sync
+
       - name: Set up Node
         uses: actions/setup-node@v7
         with:
@@ -40,24 +47,5 @@ jobs:
       - name: Install JavaScript dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Check Python syntax
-        working-directory: backend
-        run: python -m compileall -q geo_pipeline
-
-      - name: Run Node unit tests
-        run: pnpm --dir backend-node test
-
-      - name: Type-check and build Node provider
-        run: pnpm --dir backend-node run build
-
-      - name: Lint Node provider
-        run: pnpm --dir backend-node run lint
-
-      - name: Run frontend unit tests
-        run: pnpm --dir frontend test
-
-      - name: Type-check and build frontend
-        run: pnpm --dir frontend run build
-
-      - name: Lint frontend
-        run: pnpm --dir frontend run lint
+      - name: Run repository-owned verification gate
+        run: ./scripts/verify_provider.sh

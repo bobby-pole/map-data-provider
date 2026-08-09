@@ -1,5 +1,6 @@
 import copy
 import json
+import os
 from pathlib import Path
 
 import pytest
@@ -207,3 +208,30 @@ def test_cache_reader_rejects_missing_legacy_analytical_source_provenance(tmp_pa
 
     with pytest.raises(ValueError, match="provenance fields: query_version"):
         read_cached_layer(target_paths)
+
+
+if os.environ.get("MDQ_REJECT_NONFREE_PROBE") == "1":
+    def test_probe_nonfree_source_rejection_failure() -> None:
+        paid_source = {
+            "id": "paid_analytical_vector",
+            "access_method": "paid",
+            "qualification_status": "qualified_free",
+            "usage_role": "analytical",
+            "data_kind": "vector",
+        }
+        res = evaluate_source_eligibility(paid_source, "analytical_processing")
+        assert res["allowed"], "Probe intentionally failed: paid source must be rejected."
+
+
+if os.environ.get("MDQ_REJECT_WMS_VECTOR_PROBE") == "1":
+    def test_probe_wms_vector_export_rejection_failure() -> None:
+        wms_source = {
+            "id": "kiut_gesut_wms",
+            "access_method": "api",
+            "qualification_status": "qualified_free",
+            "usage_role": "reference",
+            "data_kind": "rendered_imagery",
+        }
+        res = evaluate_source_eligibility(wms_source, "public_export")
+        assert res["allowed"], "Probe intentionally failed: WMS source must not be allowed for public vector export."
+

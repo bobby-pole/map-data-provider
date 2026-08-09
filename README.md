@@ -47,21 +47,21 @@ The intended contract is that a consumer can request infrastructure layers for a
 ## Provider demo flow
 
 1. Run the offline provider verification and start the Node/Express API.
-2. Request the `rybnik_60km/power`, `rybnik_60km/emergency` or `rybnik_60km/public` cached layer through the read-only endpoint.
-3. Inspect the source-labelled GeoJSON, metadata and readiness record.
+2. Request cached layers for any of the 9 supported domains (`power`, `emergency`, `public`, `transport`, `bridges`, `water`, `gas`, `sewer`, `industrial`) through read-only API endpoints or multi-domain export (`GET /api/aoi/:aoiId/export?domains=...`).
+3. Inspect the source-labelled GeoJSON, metadata, domain outcomes, and readiness records.
 4. Compare analytical, manual and reference-only source classifications.
 5. Inspect generated issue evidence, human review state and feature metadata in the dev-preview.
-6. Export `provider_pack/v1` for a provider-compatible client.
+6. Export `provider_multi_domain_export/v2` for provider-compatible clients.
 
 Follow the [3–5 minute provider demo](./docs/demo.md) for exact commands and representative output.
 
 ## Demo scenario
 
 ```text
-Scenario: a provider-compatible client requests a source-aware infrastructure layer
+Scenario: a provider-compatible client requests source-aware multi-domain infrastructure layers
 
-A compatible client requests the `power`, `emergency` or `public` domain for the Rybnik AOI.
-Map Data Quality Lab returns cached, normalized analytical layers with their metadata and readiness record. The power pack preserves OSM source evidence and a separate KIUT/GESUT reference-only WMS overlay. The emergency pack keeps OSM hospital/fire/police/ambulance-rescue geometry distinct from supplementary PRG police/fire unit-area representative points. The public pack exposes only explicit OSM administration, education, post and community/social semantics; BDOT10k buildings remain context, not facilities.
+A compatible client requests any subset or all 9 supported domains (power, emergency, public, transport, bridges, water, gas, sewer, industrial) for the Rybnik AOI.
+Map Data Quality Lab returns cached, normalized analytical layers with their metadata, domain outcomes, and readiness records.
 The provider exposes source attribution, feature count, validation status, confidence and known limitations.
 Its source registry keeps manual inputs and KIUT/GESUT WMS references distinct from analytical vectors.
 The returned layer pack is ready for a provider-compatible client; consumer-specific integration remains external work.

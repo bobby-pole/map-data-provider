@@ -5,7 +5,12 @@ cd "$(dirname "$0")/.."
 
 export UV_CACHE_DIR="${UV_CACHE_DIR:-${TMPDIR:-/tmp}/map-data-quality-lab-uv-cache}"
 
-(cd backend && uv run --offline pytest -q -W error && uv run --offline python tests/smoke_check.py)
+OFFLINE_FLAG=""
+if [[ "${MDQ_OFFLINE:-0}" == "1" ]]; then
+  OFFLINE_FLAG="--offline"
+fi
+
+(cd backend && uv run $OFFLINE_FLAG pytest -q -W error && uv run $OFFLINE_FLAG python tests/smoke_check.py)
 ./scripts/verify_contract_failure_probe.sh
 pnpm run verify:node
 pnpm run verify:frontend

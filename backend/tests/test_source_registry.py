@@ -235,3 +235,12 @@ if os.environ.get("MDQ_REJECT_WMS_VECTOR_PROBE") == "1":
         res = evaluate_source_eligibility(wms_source, "public_export")
         assert res["allowed"], "Probe intentionally failed: WMS source must not be allowed for public vector export."
 
+
+if os.environ.get("MDQ_REJECT_STALE_EVIDENCE_PROBE") == "1":
+    def test_probe_stale_evidence_rejection_failure() -> None:
+        source_paths = cache_paths("rybnik_60km", "power")
+        metadata = json.loads(source_paths.metadata.read_text(encoding="utf-8"))
+        has_valid_query = "query_version" in metadata and metadata["query_version"] == "stale_query_v0"
+        assert has_valid_query, "Probe intentionally failed: stale or invalid query_version evidence must be rejected."
+
+

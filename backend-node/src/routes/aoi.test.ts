@@ -149,6 +149,7 @@ describe("read-only AOI provider routes", () => {
       expect.objectContaining({ domain: "emergency", feature_count: 4, source_type: "analytical_vector" }),
       expect.objectContaining({ domain: "gas", feature_count: 2, source_type: "analytical_vector" }),
       expect.objectContaining({ domain: "telecom", feature_count: 2, source_type: "analytical_vector" }),
+      expect.objectContaining({ domain: "district_heating", feature_count: 2, source_type: "analytical_vector" }),
     ]));
   });
 
@@ -191,6 +192,20 @@ describe("read-only AOI provider routes", () => {
     expect(layer.metadata.limitations).toEqual(expect.arrayContaining([
       expect.stringMatching(/empty telecom\.lines layer remains an explicit source gap/i),
       expect.stringMatching(/KIUT telecom WMS layers are visual reference overlays only/i),
+    ]));
+  });
+
+  it("returns the district-heating contract with an explicit missing-network source gap", async () => {
+    const response = await request(createApp()).get("/api/aoi/rybnik_60km/layers/district_heating");
+
+    expect(response.status).toBe(200);
+    const layer = providerLayerResponseSchema.parse(response.body);
+    expect(layer.metadata).toMatchObject({
+      aoi_id: "rybnik_60km", domain: "district_heating", feature_count: 2, query_version: "district-heating-osm/v1",
+    });
+    expect(layer.metadata.limitations).toEqual(expect.arrayContaining([
+      expect.stringMatching(/empty district_heating\.lines layer remains an explicit source gap/i),
+      expect.stringMatching(/KIUT district-heating WMS is visual reference-only imagery/i),
     ]));
   });
 
@@ -441,6 +456,17 @@ describe("read-only AOI provider routes", () => {
       "telecom.towers", "telecom.facilities", "telecom.lines", "telecom.inspection_points",
     ]);
     expect(pack.layers.find((layer) => layer.artifact.id === "telecom.lines")?.layer.metadata.readiness).toBe("needs_source");
+  });
+
+  it("returns the cached district-heating pack without exporting the KIUT reference", async () => {
+    const response = await request(createApp()).get("/api/aoi/rybnik_60km/domain-packs/district_heating");
+    expect(response.status).toBe(200);
+    const pack = domainPackReadResponseSchema.parse(response.body);
+    expect(pack.domain).toBe("district_heating");
+    expect(pack.layers.map((layer) => layer.artifact.id)).toEqual([
+      "district_heating.plants", "district_heating.facilities", "district_heating.lines", "district_heating.inspection_points",
+    ]);
+    expect(pack.layers.find((layer) => layer.artifact.id === "district_heating.lines")?.layer.metadata.readiness).toBe("needs_source");
   });
 
   it("returns 422 for a malformed AOI", async () => {

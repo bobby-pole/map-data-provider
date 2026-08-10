@@ -153,3 +153,23 @@ TELECOM_OSM_QUERY = OsmQueryDefinition(
         "telecom": ["antenna", "exchange", "distribution_point", "service_point", "street_cabinet", "data_center", "cable_landing_station"],
     },
 )
+
+
+DISTRICT_HEATING_OSM_QUERY = OsmQueryDefinition(
+    source_registry_id="openstreetmap",
+    # OSMnx composes the keys below with OR semantics.  The normalizer keeps
+    # only explicit heating evidence: a generic plant, generator or pipeline
+    # cannot enter this domain merely because it was an acquisition candidate.
+    query_version="district-heating-osm/v1",
+    tags={
+        "industrial": ["heating_station"],
+        "man_made": ["heat_exchanger", "pipeline"],
+        "power": ["plant", "generator"],
+        "plant:source": ["heat"],
+        "generator:source": ["heat"],
+        "plant:output:heat": ["yes", "true", "1", "heat"],
+        "generator:output:heat": ["yes", "true", "1", "heat"],
+        "pipeline": ["heating"],
+        "substance": ["hot_water", "steam", "heat"],
+    },
+)

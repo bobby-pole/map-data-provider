@@ -1932,7 +1932,7 @@ Verification: `telecom-osm/v1` adds fixture-first OSM telecom towers/masts, faci
 
 Priority: P2
 
-Status: Todo
+Status: Done
 
 Goal: `G-005`
 
@@ -1946,10 +1946,12 @@ Objective: add a district-heating domain only after the required-domain release 
 
 Acceptance criteria:
 
-- [ ] Heating plants, facilities and network lines are distinct normalized roles.
-- [ ] KIUT heating imagery remains reference-only.
-- [ ] Missing analytical network geometry remains visible as a source gap.
-- [ ] The ticket satisfies the shared domain definition of done or records why the product decision remains blocked.
+- [x] Heating plants, facilities and network lines are distinct normalized roles.
+- [x] KIUT heating imagery remains reference-only.
+- [x] Missing analytical network geometry remains visible as a source gap.
+- [x] The ticket satisfies the shared domain definition of done.
+
+Verification: `district-heating-osm/v1` adds fixture-first OSM heating plants, heat-exchanger facilities and network lines with explicit false-positive exclusions. Power plants/generators require explicit heat-output/source evidence; generic industrial objects and pipelines are rejected. `district_heating.lines` is a public zero-feature `needs_source` layer when the bounded fixture has no qualified lines; KIUT is retained only as a private reference record. Runtime refresh, Node/export schemas and MapLibre presentation support the domain. Focused backend tests, `pnpm run verify:node`, `pnpm run verify:frontend` and `MDQ_OFFLINE=1 ./scripts/verify_provider.sh` pass.
 
 ## Milestone 12 - Aggregate and Verify the Multi-Domain Provider
 

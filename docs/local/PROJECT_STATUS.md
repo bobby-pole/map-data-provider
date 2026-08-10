@@ -1,18 +1,20 @@
 # Project Status
 
-Updated: 2026-08-08
+Updated: 2026-08-10
 
 ## Current snapshot
 
-- Active goal: `G-005 - Optional utility-domain expansion` (`Active`); `G-003` and `G-004` remain achieved.
-- Current milestone: optional utility-domain expansion
-- Active ticket: `MDQ-042 - Deliver District-Heating Domain Pack`.
-- Last completed ticket: `MDQ-041 - Deliver Telecom Domain Pack`.
-- Next dependency-safe ticket after MDQ-042: `MDQ-052 - Deploy Read-Only Portfolio Demo on VPS`.
-- Prepared follow-up: `MDQ-052 - Deploy Read-Only Portfolio Demo on VPS` (`G-006`) after MDQ-041 and MDQ-042.
+- Active goal: none; `G-003`, `G-004` and `G-005` are achieved.
+- Current milestone: portfolio deployment preparation
+- Active ticket: none.
+- Last completed ticket: `MDQ-042 - Deliver District-Heating Domain Pack`.
+- Next dependency-safe ticket: `MDQ-052 - Deploy Read-Only Portfolio Demo on VPS`.
+- Prepared follow-up: `MDQ-052 - Deploy Read-Only Portfolio Demo on VPS` (`G-006`) after the completed optional utility-domain expansion.
 - Blockers: None.
 
 ## Release evidence
+
+- 2026-08-10 - Completed `MDQ-042`: delivered the optional fixture-first `rybnik_60km/district_heating` domain pack for Goal `G-005`. `district-heating-osm/v1` separates explicit heating plants, heat-exchanger facilities and heat-network lines; a plant/generator requires explicit heat-output/source evidence, while generic industrial objects and pipelines are excluded. The fixture publishes a public zero-feature `district_heating.lines` layer with `readiness=needs_source`, derived inspection points, source-gap evidence and a private KIUT WMS reference record. The domain is registered in cache/domain-pack publication, bounded runtime OSM refresh, Node API/export schemas and MapLibre preview. Focused backend checks (33 tests), Node verification (55 tests), frontend verification (19 tests) and the offline provider gate passed; the frontend retains the existing non-failing Vite chunk-size warning.
 
 - 2026-08-08 - Completed `MDQ-044`: delivered multi-source release verification and demo suite for Goal `G-004`. Unified `./scripts/verify_provider.sh` as the single repository-owned gate verifying all 9 domains (`power`, `emergency`, `public`, `transport`, `bridges`, `water`, `gas`, `sewer`, `industrial`), integrated negative probes (non-free vector rejection, WMS vector export rejection, contract failures, stale evidence rejection, malformed domain pack rejection, malformed export query rejection), aligned CI workflow (`.github/workflows/provider-verification.yml`), recorded scale measurements (171,372 features, 144.8 MB GeoJSON corpus), and updated documentation. Full provider verification passed: 193 Python tests, 51 Node tests, 19 frontend tests, 6 failure probes, smoke check, and clean builds.
 

@@ -1,6 +1,6 @@
 # Provider Demo
 
-This walkthrough demonstrates the implemented `rybnik_60km/power` provider slice in three to five minutes. It uses the committed cache and offline fixtures; it does not require live Overpass or WMS access.
+This walkthrough demonstrates the implemented multi-domain provider suite across all 9 required G-004 domains (`power`, `emergency`, `public`, `transport`, `bridges`, `water`, `gas`, `sewer`, `industrial`) for the `rybnik_60km` AOI in three to five minutes. It uses the committed cache and offline fixtures; it does not require live Overpass or WMS access.
 
 The current release produces a provider-compatible export. Loading that export inside the downstream application repository remains separate integration work.
 

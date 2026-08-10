@@ -132,3 +132,24 @@ INDUSTRIAL_OSM_QUERY = OsmQueryDefinition(
         "military": ["danger_area", "base"],
     },
 )
+
+
+TELECOM_OSM_QUERY = OsmQueryDefinition(
+    source_registry_id="openstreetmap",
+    # OSMnx combines this profile with OR semantics.  Structural candidates
+    # are therefore filtered again by telecom.category_for_osm_feature before
+    # publication; generic masts, towers and poles are never telecom data.
+    query_version="telecom-osm/v1",
+    tags={
+        "man_made": ["communications_tower", "mast", "tower", "antenna"],
+        "tower:type": ["communication"],
+        "communication:mobile_phone": ["yes"],
+        "communication:radio": ["yes"],
+        "communication:television": ["yes"],
+        "communication:microwave": ["yes"],
+        "communication:bos": ["yes"],
+        "communication": ["line"],
+        "cable": ["communication"],
+        "telecom": ["antenna", "exchange", "distribution_point", "service_point", "street_cabinet", "data_center", "cable_landing_station"],
+    },
+)

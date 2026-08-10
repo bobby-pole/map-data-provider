@@ -24,7 +24,7 @@ const runtimeAdministrativeAoiSchema = z.object({
   type: z.literal("administrative_selection"), unit_ids: z.array(providerIdentifierSchema).min(1),
 }).strict();
 export const runtimeAoiInputSchema = z.union([runtimePointRadiusAoiSchema, runtimeAdministrativeAoiSchema]);
-export const runtimeProfileSchema = z.enum(["power", "emergency", "public", "transport", "bridges", "water", "gas", "sewer", "industrial"]);
+export const runtimeProfileSchema = z.enum(["power", "emergency", "public", "transport", "bridges", "water", "gas", "sewer", "industrial", "telecom"]);
 export const providerRuntimeRequestSchema = z.object({
   aoi: runtimeAoiInputSchema,
   profiles: z.array(runtimeProfileSchema).min(1),
@@ -42,7 +42,7 @@ export const providerRuntimeResponseSchema = z.object({
   cache_key: providerIdentifierSchema, aoi: runtimeResolvedAoiSchema, pipeline_version: z.string().min(1), job_state: z.literal("ready"), request_result: z.enum(["cache", "refresh"]), cached_at: z.string().datetime(),
   profiles: z.array(z.object({ domain: runtimeProfileSchema, source_registry_id: z.string().min(1), source_role: z.enum(["analytical", "reference", "review"]), output_kind: z.enum(["analytical_vector", "reference_descriptor", "derived_context"]), query_version: z.string().min(1), tags: z.record(z.string(), z.array(z.string())) }).strict()),
   outcomes: z.array(z.object({ domain: runtimeProfileSchema, source_registry_id: z.string().min(1), source_role: z.enum(["analytical", "reference", "review"]), output_kind: z.enum(["analytical_vector", "reference_descriptor", "derived_context"]), query_version: z.string().min(1), tags: z.record(z.string(), z.array(z.string())), status: z.enum(["ready", "needs_source", "reference_only", "pending_qualification"]), detail: z.string().min(1), artifact_aoi_id: providerIdentifierSchema.nullable(), cache_status: z.enum(["fresh", "missing"]), queried_feature_count: z.number().int().nonnegative().nullable(), accepted_feature_count: z.number().int().nonnegative().nullable(), derived_feature_count: z.number().int().nonnegative().nullable() }).strict()),
-  contexts: z.array(z.object({ domain: z.enum(["administrative", "power", "emergency", "public", "transport", "bridges", "water", "gas", "sewer", "industrial"]), source_registry_id: z.string().min(1), output_kind: z.enum(["official_context", "topographic_context", "reference_descriptor", "derived_context"]), status: z.enum(["ready", "needs_source", "reference_only", "pending_qualification"]), detail: z.string().min(1) }).strict()),
+  contexts: z.array(z.object({ domain: z.enum(["administrative", "power", "emergency", "public", "transport", "bridges", "water", "gas", "sewer", "industrial", "telecom"]), source_registry_id: z.string().min(1), output_kind: z.enum(["official_context", "topographic_context", "reference_descriptor", "derived_context"]), status: z.enum(["ready", "needs_source", "reference_only", "pending_qualification"]), detail: z.string().min(1) }).strict()),
 }).strict();
 export const administrativeCatalogResponseSchema = z.object({
   catalog_version: z.literal("prg_administrative_catalog/v1"), source_registry_id: z.literal("prg_wfs"), snapshot_at: z.string().datetime(), source_crs: z.literal("EPSG:4326"), limitations: z.array(z.string()),

@@ -145,3 +145,7 @@ curl -sS -X POST http://127.0.0.1:3001/api/aoi/requests \
 ```
 
 W przypadku migawki (snapshot) nie starszej niż 24 godziny zwracany jest `result: "cache"`. W przypadku starszej lub brakującej migawki uruchamiany jest worker Python z jego offline fixture i zwracany jest `result: "refresh"`; proces ten zastępuje lokalną pamięć podręczną mniejszym artefaktem fixture. Ten krok należy wykonać dopiero po zaprezentowaniu zatwierdzonej migawki zawierającej 16 505 cech. W obecnym przepisie pracy żadna z tych ścieżek nie wywołuje usługi Overpass w trybie live.
+
+## Opcjonalny przykład telecom
+
+Pakiet `telecom` publikuje tylko jawnie oznaczone obiekty OSM: wieże/maszty komunikacyjne, obiekty telekomunikacyjne i linie `communication=line` lub `cable=communication`. W zatwierdzonym fixture Rybnik warstwa `telecom.lines` ma zero obiektów oraz `readiness: needs_source`. Jest to jawna luka źródłowa dla sieci, a nie błąd renderowania; KIUT telecom pozostaje wyłącznie prywatną referencją WMS.

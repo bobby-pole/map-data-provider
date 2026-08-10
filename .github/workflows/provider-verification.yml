@@ -17,7 +17,9 @@ jobs:
   verify:
     name: unit-tests
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # The repository-owned verification gate includes PMTiles/domain-pack
+    # generation; hosted runners can exceed ten minutes without a failure.
+    timeout-minutes: 20
     steps:
       - name: Check out repository
         uses: actions/checkout@v7

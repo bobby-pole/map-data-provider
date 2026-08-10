@@ -13,12 +13,12 @@ from shapely.geometry import mapping, shape
 from shapely.ops import unary_union
 
 from geo_pipeline.aoi import AoiResolutionError, MAX_AREA_SQ_M, WGS84, _resolved, resolve_aoi
-from geo_pipeline.query_catalog import GAS_OSM_QUERY, POWER_OSM_QUERY, SEWER_OSM_QUERY, TRANSPORT_OSM_QUERY, WATER_OSM_QUERY, INDUSTRIAL_OSM_QUERY
+from geo_pipeline.query_catalog import GAS_OSM_QUERY, POWER_OSM_QUERY, SEWER_OSM_QUERY, TRANSPORT_OSM_QUERY, WATER_OSM_QUERY, INDUSTRIAL_OSM_QUERY, TELECOM_OSM_QUERY
 
 AOI_REQUEST_CONTRACT_VERSION = "provider_aoi_request/v2"
 RUNTIME_CONTRACT_VERSION = "provider_runtime/v1"
-# v13 adds the industrial domain pack.
-PIPELINE_VERSION = "geo_pipeline/runtime/v13"
+# v14 adds explicit telecom profile/category semantics.
+PIPELINE_VERSION = "geo_pipeline/runtime/v14"
 CATALOG_PATH = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "aoi" / "prg_administrative_catalog.geojson"
 POLAND_BOUNDS = (14.05, 49.0, 24.25, 55.0)
 ProfileOutcome = Literal["ready", "needs_source", "reference_only", "pending_qualification"]
@@ -45,6 +45,7 @@ PROFILES: tuple[ProviderProfile, ...] = (
     ProviderProfile("gas", GAS_OSM_QUERY.source_registry_id, "analytical", "analytical_vector", GAS_OSM_QUERY.query_version, GAS_OSM_QUERY.tags, True),
     ProviderProfile("sewer", SEWER_OSM_QUERY.source_registry_id, "analytical", "analytical_vector", SEWER_OSM_QUERY.query_version, SEWER_OSM_QUERY.tags, True),
     ProviderProfile("industrial", INDUSTRIAL_OSM_QUERY.source_registry_id, "analytical", "analytical_vector", INDUSTRIAL_OSM_QUERY.query_version, INDUSTRIAL_OSM_QUERY.tags, True),
+    ProviderProfile("telecom", TELECOM_OSM_QUERY.source_registry_id, "analytical", "analytical_vector", TELECOM_OSM_QUERY.query_version, TELECOM_OSM_QUERY.tags, True),
 )
 _PROFILE_BY_DOMAIN = {profile.domain: profile for profile in PROFILES}
 
@@ -123,7 +124,7 @@ def context_outcomes(request: dict[str, Any]) -> list[dict[str, Any]]:
     for domain in domains:
         if domain in {"public", "transport", "bridges", "water", "industrial"}:
             records.append(_context(domain, "bdot10k", "topographic_context", "needs_source", "A qualified BDOT10k class must be selected and verified for this AOI; building or topographic context is not facility semantics."))
-        if domain in {"power", "water", "gas", "sewer"}:
+        if domain in {"power", "water", "gas", "sewer", "telecom"}:
             records.append(_context(domain, "kiut_gesut_wms", "reference_descriptor", "reference_only", "KIUT/GESUT is rendered reference imagery and cannot enter analytical GeoJSON."))
         records.append(_context(domain, "geoportal_orthophoto", "reference_descriptor", "reference_only", "Orthophoto is an optional rendered reference and cannot become an object vector."))
         if domain == "water":

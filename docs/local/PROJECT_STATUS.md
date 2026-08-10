@@ -4,12 +4,12 @@ Updated: 2026-08-08
 
 ## Current snapshot
 
-- Active goal: `G-004 - Multi-source, multi-domain provider` (`Achieved`); `G-003` and `G-004` achieved across all 9 required domains.
-- Current milestone: multi-source release verification & portfolio deployment
-- Active ticket: None.
-- Last completed ticket: `MDQ-044 - Add Multi-Source Release Verification and Demo`.
-- Next dependency-safe ticket: `MDQ-052 - Deploy Read-Only Portfolio Demo on VPS`.
-- Prepared follow-up: `MDQ-052 - Deploy Read-Only Portfolio Demo on VPS` (`G-006`).
+- Active goal: `G-005 - Optional utility-domain expansion` (`Active`); `G-003` and `G-004` remain achieved.
+- Current milestone: optional utility-domain expansion
+- Active ticket: `MDQ-042 - Deliver District-Heating Domain Pack`.
+- Last completed ticket: `MDQ-041 - Deliver Telecom Domain Pack`.
+- Next dependency-safe ticket after MDQ-042: `MDQ-052 - Deploy Read-Only Portfolio Demo on VPS`.
+- Prepared follow-up: `MDQ-052 - Deploy Read-Only Portfolio Demo on VPS` (`G-006`) after MDQ-041 and MDQ-042.
 - Blockers: None.
 
 ## Release evidence

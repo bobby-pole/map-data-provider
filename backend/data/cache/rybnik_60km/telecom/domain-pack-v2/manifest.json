@@ -1,0 +1,109 @@
+{
+  "domain_pack_version": "provider_domain_pack/v2",
+  "aoi_id": "rybnik_60km",
+  "domain": "telecom",
+  "source_provenance": [
+    {
+      "source_id": "openstreetmap",
+      "contribution_role": "primary"
+    },
+    {
+      "source_id": "kiut_gesut_wms",
+      "contribution_role": "validation_reference"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "telecom.towers",
+      "kind": "processed_vector",
+      "format": "geojson",
+      "path": "layers/telecom.towers.geojson",
+      "sha256": "e63252d0c7374e8661b0a14d3bd83a73a16295e632f92c91ba3ecb6882db2531",
+      "feature_count": 1,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "telecom.facilities",
+      "kind": "processed_vector",
+      "format": "geojson",
+      "path": "layers/telecom.facilities.geojson",
+      "sha256": "5c8425b97546065b5851fdd2bba3ecb401f94297e3d3fb949647e0d776c4603b",
+      "feature_count": 1,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "telecom.lines",
+      "kind": "processed_vector",
+      "format": "geojson",
+      "path": "layers/telecom.lines.geojson",
+      "sha256": "b244174dede6a7916d644f8f49d9664142728e6d1cdff9c24195785f0f621df1",
+      "feature_count": 0,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "telecom.inspection_points",
+      "kind": "derived_vector",
+      "format": "geojson",
+      "path": "layers/telecom.inspection_points.geojson",
+      "sha256": "815311e3b704cf0771d5586c774053cc1eb83718daf03efe27e9477997bed301",
+      "feature_count": 0,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "telecom.osm_source_evidence",
+      "kind": "native_vector",
+      "format": "json",
+      "path": "native/osm-telecom-source-evidence.json",
+      "sha256": "a165707f389c6e81612ae65d2a6a6c3f9587ec44ecb677e930669a949fc1aa63",
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": false
+    },
+    {
+      "id": "telecom.kiut_reference",
+      "kind": "remote_service",
+      "format": "wms",
+      "source_provenance": [
+        {
+          "source_id": "kiut_gesut_wms",
+          "contribution_role": "validation_reference"
+        }
+      ],
+      "public_export": false
+    }
+  ],
+  "validation": {
+    "path": "validation/metadata.json"
+  },
+  "readiness": {
+    "path": "readiness/readiness.json"
+  }
+}

@@ -117,6 +117,15 @@ curl -sS "http://127.0.0.1:3001/api/aoi/rybnik_60km/export?domains=power,emergen
 
 The response conforms to `provider_multi_domain_export/v2`. It isolates per-domain failures into explicit `domain_outcomes`, filters public GeoJSON domain packs, attaches reviewed issue evidence matching requested domains, and deduplicates requested domain parameters.
 
+## Optional telecom source-gap example
+
+The optional `telecom` pack exposes only explicitly tagged OSM communication towers/masts, facilities and cable routes. It never derives a network from KIUT WMS. In the committed Rybnik fixture, `telecom.lines` has zero features and `readiness: needs_source`; this is a visible absence of qualified analytical line coverage, not a rendering failure.
+
+```bash
+curl -sS http://127.0.0.1:3001/api/aoi/rybnik_60km/domain-packs/telecom \
+  | jq '.layers[] | {id: .artifact.id, count: .layer.metadata.feature_count, readiness: .layer.metadata.readiness}'
+```
+
 ## 7. Close with the system boundary — 20 seconds
 
 The demonstrated path is:

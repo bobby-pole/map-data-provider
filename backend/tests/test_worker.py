@@ -96,6 +96,24 @@ def test_sewer_fixture_worker_publishes_the_versioned_explicit_semantics_profile
     ]
 
 
+def test_telecom_fixture_worker_keeps_kiut_reference_only_and_publishes_line_gap(tmp_path: Path) -> None:
+    result = run_worker(aoi="rybnik_60km", domain="telecom", input_mode="fixture", cache_root=tmp_path)
+    manifest = read_domain_pack("rybnik_60km", "telecom", root=tmp_path)
+
+    assert result == {
+        "status": "ok", "aoi_id": "rybnik_60km", "domain": "telecom", "input": "fixture", "refreshed": True,
+        "source_registry_id": "openstreetmap", "query_version": "telecom-osm/v1", "feature_count": 2,
+        "readiness": "usable_with_limitations",
+    }
+    assert manifest["source_provenance"] == [
+        {"source_id": "openstreetmap", "contribution_role": "primary"},
+        {"source_id": "kiut_gesut_wms", "contribution_role": "validation_reference"},
+    ]
+    assert [artifact["id"] for artifact in manifest["artifacts"][:4]] == [
+        "telecom.towers", "telecom.facilities", "telecom.lines", "telecom.inspection_points",
+    ]
+
+
 def test_worker_rejects_unsupported_target_without_creating_cache(tmp_path: Path) -> None:
     try:
         run_worker(aoi="unknown", domain="power", input_mode="fixture", cache_root=tmp_path)

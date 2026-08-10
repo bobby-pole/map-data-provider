@@ -52,6 +52,12 @@ from geo_pipeline.industrial import (
     build_osm_industrial_layers,
     industrial_osm_metadata,
 )
+from geo_pipeline.telecom import (
+    TELECOM_CATEGORIES,
+    TELECOM_FIXTURE,
+    TELECOM_LIMITATIONS,
+    build_osm_telecom_layers,
+)
 from geo_pipeline.emergency import (
     EMERGENCY_FIXTURE,
     EMERGENCY_LIMITATIONS,
@@ -828,6 +834,71 @@ def build_rybnik_industrial_domain_pack(*, root: Path) -> dict[str, Any]:
     return pack
 
 
+def build_rybnik_telecom_domain_pack(*, root: Path) -> dict[str, Any]:
+    """Build a telecom pack without inferring a network from KIUT imagery."""
+    legacy = read_cached_layer(cache_paths("rybnik_60km", "telecom", root=root))
+    readiness = legacy["readiness"]["readiness"]
+    layers = build_osm_telecom_layers(readiness=readiness)
+    osm_provenance = [{"source_id": "openstreetmap", "contribution_role": "primary"}]
+    kiut_provenance = [{"source_id": "kiut_gesut_wms", "contribution_role": "validation_reference"}]
+    files: dict[str, bytes] = {
+        "validation/metadata.json": json.dumps(legacy["metadata"], ensure_ascii=False, indent=2).encode(),
+        "readiness/readiness.json": json.dumps(legacy["readiness"], ensure_ascii=False, indent=2).encode(),
+    }
+    artifacts: list[dict[str, Any]] = []
+    for category in TELECOM_CATEGORIES:
+        layer = layers[category]
+        path = f"layers/telecom.{category}.geojson"
+        payload = json.dumps(layer, ensure_ascii=False, indent=2).encode()
+        files[path] = payload
+        artifacts.append({
+            "id": f"telecom.{category}", "kind": "processed_vector", "format": "geojson", "path": path,
+            "sha256": _digest(payload), "feature_count": layer["metadata"]["feature_count"],
+            "source_provenance": osm_provenance, "public_export": True,
+        })
+
+    points = _telecom_representative_points(layers)
+    points_payload = json.dumps(points, ensure_ascii=False, indent=2).encode()
+    files["layers/telecom.inspection_points.geojson"] = points_payload
+    artifacts.append({
+        "id": "telecom.inspection_points", "kind": "derived_vector", "format": "geojson", "path": "layers/telecom.inspection_points.geojson",
+        "sha256": _digest(points_payload), "feature_count": points["metadata"]["feature_count"],
+        "source_provenance": osm_provenance, "public_export": True,
+    })
+
+    evidence = {
+        "source_registry_id": "openstreetmap",
+        "fixture": str(TELECOM_FIXTURE.relative_to(Path(__file__).resolve().parents[1])),
+        "sha256": _digest(TELECOM_FIXTURE.read_bytes()),
+        "category_rules": {
+            "telecom.towers": "man_made=communications_tower, or man_made=mast/tower with tower:type=communication or a communication:* service=yes tag.",
+            "telecom.facilities": "allow-listed telecom=* values, or man_made=antenna with a communication:* service=yes tag.",
+            "telecom.lines": "communication=line or cable=communication only.",
+        },
+        "false_positive_rule": "Generic masts, towers, poles, buildings, ducts and utilities without qualifying telecom tags are excluded.",
+        "source_gap": "No qualified official analytical telecom-network vector feed is enabled; a zero-feature telecom.lines layer remains visible with readiness=needs_source.",
+        "limitations": TELECOM_LIMITATIONS,
+    }
+    evidence_payload = json.dumps(evidence, ensure_ascii=False, indent=2).encode()
+    files["native/osm-telecom-source-evidence.json"] = evidence_payload
+    artifacts.append({
+        "id": "telecom.osm_source_evidence", "kind": "native_vector", "format": "json", "path": "native/osm-telecom-source-evidence.json",
+        "sha256": _digest(evidence_payload), "source_provenance": osm_provenance, "public_export": False,
+    })
+    artifacts.append({
+        "id": "telecom.kiut_reference", "kind": "remote_service", "format": "wms",
+        "source_provenance": kiut_provenance, "public_export": False,
+    })
+    manifest = {
+        "domain_pack_version": DOMAIN_PACK_VERSION, "aoi_id": "rybnik_60km", "domain": "telecom",
+        "source_provenance": [*osm_provenance, *kiut_provenance], "artifacts": artifacts,
+        "validation": {"path": "validation/metadata.json"}, "readiness": {"path": "readiness/readiness.json"},
+    }
+    pack = write_domain_pack("rybnik_60km", "telecom", root=root, manifest=manifest, files=files)
+    build_map_presentation(pack_root=domain_pack_root("rybnik_60km", "telecom", root=root), manifest=pack)
+    return pack
+
+
 def _representative_points_layer(layer: dict[str, Any]) -> dict[str, Any]:
     metadata = {**deepcopy(layer["metadata"]), "layer_id": "power.representative_points"}
     features = []
@@ -841,6 +912,21 @@ def _representative_points_layer(layer: dict[str, Any]) -> dict[str, Any]:
     if errors:
         raise ValueError(f"Representative points violate the provider contract: {', '.join(errors)}")
     return points
+
+
+def _telecom_representative_points(layers: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    first = layers["towers"]
+    metadata = {**deepcopy(first["metadata"]), "layer_id": "telecom.inspection_points"}
+    features = []
+    for category, layer in layers.items():
+        for feature in layer["features"]:
+            geometry = shape(feature["geometry"])
+            if geometry.geom_type == "Point":
+                continue
+            properties = {**deepcopy(feature["properties"]), "origin_artifact": f"telecom.{category}", "source_geometry_type": geometry.geom_type}
+            features.append({"type": "Feature", "properties": properties, "geometry": mapping(geometry.representative_point())})
+    metadata["feature_count"] = len(features)
+    return normalize_analytical_vector_layer({"type": "FeatureCollection", "features": features}, metadata=metadata)
 
 
 def _emergency_representative_points(layers: dict[str, dict[str, Any]]) -> dict[str, Any]:

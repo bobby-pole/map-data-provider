@@ -209,9 +209,9 @@ pnpm run verify:provider
 
 `pnpm install` configures the tracked native Git hook in `.githooks/`. Before every `git push`, that `pre-push` hook runs `pnpm run verify:provider`. The full gate covers Python pipeline stages and contracts, the FastAPI smoke check, Node API/build/lint, the layer-pack export, issue-review persistence and conflicts, plus frontend review tests/build/lint. It does not query live Overpass or WMS services.
 
-GitHub Actions is intentionally fast: for every pull request and push to `main` it checks Python syntax and runs Node/frontend unit tests, type-check/build and lint. The full Python suite, smoke check and controlled negative probe run locally before a push instead.
+GitHub Actions invokes the same `./scripts/verify_provider.sh` gate for every pull request and push to `main`. It runs the full Python suite, smoke check, controlled negative probes, and the Node/frontend tests, builds and lint checks. The application verification remains offline after dependency installation and does not query live Overpass or WMS services.
 
-The gate also runs a controlled negative probe and confirms that an intentionally invalid issue-snapshot contract makes its pytest command fail. A probe that unexpectedly passes fails the overall gate.
+The gate also runs six controlled negative probes covering contract snapshots, non-free sources, WMS vector export, stale evidence, malformed domain packs and malformed export queries. Each probe intentionally expects invalid input to be accepted; an unexpected pass fails the overall gate.
 
 Component-level commands are available for diagnosis:
 
@@ -244,7 +244,7 @@ KIUT/GESUT is kept as an OGC WMS visual reference overlay. WMS imagery is not co
 
 ## Map presentation and offline use
 
-Full `provider_geojson/v1` artifacts remain the canonical cache, validation and export products. They are intentionally not the dev-preview map read path for the 23,604-feature Rybnik power snapshot or source-separated emergency artifacts. The worker derives only manifest-approved public analytical layers into MVT and packages them in the checked `provider_map_presentation/v1` PMTiles archive. Node returns compact presentation metadata and HTTP byte ranges; MapLibre reads the local archive without a remote vector-data request. Selecting a visible feature loads one validated, allow-listed source-detail record by its stable provider source ID; it never fetches a full GeoJSON layer into the inspector.
+Full `provider_geojson/v1` artifacts remain the canonical cache, validation and export products. They are intentionally not the dev-preview map read path for the 156,721-feature Rybnik power snapshot or source-separated emergency artifacts. The worker derives only manifest-approved public analytical layers into MVT and packages them in the checked `provider_map_presentation/v1` PMTiles archive. Node returns compact presentation metadata and HTTP byte ranges; MapLibre reads the local archive without a remote vector-data request. Selecting a visible feature loads one validated, allow-listed source-detail record by its stable provider source ID; it never fetches a full GeoJSON layer into the inspector.
 
 The presentation has separate power-line, power-asset and bounded power-support layers. Power-line colours use deterministic voltage buckets. The support layer carries OSM `tower`, `pole`, `portal` and `utility_pole` classes where present in the committed source snapshot; towers, portals and utility poles are generated from zoom 12, while ordinary poles are generated from zoom 14. These rules constrain tile generation rather than only hiding client-side features. The bounded support fixture is evidence for this preview behaviour, not a claim of complete support coverage across the AOI.
 

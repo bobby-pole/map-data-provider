@@ -131,7 +131,7 @@ export type ProviderIssue = {
   evidence: string; recommendation: string; review: IssueReview;
 };
 
-export type RuntimeCategory = "power" | "emergency" | "public" | "transport" | "bridges" | "water" | "gas" | "sewer" | "industrial";
+export type RuntimeCategory = "power" | "emergency" | "public" | "transport" | "bridges" | "water" | "gas" | "sewer" | "industrial" | "telecom";
 export type RuntimeAoiInput = { type: "point_radius"; longitude: number; latitude: number; radius_m: number } | { type: "administrative_selection"; unit_ids: string[] };
 export type AdministrativeCatalog = { catalog_version: "prg_administrative_catalog/v1"; source_registry_id: "prg_wfs"; snapshot_at: string; source_crs: "EPSG:4326"; limitations: string[]; units: Array<{ id: string; kind: "voivodeship" | "county" | "gmina"; name: string; prg_id: string; geometry: Geometry }> };
 export type ProviderRuntimeResponse = {

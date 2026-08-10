@@ -1907,7 +1907,7 @@ Verification: `industrial-osm/v2`, `industrial/v2` implemented layer separation.
 
 Priority: P2
 
-Status: Todo
+Status: Done
 
 Goal: `G-005`
 
@@ -1921,10 +1921,12 @@ Objective: add a telecom domain only after the required-domain release and a con
 
 Acceptance criteria:
 
-- [ ] Towers, facilities and network lines are distinct roles and use explicit telecom semantics.
-- [ ] KIUT telecom imagery is never presented as analytical network geometry.
-- [ ] Missing analytical lines remain visible as a source gap.
-- [ ] The ticket satisfies the shared domain definition of done or records why the product decision remains blocked.
+- [x] Towers, facilities and network lines are distinct roles and use explicit telecom semantics.
+- [x] KIUT telecom imagery is never presented as analytical network geometry.
+- [x] Missing analytical lines remain visible as a source gap.
+- [x] The ticket satisfies the shared domain definition of done.
+
+Verification: `telecom-osm/v1` adds fixture-first OSM telecom towers/masts, facilities and lines with explicit false-positive exclusions. `telecom.lines` is a public zero-feature `needs_source` layer when the bounded fixture has no qualified lines; KIUT is retained only as a private reference record. Runtime refresh, Node/export schemas and MapLibre presentation support the domain. Focused backend tests, `pnpm run verify:node`, `pnpm run verify:frontend` and `MDQ_OFFLINE=1 ./scripts/verify_provider.sh` pass.
 
 ### MDQ-042 - Deliver District-Heating Domain Pack
 

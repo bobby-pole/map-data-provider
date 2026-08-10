@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { AdministrativeCatalog, ProviderRuntimeResponse, RuntimeCategory } from "../types/api";
 import { buildRuntimeRequest, providerResponseMessage, runtimeRequestError } from "../aoiSettings";
 
-const categories: RuntimeCategory[] = ["power", "emergency", "public", "transport", "bridges", "water", "gas", "sewer", "industrial", "telecom"];
+const categories: RuntimeCategory[] = ["power", "emergency", "public", "transport", "bridges", "water", "gas", "sewer", "industrial", "telecom", "district_heating"];
 
 export function AoiSettings({ onApplied }: { onApplied: (result: ProviderRuntimeResponse) => void }) {
   const [catalog, setCatalog] = useState<AdministrativeCatalog | null>(null);

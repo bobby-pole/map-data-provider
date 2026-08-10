@@ -1,18 +1,20 @@
 # Status projektu
 
-Ostatnia aktualizacja: 2026-08-08
+Ostatnia aktualizacja: 2026-08-10
 
 ## Aktualny stan (snapshot)
 
-- Aktywny cel: `G-004 - Multi-source, multi-domain provider` (`Osiągnięty`); cele `G-003` i `G-004` osiągnięte dla wszystkich 9 wymaganych domen.
-- Bieżący kamień milowy: weryfikacja wydań wieloźródłowych & wdrożenie portfolio.
+- Aktywny cel: Brak; cele `G-003`, `G-004` i `G-005` są osiągnięte.
+- Bieżący kamień milowy: przygotowanie wdrożenia portfolio.
 - Aktywny ticket: Brak.
-- Ostatni ukończony ticket: `MDQ-044 - Add Multi-Source Release Verification and Demo`.
+- Ostatni ukończony ticket: `MDQ-042 - Deliver District-Heating Domain Pack`.
 - Następny ticket bezpieczny pod względem zależności: `MDQ-052 - Deploy Read-Only Portfolio Demo on VPS`.
 - Przygotowany follow-up: `MDQ-052 - Deploy Read-Only Portfolio Demo on VPS` (`G-006`, niezależny od release traina domen G-004).
 - Blokady: Brak.
 
 ## Dowody wydania (Release evidence)
+
+- 2026-08-10 - Ukończono `MDQ-042`: dostarczono opcjonalny pakiet domeny `rybnik_60km/district_heating` oparty na fixture'ach dla Celu `G-005`. `district-heating-osm/v1` rozdziela jawne źródła ciepła, obiekty wymienników i linie sieci; elektrownia/generator wymaga jawnego dowodu wytwarzania albo źródła ciepła, zaś ogólne obiekty przemysłowe i rurociągi są wykluczane. Fixture publikuje publiczną warstwę zerową `district_heating.lines` z `readiness=needs_source`, pochodne punkty inspekcji, dowody luki źródłowej i prywatny rekord referencyjny KIUT WMS. Domena jest zarejestrowana w publikacji cache/domain-pack, ograniczonym odświeżeniu OSM runtime, schematach Node API/eksportu i podglądzie MapLibre. Testy backendowe, Node, frontend oraz offline'owa bramka dostawcy przechodzą pomyślnie; frontend zachowuje istniejące, niepowodujące błędu ostrzeżenie Vite o rozmiarze chunka.
 
 - 2026-08-08 - Ukończono `MDQ-044`: dostarczono pakiet weryfikacji wydania i demo wieloźródłowego dla Celu `G-004`. Zjednoczono `./scripts/verify_provider.sh` jako pojedynczą bramkę weryfikującą wszystkie 9 domen (`power`, `emergency`, `public`, `transport`, `bridges`, `water`, `gas`, `sewer`, `industrial`), zintegrowano 6 sondaży błędów (odrzucanie nie-wolnych źródeł, zakaz redystrybucji WMS jako wektora, błędne kontrakty, przestarzałe dowody, uszkodzone pakiety oraz błędne zapytania eksportowe), uzgodniono przepływ CI (`.github/workflows/provider-verification.yml`), zarejestrowano pomiary skali (171 372 obiekty, 144,8 MB GeoJSON) i zaktualizowano dokumentację. Pełna weryfikacja przeszła pomyślnie: 193 testy Python, 51 testów Node, 19 testów frontend, 6 sondaży błędów, smoke check i poprawne buildy.
 

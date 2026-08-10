@@ -7,7 +7,7 @@ from geo_pipeline.aoi_runtime import RuntimeRequestError, administrative_catalog
 from geo_pipeline.config import CACHE_DIR
 from geo_pipeline.domain_pack import read_domain_pack
 from geo_pipeline.runtime_osm import publish_runtime_osm_collection
-from geo_pipeline.query_catalog import GAS_OSM_QUERY, POWER_OSM_QUERY, SEWER_OSM_QUERY, TELECOM_OSM_QUERY, TRANSPORT_OSM_QUERY, WATER_OSM_QUERY
+from geo_pipeline.query_catalog import DISTRICT_HEATING_OSM_QUERY, GAS_OSM_QUERY, POWER_OSM_QUERY, SEWER_OSM_QUERY, TELECOM_OSM_QUERY, TRANSPORT_OSM_QUERY, WATER_OSM_QUERY
 from geo_pipeline.worker import run_runtime_worker
 
 
@@ -114,6 +114,17 @@ def test_telecom_runtime_profile_has_reference_only_kiut_context() -> None:
     assert any(context["source_registry_id"] == "kiut_gesut_wms" and context["status"] == "reference_only" for context in contexts)
 
 
+def test_district_heating_runtime_profile_has_reference_only_kiut_context() -> None:
+    request = {"aoi": point_radius(), "profiles": ["district_heating"]}
+    outcome = profile_outcomes(request)[0]
+    contexts = context_outcomes(request)
+
+    assert outcome["status"] == "ready"
+    assert outcome["query_version"] == DISTRICT_HEATING_OSM_QUERY.query_version
+    assert outcome["tags"] == DISTRICT_HEATING_OSM_QUERY.tags
+    assert any(context["source_registry_id"] == "kiut_gesut_wms" and context["status"] == "reference_only" for context in contexts)
+
+
 def test_runtime_power_publication_builds_a_valid_pmtiles_domain_pack(tmp_path) -> None:
     aoi = resolve_runtime_request({"aoi": {"type": "administrative_selection", "unit_ids": ["county_rybnik_city"]}, "profiles": ["power"]})["aoi"]
     source = {"type": "FeatureCollection", "features": [
@@ -181,6 +192,26 @@ def test_runtime_telecom_publication_preserves_empty_line_source_gap(tmp_path) -
     assert result["accepted_feature_count"] == 2
     assert lines["features"] == []
     assert lines["metadata"]["readiness"] == "needs_source"
+
+
+def test_runtime_district_heating_publication_preserves_empty_line_source_gap(tmp_path) -> None:
+    aoi = resolve_runtime_request({"aoi": {"type": "administrative_selection", "unit_ids": ["county_rybnik_city"]}, "profiles": ["district_heating"]})["aoi"]
+    source = {"type": "FeatureCollection", "features": [
+        {"type": "Feature", "properties": {"element": "way", "id": 1, "provider_category": "plants", "industrial": "heating_station"}, "geometry": {"type": "Polygon", "coordinates": [[[18.49, 50.09], [18.50, 50.09], [18.50, 50.10], [18.49, 50.09]]]}},
+        {"type": "Feature", "properties": {"element": "node", "id": 2, "provider_category": "facilities", "man_made": "heat_exchanger"}, "geometry": {"type": "Point", "coordinates": [18.51, 50.11]}},
+    ]}
+
+    result = publish_runtime_osm_collection(aoi=aoi, domain="district_heating", source=source, query_version=DISTRICT_HEATING_OSM_QUERY.query_version, root=tmp_path)
+    pack = read_domain_pack(aoi["aoi_id"], "district_heating", root=tmp_path)
+    artifacts = {artifact["id"]: artifact for artifact in pack["artifacts"]}
+    lines = json.loads((tmp_path / aoi["aoi_id"] / "district_heating" / "domain-pack-v2" / artifacts["district_heating.lines"]["path"]).read_text())
+    inspection = json.loads((tmp_path / aoi["aoi_id"] / "district_heating" / "domain-pack-v2" / artifacts["district_heating.inspection_points"]["path"]).read_text())
+
+    assert result["status"] == "ready"
+    assert result["accepted_feature_count"] == 2
+    assert lines["features"] == []
+    assert lines["metadata"]["readiness"] == "needs_source"
+    assert inspection["features"][0]["properties"]["origin_artifact"] == "district_heating.plants"
 
 
 def test_runtime_transport_publication_keeps_semantic_categories_independent(tmp_path) -> None:

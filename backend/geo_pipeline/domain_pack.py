@@ -58,6 +58,12 @@ from geo_pipeline.telecom import (
     TELECOM_LIMITATIONS,
     build_osm_telecom_layers,
 )
+from geo_pipeline.district_heating import (
+    DISTRICT_HEATING_CATEGORIES,
+    DISTRICT_HEATING_FIXTURE,
+    DISTRICT_HEATING_LIMITATIONS,
+    build_osm_district_heating_layers,
+)
 from geo_pipeline.emergency import (
     EMERGENCY_FIXTURE,
     EMERGENCY_LIMITATIONS,
@@ -899,6 +905,98 @@ def build_rybnik_telecom_domain_pack(*, root: Path) -> dict[str, Any]:
     return pack
 
 
+def build_rybnik_district_heating_domain_pack(*, root: Path) -> dict[str, Any]:
+    """Build a district-heating pack without inferring a network from KIUT."""
+    legacy = read_cached_layer(cache_paths("rybnik_60km", "district_heating", root=root))
+    readiness = legacy["readiness"]["readiness"]
+    layers = build_osm_district_heating_layers(readiness=readiness)
+    osm_provenance = [{"source_id": "openstreetmap", "contribution_role": "primary"}]
+    kiut_provenance = [{"source_id": "kiut_gesut_wms", "contribution_role": "validation_reference"}]
+    files: dict[str, bytes] = {
+        "validation/metadata.json": json.dumps(legacy["metadata"], ensure_ascii=False, indent=2).encode(),
+        "readiness/readiness.json": json.dumps(legacy["readiness"], ensure_ascii=False, indent=2).encode(),
+    }
+    artifacts: list[dict[str, Any]] = []
+    for category in DISTRICT_HEATING_CATEGORIES:
+        layer = layers[category]
+        path = f"layers/district_heating.{category}.geojson"
+        payload = json.dumps(layer, ensure_ascii=False, indent=2).encode()
+        files[path] = payload
+        artifacts.append({
+            "id": f"district_heating.{category}",
+            "kind": "processed_vector",
+            "format": "geojson",
+            "path": path,
+            "sha256": _digest(payload),
+            "feature_count": layer["metadata"]["feature_count"],
+            "source_provenance": osm_provenance,
+            "public_export": True,
+        })
+
+    points = _district_heating_representative_points(layers)
+    points_payload = json.dumps(points, ensure_ascii=False, indent=2).encode()
+    points_path = "layers/district_heating.inspection_points.geojson"
+    files[points_path] = points_payload
+    artifacts.append({
+        "id": "district_heating.inspection_points",
+        "kind": "derived_vector",
+        "format": "geojson",
+        "path": points_path,
+        "sha256": _digest(points_payload),
+        "feature_count": points["metadata"]["feature_count"],
+        "source_provenance": osm_provenance,
+        "public_export": True,
+    })
+
+    evidence = {
+        "source_registry_id": "openstreetmap",
+        "fixture": str(DISTRICT_HEATING_FIXTURE.relative_to(Path(__file__).resolve().parents[1])),
+        "sha256": _digest(DISTRICT_HEATING_FIXTURE.read_bytes()),
+        "category_rules": {
+            "district_heating.plants": "industrial=heating_station, or power=plant/generator with explicit heat output/source tags.",
+            "district_heating.facilities": "man_made=heat_exchanger only.",
+            "district_heating.lines": "pipeline=heating, or man_made=pipeline with substance=hot_water, steam or heat.",
+        },
+        "false_positive_rule": "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+        "source_gap": "No qualified official analytical district-heating-network vector feed is enabled; a zero-feature district_heating.lines layer remains visible with readiness=needs_source.",
+        "limitations": DISTRICT_HEATING_LIMITATIONS,
+    }
+    evidence_payload = json.dumps(evidence, ensure_ascii=False, indent=2).encode()
+    evidence_path = "native/osm-district-heating-source-evidence.json"
+    files[evidence_path] = evidence_payload
+    artifacts.append({
+        "id": "district_heating.osm_source_evidence",
+        "kind": "native_vector",
+        "format": "json",
+        "path": evidence_path,
+        "sha256": _digest(evidence_payload),
+        "source_provenance": osm_provenance,
+        "public_export": False,
+    })
+    artifacts.append({
+        "id": "district_heating.kiut_reference",
+        "kind": "remote_service",
+        "format": "wms",
+        "source_provenance": kiut_provenance,
+        "public_export": False,
+    })
+    manifest = {
+        "domain_pack_version": DOMAIN_PACK_VERSION,
+        "aoi_id": "rybnik_60km",
+        "domain": "district_heating",
+        "source_provenance": [*osm_provenance, *kiut_provenance],
+        "artifacts": artifacts,
+        "validation": {"path": "validation/metadata.json"},
+        "readiness": {"path": "readiness/readiness.json"},
+    }
+    pack = write_domain_pack("rybnik_60km", "district_heating", root=root, manifest=manifest, files=files)
+    build_map_presentation(
+        pack_root=domain_pack_root("rybnik_60km", "district_heating", root=root),
+        manifest=pack,
+    )
+    return pack
+
+
 def _representative_points_layer(layer: dict[str, Any]) -> dict[str, Any]:
     metadata = {**deepcopy(layer["metadata"]), "layer_id": "power.representative_points"}
     features = []
@@ -927,6 +1025,32 @@ def _telecom_representative_points(layers: dict[str, dict[str, Any]]) -> dict[st
             features.append({"type": "Feature", "properties": properties, "geometry": mapping(geometry.representative_point())})
     metadata["feature_count"] = len(features)
     return normalize_analytical_vector_layer({"type": "FeatureCollection", "features": features}, metadata=metadata)
+
+
+def _district_heating_representative_points(layers: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    metadata = {**deepcopy(layers["plants"]["metadata"]), "layer_id": "district_heating.inspection_points"}
+    features = []
+    for category, layer in layers.items():
+        for feature in layer["features"]:
+            geometry = shape(feature["geometry"])
+            if geometry.geom_type == "Point":
+                continue
+            properties = {
+                **deepcopy(feature["properties"]),
+                "origin_artifact": f"district_heating.{category}",
+                "source_geometry_type": geometry.geom_type,
+            }
+            features.append({
+                "type": "Feature",
+                "properties": properties,
+                "geometry": mapping(geometry.representative_point()),
+            })
+    metadata["feature_count"] = len(features)
+    points = {"type": "FeatureCollection", "metadata": metadata, "features": features}
+    errors = validate_provider_geojson(points)
+    if errors:
+        raise ValueError(f"District-heating representative points violate provider contract: {', '.join(errors)}")
+    return points
 
 
 def _emergency_representative_points(layers: dict[str, dict[str, Any]]) -> dict[str, Any]:

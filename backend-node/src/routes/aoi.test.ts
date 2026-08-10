@@ -148,6 +148,7 @@ describe("read-only AOI provider routes", () => {
       expect.objectContaining({ domain: "power", feature_count: 16_505, source_type: "analytical_vector" }),
       expect.objectContaining({ domain: "emergency", feature_count: 4, source_type: "analytical_vector" }),
       expect.objectContaining({ domain: "gas", feature_count: 2, source_type: "analytical_vector" }),
+      expect.objectContaining({ domain: "telecom", feature_count: 2, source_type: "analytical_vector" }),
     ]));
   });
 
@@ -176,6 +177,20 @@ describe("read-only AOI provider routes", () => {
     });
     expect(layer.metadata.limitations).toEqual(expect.arrayContaining([
       expect.stringMatching(/not a complete Rybnik 60 km OSM snapshot/i),
+    ]));
+  });
+
+  it("returns the telecom contract with an explicit missing-network source gap", async () => {
+    const response = await request(createApp()).get("/api/aoi/rybnik_60km/layers/telecom");
+
+    expect(response.status).toBe(200);
+    const layer = providerLayerResponseSchema.parse(response.body);
+    expect(layer.metadata).toMatchObject({
+      aoi_id: "rybnik_60km", domain: "telecom", feature_count: 2, query_version: "telecom-osm/v1",
+    });
+    expect(layer.metadata.limitations).toEqual(expect.arrayContaining([
+      expect.stringMatching(/empty telecom\.lines layer remains an explicit source gap/i),
+      expect.stringMatching(/KIUT telecom WMS layers are visual reference overlays only/i),
     ]));
   });
 
@@ -415,6 +430,17 @@ describe("read-only AOI provider routes", () => {
     const response = await request(createApp()).get("/api/aoi/rybnik_60km/domain-packs/industrial");
     expect(response.status).toBe(200);
     expect(domainPackReadResponseSchema.parse(response.body).domain).toBe("industrial");
+  });
+
+  it("returns the cached telecom pack without exporting the KIUT reference", async () => {
+    const response = await request(createApp()).get("/api/aoi/rybnik_60km/domain-packs/telecom");
+    expect(response.status).toBe(200);
+    const pack = domainPackReadResponseSchema.parse(response.body);
+    expect(pack.domain).toBe("telecom");
+    expect(pack.layers.map((layer) => layer.artifact.id)).toEqual([
+      "telecom.towers", "telecom.facilities", "telecom.lines", "telecom.inspection_points",
+    ]);
+    expect(pack.layers.find((layer) => layer.artifact.id === "telecom.lines")?.layer.metadata.readiness).toBe("needs_source");
   });
 
   it("returns 422 for a malformed AOI", async () => {

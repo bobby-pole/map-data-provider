@@ -20,6 +20,7 @@ from geo_pipeline.emergency import build_osm_emergency_cache_layer, emergency_os
 from geo_pipeline.gas import build_osm_gas_cache_layer, gas_osm_metadata
 from geo_pipeline.sewer import build_osm_sewer_cache_layer, sewer_osm_metadata
 from geo_pipeline.industrial import build_osm_industrial_cache_layer, industrial_osm_metadata
+from geo_pipeline.telecom import build_osm_telecom_cache_layer, telecom_osm_metadata
 from geo_pipeline.public_services import build_osm_public_services_cache_layer, public_services_osm_metadata
 from geo_pipeline.transport import build_osm_transport_cache_layer, transport_osm_metadata
 from geo_pipeline.water import build_osm_water_cache_layer, water_osm_metadata
@@ -247,6 +248,20 @@ def build_rybnik_industrial_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
         "highest_issue_severity": "medium", "feature_count": metadata["feature_count"], "evaluated_at": metadata["snapshot_at"],
     }
     paths = cache_paths("rybnik_60km", "industrial", root=root)
+    _write_cache(paths, layer=layer, metadata=metadata, readiness=readiness)
+    return read_cached_layer(paths)
+
+
+def build_rybnik_telecom_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
+    """Build a v1-compatible telecom cache while retaining source-gap layers in v2."""
+    layer = build_osm_telecom_cache_layer(readiness="usable_with_limitations")
+    metadata = {**telecom_osm_metadata(layer_id="telecom.osm_features", readiness="usable_with_limitations"), "feature_count": layer["metadata"]["feature_count"]}
+    readiness = {
+        "cache_layout_version": CACHE_LAYOUT_VERSION, "aoi_id": "rybnik_60km", "domain": "telecom",
+        "layer_id": "telecom.osm_features", "readiness": "usable_with_limitations", "quality_status": "warning",
+        "highest_issue_severity": "medium", "feature_count": metadata["feature_count"], "evaluated_at": metadata["snapshot_at"],
+    }
+    paths = cache_paths("rybnik_60km", "telecom", root=root)
     _write_cache(paths, layer=layer, metadata=metadata, readiness=readiness)
     return read_cached_layer(paths)
 

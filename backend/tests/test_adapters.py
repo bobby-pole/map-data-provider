@@ -52,6 +52,16 @@ def test_telecom_is_registered_with_explicit_tower_facility_and_line_candidates(
     assert adapter.query.tags["communication"] == ["line"]
 
 
+def test_district_heating_is_registered_with_explicit_heat_candidates() -> None:
+    adapter = resolve_adapter("rybnik_60km", "district_heating")
+
+    assert adapter in registered_adapters()
+    assert adapter.query.source_registry_id == "openstreetmap"
+    assert adapter.query.query_version == "district-heating-osm/v1"
+    assert adapter.query.tags["industrial"] == ["heating_station"]
+    assert adapter.query.tags["plant:output:heat"] == ["yes", "true", "1", "heat"]
+
+
 def test_unsupported_targets_fail_before_any_cache_path_is_published(tmp_path: Path) -> None:
     with pytest.raises(AdapterError, match="Unsupported registered AOI/domain target"):
         resolve_adapter("unknown", "power")

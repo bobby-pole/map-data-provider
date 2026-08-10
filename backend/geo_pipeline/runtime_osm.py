@@ -19,15 +19,16 @@ from geo_pipeline.gas import category_for_osm_feature as gas_category_for_osm_fe
 from geo_pipeline.sewer import category_for_osm_feature as sewer_category_for_osm_feature
 from geo_pipeline.industrial import category_for_osm_feature as industrial_category_for_osm_feature
 from geo_pipeline.telecom import category_for_osm_feature as telecom_category_for_osm_feature
+from geo_pipeline.district_heating import category_for_osm_feature as district_heating_category_for_osm_feature
 from geo_pipeline.emergency import category_for_osm_feature
 from geo_pipeline.public_services import category_for_osm_feature as public_category_for_osm_feature
 from geo_pipeline.transport import category_for_osm_feature as transport_category_for_osm_feature, road_class_for_osm_feature
 from geo_pipeline.extract import configure_osmnx, fetch_osm_features_geometry, sanitize_for_geojson
 from geo_pipeline.layers.power import _add_power_categories, _compact_power_properties
-from geo_pipeline.query_catalog import BRIDGES_OSM_QUERY, EMERGENCY_OSM_QUERY, GAS_OSM_QUERY, PUBLIC_OSM_QUERY, POWER_OSM_QUERY, SEWER_OSM_QUERY, TRANSPORT_OSM_QUERY, WATER_OSM_QUERY, INDUSTRIAL_OSM_QUERY, TELECOM_OSM_QUERY
+from geo_pipeline.query_catalog import BRIDGES_OSM_QUERY, EMERGENCY_OSM_QUERY, GAS_OSM_QUERY, PUBLIC_OSM_QUERY, POWER_OSM_QUERY, SEWER_OSM_QUERY, TRANSPORT_OSM_QUERY, WATER_OSM_QUERY, INDUSTRIAL_OSM_QUERY, TELECOM_OSM_QUERY, DISTRICT_HEATING_OSM_QUERY
 
-RUNTIME_PIPELINE_VERSION = "geo_pipeline/runtime-osm/v4"
-_QUERY_BY_DOMAIN = {"power": POWER_OSM_QUERY, "emergency": EMERGENCY_OSM_QUERY, "public": PUBLIC_OSM_QUERY, "transport": TRANSPORT_OSM_QUERY, "bridges": BRIDGES_OSM_QUERY, "water": WATER_OSM_QUERY, "gas": GAS_OSM_QUERY, "sewer": SEWER_OSM_QUERY, "industrial": INDUSTRIAL_OSM_QUERY, "telecom": TELECOM_OSM_QUERY}
+RUNTIME_PIPELINE_VERSION = "geo_pipeline/runtime-osm/v5"
+_QUERY_BY_DOMAIN = {"power": POWER_OSM_QUERY, "emergency": EMERGENCY_OSM_QUERY, "public": PUBLIC_OSM_QUERY, "transport": TRANSPORT_OSM_QUERY, "bridges": BRIDGES_OSM_QUERY, "water": WATER_OSM_QUERY, "gas": GAS_OSM_QUERY, "sewer": SEWER_OSM_QUERY, "industrial": INDUSTRIAL_OSM_QUERY, "telecom": TELECOM_OSM_QUERY, "district_heating": DISTRICT_HEATING_OSM_QUERY}
 
 
 def refresh_runtime_osm_domain(*, aoi: dict[str, Any], domain: str, root: Path) -> dict[str, Any]:
@@ -56,6 +57,8 @@ def refresh_runtime_osm_domain(*, aoi: dict[str, Any], domain: str, root: Path) 
         raw = _add_sewer_categories(raw)
     elif domain == "telecom":
         raw = _add_telecom_categories(raw)
+    elif domain == "district_heating":
+        raw = _add_district_heating_categories(raw)
     else:
         raw = _add_industrial_categories(raw)
     source = _clip_to_aoi(_geojson_collection(raw), aoi["geometry"])
@@ -178,6 +181,17 @@ def _add_telecom_categories(frame: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     return enriched[enriched["provider_category"] != "other"].copy()
 
 
+def _add_district_heating_categories(frame: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
+    if frame.empty:
+        return frame
+    enriched = frame.copy()
+    enriched["provider_category"] = enriched.apply(
+        lambda row: district_heating_category_for_osm_feature(dict(row)) or "other",
+        axis=1,
+    )
+    return enriched[enriched["provider_category"] != "other"].copy()
+
+
 def _geojson_collection(frame: gpd.GeoDataFrame) -> dict[str, Any]:
     if frame.empty:
         return {"type": "FeatureCollection", "features": []}
@@ -223,6 +237,38 @@ def _domain_layers(domain: str, collection: dict[str, Any]) -> dict[str, list[di
         if inspection_points:
             grouped["telecom.inspection_points"] = inspection_points
         return grouped
+    if domain == "district_heating":
+        grouped = {
+            "district_heating.plants": [],
+            "district_heating.facilities": [],
+            "district_heating.lines": [],
+        }
+        for feature in collection["features"]:
+            category = feature.get("properties", {}).get("provider_category")
+            layer_id = f"district_heating.{category}" if isinstance(category, str) else ""
+            if layer_id in grouped:
+                grouped[layer_id].append(feature)
+        if not any(grouped.values()):
+            return {}
+        inspection_points = []
+        for layer_id, features in grouped.items():
+            for feature in features:
+                geometry = shape(feature["geometry"])
+                if geometry.geom_type != "Point":
+                    properties = dict(feature.get("properties", {}))
+                    properties.update({
+                        "origin_artifact": layer_id,
+                        "origin_source_id": f"{properties.get('element', 'feature')}/{properties.get('id')}",
+                        "source_geometry_type": geometry.geom_type,
+                    })
+                    inspection_points.append({
+                        "type": "Feature",
+                        "properties": properties,
+                        "geometry": mapping(geometry.representative_point()),
+                    })
+        if inspection_points:
+            grouped["district_heating.inspection_points"] = inspection_points
+        return grouped
     grouped: dict[str, list[dict[str, Any]]] = {}
     for feature in collection["features"]:
         category = feature.get("properties", {}).get("provider_category")
@@ -257,7 +303,7 @@ def _pack_payload(*, aoi: dict[str, Any], domain: str, query_version: str, snaps
     artifacts = []
     first_metadata: dict[str, Any] | None = None
     for layer_id, features in layers.items():
-        layer_readiness = "needs_source" if layer_id == "telecom.lines" and not features else "usable_with_limitations"
+        layer_readiness = "needs_source" if layer_id in {"telecom.lines", "district_heating.lines"} and not features else "usable_with_limitations"
         metadata = {
             "cache_layout_version": "provider_cache/v1", "geojson_contract_version": "provider_geojson/v1",
             "aoi_id": aoi["aoi_id"], "domain": domain, "layer_id": layer_id, "source": "OpenStreetMap",

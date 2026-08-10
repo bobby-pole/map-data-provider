@@ -10,8 +10,7 @@ Zainstaluj zależności i uruchom pełny proces quality gate raz:
 
 ```bash
 (cd backend && uv sync --locked --dev)
-(cd backend-node && npm install --package-lock=false)
-(cd frontend && npm install --package-lock=false)
+pnpm install
 ./scripts/verify_provider.sh
 ```
 
@@ -71,7 +70,7 @@ curl -sS http://127.0.0.1:3001/api/aoi/rybnik_60km/presentations/power \
 
 Odpowiedź to zwarte metadane, a nie pełne kolekcje GeoJSON. Lokalny podgląd MapLibre używa jego `archive_url` wraz z HTTP byte range, aby odczytywać tylko wymagane kafelki MVT z PMTiles. Pełne endpointy domain-pack i GeoJSON pozostają ścieżką danych/eksportu.
 
-Aktualna zatwierdzona migawka zawiera 23 604 publiczne obiekty energetyczne w trzech warstwach GeoJSON. `power.supports` jest ograniczonym fixture dowodowym OSM, a nie kompletnym inwentarzem supportów AOI. Jej archiwum PMTiles jest pochodnym, sprawdzonym artefaktem prezentacyjnym; liczniki i rozmiar archiwum należy traktować jako specyficzne dla migawki.
+Aktualna zatwierdzona migawka zawiera 156 721 publicznych obiektów energetycznych w trzech warstwach GeoJSON: 16 505 linii, 7 087 assetów i 133 129 supportów. `power.supports` jest ograniczonym fixture dowodowym OSM, a nie kompletnym inwentarzem supportów AOI. Jej archiwum PMTiles jest pochodnym, sprawdzonym artefaktem prezentacyjnym; liczniki i rozmiar archiwum należy traktować jako specyficzne dla migawki.
 
 ## 4. Wykazanie, dlaczego KIUT/GESUT pozostaje jedynie punktem odniesienia — 45 sekund
 

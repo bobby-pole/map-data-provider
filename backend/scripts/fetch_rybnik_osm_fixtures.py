@@ -98,10 +98,10 @@ cx, cy = to_2180.transform(CENTER_LON, CENTER_LAT)
 aoi_buffer_2180 = Point(cx, cy).buffer(RADIUS_M)
 
 OVERPASS_SERVERS = [
-    "https://overpass.osm.ch/api/interpreter",
     "https://overpass-api.de/api/interpreter",
-    "https://z.overpass-api.de/api/interpreter",
     "https://lz4.overpass-api.de/api/interpreter",
+    "https://z.overpass-api.de/api/interpreter",
+    "https://overpass.openstreetmap.fr/api/interpreter",
 ]
 
 HEADERS = {

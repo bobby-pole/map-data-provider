@@ -23,13 +23,12 @@ urllib3_cn.allowed_gai_family = lambda: socket.AF_INET
 logger = logging.getLogger(__name__)
 
 OVERPASS_ENDPOINTS = [
-    "https://overpass.osm.ch/api/interpreter",
     "https://overpass-api.de/api/interpreter",
-    "https://z.overpass-api.de/api/interpreter",
     "https://lz4.overpass-api.de/api/interpreter",
+    "https://z.overpass-api.de/api/interpreter",
+    "https://overpass.openstreetmap.fr/api/interpreter",
     "https://overpass.kumi.systems/api/interpreter",
     "https://overpass.private.coffee/api/interpreter",
-    "https://overpass.openstreetmap.fr/api/interpreter",
 ]
 
 HEADERS = {

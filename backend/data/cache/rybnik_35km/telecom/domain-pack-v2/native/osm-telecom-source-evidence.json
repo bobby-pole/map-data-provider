@@ -1,0 +1,19 @@
+{
+  "source_registry_id": "openstreetmap",
+  "fixture": "data/fixtures/rybnik_35km/telecom/osm-telecom.geojson",
+  "sha256": "118973f8fd6a4cb9442046b1a22929aa133c5deebe90498f04973246c1deed53",
+  "category_rules": {
+    "telecom.towers": "man_made=communications_tower, or man_made=mast/tower with tower:type=communication or a communication:* service=yes tag.",
+    "telecom.facilities": "allow-listed telecom=* values, or man_made=antenna with a communication:* service=yes tag.",
+    "telecom.lines": "communication=line or cable=communication only."
+  },
+  "false_positive_rule": "Generic masts, towers, poles, buildings, ducts and utilities without qualifying telecom tags are excluded.",
+  "source_gap": "No qualified official analytical telecom-network vector feed is enabled; a zero-feature telecom.lines layer remains visible with readiness=needs_source.",
+  "limitations": [
+    "OSM telecom infrastructure and communication-network completeness varies significantly by area and operator.",
+    "The committed contract fixture demonstrates explicit telecom categories; it is not a complete Rybnik 35 km network, coverage or transmission model.",
+    "Generic masts, towers, poles, buildings, ducts and utilities without qualifying communication tags are excluded to prevent false telecom attribution.",
+    "No qualified official analytical telecom-network vector feed is enabled; an empty telecom.lines layer remains an explicit source gap.",
+    "KIUT telecom WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+  ]
+}

@@ -40,7 +40,7 @@ def test_water_query_retrieves_only_explicit_water_semantics() -> None:
 def test_water_domain_pack_builds_independent_categories_and_inspection_points(tmp_path: Path) -> None:
     build_rybnik_water_cache(root=tmp_path)
     pack = build_rybnik_water_domain_pack(root=tmp_path)
-    pack_root = tmp_path / "rybnik_60km" / "water" / "domain-pack-v2"
+    pack_root = tmp_path / "rybnik_35km" / "water" / "domain-pack-v2"
     artifacts = {artifact["id"]: artifact for artifact in pack["artifacts"]}
 
     facilities = json.loads((pack_root / artifacts["water.facilities"]["path"]).read_text(encoding="utf-8"))
@@ -58,7 +58,7 @@ def test_water_domain_pack_builds_independent_categories_and_inspection_points(t
     assert context["bdot10k"]["status"] == "context_only"
     assert context["comparison"][0]["outcome"] == "ambiguous"
 
-    public = read_domain_pack("rybnik_60km", "water", root=tmp_path, public_export=True)["artifacts"]
+    public = read_domain_pack("rybnik_35km", "water", root=tmp_path, public_export=True)["artifacts"]
     assert {artifact["id"] for artifact in public} == {
         "water.facilities", "water.pipelines", "water.waterways", "water.inspection_points",
     }

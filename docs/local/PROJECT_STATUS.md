@@ -1,18 +1,26 @@
 # Project Status
 
-Updated: 2026-08-10
+Updated: 2026-08-14
 
 ## Current snapshot
 
-- Active goal: none; `G-003`, `G-004` and `G-005` are achieved.
-- Current milestone: portfolio deployment preparation
-- Active ticket: none.
-- Last completed ticket: `MDQ-042 - Deliver District-Heating Domain Pack`.
+- Active goal: `G-006 - Portfolio Deployment`; `G-003`, `G-004` and `G-005` are achieved.
+- Current milestone: provider preview UX and deployment preparation
+- Active ticket: None.
+- Last completed ticket: `MDQ-056 - Modernize the Full-Screen Provider Preview`.
 - Next dependency-safe ticket: `MDQ-052 - Deploy Read-Only Portfolio Demo on VPS`.
-- Prepared follow-up: `MDQ-052 - Deploy Read-Only Portfolio Demo on VPS` (`G-006`) after the completed optional utility-domain expansion.
+- Prepared follow-up: begin `MDQ-052` release/deployment preparation on a dedicated branch.
 - Blockers: None.
 
 ## Release evidence
+
+- 2026-08-14 - Completed `MDQ-056`: redesigned the provider preview as a full-screen, map-led interface with a compact glass top bar, left translucent drawers, minimal accessible SVG icon rail and bottom AOI/visibility/base-map status capsule. The provider panel switches `Standard OSM`, `Dark OSM` and `No base map`; the dark option modifies only MapLibre raster paint for the same attributed OSM tiles and never recreates provider PMTiles sources or changes source semantics. CARTO Dark Matter was explicitly rejected as a default CDN dependency: CARTO's current terms require an Enterprise licence for commercial use or a non-commercial grant. Browser QA confirmed the desktop shell, all three base-map states and the narrow drawer layout without horizontal overflow. Verification passed: 23 frontend tests, lint and production build; the existing non-failing Vite chunk-size warning remains.
+
+- 2026-08-14 - Completed `MDQ-055`: every live power refresh now obtains bounded OSM `power=circuit` membership separately from the analytical geometry query and publishes the checksum-validated private `power.osm_relation_evidence` artifact with its runtime domain pack. It retains only source relation members that have an exact delivered OSM ID in the resolved AOI; retained line geometry is clipped to that AOI, and original way endpoint-node IDs are preserved only when supplied by OSM member evidence. The runtime cache version moved to `geo_pipeline/runtime/v17`, so a pre-evidence power pack cannot be reused. The preview opens the selected-feature inspection after a map click and distinguishes unavailable relation evidence from an unrelated feature with no relation. Verification passed: 27 focused Python tests, 58 Node tests with lint/build, and 22 frontend tests with lint/build; the existing non-failing Vite chunk-size warning remains.
+
+- 2026-08-14 - Corrected `MDQ-055` inspection interaction: the selected station/node now exposes retained circuit lines directly instead of requiring the user to interpret a relation-member list. Selecting a line isolates it on the map and marks its two source endpoints; no new connection inference is introduced. Frontend verification again passed: 22 tests, lint and build.
+
+- 2026-08-10 - Completed `MDQ-054`: replaced the permanent inspector with a map-first right icon rail, source-role/domain/artifact tree, shared rendering/legend semantics, separate reference-context controls and a movable Activity window. The new first-run state does not request `rybnik_60km`; point selection is map-driven, and `prg_administrative_catalog/v2` supplies local source-labelled boundaries for all 16 voivodeships, 380 counties and 2,479 gminas. The administrative selector is a lazy expandable `voivodeship -> county -> gmina` checkbox tree: selected parents visibly select descendants, while county/gmina exclusions materialise the remaining union and remain editable. Client and runtime API both reject a selection that spans more than one voivodeship; runtime repairs generalised PRG topology before a real union is calculated. The typed true-boundary preflight blocks a 35,530.3 km² Mazowieckie request before Overpass. Verification passed: 26 focused Python tests, 37 AOI route tests, 22 frontend tests with lint/build and browser QA, plus the original smoke and canonical provider verification evidence.
 
 - 2026-08-10 - Completed `MDQ-042`: delivered the optional fixture-first `rybnik_60km/district_heating` domain pack for Goal `G-005`. `district-heating-osm/v1` separates explicit heating plants, heat-exchanger facilities and heat-network lines; a plant/generator requires explicit heat-output/source evidence, while generic industrial objects and pipelines are excluded. The fixture publishes a public zero-feature `district_heating.lines` layer with `readiness=needs_source`, derived inspection points, source-gap evidence and a private KIUT WMS reference record. The domain is registered in cache/domain-pack publication, bounded runtime OSM refresh, Node API/export schemas and MapLibre preview. Focused backend checks (33 tests), Node verification (55 tests), frontend verification (19 tests) and the offline provider gate passed; the frontend retains the existing non-failing Vite chunk-size warning.
 

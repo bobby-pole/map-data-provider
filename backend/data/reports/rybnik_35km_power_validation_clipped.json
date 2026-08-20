@@ -1,0 +1,28 @@
+{
+  "aoi": {
+    "name": "rybnik_35km",
+    "center_lat": 50.102174,
+    "center_lon": 18.546285,
+    "radius_m": 35000
+  },
+  "status": "pass",
+  "layers": {
+    "power_lines": {
+      "exists": true,
+      "readable": true,
+      "feature_count": 6796,
+      "status": "pass"
+    },
+    "power_node_points_display": {
+      "exists": true,
+      "readable": true,
+      "feature_count": 2379,
+      "status": "pass"
+    }
+  },
+  "domain_quality": {
+    "has_power_lines": true,
+    "has_power_nodes": true,
+    "status": "pass"
+  }
+}

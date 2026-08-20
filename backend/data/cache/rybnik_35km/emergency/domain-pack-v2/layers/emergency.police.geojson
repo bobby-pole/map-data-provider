@@ -1,0 +1,4740 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "cache_layout_version": "provider_cache/v1",
+    "geojson_contract_version": "provider_geojson/v1",
+    "aoi_id": "rybnik_35km",
+    "domain": "emergency",
+    "layer_id": "emergency.police",
+    "source": "OpenStreetMap",
+    "source_type": "analytical_vector",
+    "source_registry_id": "openstreetmap",
+    "source_url": "https://overpass-api.de/api/interpreter",
+    "source_query": "Overpass bounded snapshot: explicit amenity=hospital|fire_station|police|ambulance_station, healthcare=hospital and emergency=ambulance_station|mountain_rescue|lifeguard_base within the Rybnik 35 km AOI.",
+    "snapshot_at": "2026-08-03T10:14:06Z",
+    "pipeline_version": "geo_pipeline/emergency/v1",
+    "query_version": "emergency-osm/v1",
+    "validation_status_raw": "warning",
+    "quality_status": "warning",
+    "confidence": "medium",
+    "limitations": [
+      "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+      "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+      "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+    ],
+    "eligible_for_analysis": true,
+    "readiness": "usable_with_limitations",
+    "contract_version": "provider_geojson/v1",
+    "feature_count": 102
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/920033926",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Městská policie Hlučín",
+          "wikidata": "Q132801333",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.1873542,
+          49.8963388
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/920034140",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Policie ČR - Obvodní oddělení Hlučín",
+          "website": "https://policie.gov.cz/",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.190827,
+          49.898134899999995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/925524835",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Policie ČR - obvodní oddělení Přívoz",
+          "website": "https://policie.gov.cz/",
+          "name:pl": "Policja Republiki Czeskiej",
+          "name:en": "Police of the Czech Republic",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.2680969,
+          49.851658
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/958637795",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji III w Katowicach",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.9679262,
+          50.23088039999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/1478321042",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Polcji V w Rudzie Śląskiej",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8357427,
+          50.238464399999984
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/1565011361",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji V w Zabrzu",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7985044,
+          50.3649309
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/1744233007",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Městská policie Karviná",
+          "source": "cuzk:km",
+          "amenity": "police",
+          "opening_hours": "24/7"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5468037,
+          49.8551912
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/1781606469",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji IV w Zabrzu",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7811369,
+          50.338179399999994
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/1829885225",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji w Rybniku-Boguszowicach",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5989396,
+          50.0490262
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/1858602008",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komenda Miejska Policji w Gliwicach",
+          "operator": "Policja",
+          "operator:wikidata": "Q622532",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.6614993,
+          50.29753689999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/2061402004",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Městská policie Bohumín",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.3584972,
+          49.9038798
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/2074365273",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Městská policie Ostrava",
+          "wikidata": "Q131378355",
+          "wikipedia": "cs:Městská policie Ostrava",
+          "website": "https://mpostrava.cz/",
+          "amenity": "police",
+          "opening_hours": "24/7"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.2743477,
+          49.85011529999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/2118225444",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji IV w Katowicach",
+          "amenity": "police",
+          "phone": "+48 32 200 37 51"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.9766606,
+          50.20930399999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/2126752049",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komenda Miejska Policji w Zabrzu",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7771484,
+          50.302169899999996
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/2291665333",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Správa moravskoslezského kraje Policie ČR",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.2904822,
+          49.840264399999995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/2374827431",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji II w Zabrzu",
+          "source": "http://www.zabrze.slaska.policja.gov.pl/jednostki/",
+          "amenity": "police",
+          "phone": "+48 32 370 36 10"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.766011,
+          50.30636369999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/2406060506",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Policie ČR - Obvodní oddělení Havířov 3",
+          "website": "https://policie.gov.cz/",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.419154,
+          49.8021401
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/2406319431",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Policie České republiky - Policejní stanice Radvanice",
+          "amenity": "police",
+          "contact:phone": "+420974725761",
+          "contact:email": "mrpo.ps.radvanice@pcr.cz"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.3445473,
+          49.8163719
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/2588801715",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Straż Miejska w Pszczynie",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.9291332,
+          49.967906899999996
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/2986249957",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Straż Miejska w Czerwionce-Leszczynach",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.6763733,
+          50.152627100000004
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/3043369331",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji I w Zabrzu",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7872752,
+          50.296190599999996
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/3621399153",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji III w Zabrzu",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.813507800000004,
+          50.2936898
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/3669139501",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Městská policie Havířov",
+          "operator": "Statutární město Havířov",
+          "website": "https://www.havirov-city.cz/mestska-policie",
+          "description": "Komisariát č. 3.",
+          "source": "survey",
+          "amenity": "police",
+          "email": "komisark3.mpha@havirovcity.cz"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4146883,
+          49.800898000000004
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/3711893389",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Straż Miejska w Mikołowie",
+          "amenity": "police",
+          "phone": "+48 32 226 02 91;+48 32 324 85 55"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.9047133,
+          50.1687208
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/3956141718",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji Autostradowej w Gliwicach",
+          "amenity": "police",
+          "opening_hours": "24/7",
+          "phone": "+48 32 200 34 00"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7235469,
+          50.30803530000001
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/3958599449",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Policie ČR - Městské ředitelství policie Ostrava",
+          "website": "https://policie.gov.cz/",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.2890681,
+          49.840874799999995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/4033818054",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Straż Miejska w Łaziskach Górnych",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8396746,
+          50.150225000000006
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/4865729663",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Městská policie Ostrava",
+          "website": "https://mpostrava.cz/",
+          "description": "Kontaktní místo pro občany.",
+          "amenity": "police",
+          "opening_hours": "Mo-Su 15:00-16:00"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.3193025,
+          49.82378899999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/6062978184",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Městská policie Ostrava",
+          "wikidata": "Q131378355",
+          "wikipedia": "cs:Městská policie Ostrava",
+          "website": "https://mpostrava.cz/",
+          "amenity": "police",
+          "opening_hours": "24/7"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.3327544,
+          49.841699600000005
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/8482976360",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji w Radlinie",
+          "amenity": "police",
+          "phone": "+48 32 414 57 10"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4893436,
+          50.047131
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/9107868538",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Policie ČR - Obvodní oddělení Slezská Ostrava",
+          "website": "https://policie.gov.cz/",
+          "name:pl": "Policja Republiki Czeskiej",
+          "name:en": "Police of the Czech Republic",
+          "amenity": "police",
+          "opening_hours": "24/7"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.2947817,
+          49.8446832
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/9950607486",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Posterunek Policji w Gołkowicach",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5059363,
+          49.903756400000006
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/10697891454",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji w Orzeszu",
+          "operator": "Policja",
+          "operator:wikidata": "Q622532",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7819617,
+          50.1459041
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/10734705459",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Straż Miejska w Zabrzu",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7897496,
+          50.3075635
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/11001346519",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Straż Miejska w Knurowie",
+          "website": "https://www.knurow.pl/",
+          "amenity": "police",
+          "opening_hours": "24/7",
+          "phone": "+48 32 330 15 59",
+          "email": "sm@knurow.pl",
+          "wheelchair": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.6686133,
+          50.22067710000001
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/11641047322",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji w Strumieniu",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7660173,
+          49.92171449999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/11642037582",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Posterunek Policji w Świerklanach",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5801264,
+          50.0213686
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/11642037584",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji w Kuźni Raciborskiej",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.3045922,
+          50.2017075
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/11782562988",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Posterunek Straży Ochrony Kolei w Gliwicach",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.677249,
+          50.30045539999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/11782562989",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Posterunek Straży Ochrony Kolei w Rybniku",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.547069,
+          50.08908739999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/11786221573",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Posterunek Policji w Pietrowicach Wielkich",
+          "operator": "Policja",
+          "operator:wikidata": "Q622532",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.091255,
+          50.083701999999995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/12074038347",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Straż Miejska w Pyskowicach",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.6295067,
+          50.40000539999998
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/12312918114",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Městská policie Ostrava",
+          "website": "https://mpostrava.cz/",
+          "description": "Kontaktní místo pro občany.",
+          "amenity": "police",
+          "opening_hours": "Mo,We,Fr 13:00-14:00"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.3054849,
+          49.859002600000004
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/12434592674",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Městská policie Ostrava",
+          "wikidata": "Q131378355",
+          "wikipedia": "cs:Městská policie Ostrava",
+          "website": "https://mpostrava.cz/",
+          "amenity": "police",
+          "opening_hours": "24/7"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.2908346,
+          49.8355409
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/12434592675",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Městská policie Ostrava",
+          "website": "https://mpostrava.cz/",
+          "description": "Kontaktní místo pro občany.",
+          "amenity": "police",
+          "opening_hours": "Mo 10:00-11:00; We 15:00-16:00"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.296957,
+          49.8401213
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/12438532561",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Policie ČR - obvodní oddělení Bohumín",
+          "website": "https://policie.gov.cz/",
+          "name:pl": "Policja Republiki Czeskiej",
+          "name:en": "Police of the Czech Republic",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.3587576,
+          49.9020894
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/12439927784",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Policie ČR - obvodní oddělení Karviná 1",
+          "website": "https://policie.gov.cz/",
+          "name:pl": "Policja Republiki Czeskiej",
+          "name:en": "Police of the Czech Republic",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5318201,
+          49.8676691
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/12439927785",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Policie ČR - obvodní oddělení Dětmarovice",
+          "website": "https://policie.gov.cz/",
+          "name:pl": "Policja Republiki Czeskiej",
+          "name:en": "Police of the Czech Republic",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4671436,
+          49.89727619999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/12441554029",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Policie ČR - Obvodní oddělení Horní Suchá",
+          "website": "https://policie.gov.cz/",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4825289,
+          49.80131779999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/12441554031",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Policie ČR - Obvodní oddělení Karviná 7",
+          "website": "https://policie.gov.cz/",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5583713,
+          49.8595672
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/12441554032",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Policie ČR - Obvodní oddělení Orlová",
+          "website": "https://policie.gov.cz/",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4263648,
+          49.85952910000002
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/12441554033",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Policie ČR - Obvodní oddělení Petřvald",
+          "website": "https://policie.gov.cz/",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.3900926,
+          49.8309989
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/12451662992",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Městská policie Orlová",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4225734,
+          49.8740827
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/13274853242",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Městská policie Ostrava",
+          "wikidata": "Q131378355",
+          "wikipedia": "cs:Městská policie Ostrava",
+          "website": "https://mpostrava.cz/",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.2588721,
+          49.8551959
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/13898073872",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Straż Miejska w Radlinie",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4894725,
+          50.04710429999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/13992908107",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5391728,
+          49.86444769999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/13992908205",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.534455600000005,
+          49.8656823
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/105039934",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji I w Gliwicach",
+          "source": "Bing",
+          "amenity": "police",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.665432,
+              50.29555679999999
+            ],
+            [
+              18.6655802,
+              50.29547499999999
+            ],
+            [
+              18.6654492,
+              50.29539019999999
+            ],
+            [
+              18.665203,
+              50.2955264
+            ],
+            [
+              18.6653179,
+              50.2956024
+            ],
+            [
+              18.6654015,
+              50.29555729999999
+            ],
+            [
+              18.665435,
+              50.2955805
+            ],
+            [
+              18.665432,
+              50.29555679999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/105746602",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Straż Miejska w Rybniku",
+          "amenity": "police",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.5313803,
+              50.089931
+            ],
+            [
+              18.5313464,
+              50.0898243
+            ],
+            [
+              18.5311971,
+              50.08984379999999
+            ],
+            [
+              18.5311943,
+              50.08983500000001
+            ],
+            [
+              18.531142300000003,
+              50.089841799999995
+            ],
+            [
+              18.531145,
+              50.08985049999999
+            ],
+            [
+              18.530966,
+              50.0898739
+            ],
+            [
+              18.5309999,
+              50.08998069999999
+            ],
+            [
+              18.5313803,
+              50.089931
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/148178284",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji w Pyskowicach",
+          "amenity": "police",
+          "building": "public"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.6326342,
+              50.398719299999996
+            ],
+            [
+              18.6327329,
+              50.39845799999999
+            ],
+            [
+              18.6325825,
+              50.3984347
+            ],
+            [
+              18.632561,
+              50.39849159999999
+            ],
+            [
+              18.6326217,
+              50.398500899999995
+            ],
+            [
+              18.6325667,
+              50.3986472
+            ],
+            [
+              18.6322569,
+              50.398599
+            ],
+            [
+              18.6322013,
+              50.39874479999999
+            ],
+            [
+              18.6325186,
+              50.39879390000001
+            ],
+            [
+              18.6325521,
+              50.3987067
+            ],
+            [
+              18.6326342,
+              50.398719299999996
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/151879126",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji w Knurowie",
+          "amenity": "police",
+          "building": "yes",
+          "wheelchair": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.6723287,
+              50.222171499999995
+            ],
+            [
+              18.6719714,
+              50.2222587
+            ],
+            [
+              18.6720362,
+              50.22236720000001
+            ],
+            [
+              18.672392,
+              50.222279699999994
+            ],
+            [
+              18.6723287,
+              50.222171499999995
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/159708718",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji V w Gliwicach",
+          "amenity": "police",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.7306744,
+              50.2920566
+            ],
+            [
+              18.7307281,
+              50.29200180000001
+            ],
+            [
+              18.7307003,
+              50.29199089999999
+            ],
+            [
+              18.7307328,
+              50.2919571
+            ],
+            [
+              18.7306764,
+              50.2919349
+            ],
+            [
+              18.730668,
+              50.2919443
+            ],
+            [
+              18.7305272,
+              50.2918888
+            ],
+            [
+              18.7304278,
+              50.2919915
+            ],
+            [
+              18.7305533,
+              50.29204119999999
+            ],
+            [
+              18.7305522,
+              50.2920428
+            ],
+            [
+              18.7306228,
+              50.292071400000005
+            ],
+            [
+              18.7306476,
+              50.29204549999999
+            ],
+            [
+              18.7306744,
+              50.2920566
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/167284291",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji II w Rudzie Śląskiej",
+          "operator": "Policja",
+          "operator:wikidata": "Q622532",
+          "website": "http://www.ruda.slaska.policja.gov.pl/k21/kontakt/komisariat-ii-policji/54352,Komisariat-Policji-II.html",
+          "source": "Knowledge, Bing",
+          "amenity": "police",
+          "building": "yes",
+          "opening_hours": "24/7",
+          "phone": "+48 47 854 16 10"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.8687616,
+              50.2710525
+            ],
+            [
+              18.8687381,
+              50.2710492
+            ],
+            [
+              18.8687191,
+              50.2711046
+            ],
+            [
+              18.8687523,
+              50.2711092
+            ],
+            [
+              18.8687376,
+              50.271152099999995
+            ],
+            [
+              18.8688252,
+              50.27116440000001
+            ],
+            [
+              18.868829,
+              50.2711531
+            ],
+            [
+              18.8689004,
+              50.27116310000001
+            ],
+            [
+              18.8689395,
+              50.2710492
+            ],
+            [
+              18.8688568,
+              50.2710377
+            ],
+            [
+              18.868855200000002,
+              50.27104249999999
+            ],
+            [
+              18.8687691,
+              50.2710304
+            ],
+            [
+              18.8687616,
+              50.2710525
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/168873356",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komenda Miejska Policji w Rudzie Śląskiej",
+          "operator": "Policja",
+          "operator:wikidata": "Q622532",
+          "amenity": "police",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.8718269,
+              50.288361899999984
+            ],
+            [
+              18.8725677,
+              50.28849249999998
+            ],
+            [
+              18.8726222,
+              50.28836640000001
+            ],
+            [
+              18.8716117,
+              50.2881882
+            ],
+            [
+              18.8715573,
+              50.2883143
+            ],
+            [
+              18.8718269,
+              50.288361899999984
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/169411934",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komenda Powiatowa Policji",
+          "operator": "Policja",
+          "operator:wikidata": "Q622532",
+          "website": "http://www.mikolow.slaska.policja.gov.pl/",
+          "source": "bing",
+          "amenity": "police",
+          "building": "office",
+          "phone": "+48 47 85 582 00",
+          "email": "komendant@mikolow.ka.policja.gov.pl"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.8948032,
+              50.17282850000001
+            ],
+            [
+              18.8948736,
+              50.17270800000001
+            ],
+            [
+              18.8946841,
+              50.17266260000001
+            ],
+            [
+              18.8945054,
+              50.1729683
+            ],
+            [
+              18.8946949,
+              50.17301369999999
+            ],
+            [
+              18.8948032,
+              50.17282850000001
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/170833877",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Straż Miejska w Świętochłowicach",
+          "source": "www.geoportal.gov.pl",
+          "amenity": "police",
+          "building": "garage",
+          "phone": "+48 32 349 19 70",
+          "email": "sm@swientochlowice.pl"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.9308361,
+              50.284917599999986
+            ],
+            [
+              18.9308682,
+              50.2849557
+            ],
+            [
+              18.9308945,
+              50.28494609999999
+            ],
+            [
+              18.9309204,
+              50.2849742
+            ],
+            [
+              18.9309007,
+              50.2849813
+            ],
+            [
+              18.9309582,
+              50.28504409999999
+            ],
+            [
+              18.9309494,
+              50.285047199999994
+            ],
+            [
+              18.930958100000005,
+              50.28505729999999
+            ],
+            [
+              18.9310724,
+              50.2850156
+            ],
+            [
+              18.9310667,
+              50.2850087
+            ],
+            [
+              18.9311059,
+              50.28499419999999
+            ],
+            [
+              18.9310317,
+              50.28491089999999
+            ],
+            [
+              18.9309821,
+              50.28486019999999
+            ],
+            [
+              18.9308361,
+              50.284917599999986
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/171852734",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji IV w Rudzie Śląskiej",
+          "operator": "Policja",
+          "operator:wikidata": "Q622532",
+          "website": "http://www.ruda.slaska.policja.gov.pl/komisariat-iv-policji-w-rudzie-s/",
+          "source": "OSM Tracker, Knowledge, Bing",
+          "amenity": "police",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.8557505,
+              50.2716098
+            ],
+            [
+              18.8557618,
+              50.2716084
+            ],
+            [
+              18.8557728,
+              50.27163060000001
+            ],
+            [
+              18.8558859,
+              50.2716128
+            ],
+            [
+              18.8558782,
+              50.2715897
+            ],
+            [
+              18.8558944,
+              50.27158709999999
+            ],
+            [
+              18.8559138,
+              50.2715736
+            ],
+            [
+              18.8559037,
+              50.27154710000001
+            ],
+            [
+              18.8558808,
+              50.271542100000005
+            ],
+            [
+              18.8558614,
+              50.2714983
+            ],
+            [
+              18.855715,
+              50.27152279999999
+            ],
+            [
+              18.8557505,
+              50.2716098
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/178230941",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komenda Miejska Policji w Tychach",
+          "website": "https://tychy.policja.gov.pl",
+          "source": "UM Tychy",
+          "amenity": "police",
+          "building": "yes",
+          "phone": "+48 47 855 12 00",
+          "email": "komendant@tychy.ka.policja.gov.pl",
+          "wheelchair": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.9857169,
+              50.1228916
+            ],
+            [
+              18.985763,
+              50.12295850000001
+            ],
+            [
+              18.9858257,
+              50.1229405
+            ],
+            [
+              18.9859228,
+              50.1229115
+            ],
+            [
+              18.9858551,
+              50.122814799999986
+            ],
+            [
+              18.9855384,
+              50.122362800000005
+            ],
+            [
+              18.9853816,
+              50.1224083
+            ],
+            [
+              18.9857169,
+              50.1228916
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/182784333",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji I w Chorzowie",
+          "website": "http://www.chorzow.slaska.policja.gov.pl",
+          "source": "www.geoportal.gov.pl",
+          "amenity": "police",
+          "building": "public",
+          "phone": "+48 32 348 65 10",
+          "email": "kp1@chorzow.ka.policja.gov.pl"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.9395498,
+              50.2739656
+            ],
+            [
+              18.939574,
+              50.274032
+            ],
+            [
+              18.9396989,
+              50.274013399999994
+            ],
+            [
+              18.9397101,
+              50.2740193
+            ],
+            [
+              18.939727,
+              50.27402029999999
+            ],
+            [
+              18.9397405,
+              50.27401569999999
+            ],
+            [
+              18.9397454,
+              50.274011400000006
+            ],
+            [
+              18.9397478,
+              50.2740061
+            ],
+            [
+              18.939962,
+              50.2739743
+            ],
+            [
+              18.9399241,
+              50.2738692
+            ],
+            [
+              18.9397049,
+              50.2739035
+            ],
+            [
+              18.9397182,
+              50.2739401
+            ],
+            [
+              18.9396159,
+              50.2739553
+            ],
+            [
+              18.9395498,
+              50.2739656
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/183123508",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji III w Rudzie Śląskiej",
+          "source": "OSM Tracker, Knowledge, Bing",
+          "amenity": "police",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.9060522,
+              50.25327519999999
+            ],
+            [
+              18.9060637,
+              50.25327320000001
+            ],
+            [
+              18.906051,
+              50.2531936
+            ],
+            [
+              18.9058885,
+              50.2532034
+            ],
+            [
+              18.9059001,
+              50.2533063
+            ],
+            [
+              18.9060525,
+              50.2532982
+            ],
+            [
+              18.9060522,
+              50.25327519999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/183614354",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komenda Miejska Policji w Świętochłowicach",
+          "operator": "Policja",
+          "operator:wikidata": "Q622532",
+          "source": "UM Świętochłowice",
+          "amenity": "police",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.9190163,
+              50.284892500000005
+            ],
+            [
+              18.9196254,
+              50.2849676
+            ],
+            [
+              18.9196563,
+              50.284971399999996
+            ],
+            [
+              18.91969,
+              50.28485109999999
+            ],
+            [
+              18.9191804,
+              50.284788600000006
+            ],
+            [
+              18.9191474,
+              50.2847846
+            ],
+            [
+              18.9188329,
+              50.2847465
+            ],
+            [
+              18.9187987,
+              50.2848663
+            ],
+            [
+              18.9190163,
+              50.284892500000005
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/189916961",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komenda Powiatowa Policji w Wodzisławiu Śląskim",
+          "operator": "Policja",
+          "operator:wikidata": "Q622532",
+          "source": "Bing",
+          "amenity": "police",
+          "building": "yes",
+          "opening_hours": "24/7"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.440052200000004,
+              50.0158097
+            ],
+            [
+              18.4394979,
+              50.0157972
+            ],
+            [
+              18.4392233,
+              50.015791
+            ],
+            [
+              18.4392183,
+              50.01588369999999
+            ],
+            [
+              18.4394101,
+              50.015888000000004
+            ],
+            [
+              18.4395861,
+              50.015892
+            ],
+            [
+              18.4400471,
+              50.01590240000001
+            ],
+            [
+              18.440052200000004,
+              50.0158097
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/205894627",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji II w Gliwicach",
+          "amenity": "police",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.6796109,
+              50.309233299999995
+            ],
+            [
+              18.6797688,
+              50.3091444
+            ],
+            [
+              18.6795932,
+              50.3090159
+            ],
+            [
+              18.6794327,
+              50.3091037
+            ],
+            [
+              18.6796109,
+              50.309233299999995
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/206397601",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji I w Rudzie Śląskiej",
+          "source": "UM Ruda Śląska",
+          "amenity": "police",
+          "building": "office"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.8548717,
+              50.3126941
+            ],
+            [
+              18.8548728,
+              50.3126908
+            ],
+            [
+              18.854873,
+              50.31268740000001
+            ],
+            [
+              18.854872,
+              50.31268409999999
+            ],
+            [
+              18.8548668,
+              50.312676100000004
+            ],
+            [
+              18.8548584,
+              50.3126694
+            ],
+            [
+              18.8548475,
+              50.312664299999994
+            ],
+            [
+              18.854831,
+              50.3126622
+            ],
+            [
+              18.8548147,
+              50.312664599999984
+            ],
+            [
+              18.8548012,
+              50.31267100000001
+            ],
+            [
+              18.854772400000005,
+              50.312676599999996
+            ],
+            [
+              18.8546956,
+              50.3126934
+            ],
+            [
+              18.8546892,
+              50.3126925
+            ],
+            [
+              18.8546672,
+              50.312698999999995
+            ],
+            [
+              18.854644200000003,
+              50.312695
+            ],
+            [
+              18.8546217,
+              50.312700099999994
+            ],
+            [
+              18.8546079,
+              50.31271259999999
+            ],
+            [
+              18.8546063,
+              50.312725199999996
+            ],
+            [
+              18.8546163,
+              50.312735999999994
+            ],
+            [
+              18.8546343,
+              50.3127412
+            ],
+            [
+              18.8546669,
+              50.3128085
+            ],
+            [
+              18.8546742,
+              50.312822699999984
+            ],
+            [
+              18.8546809,
+              50.3128289
+            ],
+            [
+              18.8547635,
+              50.3128112
+            ],
+            [
+              18.8547709,
+              50.31280959999999
+            ],
+            [
+              18.8547795,
+              50.3128078
+            ],
+            [
+              18.854797,
+              50.312804
+            ],
+            [
+              18.8548145,
+              50.3128003
+            ],
+            [
+              18.8548232,
+              50.31279839999999
+            ],
+            [
+              18.8548305,
+              50.312796799999994
+            ],
+            [
+              18.8549163,
+              50.3127785
+            ],
+            [
+              18.8549159,
+              50.31277759999999
+            ],
+            [
+              18.8549006,
+              50.312748199999994
+            ],
+            [
+              18.8548907,
+              50.312730200000004
+            ],
+            [
+              18.8548717,
+              50.3126941
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/206728725",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komenda Miejska Policji w Jastrzębiu Zdroju",
+          "operator": "Policja",
+          "operator:wikidata": "Q622532",
+          "website": "https://jastrzebie-zdroj.policja.gov.pl",
+          "amenity": "police",
+          "building": "yes",
+          "phone": "+48 47 85 542 00",
+          "email": "komendant@jastrzebie.ka.policja.gov.pl"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.6024145,
+              49.9500769
+            ],
+            [
+              18.602167,
+              49.9500702
+            ],
+            [
+              18.6021618,
+              49.9501495
+            ],
+            [
+              18.602154,
+              49.95026959999999
+            ],
+            [
+              18.6024015,
+              49.95027629999999
+            ],
+            [
+              18.6024033,
+              49.9502485
+            ],
+            [
+              18.6024145,
+              49.9500769
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/210045247",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komenda Powiatowa Policji",
+          "website": "https://raciborz.policja.gov.pl",
+          "source": "UM Racibórz",
+          "amenity": "police",
+          "building": "office",
+          "phone": "+48 47 85 562 00",
+          "email": "dyzurny@raciborz.ka.policja.gov.pl"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.2282504,
+              50.0956565
+            ],
+            [
+              18.2282108,
+              50.0955493
+            ],
+            [
+              18.2281681,
+              50.0955558
+            ],
+            [
+              18.2277623,
+              50.0956175
+            ],
+            [
+              18.2278019,
+              50.095724600000004
+            ],
+            [
+              18.2282504,
+              50.0956565
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/215416892",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komenda Miejska Policji",
+          "operator": "Policja",
+          "operator:wikidata": "Q622532",
+          "website": "https://zory.policja.gov.pl/",
+          "source": "WMS UM Żory",
+          "amenity": "police",
+          "building": "yes",
+          "opening_hours": "24/7",
+          "phone": "+48 47 855 32 00",
+          "wheelchair": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.688712900000002,
+              50.0422454
+            ],
+            [
+              18.6885974,
+              50.0422473
+            ],
+            [
+              18.688503,
+              50.0422475
+            ],
+            [
+              18.6885013,
+              50.04222649999999
+            ],
+            [
+              18.6883685,
+              50.0422288
+            ],
+            [
+              18.6883692,
+              50.0422805
+            ],
+            [
+              18.6885127,
+              50.042278499999995
+            ],
+            [
+              18.6885174,
+              50.0425911
+            ],
+            [
+              18.6885344,
+              50.04259119999998
+            ],
+            [
+              18.688539,
+              50.0426843
+            ],
+            [
+              18.6886673,
+              50.042681599999995
+            ],
+            [
+              18.688688,
+              50.0426809
+            ],
+            [
+              18.6886886,
+              50.04269649999999
+            ],
+            [
+              18.6886998,
+              50.0426962
+            ],
+            [
+              18.6886986,
+              50.0426682
+            ],
+            [
+              18.6887221,
+              50.042667699999996
+            ],
+            [
+              18.6887206,
+              50.0425885
+            ],
+            [
+              18.6887134,
+              50.0423022
+            ],
+            [
+              18.688712900000002,
+              50.0422454
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/219415783",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji w Krzyżanowicach",
+          "amenity": "police",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.2667868,
+              49.9856981
+            ],
+            [
+              18.2668971,
+              49.985745
+            ],
+            [
+              18.2669241,
+              49.9857187
+            ],
+            [
+              18.2669638,
+              49.985680099999996
+            ],
+            [
+              18.2669897,
+              49.9856549
+            ],
+            [
+              18.2668793,
+              49.98560799999999
+            ],
+            [
+              18.2667868,
+              49.9856981
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/248434250",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komenda Powiatowa Policji w Pszczynie",
+          "amenity": "police",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.9467207,
+              49.9730703
+            ],
+            [
+              18.9469006,
+              49.973002799999996
+            ],
+            [
+              18.946922,
+              49.972994799999995
+            ],
+            [
+              18.9469129,
+              49.9729848
+            ],
+            [
+              18.9469322,
+              49.97297749999999
+            ],
+            [
+              18.9469497,
+              49.9729709
+            ],
+            [
+              18.9467625,
+              49.9727644
+            ],
+            [
+              18.9466239,
+              49.9728164
+            ],
+            [
+              18.9466441,
+              49.97283869999999
+            ],
+            [
+              18.9467603,
+              49.9729668
+            ],
+            [
+              18.9466607,
+              49.97300409999999
+            ],
+            [
+              18.9467207,
+              49.9730703
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/271018756",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji w Zebrzydowicach",
+          "operator": "Policja",
+          "operator:wikidata": "Q622532",
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.6251517,
+              49.86973569999999
+            ],
+            [
+              18.625068700000003,
+              49.8695615
+            ],
+            [
+              18.624836,
+              49.8696079
+            ],
+            [
+              18.6249185,
+              49.86978189999999
+            ],
+            [
+              18.6251517,
+              49.86973569999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/283588390",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Straż Miejska w Gliwicach",
+          "amenity": "police",
+          "building": "office"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.644349000000002,
+              50.29525400000001
+            ],
+            [
+              18.6444805,
+              50.29516610000001
+            ],
+            [
+              18.64469,
+              50.29502599999999
+            ],
+            [
+              18.644573,
+              50.294955
+            ],
+            [
+              18.644232,
+              50.295182000000004
+            ],
+            [
+              18.644349000000002,
+              50.29525400000001
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/299735219",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji III w Gliwicach",
+          "amenity": "police",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.6690961,
+              50.28874819999999
+            ],
+            [
+              18.6691152,
+              50.2887376
+            ],
+            [
+              18.6691796,
+              50.28878399999999
+            ],
+            [
+              18.6691926,
+              50.28879349999999
+            ],
+            [
+              18.6692259,
+              50.2888172
+            ],
+            [
+              18.669579,
+              50.288615099999994
+            ],
+            [
+              18.6693922,
+              50.2884832
+            ],
+            [
+              18.6692548,
+              50.28856269999999
+            ],
+            [
+              18.6693253,
+              50.28861280000001
+            ],
+            [
+              18.6692159,
+              50.288676499999994
+            ],
+            [
+              18.6690128,
+              50.288531599999985
+            ],
+            [
+              18.6688904,
+              50.28860180000001
+            ],
+            [
+              18.6690961,
+              50.28874819999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/302829394",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji w Łaziskach Górnych",
+          "source": "Powiat mikołowski",
+          "amenity": "police",
+          "building": "office"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.8402124,
+              50.1500082
+            ],
+            [
+              18.8402275,
+              50.15003039999999
+            ],
+            [
+              18.8402629,
+              50.15008879999999
+            ],
+            [
+              18.840281600000004,
+              50.150119999999994
+            ],
+            [
+              18.8404245,
+              50.15008389999999
+            ],
+            [
+              18.8403537,
+              50.149969299999995
+            ],
+            [
+              18.8402124,
+              50.1500082
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/303788638",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji w Pszowie",
+          "amenity": "police",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.3885203,
+              50.03539129999999
+            ],
+            [
+              18.3885705,
+              50.03529420000001
+            ],
+            [
+              18.3885104,
+              50.0352809
+            ],
+            [
+              18.3885145,
+              50.03526639999999
+            ],
+            [
+              18.3883672,
+              50.03523460000001
+            ],
+            [
+              18.3883601,
+              50.035251599999995
+            ],
+            [
+              18.3883054,
+              50.035240099999996
+            ],
+            [
+              18.3882629,
+              50.03533549999999
+            ],
+            [
+              18.3885203,
+              50.03539129999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/304664702",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Straż Miejska w Rydułtowach",
+          "amenity": "police",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.4162614,
+              50.06299990000001
+            ],
+            [
+              18.4163431,
+              50.062843699999995
+            ],
+            [
+              18.4161933,
+              50.062811299999986
+            ],
+            [
+              18.4161117,
+              50.062967399999984
+            ],
+            [
+              18.4162614,
+              50.06299990000001
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/305859746",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji w Rydułtowach",
+          "amenity": "police",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.4209456,
+              50.075587199999994
+            ],
+            [
+              18.4209901,
+              50.0754959
+            ],
+            [
+              18.4208367,
+              50.075465099999995
+            ],
+            [
+              18.4207923,
+              50.075556399999996
+            ],
+            [
+              18.4209456,
+              50.075587199999994
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/333796078",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji w Gorzycach",
+          "amenity": "police",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.3529201,
+              49.990447800000005
+            ],
+            [
+              18.3527771,
+              49.99032799999999
+            ],
+            [
+              18.3526678,
+              49.9903819
+            ],
+            [
+              18.3528108,
+              49.9905017
+            ],
+            [
+              18.3529201,
+              49.990447800000005
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/336901509",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Wydział Ruchu Drogowego Komendy Powiatowej Policji w Cieszynie",
+          "amenity": "police",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.6008259,
+              49.80212459999999
+            ],
+            [
+              18.6009215,
+              49.801931599999996
+            ],
+            [
+              18.6007472,
+              49.8018957
+            ],
+            [
+              18.6006516,
+              49.802088600000005
+            ],
+            [
+              18.6008259,
+              49.80212459999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/343011646",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji w Pawłowicach",
+          "amenity": "police",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.7168369,
+              49.9594053
+            ],
+            [
+              18.7168094,
+              49.9592708
+            ],
+            [
+              18.7165564,
+              49.95929240000001
+            ],
+            [
+              18.716584,
+              49.9594268
+            ],
+            [
+              18.7168369,
+              49.9594053
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/346174703",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji w Gaszowicach",
+          "amenity": "police",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.4315693,
+              50.1078373
+            ],
+            [
+              18.4315413,
+              50.1077292
+            ],
+            [
+              18.4313933,
+              50.10774500000001
+            ],
+            [
+              18.4313901,
+              50.1077329
+            ],
+            [
+              18.4313303,
+              50.1077393
+            ],
+            [
+              18.4313616,
+              50.107859699999985
+            ],
+            [
+              18.4315693,
+              50.1078373
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/355737268",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji w Czerwionce-Leszczynach",
+          "amenity": "police",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.6656073,
+              50.1545772
+            ],
+            [
+              18.665731,
+              50.15434929999999
+            ],
+            [
+              18.665512300000003,
+              50.1543125
+            ],
+            [
+              18.6653952,
+              50.1545375
+            ],
+            [
+              18.6656073,
+              50.1545772
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/365579245",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Placówka Straży Granicznej w Rudzie Śląskiej",
+          "website": "http://www.sm.strazgraniczna.pl/placowki-sg/psg-w-rudzie-slaskiej/",
+          "source": "Ortofotomapa UM Ruda Śląska",
+          "amenity": "police",
+          "building": "government",
+          "phone": "+48 32 342 73 00"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.8546401,
+              50.27566709999999
+            ],
+            [
+              18.8547761,
+              50.275682100000004
+            ],
+            [
+              18.854772,
+              50.2756958
+            ],
+            [
+              18.8548676,
+              50.275708
+            ],
+            [
+              18.8548721,
+              50.27569280000001
+            ],
+            [
+              18.8550025,
+              50.27570889999999
+            ],
+            [
+              18.8550459,
+              50.2755518
+            ],
+            [
+              18.8549993,
+              50.2755463
+            ],
+            [
+              18.8549961,
+              50.27556049999999
+            ],
+            [
+              18.8546808,
+              50.2755233
+            ],
+            [
+              18.8546401,
+              50.27566709999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/371954517",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Straż Miejska w Wodzisławiu Śląskim",
+          "amenity": "police",
+          "building": "yes",
+          "opening_hours": "Mo-Sa 06:00-22:00"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.4568512,
+              49.9967323
+            ],
+            [
+              18.4568982,
+              49.996722999999996
+            ],
+            [
+              18.4568895,
+              49.9967047
+            ],
+            [
+              18.4569552,
+              49.9966918
+            ],
+            [
+              18.4568556,
+              49.99648179999999
+            ],
+            [
+              18.4567405,
+              49.99650439999999
+            ],
+            [
+              18.4567498,
+              49.996523899999985
+            ],
+            [
+              18.4567155,
+              49.9965306
+            ],
+            [
+              18.456755400000002,
+              49.996614599999994
+            ],
+            [
+              18.4567919,
+              49.9966074
+            ],
+            [
+              18.4568512,
+              49.9967323
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/375869494",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Straż Miejska Miasta Tychy",
+          "amenity": "police",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.9745082,
+              50.126584599999994
+            ],
+            [
+              18.97444,
+              50.12649439999999
+            ],
+            [
+              18.974110600000003,
+              50.12660040000001
+            ],
+            [
+              18.9741793,
+              50.12669009999999
+            ],
+            [
+              18.9742903,
+              50.126654900000005
+            ],
+            [
+              18.9743922,
+              50.126782199999994
+            ],
+            [
+              18.974499500000004,
+              50.12674769999999
+            ],
+            [
+              18.9743981,
+              50.126619999999996
+            ],
+            [
+              18.9745082,
+              50.126584599999994
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/488261604",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Komisariat Policji IV w Gliwicach",
+          "website": "https://gliwice.policja.gov.pl/ka9/informacje/twoj-dzielnicowy/28517,Komisariat-IV-Policji.html",
+          "amenity": "police",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.6229208,
+              50.34397439999999
+            ],
+            [
+              18.6228932,
+              50.34390719999999
+            ],
+            [
+              18.6228969,
+              50.3439054
+            ],
+            [
+              18.6228547,
+              50.34380370000001
+            ],
+            [
+              18.6228521,
+              50.343803699999995
+            ],
+            [
+              18.6228234,
+              50.34373500000001
+            ],
+            [
+              18.6226729,
+              50.34376009999998
+            ],
+            [
+              18.6227704,
+              50.34399930000001
+            ],
+            [
+              18.6229208,
+              50.34397439999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/605956322",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.8551029,
+              50.27567599999999
+            ],
+            [
+              18.8550505,
+              50.2754663
+            ],
+            [
+              18.8546825,
+              50.27545979999999
+            ],
+            [
+              18.8546231,
+              50.275481
+            ],
+            [
+              18.8544605,
+              50.2756657
+            ],
+            [
+              18.8543755,
+              50.275762199999996
+            ],
+            [
+              18.8543726,
+              50.2757955
+            ],
+            [
+              18.8544427,
+              50.275804
+            ],
+            [
+              18.8557066,
+              50.2759534
+            ],
+            [
+              18.8556611,
+              50.275836899999995
+            ],
+            [
+              18.8556289,
+              50.2757542
+            ],
+            [
+              18.8556024,
+              50.27570249999999
+            ],
+            [
+              18.8551029,
+              50.27567599999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/857196497",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Straż Miejska w Rudzie Śląskiej",
+          "amenity": "police",
+          "email": "straz@rudaslaska.pl"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.8618277,
+              50.28578910000001
+            ],
+            [
+              18.862565,
+              50.2854925
+            ],
+            [
+              18.861949,
+              50.2848674
+            ],
+            [
+              18.8609207,
+              50.285281100000006
+            ],
+            [
+              18.8605979,
+              50.28497329999999
+            ],
+            [
+              18.8602135,
+              50.2851338
+            ],
+            [
+              18.8605226,
+              50.285427500000004
+            ],
+            [
+              18.8615367,
+              50.28590609999999
+            ],
+            [
+              18.8618277,
+              50.28578910000001
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/859261647",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "website": "https://ruda-slaska.policja.gov.pl",
+          "amenity": "police",
+          "phone": "+48 47 854 12 00",
+          "email": "komendant@ruda.ka.policja.gov.pl"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.8728956,
+              50.28823450000001
+            ],
+            [
+              18.8730421,
+              50.2878536
+            ],
+            [
+              18.8729745,
+              50.2878427
+            ],
+            [
+              18.8728822,
+              50.28782669999998
+            ],
+            [
+              18.872379,
+              50.28774289999999
+            ],
+            [
+              18.872365,
+              50.287772699999984
+            ],
+            [
+              18.8723243,
+              50.28779699999998
+            ],
+            [
+              18.8722935,
+              50.2878688
+            ],
+            [
+              18.8722606,
+              50.2878618
+            ],
+            [
+              18.8721735,
+              50.288080599999994
+            ],
+            [
+              18.8718404,
+              50.28802660000001
+            ],
+            [
+              18.8716782,
+              50.28799759999999
+            ],
+            [
+              18.8715011,
+              50.28842019999999
+            ],
+            [
+              18.8725915,
+              50.2886055
+            ],
+            [
+              18.8727303,
+              50.2886291
+            ],
+            [
+              18.8728956,
+              50.28823450000001
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1046600287",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Domek Policyjny",
+          "amenity": "police",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.9951642,
+              50.088569400000004
+            ],
+            [
+              18.9951639,
+              50.0885147
+            ],
+            [
+              18.9950808,
+              50.088514799999984
+            ],
+            [
+              18.9950811,
+              50.0885696
+            ],
+            [
+              18.9951642,
+              50.088569400000004
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1118589338",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "amenity": "police",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.8560271,
+              50.2716292
+            ],
+            [
+              18.8558638,
+              50.2714064
+            ],
+            [
+              18.8554438,
+              50.27147010000001
+            ],
+            [
+              18.855549,
+              50.2717389
+            ],
+            [
+              18.8560385,
+              50.2716691
+            ],
+            [
+              18.8561777,
+              50.271648899999995
+            ],
+            [
+              18.8561652,
+              50.27160899999999
+            ],
+            [
+              18.8560271,
+              50.2716292
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1119720510",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.8689771,
+              50.2712529
+            ],
+            [
+              18.8691015,
+              50.2708627
+            ],
+            [
+              18.8690295,
+              50.2708526
+            ],
+            [
+              18.8686764,
+              50.270803400000005
+            ],
+            [
+              18.8686391,
+              50.2707982
+            ],
+            [
+              18.8685812,
+              50.27096
+            ],
+            [
+              18.868269400000003,
+              50.2709161
+            ],
+            [
+              18.8681946,
+              50.27114099999999
+            ],
+            [
+              18.8689771,
+              50.2712529
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1482047050",
+        "domain": "emergency",
+        "asset_type": "police",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "amenity": "police"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.9197507,
+              50.2847871
+            ],
+            [
+              18.918727,
+              50.284670799999994
+            ],
+            [
+              18.9187309,
+              50.2847348
+            ],
+            [
+              18.9187432,
+              50.28493339999999
+            ],
+            [
+              18.9186815,
+              50.28518510000001
+            ],
+            [
+              18.9195234,
+              50.28528099999999
+            ],
+            [
+              18.919576,
+              50.28528699999999
+            ],
+            [
+              18.9197507,
+              50.2847871
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

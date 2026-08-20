@@ -1,0 +1,7 @@
+backend/data/** binary
+backend/data/** -diff
+backend/data/** -text
+*.pmtiles binary
+*.geojson binary
+*.geojson -diff
+*.geojson -text

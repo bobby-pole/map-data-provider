@@ -40,7 +40,7 @@ def test_sewer_query_retrieves_only_explicit_sewer_or_wastewater_semantics() -> 
 def test_sewer_domain_pack_builds_independent_categories_and_inspection_points(tmp_path: Path) -> None:
     build_rybnik_sewer_cache(root=tmp_path)
     pack = build_rybnik_sewer_domain_pack(root=tmp_path)
-    pack_root = tmp_path / "rybnik_60km" / "sewer" / "domain-pack-v2"
+    pack_root = tmp_path / "rybnik_35km" / "sewer" / "domain-pack-v2"
     artifacts = {artifact["id"]: artifact for artifact in pack["artifacts"]}
 
     facilities = json.loads((pack_root / artifacts["sewer.facilities"]["path"]).read_text(encoding="utf-8"))
@@ -58,7 +58,7 @@ def test_sewer_domain_pack_builds_independent_categories_and_inspection_points(t
     evidence = json.loads((pack_root / artifacts["sewer.osm_source_evidence"]["path"]).read_text(encoding="utf-8"))
     assert "stormwater" in evidence["sewer_semantics_rule"]
 
-    public = read_domain_pack("rybnik_60km", "sewer", root=tmp_path, public_export=True)["artifacts"]
+    public = read_domain_pack("rybnik_35km", "sewer", root=tmp_path, public_export=True)["artifacts"]
     assert {artifact["id"] for artifact in public} == {
         "sewer.facilities", "sewer.pipelines", "sewer.inspection_points",
     }

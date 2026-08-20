@@ -11,11 +11,11 @@ from geo_pipeline.contracts import normalize_analytical_vector_layer
 from geo_pipeline.query_catalog import SEWER_OSM_QUERY
 from geo_pipeline.source_registry import guard_source_access
 
-SEWER_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_60km" / "sewer" / "osm-sewer.geojson"
+SEWER_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_35km" / "sewer" / "osm-sewer.geojson"
 SEWER_SNAPSHOT_AT = "2026-08-07T15:30:00Z"
 SEWER_LIMITATIONS = [
     "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
-    "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 60 km OSM snapshot or an operational hydraulic flow model.",
+    "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
     "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
     "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts.",
 ]
@@ -76,7 +76,7 @@ def sewer_osm_metadata(*, layer_id: str, readiness: str) -> dict[str, Any]:
     return {
         "cache_layout_version": "provider_cache/v1",
         "geojson_contract_version": "provider_geojson/v1",
-        "aoi_id": "rybnik_60km",
+        "aoi_id": "rybnik_35km",
         "domain": "sewer",
         "layer_id": layer_id,
         "source": "OpenStreetMap",

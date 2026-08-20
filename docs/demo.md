@@ -1,6 +1,6 @@
 # Provider Demo
 
-This walkthrough demonstrates the implemented multi-domain provider suite across all 9 required G-004 domains (`power`, `emergency`, `public`, `transport`, `bridges`, `water`, `gas`, `sewer`, `industrial`) for the `rybnik_60km` AOI in three to five minutes. It uses the committed cache and offline fixtures; it does not require live Overpass or WMS access.
+This walkthrough demonstrates the implemented multi-domain provider suite across all 9 required G-004 domains (`power`, `emergency`, `public`, `transport`, `bridges`, `water`, `gas`, `sewer`, `industrial`) for the `rybnik_35km` AOI in three to five minutes. It uses the committed cache and offline fixtures; it does not require live Overpass or WMS access.
 
 The current release produces a provider-compatible export. Loading that export inside the downstream application repository remains separate integration work.
 
@@ -44,7 +44,7 @@ The public API is Node/Express/TypeScript. Python remains the geospatial worker 
 ## 2. Request the cached Rybnik power layer — 30 seconds
 
 ```bash
-curl -sS http://127.0.0.1:3001/api/aoi/rybnik_60km/layers/power \
+curl -sS http://127.0.0.1:3001/api/aoi/rybnik_35km/layers/power \
   | jq '{
       aoi_id: .metadata.aoi_id,
       domain: .metadata.domain,
@@ -59,7 +59,7 @@ This read-only endpoint serves the committed, validated cache without extraction
 ## 3. Inspect the compact offline map presentation — 45 seconds
 
 ```bash
-curl -sS http://127.0.0.1:3001/api/aoi/rybnik_60km/presentations/power \
+curl -sS http://127.0.0.1:3001/api/aoi/rybnik_35km/presentations/power \
   | jq '{
       aoi_id,
       domain,
@@ -75,7 +75,7 @@ The current committed snapshot contains 156,721 public power features across the
 ## 4. Show why KIUT/GESUT remains reference-only — 45 seconds
 
 ```bash
-curl -sS http://127.0.0.1:3001/api/aoi/rybnik_60km/sources \
+curl -sS http://127.0.0.1:3001/api/aoi/rybnik_35km/sources \
   | jq '.sources[]
       | select(.id == "kiut_gesut_wms")'
 ```
@@ -87,7 +87,7 @@ The registry identifies KIUT/GESUT WMS as a raster visual reference, not provide
 List generated evidence together with separate human review state:
 
 ```bash
-curl -sS http://127.0.0.1:3001/api/aoi/rybnik_60km/issues \
+curl -sS http://127.0.0.1:3001/api/aoi/rybnik_35km/issues \
   | jq '.issues[] | {id, rule_id, source_type, severity, review}'
 ```
 
@@ -105,7 +105,7 @@ Open `http://localhost:5173`. The MapLibre preview draws public power data from 
 Request a consolidated export payload for all 9 supported domains (`power`, `emergency`, `public`, `transport`, `bridges`, `water`, `gas`, `sewer`, `industrial`):
 
 ```bash
-curl -sS "http://127.0.0.1:3001/api/aoi/rybnik_60km/export?domains=power,emergency,public,transport,bridges,water,gas,sewer,industrial" \
+curl -sS "http://127.0.0.1:3001/api/aoi/rybnik_35km/export?domains=power,emergency,public,transport,bridges,water,gas,sewer,industrial" \
   | jq '{
       export_version,
       aoi_id,
@@ -122,14 +122,14 @@ The response conforms to `provider_multi_domain_export/v2`. It isolates per-doma
 The optional `telecom` pack exposes only explicitly tagged OSM communication towers/masts, facilities and cable routes. It never derives a network from KIUT WMS. In the committed Rybnik fixture, `telecom.lines` has zero features and `readiness: needs_source`; this is a visible absence of qualified analytical line coverage, not a rendering failure.
 
 ```bash
-curl -sS http://127.0.0.1:3001/api/aoi/rybnik_60km/domain-packs/telecom \
+curl -sS http://127.0.0.1:3001/api/aoi/rybnik_35km/domain-packs/telecom \
   | jq '.layers[] | {id: .artifact.id, count: .layer.metadata.feature_count, readiness: .layer.metadata.readiness}'
 ```
 
 The optional `district_heating` pack separately exposes explicit heating plants, heat-exchanger facilities and heat-network lines. A power plant or generator requires an explicit heat-output/source tag; generic industrial or pipeline features remain excluded. In the committed Rybnik fixture, `district_heating.lines` has zero features and `readiness: needs_source`; KIUT district-heating remains a private WMS reference rather than analytical geometry.
 
 ```bash
-curl -sS http://127.0.0.1:3001/api/aoi/rybnik_60km/domain-packs/district_heating \
+curl -sS http://127.0.0.1:3001/api/aoi/rybnik_35km/domain-packs/district_heating \
   | jq '.layers[] | {id: .artifact.id, count: .layer.metadata.feature_count, readiness: .layer.metadata.readiness}'
 ```
 
@@ -156,7 +156,7 @@ The orchestration endpoint is intentionally separate from read-only layer access
 ```bash
 curl -sS -X POST http://127.0.0.1:3001/api/aoi/requests \
   -H 'content-type: application/json' \
-  -d '{"aoi_id":"rybnik_60km","domain":"power"}' \
+  -d '{"aoi_id":"rybnik_35km","domain":"power"}' \
   | jq '{aoi: .aoi.id, domain, result, cache_status, feature_count: .metadata.feature_count}'
 ```
 

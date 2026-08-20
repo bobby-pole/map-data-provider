@@ -6,7 +6,7 @@ from geo_pipeline.adapters import AdapterError, registered_adapters, resolve_ada
 
 
 def test_power_is_registered_through_a_versioned_query_catalog() -> None:
-    adapter = resolve_adapter("rybnik_60km", "power")
+    adapter = resolve_adapter("rybnik_35km", "power")
 
     assert adapter in registered_adapters()
     assert adapter.query.source_registry_id == "openstreetmap"
@@ -15,7 +15,7 @@ def test_power_is_registered_through_a_versioned_query_catalog() -> None:
 
 
 def test_emergency_is_registered_through_an_explicit_osm_query_catalog() -> None:
-    adapter = resolve_adapter("rybnik_60km", "emergency")
+    adapter = resolve_adapter("rybnik_35km", "emergency")
 
     assert adapter in registered_adapters()
     assert adapter.query.source_registry_id == "openstreetmap"
@@ -24,7 +24,7 @@ def test_emergency_is_registered_through_an_explicit_osm_query_catalog() -> None
 
 
 def test_public_services_are_registered_through_an_explicit_osm_query_catalog() -> None:
-    adapter = resolve_adapter("rybnik_60km", "public")
+    adapter = resolve_adapter("rybnik_35km", "public")
 
     assert adapter in registered_adapters()
     assert adapter.query.source_registry_id == "openstreetmap"
@@ -33,7 +33,7 @@ def test_public_services_are_registered_through_an_explicit_osm_query_catalog() 
 
 
 def test_gas_is_registered_through_an_explicit_and_bounded_osm_query_catalog() -> None:
-    adapter = resolve_adapter("rybnik_60km", "gas")
+    adapter = resolve_adapter("rybnik_35km", "gas")
 
     assert adapter in registered_adapters()
     assert adapter.query.source_registry_id == "openstreetmap"
@@ -43,7 +43,7 @@ def test_gas_is_registered_through_an_explicit_and_bounded_osm_query_catalog() -
 
 
 def test_telecom_is_registered_with_explicit_tower_facility_and_line_candidates() -> None:
-    adapter = resolve_adapter("rybnik_60km", "telecom")
+    adapter = resolve_adapter("rybnik_35km", "telecom")
 
     assert adapter in registered_adapters()
     assert adapter.query.source_registry_id == "openstreetmap"
@@ -53,7 +53,7 @@ def test_telecom_is_registered_with_explicit_tower_facility_and_line_candidates(
 
 
 def test_district_heating_is_registered_with_explicit_heat_candidates() -> None:
-    adapter = resolve_adapter("rybnik_60km", "district_heating")
+    adapter = resolve_adapter("rybnik_35km", "district_heating")
 
     assert adapter in registered_adapters()
     assert adapter.query.source_registry_id == "openstreetmap"

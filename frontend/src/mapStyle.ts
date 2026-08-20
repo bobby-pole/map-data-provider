@@ -1,5 +1,13 @@
 import type { ExpressionSpecification } from "maplibre-gl";
 
+export type VisualBasemapMode = "standard" | "dark" | "none";
+
+export const visualBasemapOptions: ReadonlyArray<{ id: VisualBasemapMode; label: string; detail: string }> = [
+  { id: "standard", label: "Standard OSM", detail: "Attributed OpenStreetMap raster tiles." },
+  { id: "dark", label: "Dark OSM", detail: "Local visual treatment of the same attributed OSM tiles." },
+  { id: "none", label: "No base map", detail: "Neutral canvas; provider and reference layers remain unchanged." },
+] as const;
+
 /** Pure style policy so the MVT preview can be verified without a WebGL runtime. */
 export function isLinePresentationLayer(sourceLayer: string): boolean {
   return sourceLayer.includes("line")
@@ -61,3 +69,10 @@ export const openStreetMapBasemap = {
   minZoom: 0,
   maxZoom: 19,
 } as const;
+
+/** Raster paint only changes visual presentation; it never changes the OSM source. */
+export function baseMapRasterPaint(mode: Exclude<VisualBasemapMode, "none">): Record<string, number> {
+  return mode === "dark"
+    ? { "raster-opacity": 0.66, "raster-brightness-min": 0.03, "raster-brightness-max": 0.38, "raster-saturation": -0.78, "raster-contrast": 0.26 }
+    : { "raster-opacity": 0.9, "raster-brightness-min": 0, "raster-brightness-max": 1, "raster-saturation": 0, "raster-contrast": 0 };
+}

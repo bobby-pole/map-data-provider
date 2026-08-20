@@ -87,8 +87,8 @@ def _catalog_base() -> list[dict[str, Any]]:
             "access": "public",
             "geometry": "LineString/MultiLineString",
             "endpoint": "/api/geodata/power/lines",
-            "path": PROCESSED_DIR / "rybnik_60km_power_lines_clipped.geojson",
-            "report": REPORTS_DIR / "rybnik_60km_power_validation_clipped.json",
+            "path": PROCESSED_DIR / "rybnik_35km_power_lines_clipped.geojson",
+            "report": REPORTS_DIR / "rybnik_35km_power_validation_clipped.json",
             "analytical_use": "limited_vector_evidence",
         },
         {
@@ -107,8 +107,8 @@ def _catalog_base() -> list[dict[str, Any]]:
             "access": "public",
             "geometry": "Point/MultiPoint",
             "endpoint": "/api/geodata/power/nodes",
-            "path": PROCESSED_DIR / "rybnik_60km_power_node_points_display_clipped.geojson",
-            "report": REPORTS_DIR / "rybnik_60km_power_validation_clipped.json",
+            "path": PROCESSED_DIR / "rybnik_35km_power_node_points_display_clipped.geojson",
+            "report": REPORTS_DIR / "rybnik_35km_power_validation_clipped.json",
             "analytical_use": "inspection_display_subset",
         },
         {
@@ -127,8 +127,8 @@ def _catalog_base() -> list[dict[str, Any]]:
             "access": "review_only",
             "geometry": "Point",
             "endpoint": "/api/geodata/power/manual-seeds",
-            "path": MANUAL_DIR / "rybnik_60km_power_seed_nodes.geojson",
-            "report": REPORTS_DIR / "rybnik_60km_power_seed_nodes_validation.json",
+            "path": MANUAL_DIR / "rybnik_35km_power_seed_nodes.geojson",
+            "report": REPORTS_DIR / "rybnik_35km_power_seed_nodes_validation.json",
             "analytical_use": "non_authoritative_review_input",
         },
         {
@@ -147,8 +147,8 @@ def _catalog_base() -> list[dict[str, Any]]:
             "access": "public",
             "geometry": "Polygon",
             "endpoint": "/api/geodata/power/hexes/regional",
-            "path": PROCESSED_DIR / "rybnik_60km_power_hexes_clipped.geojson",
-            "report": REPORTS_DIR / "rybnik_60km_power_hexes_report.json",
+            "path": PROCESSED_DIR / "rybnik_35km_power_hexes_clipped.geojson",
+            "report": REPORTS_DIR / "rybnik_35km_power_hexes_report.json",
             "analytical_use": "aggregated_quality_signal",
         },
         {
@@ -254,17 +254,17 @@ def data_quality_metrics() -> dict[str, Any]:
 
 @app.get("/api/geodata/power/lines")
 def get_power_lines() -> FileResponse:
-    return FileResponse(PROCESSED_DIR / "rybnik_60km_power_lines_clipped.geojson", media_type="application/geo+json")
+    return FileResponse(PROCESSED_DIR / "rybnik_35km_power_lines_clipped.geojson", media_type="application/geo+json")
 
 
 @app.get("/api/geodata/power/nodes")
 def get_power_nodes() -> FileResponse:
-    return FileResponse(PROCESSED_DIR / "rybnik_60km_power_node_points_display_clipped.geojson", media_type="application/geo+json")
+    return FileResponse(PROCESSED_DIR / "rybnik_35km_power_node_points_display_clipped.geojson", media_type="application/geo+json")
 
 
 @app.get("/api/geodata/power/manual-seeds")
 def get_manual_power_seeds() -> FileResponse:
-    return FileResponse(MANUAL_DIR / "rybnik_60km_power_seed_nodes.geojson", media_type="application/geo+json")
+    return FileResponse(MANUAL_DIR / "rybnik_35km_power_seed_nodes.geojson", media_type="application/geo+json")
 
 
 @app.get("/api/geodata/power/hexes/{level}")
@@ -272,4 +272,4 @@ def get_power_hexes(level: str) -> FileResponse:
     suffixes = {"regional": "", "urban": "_urban", "local": "_local"}
     if level not in suffixes:
         raise HTTPException(status_code=404, detail="Unknown hex level")
-    return FileResponse(PROCESSED_DIR / f"rybnik_60km_power_hexes{suffixes[level]}_clipped.geojson", media_type="application/geo+json")
+    return FileResponse(PROCESSED_DIR / f"rybnik_35km_power_hexes{suffixes[level]}_clipped.geojson", media_type="application/geo+json")

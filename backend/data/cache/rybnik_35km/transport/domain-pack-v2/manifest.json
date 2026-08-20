@@ -1,0 +1,134 @@
+{
+  "domain_pack_version": "provider_domain_pack/v2",
+  "aoi_id": "rybnik_35km",
+  "domain": "transport",
+  "source_provenance": [
+    {
+      "source_id": "openstreetmap",
+      "contribution_role": "primary"
+    },
+    {
+      "source_id": "prg_wfs",
+      "contribution_role": "supplementary"
+    },
+    {
+      "source_id": "bdot10k",
+      "contribution_role": "supplementary"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "transport.roads",
+      "kind": "processed_vector",
+      "format": "geojson",
+      "path": "layers/transport.roads.geojson",
+      "sha256": "a02b55948755a8fdce467fd397dbc2454f8849d4194961766ec257c87eb42789",
+      "feature_count": 10036,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "transport.railways",
+      "kind": "processed_vector",
+      "format": "geojson",
+      "path": "layers/transport.railways.geojson",
+      "sha256": "d42cc4d516f6e20f2a9e6c4a980bbdcfc19da39e2e787d739df7a5f5d0912788",
+      "feature_count": 6340,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "transport.stations",
+      "kind": "processed_vector",
+      "format": "geojson",
+      "path": "layers/transport.stations.geojson",
+      "sha256": "e37587fd7acfb8fa9022886dc6cc8f3b0894553290de31051c57aa8d7f623f17",
+      "feature_count": 114,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "transport.aviation",
+      "kind": "processed_vector",
+      "format": "geojson",
+      "path": "layers/transport.aviation.geojson",
+      "sha256": "777c641aa0fec7b11eb60d0426cd6831adb86dc5ac8a42ba28722ac1344f952b",
+      "feature_count": 26,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "transport.inspection_points",
+      "kind": "derived_vector",
+      "format": "geojson",
+      "path": "layers/transport.inspection_points.geojson",
+      "sha256": "6e2c12526fc7767f1495f1faf94e577fc81429ce311d0758b71335bf601ab071",
+      "feature_count": 16401,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "transport.osm_source_evidence",
+      "kind": "native_vector",
+      "format": "json",
+      "path": "native/osm-transport-source-evidence.json",
+      "sha256": "eab1bf7f9b1a4440f4e41997c7a929cd2ca380101fc3f5b9fda54766e8543ad1",
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": false
+    },
+    {
+      "id": "transport.context_and_comparison",
+      "kind": "native_vector",
+      "format": "json",
+      "path": "native/transport-context-and-comparison.json",
+      "sha256": "caf1f64e205b29731042f0787e8d317e45b7a9d4047c06d1f3acb9b92c128367",
+      "source_provenance": [
+        {
+          "source_id": "prg_wfs",
+          "contribution_role": "supplementary"
+        },
+        {
+          "source_id": "bdot10k",
+          "contribution_role": "supplementary"
+        }
+      ],
+      "public_export": false
+    }
+  ],
+  "validation": {
+    "path": "validation/metadata.json"
+  },
+  "readiness": {
+    "path": "readiness/readiness.json"
+  }
+}

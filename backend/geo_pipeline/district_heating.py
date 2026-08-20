@@ -11,11 +11,11 @@ from geo_pipeline.contracts import normalize_analytical_vector_layer
 from geo_pipeline.query_catalog import DISTRICT_HEATING_OSM_QUERY
 from geo_pipeline.source_registry import guard_source_access
 
-DISTRICT_HEATING_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_60km" / "district_heating" / "osm-district-heating.geojson"
+DISTRICT_HEATING_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_35km" / "district_heating" / "osm-district-heating.geojson"
 DISTRICT_HEATING_SNAPSHOT_AT = "2026-08-10T12:00:00Z"
 DISTRICT_HEATING_LIMITATIONS = [
     "OSM district-heating infrastructure completeness varies significantly by area and operator.",
-    "The committed contract fixture is not a complete Rybnik 60 km heat-network, capacity, pressure or flow model.",
+    "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
     "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
     "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
     "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts.",
@@ -74,7 +74,7 @@ def district_heating_osm_metadata(*, layer_id: str, readiness: str) -> dict[str,
     return {
         "cache_layout_version": "provider_cache/v1",
         "geojson_contract_version": "provider_geojson/v1",
-        "aoi_id": "rybnik_60km",
+        "aoi_id": "rybnik_35km",
         "domain": "district_heating",
         "layer_id": layer_id,
         "source": "OpenStreetMap",

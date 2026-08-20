@@ -32,7 +32,7 @@ def _power_live() -> None:
 
 
 POWER_ADAPTER = DomainAdapter(
-    aoi_alias="rybnik_60km",
+    aoi_alias="rybnik_35km",
     domain="power",
     query=POWER_OSM_QUERY,
     build_fixture=lambda root: build_rybnik_power_cache(root=root),
@@ -48,7 +48,7 @@ def _emergency_live() -> None:
 
 
 EMERGENCY_ADAPTER = DomainAdapter(
-    aoi_alias="rybnik_60km",
+    aoi_alias="rybnik_35km",
     domain="emergency",
     query=EMERGENCY_OSM_QUERY,
     build_fixture=lambda root: build_rybnik_emergency_cache(root=root),
@@ -62,7 +62,7 @@ def _public_live() -> None:
 
 
 PUBLIC_ADAPTER = DomainAdapter(
-    aoi_alias="rybnik_60km",
+    aoi_alias="rybnik_35km",
     domain="public",
     query=PUBLIC_OSM_QUERY,
     build_fixture=lambda root: build_rybnik_public_cache(root=root),
@@ -76,7 +76,7 @@ def _transport_live() -> None:
 
 
 TRANSPORT_ADAPTER = DomainAdapter(
-    aoi_alias="rybnik_60km",
+    aoi_alias="rybnik_35km",
     domain="transport",
     query=TRANSPORT_OSM_QUERY,
     build_fixture=lambda root: build_rybnik_transport_cache(root=root),
@@ -90,7 +90,7 @@ def _bridges_live() -> None:
 
 
 BRIDGES_ADAPTER = DomainAdapter(
-    aoi_alias="rybnik_60km",
+    aoi_alias="rybnik_35km",
     domain="bridges",
     query=BRIDGES_OSM_QUERY,
     build_fixture=lambda root: build_rybnik_bridges_cache(root=root),
@@ -104,7 +104,7 @@ def _water_live() -> None:
 
 
 WATER_ADAPTER = DomainAdapter(
-    aoi_alias="rybnik_60km",
+    aoi_alias="rybnik_35km",
     domain="water",
     query=WATER_OSM_QUERY,
     build_fixture=lambda root: build_rybnik_water_cache(root=root),
@@ -118,7 +118,7 @@ def _gas_live() -> None:
 
 
 GAS_ADAPTER = DomainAdapter(
-    aoi_alias="rybnik_60km",
+    aoi_alias="rybnik_35km",
     domain="gas",
     query=GAS_OSM_QUERY,
     build_fixture=lambda root: build_rybnik_gas_cache(root=root),
@@ -132,7 +132,7 @@ def _sewer_live() -> None:
 
 
 SEWER_ADAPTER = DomainAdapter(
-    aoi_alias="rybnik_60km",
+    aoi_alias="rybnik_35km",
     domain="sewer",
     query=SEWER_OSM_QUERY,
     build_fixture=lambda root: build_rybnik_sewer_cache(root=root),
@@ -146,7 +146,7 @@ def _industrial_live() -> None:
 
 
 INDUSTRIAL_ADAPTER = DomainAdapter(
-    aoi_alias="rybnik_60km",
+    aoi_alias="rybnik_35km",
     domain="industrial",
     query=INDUSTRIAL_OSM_QUERY,
     build_fixture=lambda root: build_rybnik_industrial_cache(root=root),
@@ -160,7 +160,7 @@ def _telecom_live() -> None:
 
 
 TELECOM_ADAPTER = DomainAdapter(
-    aoi_alias="rybnik_60km",
+    aoi_alias="rybnik_35km",
     domain="telecom",
     query=TELECOM_OSM_QUERY,
     build_fixture=lambda root: build_rybnik_telecom_cache(root=root),
@@ -176,7 +176,7 @@ def _district_heating_live() -> None:
 
 
 DISTRICT_HEATING_ADAPTER = DomainAdapter(
-    aoi_alias="rybnik_60km",
+    aoi_alias="rybnik_35km",
     domain="district_heating",
     query=DISTRICT_HEATING_OSM_QUERY,
     build_fixture=lambda root: build_rybnik_district_heating_cache(root=root),

@@ -18,7 +18,7 @@ import {
   type ProviderDataPaths,
 } from "../services/providerDataService.js";
 import { requestAoi } from "../services/aoiRequestService.js";
-import { getAdministrativeCatalog, submitRuntimeRequest } from "../services/aoiRuntimeService.js";
+import { getAdministrativeBoundary, getAdministrativeCatalog, getRuntimeJob, preflightRuntimeRequest, submitRuntimeJob, submitRuntimeRequest } from "../services/aoiRuntimeService.js";
 import { getReviewedIssues, updateIssueReview, type IssueStorePaths } from "../services/issueReviewService.js";
 import {
   layerListResponseSchema,
@@ -38,8 +38,12 @@ import {
   mapCircuitDetailResponseSchema,
   mapCircuitListResponseSchema,
   administrativeCatalogResponseSchema,
+  administrativeBoundaryRequestSchema,
+  administrativeBoundaryResponseSchema,
+  providerRuntimePreflightResponseSchema,
   providerRuntimeRequestSchema,
   providerRuntimeResponseSchema,
+  providerRuntimeJobSchema,
   multiDomainExportResponseSchema,
   runtimeProfileSchema,
   type DomainPackReadResponse,
@@ -57,6 +61,30 @@ export function createAoiRouter(options?: { issueStorePaths?: IssueStorePaths; p
     }
   });
 
+  aoiRouter.post("/catalog/boundary", async (request, response) => {
+    try {
+      response.status(200).json(administrativeBoundaryResponseSchema.parse(await getAdministrativeBoundary(administrativeBoundaryRequestSchema.parse(request.body))));
+    } catch (error) {
+      if (error instanceof Error && error.name === "ZodError") {
+        respondWithProviderError(response, new ProviderDataError("invalid_request", "Malformed administrative boundary request."));
+        return;
+      }
+      respondWithProviderError(response, error);
+    }
+  });
+
+  aoiRouter.post("/runtime-requests/preflight", async (request, response) => {
+    try {
+      response.status(200).json(providerRuntimePreflightResponseSchema.parse(await preflightRuntimeRequest(providerRuntimeRequestSchema.parse(request.body))));
+    } catch (error) {
+      if (error instanceof Error && error.name === "ZodError") {
+        respondWithProviderError(response, new ProviderDataError("invalid_request", "Malformed AOI preflight request."));
+        return;
+      }
+      respondWithProviderError(response, error);
+    }
+  });
+
   aoiRouter.post("/runtime-requests", async (request, response) => {
     try {
       response.status(200).json(providerRuntimeResponseSchema.parse(await submitRuntimeRequest(providerRuntimeRequestSchema.parse(request.body))));
@@ -67,6 +95,24 @@ export function createAoiRouter(options?: { issueStorePaths?: IssueStorePaths; p
       }
       respondWithProviderError(response, error);
     }
+  });
+
+  aoiRouter.post("/runtime-jobs", (request, response) => {
+    try {
+      response.status(202).json(providerRuntimeJobSchema.parse(submitRuntimeJob(providerRuntimeRequestSchema.parse(request.body))));
+    } catch (error) {
+      if (error instanceof Error && error.name === "ZodError") {
+        respondWithProviderError(response, new ProviderDataError("invalid_request", "Malformed AOI runtime request."));
+        return;
+      }
+      respondWithProviderError(response, error);
+    }
+  });
+
+  aoiRouter.get("/runtime-jobs/:jobId", (request, response) => {
+    const job = getRuntimeJob(request.params.jobId);
+    if (!job) { respondWithProviderError(response, new ProviderDataError("not_found", "AOI preparation job was not found.")); return; }
+    response.status(200).json(providerRuntimeJobSchema.parse(job));
   });
 
 aoiRouter.get("/:aoiId/presentations", async (request, response) => {
@@ -334,6 +380,15 @@ aoiRouter.patch("/:aoiId/issues/:issueId/review", async (request, response) => {
 }
 
 function respondWithProviderError(response: Response, error: unknown): void {
+  if (error instanceof Error && (error.name === "ZodError" || error.constructor.name === "ZodError" || "issues" in error)) {
+    response.status(422).json(
+      providerErrorSchema.parse({
+        error: "invalid_request",
+        message: "Malformed request payload.",
+      }),
+    );
+    return;
+  }
   if (error instanceof ProviderDataError) {
     response.status(error.kind === "invalid_request" ? 422 : error.kind === "not_found" ? 404 : error.kind === "conflict" ? 409 : 502).json(
       providerErrorSchema.parse({

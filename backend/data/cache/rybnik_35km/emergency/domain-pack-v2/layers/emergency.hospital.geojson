@@ -1,0 +1,6780 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "cache_layout_version": "provider_cache/v1",
+    "geojson_contract_version": "provider_geojson/v1",
+    "aoi_id": "rybnik_35km",
+    "domain": "emergency",
+    "layer_id": "emergency.hospital",
+    "source": "OpenStreetMap",
+    "source_type": "analytical_vector",
+    "source_registry_id": "openstreetmap",
+    "source_url": "https://overpass-api.de/api/interpreter",
+    "source_query": "Overpass bounded snapshot: explicit amenity=hospital|fire_station|police|ambulance_station, healthcare=hospital and emergency=ambulance_station|mountain_rescue|lifeguard_base within the Rybnik 35 km AOI.",
+    "snapshot_at": "2026-08-03T10:14:06Z",
+    "pipeline_version": "geo_pipeline/emergency/v1",
+    "query_version": "emergency-osm/v1",
+    "validation_status_raw": "warning",
+    "quality_status": "warning",
+    "confidence": "medium",
+    "limitations": [
+      "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+      "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+      "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+    ],
+    "eligible_for_analysis": true,
+    "readiness": "usable_with_limitations",
+    "contract_version": "provider_geojson/v1",
+    "feature_count": 53
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/1794673216",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Wojewódzki Szpital Rehabilitacyjny dla Dzieci",
+          "amenity": "hospital",
+          "healthcare": "hospital"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5719908,
+          49.947138999999986
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/1942974189",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Szpital św. Józefa w Mikołowie",
+          "website": "https://www.szpital.boromeuszki.org.pl/",
+          "amenity": "hospital",
+          "phone": "+48322265977",
+          "email": "szpital@boromeuszki.org.pl"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.9084745,
+          50.1701247
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/3667623172",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Karvinská hornická nemocnice a.s.",
+          "website": "https://www.khn.cz/",
+          "amenity": "hospital"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.540292,
+          49.8694377
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/4208519691",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Górnośląski Ośrodek Kardiologii",
+          "name:pl": "Górnośląski Ośrodek Kardiologii",
+          "name:en": "Upper Silesian Cardiology Center",
+          "amenity": "hospital",
+          "healthcare": "hospital"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.0010334,
+          50.2114572
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/4222375410",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Specjalistyczny Szpital Wieloprofilowy",
+          "website": "https://www.gcm.pl",
+          "name:pl": "Górnośląskie Centrum Medyczne im. prof. Leszka Gieca Slaskiego Uniwersytetu Medycznego w Katowicach-Ochojcu",
+          "name:en": "Upper Silesian Medical Center of the Medical University of Silesia in Katowice",
+          "amenity": "hospital",
+          "healthcare": "hospital",
+          "opening_hours": "24/7",
+          "phone": "+48 32 3598000"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.998486,
+          50.21086729999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/9776669669",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Szpital Chorób Płuc w Orzeszu",
+          "amenity": "hospital",
+          "healthcare": "hospital"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.773280700000004,
+          50.15164
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/14052253064",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Uniwersyteckie Centrum Kliniczne im. prof. K. Gibińskiego Śląskiego Uniwersytetu Medycznego w Katowicach",
+          "operator": "Śląski Uniwersytet Medyczny",
+          "website": "https://www.uck.katowice.pl/public/oddzialy-lokalizacja-ligota",
+          "amenity": "hospital",
+          "healthcare": "hospital",
+          "opening_hours": "24/7",
+          "phone": "+48 327 894 000"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.9544502,
+          50.2239023
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/39829907",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Szpital Powiatowy w Wodzisławiu Śląskim Oddział w Rydułtowach",
+          "operator": "Szpital Powiatowy w Wodzisławiu Śląskim",
+          "website": "http://www.zozwodzislaw.pl/",
+          "amenity": "hospital",
+          "healthcare": "hospital",
+          "wheelchair": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.425188,
+              50.05997880000001
+            ],
+            [
+              18.4252342,
+              50.0599673
+            ],
+            [
+              18.4253293,
+              50.0599338
+            ],
+            [
+              18.425451500000005,
+              50.059880699999994
+            ],
+            [
+              18.4266016,
+              50.05932249999999
+            ],
+            [
+              18.427343,
+              50.058921700000006
+            ],
+            [
+              18.4271652,
+              50.058796199999996
+            ],
+            [
+              18.4261064,
+              50.058052599999996
+            ],
+            [
+              18.4253586,
+              50.05755340000001
+            ],
+            [
+              18.4248096,
+              50.0578411
+            ],
+            [
+              18.4240194,
+              50.05825529999999
+            ],
+            [
+              18.4238103,
+              50.0583697
+            ],
+            [
+              18.423221700000003,
+              50.058698
+            ],
+            [
+              18.4229149,
+              50.0588783
+            ],
+            [
+              18.4229266,
+              50.0589546
+            ],
+            [
+              18.4231042,
+              50.059025699999985
+            ],
+            [
+              18.4232284,
+              50.0590814
+            ],
+            [
+              18.4232708,
+              50.0591004
+            ],
+            [
+              18.4239238,
+              50.0594492
+            ],
+            [
+              18.4241756,
+              50.05958559999999
+            ],
+            [
+              18.4248203,
+              50.0599259
+            ],
+            [
+              18.4248717,
+              50.05995570000001
+            ],
+            [
+              18.4249195,
+              50.0599658
+            ],
+            [
+              18.4249862,
+              50.0599763
+            ],
+            [
+              18.4250338,
+              50.05997969999999
+            ],
+            [
+              18.4251179,
+              50.0599791
+            ],
+            [
+              18.425188,
+              50.05997880000001
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/49150691",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Léčebna dlouhodobě nemocných",
+          "amenity": "hospital",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.3517297,
+              49.818853999999995
+            ],
+            [
+              18.351719,
+              49.81882619999999
+            ],
+            [
+              18.3518119,
+              49.81881150000001
+            ],
+            [
+              18.3518033,
+              49.818788999999995
+            ],
+            [
+              18.3524699,
+              49.8186828
+            ],
+            [
+              18.3525089,
+              49.8187848
+            ],
+            [
+              18.3529227,
+              49.818718899999986
+            ],
+            [
+              18.3528944,
+              49.818645100000005
+            ],
+            [
+              18.3530758,
+              49.818616199999994
+            ],
+            [
+              18.353085,
+              49.818640300000006
+            ],
+            [
+              18.353166,
+              49.81862739999999
+            ],
+            [
+              18.3531606,
+              49.8186132
+            ],
+            [
+              18.353234,
+              49.8186015
+            ],
+            [
+              18.3532425,
+              49.818623599999995
+            ],
+            [
+              18.3533085,
+              49.81861309999999
+            ],
+            [
+              18.3533009,
+              49.81859299999999
+            ],
+            [
+              18.3534095,
+              49.8185757
+            ],
+            [
+              18.3534177,
+              49.81859719999999
+            ],
+            [
+              18.3536406,
+              49.8185617
+            ],
+            [
+              18.3536325,
+              49.8185406
+            ],
+            [
+              18.3537091,
+              49.818528400000005
+            ],
+            [
+              18.3536809,
+              49.81845469999999
+            ],
+            [
+              18.3536074,
+              49.818466400000005
+            ],
+            [
+              18.3535857,
+              49.8184096
+            ],
+            [
+              18.3530299,
+              49.81849819999999
+            ],
+            [
+              18.353052,
+              49.81855590000001
+            ],
+            [
+              18.352798000000003,
+              49.818596400000004
+            ],
+            [
+              18.3527663,
+              49.8185135
+            ],
+            [
+              18.3525183,
+              49.8185531
+            ],
+            [
+              18.3525107,
+              49.8185333
+            ],
+            [
+              18.3524199,
+              49.8185478
+            ],
+            [
+              18.352413,
+              49.81852989999999
+            ],
+            [
+              18.3517465,
+              49.818636099999985
+            ],
+            [
+              18.3517371,
+              49.818611399999995
+            ],
+            [
+              18.3514523,
+              49.8186568
+            ],
+            [
+              18.3515394,
+              49.8188843
+            ],
+            [
+              18.3517297,
+              49.818853999999995
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/70652457",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Rehabilitační ústav Hrabyně. Pracoviště Chuchelná",
+          "operator": "Rehabilitační ústav Hrabyně",
+          "website": "https://www.ruhrabyne.cz/",
+          "source": "cuzk:ruian",
+          "amenity": "hospital",
+          "building": "civic",
+          "phone": "+420 553 683 300",
+          "email": "ruchuchelna@ruhrabyne.cz"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.1163081,
+              49.9890448
+            ],
+            [
+              18.1164345,
+              49.9889111
+            ],
+            [
+              18.1164935,
+              49.98893429999999
+            ],
+            [
+              18.1165406,
+              49.988883699999995
+            ],
+            [
+              18.1164821,
+              49.9888607
+            ],
+            [
+              18.1166092,
+              49.988726299999996
+            ],
+            [
+              18.1164403,
+              49.98866149999999
+            ],
+            [
+              18.1161453,
+              49.988984
+            ],
+            [
+              18.1163081,
+              49.9890448
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/89815937",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Narodowy Instytut Onkologii im. Marii Skłodowskiej-Curie",
+          "wikidata": "Q9186375",
+          "wikipedia": "pl:Narodowy Instytut Onkologii im. Marii Skłodowskiej-Curie – Państwowy Instytut Badawczy Oddział w Gliwicach",
+          "website": "http://www.io.gliwice.pl",
+          "amenity": "hospital",
+          "healthcare": "hospital"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.6620476,
+              50.303070199999986
+            ],
+            [
+              18.6622977,
+              50.3032508
+            ],
+            [
+              18.6623414,
+              50.304116400000005
+            ],
+            [
+              18.6639668,
+              50.3041224
+            ],
+            [
+              18.664306,
+              50.30411489999999
+            ],
+            [
+              18.6644207,
+              50.30411229999999
+            ],
+            [
+              18.6649397,
+              50.30407669999999
+            ],
+            [
+              18.6656906,
+              50.30390409999999
+            ],
+            [
+              18.6657258,
+              50.303833100000006
+            ],
+            [
+              18.6657227,
+              50.3036319
+            ],
+            [
+              18.6657138,
+              50.30306029999999
+            ],
+            [
+              18.665598400000004,
+              50.30298489999999
+            ],
+            [
+              18.6656588,
+              50.302951699999994
+            ],
+            [
+              18.665685000000003,
+              50.3029373
+            ],
+            [
+              18.6656995,
+              50.302929199999994
+            ],
+            [
+              18.6657821,
+              50.30288299999999
+            ],
+            [
+              18.6661112,
+              50.3028036
+            ],
+            [
+              18.6662542,
+              50.3027652
+            ],
+            [
+              18.6665803,
+              50.30265330000001
+            ],
+            [
+              18.66687,
+              50.30253719999999
+            ],
+            [
+              18.6670104,
+              50.302468499999996
+            ],
+            [
+              18.6671431,
+              50.3023922
+            ],
+            [
+              18.6672754,
+              50.302295699999995
+            ],
+            [
+              18.6673762,
+              50.30219319999999
+            ],
+            [
+              18.6674558,
+              50.3020885
+            ],
+            [
+              18.6675168,
+              50.3019822
+            ],
+            [
+              18.6675374,
+              50.301935799999995
+            ],
+            [
+              18.667548600000003,
+              50.3019104
+            ],
+            [
+              18.6675637,
+              50.301883100000005
+            ],
+            [
+              18.6676302,
+              50.3017621
+            ],
+            [
+              18.6669605,
+              50.301746099999995
+            ],
+            [
+              18.66683,
+              50.301498300000006
+            ],
+            [
+              18.6669301,
+              50.3011591
+            ],
+            [
+              18.6670603,
+              50.3007406
+            ],
+            [
+              18.6671098,
+              50.30070589999998
+            ],
+            [
+              18.6671825,
+              50.300655
+            ],
+            [
+              18.6671959,
+              50.3006456
+            ],
+            [
+              18.667376,
+              50.300552399999994
+            ],
+            [
+              18.6675527,
+              50.300287399999995
+            ],
+            [
+              18.667353400000003,
+              50.30016979999999
+            ],
+            [
+              18.6672473,
+              50.300100699999994
+            ],
+            [
+              18.6670969,
+              50.3000027
+            ],
+            [
+              18.6668993,
+              50.299873999999996
+            ],
+            [
+              18.6667363,
+              50.29987309999999
+            ],
+            [
+              18.6664934,
+              50.2997168
+            ],
+            [
+              18.6664548,
+              50.2996919
+            ],
+            [
+              18.666426,
+              50.29967370000001
+            ],
+            [
+              18.6664128,
+              50.299665399999995
+            ],
+            [
+              18.6645557,
+              50.30084050000001
+            ],
+            [
+              18.6635002,
+              50.30150329999999
+            ],
+            [
+              18.6631261,
+              50.301719799999994
+            ],
+            [
+              18.6626143,
+              50.3020439
+            ],
+            [
+              18.6621906,
+              50.3023069
+            ],
+            [
+              18.6615203,
+              50.302728800000004
+            ],
+            [
+              18.6615338,
+              50.3027415
+            ],
+            [
+              18.6620476,
+              50.303070199999986
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/91561636",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Szpital Miejski nr 4 w Gliwicach",
+          "amenity": "hospital",
+          "healthcare": "hospital"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.6527206,
+              50.29479399999998
+            ],
+            [
+              18.6526443,
+              50.294746599999996
+            ],
+            [
+              18.6527479,
+              50.294673499999995
+            ],
+            [
+              18.6528295,
+              50.2947206
+            ],
+            [
+              18.6540685,
+              50.29393089999999
+            ],
+            [
+              18.6518658,
+              50.2926189
+            ],
+            [
+              18.6510693,
+              50.2931027
+            ],
+            [
+              18.650161,
+              50.2925647
+            ],
+            [
+              18.6500787,
+              50.2925194
+            ],
+            [
+              18.6493028,
+              50.29302320000001
+            ],
+            [
+              18.6500912,
+              50.2935254
+            ],
+            [
+              18.6499777,
+              50.293601499999994
+            ],
+            [
+              18.6503047,
+              50.293798
+            ],
+            [
+              18.6513207,
+              50.2942916
+            ],
+            [
+              18.6524342,
+              50.294996899999994
+            ],
+            [
+              18.6527206,
+              50.29479399999998
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/92419313",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Szpital Powiatowy \"Zespół Opieki Zdrowotnej\"",
+          "website": "https://www.zoz.net.pl/",
+          "amenity": "hospital",
+          "healthcare": "hospital"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.9160179,
+              50.3066999
+            ],
+            [
+              18.9170955,
+              50.3065198
+            ],
+            [
+              18.9167516,
+              50.3056336
+            ],
+            [
+              18.9148784,
+              50.3059575
+            ],
+            [
+              18.9152631,
+              50.3068235
+            ],
+            [
+              18.9160179,
+              50.3066999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/100681984",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Szpital Wielospecjalistyczny",
+          "website": "https://www.szwg.pl/",
+          "amenity": "hospital",
+          "healthcare": "hospital",
+          "phone": "+48 32 238 20 91"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.6614457,
+              50.28895429999999
+            ],
+            [
+              18.6615135,
+              50.2886999
+            ],
+            [
+              18.6603037,
+              50.2885506
+            ],
+            [
+              18.6600888,
+              50.288523999999995
+            ],
+            [
+              18.660053200000004,
+              50.288543
+            ],
+            [
+              18.6600401,
+              50.2885928
+            ],
+            [
+              18.6600178,
+              50.288677299999996
+            ],
+            [
+              18.6600054,
+              50.28872419999999
+            ],
+            [
+              18.6599966,
+              50.288757600000004
+            ],
+            [
+              18.6599812,
+              50.2888161
+            ],
+            [
+              18.659895,
+              50.2891424
+            ],
+            [
+              18.659923300000003,
+              50.28916069999999
+            ],
+            [
+              18.6600087,
+              50.289170099999986
+            ],
+            [
+              18.6600228,
+              50.289171599999996
+            ],
+            [
+              18.6606395,
+              50.289239300000006
+            ],
+            [
+              18.6607334,
+              50.2892413
+            ],
+            [
+              18.6609995,
+              50.289195
+            ],
+            [
+              18.6613725,
+              50.28904399999999
+            ],
+            [
+              18.6614457,
+              50.28895429999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/100700839",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "amenity": "hospital",
+          "healthcare": "hospital"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.8876326,
+              50.3153191
+            ],
+            [
+              18.8896871,
+              50.31502369999999
+            ],
+            [
+              18.8896008,
+              50.31477960000001
+            ],
+            [
+              18.8894244,
+              50.31428079999999
+            ],
+            [
+              18.8881952,
+              50.3144496
+            ],
+            [
+              18.887738,
+              50.314718299999996
+            ],
+            [
+              18.8877849,
+              50.31486869999999
+            ],
+            [
+              18.8874014,
+              50.3149264
+            ],
+            [
+              18.8875286,
+              50.31528769999999
+            ],
+            [
+              18.8876326,
+              50.3153191
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/136027661",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Szpital Miejski w Rudzie Śląskiej Sp. z o.o",
+          "amenity": "hospital",
+          "healthcare": "hospital",
+          "emergency": "no",
+          "wheelchair": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.8540409,
+              50.27575629999999
+            ],
+            [
+              18.8540399,
+              50.2757598
+            ],
+            [
+              18.8542019,
+              50.2757785
+            ],
+            [
+              18.8542562,
+              50.27578489999999
+            ],
+            [
+              18.8543726,
+              50.2757955
+            ],
+            [
+              18.8543755,
+              50.275762199999996
+            ],
+            [
+              18.8544605,
+              50.2756657
+            ],
+            [
+              18.8546231,
+              50.275481
+            ],
+            [
+              18.8546825,
+              50.27545979999999
+            ],
+            [
+              18.8550505,
+              50.2754663
+            ],
+            [
+              18.8551029,
+              50.27567599999999
+            ],
+            [
+              18.8556024,
+              50.27570249999999
+            ],
+            [
+              18.8555613,
+              50.27559819999999
+            ],
+            [
+              18.8555481,
+              50.275555499999996
+            ],
+            [
+              18.8554772,
+              50.275380199999994
+            ],
+            [
+              18.8553162,
+              50.27496539999999
+            ],
+            [
+              18.8552296,
+              50.27474229999999
+            ],
+            [
+              18.8549925,
+              50.274159499999996
+            ],
+            [
+              18.8549524,
+              50.274060399999996
+            ],
+            [
+              18.8549416,
+              50.2740336
+            ],
+            [
+              18.8548758,
+              50.273871
+            ],
+            [
+              18.8547387,
+              50.273527699999995
+            ],
+            [
+              18.8536785,
+              50.27369860000001
+            ],
+            [
+              18.8527041,
+              50.27384469999999
+            ],
+            [
+              18.8524059,
+              50.27389250000001
+            ],
+            [
+              18.8524878,
+              50.27414660000001
+            ],
+            [
+              18.8525696,
+              50.27439689999999
+            ],
+            [
+              18.8526451,
+              50.27440729999999
+            ],
+            [
+              18.8528068,
+              50.274385300000006
+            ],
+            [
+              18.8528103,
+              50.2743961
+            ],
+            [
+              18.8528387,
+              50.27448429999999
+            ],
+            [
+              18.8526766,
+              50.27450640000001
+            ],
+            [
+              18.8526204,
+              50.2745617
+            ],
+            [
+              18.8526086,
+              50.274572
+            ],
+            [
+              18.8526013,
+              50.274596800000005
+            ],
+            [
+              18.8526027,
+              50.27462369999999
+            ],
+            [
+              18.8527201,
+              50.27496920000001
+            ],
+            [
+              18.8528001,
+              50.2752055
+            ],
+            [
+              18.8528913,
+              50.27547009999999
+            ],
+            [
+              18.8529023,
+              50.275502
+            ],
+            [
+              18.8529425,
+              50.275620599999996
+            ],
+            [
+              18.852955100000003,
+              50.27563000000001
+            ],
+            [
+              18.8540409,
+              50.27575629999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/151875216",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Szpital w Knurowie",
+          "amenity": "hospital",
+          "healthcare": "hospital",
+          "emergency": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.6673261,
+              50.22234949999999
+            ],
+            [
+              18.6671345,
+              50.2225477
+            ],
+            [
+              18.6677342,
+              50.2227864
+            ],
+            [
+              18.6678063,
+              50.2228105
+            ],
+            [
+              18.6682466,
+              50.2225788
+            ],
+            [
+              18.6687437,
+              50.22231169999999
+            ],
+            [
+              18.6688142,
+              50.22228590000001
+            ],
+            [
+              18.6688074,
+              50.222271
+            ],
+            [
+              18.6687349,
+              50.222240799999994
+            ],
+            [
+              18.6687825,
+              50.222194
+            ],
+            [
+              18.6688553,
+              50.2222239
+            ],
+            [
+              18.6689017,
+              50.2222659
+            ],
+            [
+              18.6689324,
+              50.22224509999999
+            ],
+            [
+              18.6696829,
+              50.22177059999999
+            ],
+            [
+              18.6687692,
+              50.221402399999995
+            ],
+            [
+              18.6685961,
+              50.22133290000001
+            ],
+            [
+              18.6685429,
+              50.2213115
+            ],
+            [
+              18.6685282,
+              50.2213055
+            ],
+            [
+              18.6684962,
+              50.22133839999999
+            ],
+            [
+              18.6684715,
+              50.2213291
+            ],
+            [
+              18.668445,
+              50.221319
+            ],
+            [
+              18.6684771,
+              50.221286
+            ],
+            [
+              18.6684072,
+              50.221259100000005
+            ],
+            [
+              18.6682317,
+              50.22118900000001
+            ],
+            [
+              18.6681444,
+              50.221153699999995
+            ],
+            [
+              18.6679433,
+              50.22107460000001
+            ],
+            [
+              18.6669481,
+              50.220677
+            ],
+            [
+              18.6669343,
+              50.22067499999999
+            ],
+            [
+              18.6669246,
+              50.2206764
+            ],
+            [
+              18.6667657,
+              50.2207642
+            ],
+            [
+              18.6667929,
+              50.220775499999995
+            ],
+            [
+              18.666792,
+              50.220792899999985
+            ],
+            [
+              18.6666237,
+              50.22093889999999
+            ],
+            [
+              18.6664261,
+              50.22113629999999
+            ],
+            [
+              18.6659158,
+              50.2216323
+            ],
+            [
+              18.6663499,
+              50.2218072
+            ],
+            [
+              18.6671647,
+              50.2221354
+            ],
+            [
+              18.6674335,
+              50.2222468
+            ],
+            [
+              18.6673261,
+              50.22234949999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/152296185",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Bohumínská městská nemocnice",
+          "amenity": "hospital"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.3345666,
+              49.91749309999999
+            ],
+            [
+              18.3356932,
+              49.9184312
+            ],
+            [
+              18.3359158,
+              49.9184267
+            ],
+            [
+              18.3359853,
+              49.9187021
+            ],
+            [
+              18.336785,
+              49.9193894
+            ],
+            [
+              18.3380194,
+              49.9194386
+            ],
+            [
+              18.3379568,
+              49.9192192
+            ],
+            [
+              18.338652300000003,
+              49.919129699999985
+            ],
+            [
+              18.338774,
+              49.91897070000001
+            ],
+            [
+              18.3394416,
+              49.91889679999999
+            ],
+            [
+              18.339372,
+              49.91857370000001
+            ],
+            [
+              18.339208,
+              49.918137599999994
+            ],
+            [
+              18.3391614,
+              49.9180577
+            ],
+            [
+              18.339108500000002,
+              49.9179911
+            ],
+            [
+              18.3390229,
+              49.91791159999998
+            ],
+            [
+              18.3380917,
+              49.917149699999996
+            ],
+            [
+              18.3378963,
+              49.91701
+            ],
+            [
+              18.3372892,
+              49.9172938
+            ],
+            [
+              18.3365486,
+              49.916671400000006
+            ],
+            [
+              18.3355298,
+              49.9172938
+            ],
+            [
+              18.3353209,
+              49.9173578
+            ],
+            [
+              18.3352436,
+              49.9173847
+            ],
+            [
+              18.3351164,
+              49.9174236
+            ],
+            [
+              18.3349987,
+              49.917438999999995
+            ],
+            [
+              18.3345666,
+              49.91749309999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/166116983",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Szpital Miejski w Zabrzu",
+          "amenity": "hospital",
+          "healthcare": "hospital"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.8259714,
+              50.3267345
+            ],
+            [
+              18.82664,
+              50.326798999999994
+            ],
+            [
+              18.827588600000002,
+              50.326865
+            ],
+            [
+              18.827614,
+              50.3268655
+            ],
+            [
+              18.8282174,
+              50.326877
+            ],
+            [
+              18.8282374,
+              50.326845199999994
+            ],
+            [
+              18.8282582,
+              50.326812199999985
+            ],
+            [
+              18.8286268,
+              50.326226600000005
+            ],
+            [
+              18.8288956,
+              50.32579960000001
+            ],
+            [
+              18.8287864,
+              50.3257718
+            ],
+            [
+              18.8284555,
+              50.32568880000001
+            ],
+            [
+              18.8284011,
+              50.3257793
+            ],
+            [
+              18.8281319,
+              50.325711599999984
+            ],
+            [
+              18.8282111,
+              50.3255836
+            ],
+            [
+              18.827868,
+              50.3254962
+            ],
+            [
+              18.827901,
+              50.325443799999995
+            ],
+            [
+              18.8274096,
+              50.3253083
+            ],
+            [
+              18.8274319,
+              50.32527770000001
+            ],
+            [
+              18.8252512,
+              50.324548899999996
+            ],
+            [
+              18.8252295,
+              50.32458170000001
+            ],
+            [
+              18.8252147,
+              50.32460400000001
+            ],
+            [
+              18.8251932,
+              50.3246366
+            ],
+            [
+              18.824946,
+              50.32500989999999
+            ],
+            [
+              18.8244439,
+              50.3259232
+            ],
+            [
+              18.8251529,
+              50.32635119999999
+            ],
+            [
+              18.8251456,
+              50.32655789999999
+            ],
+            [
+              18.8253152,
+              50.32668300000001
+            ],
+            [
+              18.8255014,
+              50.3267322
+            ],
+            [
+              18.8259714,
+              50.3267345
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/179950828",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Górnośląskie Centrum Zdrowia Dziecka im. Jana Pawła II",
+          "wikidata": "Q9283780",
+          "wikipedia": "pl:Górnośląskie Centrum Zdrowia Dziecka",
+          "website": "https://gczd.katowice.pl/",
+          "amenity": "hospital",
+          "healthcare": "hospital",
+          "emergency": "yes",
+          "opening_hours": "24/7",
+          "phone": "+48 32 207 18 00"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.9509118,
+              50.22402919999999
+            ],
+            [
+              18.9510311,
+              50.2240431
+            ],
+            [
+              18.951671,
+              50.22413619999998
+            ],
+            [
+              18.9518734,
+              50.2235099
+            ],
+            [
+              18.9518119,
+              50.22349520000001
+            ],
+            [
+              18.951929800000002,
+              50.22311810000001
+            ],
+            [
+              18.950582,
+              50.222939399999994
+            ],
+            [
+              18.9504898,
+              50.2229706
+            ],
+            [
+              18.9503873,
+              50.22321649999999
+            ],
+            [
+              18.9503745,
+              50.223286999999985
+            ],
+            [
+              18.949698,
+              50.22319679999999
+            ],
+            [
+              18.9496925,
+              50.223229499999995
+            ],
+            [
+              18.9496565,
+              50.22337209999999
+            ],
+            [
+              18.9495033,
+              50.22384269999999
+            ],
+            [
+              18.949552,
+              50.223850899999995
+            ],
+            [
+              18.9509118,
+              50.22402919999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/179950830",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Okręgowy Szpital Kolejowy",
+          "wikidata": "Q16583912",
+          "wikipedia": "pl:Okręgowy Szpital Kolejowy w Katowicach",
+          "website": "https://www.kolejowy.katowice.pl/",
+          "amenity": "hospital",
+          "healthcare": "hospital",
+          "phone": "+48 32 6053500"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.9593886,
+              50.2270422
+            ],
+            [
+              18.9597614,
+              50.2269095
+            ],
+            [
+              18.9591917,
+              50.226279399999996
+            ],
+            [
+              18.9591561,
+              50.22624110000001
+            ],
+            [
+              18.9586902,
+              50.226412599999996
+            ],
+            [
+              18.9593214,
+              50.2270946
+            ],
+            [
+              18.9593886,
+              50.2270422
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/179950831",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Uniwersyteckie Centrum Kliniczne im. prof. Kornela Gibińskiego Śląskiego Uniwersytetu Medycznego w Katowicach",
+          "wikipedia": "pl:Uniwersyteckie Centrum Kliniczne im. prof. Kornela Gibińskiego w Katowicach",
+          "website": "https://www.uck.katowice.pl",
+          "amenity": "hospital",
+          "healthcare": "hospital",
+          "phone": "+48 32 789 40 00",
+          "email": "sekretariat@uck.katowice.pl"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.9543431,
+              50.22409769999999
+            ],
+            [
+              18.9543338,
+              50.22415360000001
+            ],
+            [
+              18.9545436,
+              50.22419839999999
+            ],
+            [
+              18.9546404,
+              50.2242081
+            ],
+            [
+              18.9546885,
+              50.2242134
+            ],
+            [
+              18.9546975,
+              50.22418900000001
+            ],
+            [
+              18.9556071,
+              50.22429339999999
+            ],
+            [
+              18.9556532,
+              50.2241694
+            ],
+            [
+              18.9555983,
+              50.2241607
+            ],
+            [
+              18.955632200000004,
+              50.2240726
+            ],
+            [
+              18.9556871,
+              50.224081299999995
+            ],
+            [
+              18.955720000000003,
+              50.22394469999999
+            ],
+            [
+              18.9556686,
+              50.22393779999999
+            ],
+            [
+              18.955701,
+              50.2238378
+            ],
+            [
+              18.9557261,
+              50.22376069999999
+            ],
+            [
+              18.955763400000002,
+              50.223682100000005
+            ],
+            [
+              18.9557806,
+              50.2234706
+            ],
+            [
+              18.9538724,
+              50.22324569999999
+            ],
+            [
+              18.953900400000002,
+              50.2233811
+            ],
+            [
+              18.9537699,
+              50.223428600000005
+            ],
+            [
+              18.9535199,
+              50.223393899999984
+            ],
+            [
+              18.9535234,
+              50.2234393
+            ],
+            [
+              18.9535083,
+              50.22350529999999
+            ],
+            [
+              18.953451,
+              50.2235921
+            ],
+            [
+              18.9530706,
+              50.22353759999999
+            ],
+            [
+              18.9529935,
+              50.22356489999999
+            ],
+            [
+              18.952676,
+              50.2238808
+            ],
+            [
+              18.9543431,
+              50.22409769999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/197700278",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Wojewódzki Szpital Specjalistyczny Megrez",
+          "website": "https://szpitalmegrez.pl/",
+          "source": "Bing",
+          "amenity": "hospital",
+          "healthcare": "hospital",
+          "emergency": "yes",
+          "contact:phone": "+48 32 3255100",
+          "wheelchair": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              19.0060767,
+              50.11282519999999
+            ],
+            [
+              19.0060346,
+              50.113268299999994
+            ],
+            [
+              19.0052002,
+              50.11322629999999
+            ],
+            [
+              19.0052682,
+              50.11332529999999
+            ],
+            [
+              19.0052566,
+              50.1133632
+            ],
+            [
+              19.0052445,
+              50.113403
+            ],
+            [
+              19.0055964,
+              50.113832099999996
+            ],
+            [
+              19.0055946,
+              50.113908200000004
+            ],
+            [
+              19.0055917,
+              50.1140329
+            ],
+            [
+              19.0057199,
+              50.11426800000001
+            ],
+            [
+              19.005888,
+              50.1142921
+            ],
+            [
+              19.0060353,
+              50.11427499999999
+            ],
+            [
+              19.0061824,
+              50.1142316
+            ],
+            [
+              19.0066936,
+              50.114155499999995
+            ],
+            [
+              19.006739,
+              50.11414870000001
+            ],
+            [
+              19.0068342,
+              50.11413489999999
+            ],
+            [
+              19.0086391,
+              50.11414649999998
+            ],
+            [
+              19.0108181,
+              50.1142045
+            ],
+            [
+              19.0108861,
+              50.1141894
+            ],
+            [
+              19.0109332,
+              50.1141038
+            ],
+            [
+              19.0109044,
+              50.11352829999999
+            ],
+            [
+              19.0107893,
+              50.1131474
+            ],
+            [
+              19.0105093,
+              50.11262890000001
+            ],
+            [
+              19.010177,
+              50.11212879999999
+            ],
+            [
+              19.0089091,
+              50.11209970000001
+            ],
+            [
+              19.0081172,
+              50.112099699999995
+            ],
+            [
+              19.0078841,
+              50.11212110000001
+            ],
+            [
+              19.0061106,
+              50.1125569
+            ],
+            [
+              19.0059043,
+              50.11260759999999
+            ],
+            [
+              19.0060767,
+              50.11282519999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/206700761",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Wojewódzki Szpital Specjalistyczny Nr 2 - Oddział pediatryczny im. J. Korczaka",
+          "source": "UM Jastrzębie-Zdrój",
+          "amenity": "hospital",
+          "healthcare": "hospital"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.5728685,
+              49.959956899999995
+            ],
+            [
+              18.572789,
+              49.96020160000001
+            ],
+            [
+              18.5729667,
+              49.9602812
+            ],
+            [
+              18.5730623,
+              49.960325499999996
+            ],
+            [
+              18.5732878,
+              49.960427200000005
+            ],
+            [
+              18.5732426,
+              49.9606499
+            ],
+            [
+              18.5731636,
+              49.9610236
+            ],
+            [
+              18.5731589,
+              49.96104760000001
+            ],
+            [
+              18.5732904,
+              49.96106499999999
+            ],
+            [
+              18.5732762,
+              49.961103999999985
+            ],
+            [
+              18.5731892,
+              49.9613296
+            ],
+            [
+              18.5731337,
+              49.96147139999999
+            ],
+            [
+              18.5731179,
+              49.96151329999999
+            ],
+            [
+              18.5733515,
+              49.96156899999999
+            ],
+            [
+              18.5735896,
+              49.961647799999994
+            ],
+            [
+              18.5737768,
+              49.961680400000006
+            ],
+            [
+              18.573878,
+              49.96143579999998
+            ],
+            [
+              18.5741551,
+              49.9610729
+            ],
+            [
+              18.5742164,
+              49.960980099999986
+            ],
+            [
+              18.5743506,
+              49.9608546
+            ],
+            [
+              18.574573900000004,
+              49.96064429999999
+            ],
+            [
+              18.574766,
+              49.960459
+            ],
+            [
+              18.5743815,
+              49.9604748
+            ],
+            [
+              18.5740745,
+              49.960487799999996
+            ],
+            [
+              18.5740757,
+              49.96014290000001
+            ],
+            [
+              18.574161,
+              49.96013810000001
+            ],
+            [
+              18.5748339,
+              49.9601044
+            ],
+            [
+              18.5747971,
+              49.9600543
+            ],
+            [
+              18.5746015,
+              49.9596907
+            ],
+            [
+              18.574574,
+              49.95963960000001
+            ],
+            [
+              18.5745207,
+              49.9595325
+            ],
+            [
+              18.5741565,
+              49.959539299999996
+            ],
+            [
+              18.5740123,
+              49.9595418
+            ],
+            [
+              18.5739945,
+              49.959436800000006
+            ],
+            [
+              18.5739857,
+              49.95938279999999
+            ],
+            [
+              18.573592,
+              49.9593874
+            ],
+            [
+              18.5732722,
+              49.95946740000001
+            ],
+            [
+              18.5729959,
+              49.9595375
+            ],
+            [
+              18.5728747,
+              49.95956799999999
+            ],
+            [
+              18.5725625,
+              49.959647
+            ],
+            [
+              18.572536,
+              49.9596689
+            ],
+            [
+              18.5725104,
+              49.959775699999994
+            ],
+            [
+              18.5724769,
+              49.9599037
+            ],
+            [
+              18.5728685,
+              49.959956899999995
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/206736675",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Wojewódzki Szpital Specjalistyczny nr 2",
+          "operator": "Województwo Śląskie",
+          "website": "https://www.wss2.pl",
+          "source": "UM Jastrzębie-Zdrój",
+          "amenity": "hospital",
+          "healthcare": "hospital",
+          "emergency": "yes",
+          "phone": "+48 32 47 84 200"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.5862987,
+              49.94669309999999
+            ],
+            [
+              18.5863499,
+              49.946643800000004
+            ],
+            [
+              18.5863515,
+              49.9463557
+            ],
+            [
+              18.5862382,
+              49.9462321
+            ],
+            [
+              18.5862515,
+              49.9460402
+            ],
+            [
+              18.5859324,
+              49.94583389999999
+            ],
+            [
+              18.585909,
+              49.9456826
+            ],
+            [
+              18.5861231,
+              49.9452495
+            ],
+            [
+              18.5862162,
+              49.9449754
+            ],
+            [
+              18.5854249,
+              49.944465099999995
+            ],
+            [
+              18.5853826,
+              49.944438
+            ],
+            [
+              18.5847443,
+              49.944025999999994
+            ],
+            [
+              18.5847407,
+              49.94402070000002
+            ],
+            [
+              18.584721,
+              49.9440452
+            ],
+            [
+              18.5846617,
+              49.944111999999976
+            ],
+            [
+              18.5845069,
+              49.94429349999999
+            ],
+            [
+              18.5844038,
+              49.94440519999999
+            ],
+            [
+              18.5841335,
+              49.94469409999999
+            ],
+            [
+              18.584043,
+              49.94479090000001
+            ],
+            [
+              18.5839924,
+              49.9448505
+            ],
+            [
+              18.5837911,
+              49.94483129999999
+            ],
+            [
+              18.5836382,
+              49.94493889999999
+            ],
+            [
+              18.5838255,
+              49.9450476
+            ],
+            [
+              18.583837,
+              49.945373
+            ],
+            [
+              18.5836249,
+              49.945757199999996
+            ],
+            [
+              18.5836104,
+              49.94586309999999
+            ],
+            [
+              18.583126,
+              49.9458866
+            ],
+            [
+              18.5828535,
+              49.945807499999994
+            ],
+            [
+              18.5828623,
+              49.945607800000005
+            ],
+            [
+              18.5829886,
+              49.94529429999999
+            ],
+            [
+              18.5829497,
+              49.94512029999999
+            ],
+            [
+              18.5827749,
+              49.944904699999995
+            ],
+            [
+              18.5827973,
+              49.9447466
+            ],
+            [
+              18.582762200000005,
+              49.94462849999999
+            ],
+            [
+              18.5827119,
+              49.9446022
+            ],
+            [
+              18.582657,
+              49.9445095
+            ],
+            [
+              18.5826205,
+              49.9442174
+            ],
+            [
+              18.582394200000003,
+              49.9442417
+            ],
+            [
+              18.5818723,
+              49.94462879999998
+            ],
+            [
+              18.5818006,
+              49.94466359999999
+            ],
+            [
+              18.5814308,
+              49.94481840000001
+            ],
+            [
+              18.5812319,
+              49.944898699999996
+            ],
+            [
+              18.581044,
+              49.9449471
+            ],
+            [
+              18.5810191,
+              49.94496299999999
+            ],
+            [
+              18.5809119,
+              49.945028300000004
+            ],
+            [
+              18.5810168,
+              49.9450892
+            ],
+            [
+              18.5811313,
+              49.9451547
+            ],
+            [
+              18.581279,
+              49.945239300000004
+            ],
+            [
+              18.5806772,
+              49.94567039999999
+            ],
+            [
+              18.5807391,
+              49.945700899999984
+            ],
+            [
+              18.580811700000005,
+              49.945738099999986
+            ],
+            [
+              18.5809238,
+              49.9456625
+            ],
+            [
+              18.5808496,
+              49.9456503
+            ],
+            [
+              18.5810335,
+              49.9455089
+            ],
+            [
+              18.5811093,
+              49.945520099999996
+            ],
+            [
+              18.5811997,
+              49.9454575
+            ],
+            [
+              18.5812768,
+              49.9455027
+            ],
+            [
+              18.5823192,
+              49.94611789999999
+            ],
+            [
+              18.5821168,
+              49.9462496
+            ],
+            [
+              18.5820156,
+              49.94631819999999
+            ],
+            [
+              18.581940000000003,
+              49.94646559999999
+            ],
+            [
+              18.5820481,
+              49.9465259
+            ],
+            [
+              18.5827666,
+              49.946950099999995
+            ],
+            [
+              18.5828084,
+              49.9469742
+            ],
+            [
+              18.5834205,
+              49.947335100000004
+            ],
+            [
+              18.5834126,
+              49.94735910000001
+            ],
+            [
+              18.5842793,
+              49.9478788
+            ],
+            [
+              18.5844705,
+              49.9479833
+            ],
+            [
+              18.5850985,
+              49.9475354
+            ],
+            [
+              18.585083,
+              49.947520499999996
+            ],
+            [
+              18.5852778,
+              49.9473721
+            ],
+            [
+              18.5854476,
+              49.9472426
+            ],
+            [
+              18.5857008,
+              49.9471685
+            ],
+            [
+              18.585911,
+              49.94703729999999
+            ],
+            [
+              18.5859934,
+              49.946985500000004
+            ],
+            [
+              18.5862464,
+              49.946743399999995
+            ],
+            [
+              18.5862987,
+              49.94669309999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/217109712",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Szpital Rejonowy im. dr Józefa Rostka",
+          "amenity": "hospital",
+          "healthcare": "hospital",
+          "emergency": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.2049397,
+              50.1004312
+            ],
+            [
+              18.2042401,
+              50.100636599999994
+            ],
+            [
+              18.2038091,
+              50.100756299999986
+            ],
+            [
+              18.2036772,
+              50.10061599999999
+            ],
+            [
+              18.2035609,
+              50.1005563
+            ],
+            [
+              18.203624,
+              50.099955
+            ],
+            [
+              18.2034529,
+              50.09975029999999
+            ],
+            [
+              18.203354,
+              50.09973519999999
+            ],
+            [
+              18.2033009,
+              50.0997114
+            ],
+            [
+              18.2031576,
+              50.0995165
+            ],
+            [
+              18.2031219,
+              50.09952669999999
+            ],
+            [
+              18.202917400000004,
+              50.09958569999999
+            ],
+            [
+              18.2033078,
+              50.10009629999999
+            ],
+            [
+              18.2032176,
+              50.10019569999999
+            ],
+            [
+              18.2029736,
+              50.10028129999999
+            ],
+            [
+              18.2021974,
+              50.100502
+            ],
+            [
+              18.2022202,
+              50.1005408
+            ],
+            [
+              18.2017667,
+              50.100668699999986
+            ],
+            [
+              18.201075700000004,
+              50.10080829999998
+            ],
+            [
+              18.2010454,
+              50.1008163
+            ],
+            [
+              18.2009602,
+              50.1008569
+            ],
+            [
+              18.2009232,
+              50.10087459999999
+            ],
+            [
+              18.2009436,
+              50.10090079999999
+            ],
+            [
+              18.201051,
+              50.101039099999994
+            ],
+            [
+              18.2011383,
+              50.1011693
+            ],
+            [
+              18.2011872,
+              50.10126489999998
+            ],
+            [
+              18.201308,
+              50.10144859999999
+            ],
+            [
+              18.2015404,
+              50.101802
+            ],
+            [
+              18.2018635,
+              50.10229339999999
+            ],
+            [
+              18.2018846,
+              50.10232719999999
+            ],
+            [
+              18.2019197,
+              50.1023834
+            ],
+            [
+              18.2024009,
+              50.103154399999994
+            ],
+            [
+              18.2029985,
+              50.10397090000001
+            ],
+            [
+              18.2031253,
+              50.10393799999999
+            ],
+            [
+              18.2035491,
+              50.103827900000006
+            ],
+            [
+              18.2049516,
+              50.1034412
+            ],
+            [
+              18.20534,
+              50.103991199999996
+            ],
+            [
+              18.2055557,
+              50.1039346
+            ],
+            [
+              18.2062462,
+              50.10374089999999
+            ],
+            [
+              18.2067097,
+              50.103765
+            ],
+            [
+              18.2073929,
+              50.1036672
+            ],
+            [
+              18.207719,
+              50.10359669999999
+            ],
+            [
+              18.2077724,
+              50.10352280000001
+            ],
+            [
+              18.2076634,
+              50.1034003
+            ],
+            [
+              18.2074323,
+              50.1030459
+            ],
+            [
+              18.2070633,
+              50.10243199999999
+            ],
+            [
+              18.2066814,
+              50.101973400000006
+            ],
+            [
+              18.2063082,
+              50.10207099999998
+            ],
+            [
+              18.2062405,
+              50.1019668
+            ],
+            [
+              18.2058561,
+              50.10137530000001
+            ],
+            [
+              18.2057408,
+              50.1012013
+            ],
+            [
+              18.205467,
+              50.1007883
+            ],
+            [
+              18.2052269,
+              50.10039429999999
+            ],
+            [
+              18.2051854,
+              50.10037079999999
+            ],
+            [
+              18.2049397,
+              50.1004312
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/217160228",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Szpital Powiatowy w Wodzisławiu Śląskim",
+          "operator": "Szpital Powiatowy w Wodzisławiu Śląskim",
+          "website": "https://www.zoz.wodzislaw.pl/",
+          "name:pl": "Szpital w Wodzisławiu Śląskim",
+          "name:en": "Hospital Wodzisław Śląski",
+          "start_date": "1969",
+          "amenity": "hospital",
+          "healthcare": "hospital",
+          "emergency": "yes",
+          "opening_hours": "24/7",
+          "wheelchair": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.4613323,
+              50.009920399999984
+            ],
+            [
+              18.4615276,
+              50.00991809999999
+            ],
+            [
+              18.4615799,
+              50.00992029999999
+            ],
+            [
+              18.4620567,
+              50.010032499999994
+            ],
+            [
+              18.4620847,
+              50.0099897
+            ],
+            [
+              18.4620957,
+              50.0099922
+            ],
+            [
+              18.4621056,
+              50.0099767
+            ],
+            [
+              18.4621377,
+              50.009978699999984
+            ],
+            [
+              18.4621567,
+              50.009949500000005
+            ],
+            [
+              18.4622694,
+              50.00997899999999
+            ],
+            [
+              18.4623113,
+              50.0099976
+            ],
+            [
+              18.4623155,
+              50.0100094
+            ],
+            [
+              18.4625729,
+              50.0100413
+            ],
+            [
+              18.4628605,
+              50.0100627
+            ],
+            [
+              18.4631646,
+              50.0101237
+            ],
+            [
+              18.463444,
+              50.01017079999999
+            ],
+            [
+              18.463732,
+              50.0102721
+            ],
+            [
+              18.4639908,
+              50.01038679999999
+            ],
+            [
+              18.4641357,
+              50.0104912
+            ],
+            [
+              18.4646238,
+              50.0104262
+            ],
+            [
+              18.4646388,
+              50.00952229999999
+            ],
+            [
+              18.46554,
+              50.009458599999995
+            ],
+            [
+              18.4655721,
+              50.00919559999999
+            ],
+            [
+              18.4655857,
+              50.0090245
+            ],
+            [
+              18.4656019,
+              50.0087493
+            ],
+            [
+              18.465613300000005,
+              50.00854449999999
+            ],
+            [
+              18.4648516,
+              50.008002
+            ],
+            [
+              18.4648979,
+              50.008076
+            ],
+            [
+              18.4649192,
+              50.008198199999995
+            ],
+            [
+              18.4649064,
+              50.0083057
+            ],
+            [
+              18.4648262,
+              50.0084537
+            ],
+            [
+              18.4647164,
+              50.0085813
+            ],
+            [
+              18.4646261,
+              50.00864620000001
+            ],
+            [
+              18.4639517,
+              50.00848890000001
+            ],
+            [
+              18.4638663,
+              50.008639299999984
+            ],
+            [
+              18.4638503,
+              50.008667399999986
+            ],
+            [
+              18.4633468,
+              50.008557499999995
+            ],
+            [
+              18.4632953,
+              50.0085462
+            ],
+            [
+              18.4628546,
+              50.008632
+            ],
+            [
+              18.4625754,
+              50.007951600000005
+            ],
+            [
+              18.462428,
+              50.00796249999999
+            ],
+            [
+              18.4619299,
+              50.0081419
+            ],
+            [
+              18.4615741,
+              50.00834699999999
+            ],
+            [
+              18.4612879,
+              50.008459699999996
+            ],
+            [
+              18.461043600000004,
+              50.0085045
+            ],
+            [
+              18.4609842,
+              50.0086558
+            ],
+            [
+              18.4609006,
+              50.00878649999999
+            ],
+            [
+              18.4607985,
+              50.00896819999999
+            ],
+            [
+              18.4605185,
+              50.00947649999999
+            ],
+            [
+              18.4603983,
+              50.009725800000005
+            ],
+            [
+              18.460892700000002,
+              50.009863499999994
+            ],
+            [
+              18.4609139,
+              50.0098268
+            ],
+            [
+              18.4613323,
+              50.009920399999984
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/232436012",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "SPZOZ Państwowy Szpital dla Nerwowo i Psychicznie Chorych",
+          "source": "survey, Bing",
+          "amenity": "hospital",
+          "healthcare": "hospital"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.5469712,
+              50.104704299999995
+            ],
+            [
+              18.5469245,
+              50.104545099999996
+            ],
+            [
+              18.5467602,
+              50.1039606
+            ],
+            [
+              18.5467502,
+              50.1039241
+            ],
+            [
+              18.5467208,
+              50.103829
+            ],
+            [
+              18.5466466,
+              50.10364759999999
+            ],
+            [
+              18.5466027,
+              50.103397
+            ],
+            [
+              18.546509,
+              50.1030699
+            ],
+            [
+              18.546403,
+              50.102756
+            ],
+            [
+              18.5462878,
+              50.102419100000006
+            ],
+            [
+              18.5461717,
+              50.10237269999999
+            ],
+            [
+              18.5459497,
+              50.102343700000006
+            ],
+            [
+              18.545599,
+              50.1025093
+            ],
+            [
+              18.5450035,
+              50.102600699999996
+            ],
+            [
+              18.544441800000005,
+              50.1026542
+            ],
+            [
+              18.5443973,
+              50.10267779999999
+            ],
+            [
+              18.5441512,
+              50.10275649999999
+            ],
+            [
+              18.5436023,
+              50.1030022
+            ],
+            [
+              18.5433319,
+              50.10312220000001
+            ],
+            [
+              18.5432118,
+              50.10323649999999
+            ],
+            [
+              18.5427691,
+              50.1033107
+            ],
+            [
+              18.5421744,
+              50.10321619999999
+            ],
+            [
+              18.5425189,
+              50.104384599999996
+            ],
+            [
+              18.541983,
+              50.1044348
+            ],
+            [
+              18.5420643,
+              50.1046694
+            ],
+            [
+              18.5423435,
+              50.10553430000001
+            ],
+            [
+              18.542483,
+              50.1062379
+            ],
+            [
+              18.5424913,
+              50.1062813
+            ],
+            [
+              18.5426771,
+              50.1062626
+            ],
+            [
+              18.5451045,
+              50.10601059999999
+            ],
+            [
+              18.5452675,
+              50.10608980000001
+            ],
+            [
+              18.5454253,
+              50.10685070000001
+            ],
+            [
+              18.5454141,
+              50.10686829999999
+            ],
+            [
+              18.545418,
+              50.10688819999999
+            ],
+            [
+              18.5454269,
+              50.1069815
+            ],
+            [
+              18.5454364,
+              50.1071538
+            ],
+            [
+              18.5454402,
+              50.10732260000001
+            ],
+            [
+              18.5454415,
+              50.10775639999999
+            ],
+            [
+              18.5455077,
+              50.1077516
+            ],
+            [
+              18.5455395,
+              50.10775179999999
+            ],
+            [
+              18.5455693,
+              50.10775199999999
+            ],
+            [
+              18.5459444,
+              50.107757299999996
+            ],
+            [
+              18.5464398,
+              50.107803999999994
+            ],
+            [
+              18.5465266,
+              50.10780650000001
+            ],
+            [
+              18.5467093,
+              50.10780470000001
+            ],
+            [
+              18.5468566,
+              50.10782309999998
+            ],
+            [
+              18.5470896,
+              50.10718459999999
+            ],
+            [
+              18.547127400000004,
+              50.10656269999999
+            ],
+            [
+              18.5471289,
+              50.1065376
+            ],
+            [
+              18.5471531,
+              50.10608750000001
+            ],
+            [
+              18.5471482,
+              50.10599289999998
+            ],
+            [
+              18.5469932,
+              50.1053096
+            ],
+            [
+              18.54708,
+              50.1052225
+            ],
+            [
+              18.5469764,
+              50.10474249999999
+            ],
+            [
+              18.5469712,
+              50.104704299999995
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/232880649",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Nemocnice s poliklinikou Karviná-Ráj pracoviště Orlová",
+          "amenity": "hospital",
+          "emergency": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.4326762,
+              49.8745708
+            ],
+            [
+              18.432341,
+              49.8750824
+            ],
+            [
+              18.4321516,
+              49.8753791
+            ],
+            [
+              18.4328847,
+              49.875578499999996
+            ],
+            [
+              18.4328581,
+              49.87561779999999
+            ],
+            [
+              18.4329325,
+              49.87563720000001
+            ],
+            [
+              18.4330234,
+              49.87566149999999
+            ],
+            [
+              18.4330112,
+              49.87568049999999
+            ],
+            [
+              18.4330664,
+              49.8756952
+            ],
+            [
+              18.4330782,
+              49.875676899999995
+            ],
+            [
+              18.4331672,
+              49.87570070000001
+            ],
+            [
+              18.4332301,
+              49.875717800000004
+            ],
+            [
+              18.4332619,
+              49.87566319999999
+            ],
+            [
+              18.433468100000002,
+              49.87571779999999
+            ],
+            [
+              18.4335042,
+              49.87565959999999
+            ],
+            [
+              18.4336379,
+              49.8756979
+            ],
+            [
+              18.4336793,
+              49.8756322
+            ],
+            [
+              18.4338624,
+              49.87568340000001
+            ],
+            [
+              18.4339099,
+              49.8756085
+            ],
+            [
+              18.4341844,
+              49.87568189999998
+            ],
+            [
+              18.4342013,
+              49.8756557
+            ],
+            [
+              18.4343662,
+              49.875699399999995
+            ],
+            [
+              18.4343505,
+              49.8757237
+            ],
+            [
+              18.4345566,
+              49.87577869999999
+            ],
+            [
+              18.4349556,
+              49.87588519999999
+            ],
+            [
+              18.434918900000003,
+              49.87594169999999
+            ],
+            [
+              18.4351044,
+              49.87599180000001
+            ],
+            [
+              18.4351545,
+              49.8759145
+            ],
+            [
+              18.4353019,
+              49.8759546
+            ],
+            [
+              18.4353761,
+              49.87597449999999
+            ],
+            [
+              18.4353128,
+              49.87607209999999
+            ],
+            [
+              18.4357889,
+              49.876200299999994
+            ],
+            [
+              18.4358697,
+              49.876075799999995
+            ],
+            [
+              18.4359469,
+              49.87609659999999
+            ],
+            [
+              18.4360623,
+              49.8759187
+            ],
+            [
+              18.4361477,
+              49.875787
+            ],
+            [
+              18.436067,
+              49.87576529999999
+            ],
+            [
+              18.4361179,
+              49.8756867
+            ],
+            [
+              18.4362316,
+              49.875508
+            ],
+            [
+              18.4361588,
+              49.87548830000001
+            ],
+            [
+              18.4357601,
+              49.8753822
+            ],
+            [
+              18.4358096,
+              49.87533530000001
+            ],
+            [
+              18.4359145,
+              49.87534519999999
+            ],
+            [
+              18.4363012,
+              49.875452499999994
+            ],
+            [
+              18.4363137,
+              49.8754254
+            ],
+            [
+              18.4365503,
+              49.87505070000001
+            ],
+            [
+              18.4356419,
+              49.8747184
+            ],
+            [
+              18.435449,
+              49.87460879999999
+            ],
+            [
+              18.4350652,
+              49.8742843
+            ],
+            [
+              18.4346254,
+              49.87417029999999
+            ],
+            [
+              18.433943200000005,
+              49.8738505
+            ],
+            [
+              18.4338178,
+              49.87397889999999
+            ],
+            [
+              18.4333752,
+              49.874677299999995
+            ],
+            [
+              18.4326762,
+              49.8745708
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/261582517",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Szpital Powiatowy",
+          "website": "https://www.szpital-mikolow.com.pl/",
+          "amenity": "hospital",
+          "healthcare": "hospital",
+          "phone": "+48 32 325 75 00"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.904964400000004,
+              50.1754789
+            ],
+            [
+              18.904964100000004,
+              50.175513499999994
+            ],
+            [
+              18.9052341,
+              50.17551410000001
+            ],
+            [
+              18.9056196,
+              50.17553999999999
+            ],
+            [
+              18.9059991,
+              50.1755382
+            ],
+            [
+              18.9062362,
+              50.1754601
+            ],
+            [
+              18.9060884,
+              50.1752942
+            ],
+            [
+              18.9059159,
+              50.17526829999999
+            ],
+            [
+              18.9057272,
+              50.174981800000005
+            ],
+            [
+              18.905897000000003,
+              50.17482300000001
+            ],
+            [
+              18.905676,
+              50.1740858
+            ],
+            [
+              18.9055412,
+              50.1740875
+            ],
+            [
+              18.9052232,
+              50.174436299999996
+            ],
+            [
+              18.9052744,
+              50.17445519999999
+            ],
+            [
+              18.9049931,
+              50.1747715
+            ],
+            [
+              18.9049283,
+              50.17476799999999
+            ],
+            [
+              18.9044834,
+              50.175265700000004
+            ],
+            [
+              18.904462,
+              50.1753383
+            ],
+            [
+              18.9044037,
+              50.1754185
+            ],
+            [
+              18.904964400000004,
+              50.1754789
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/262923558",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Samodzielny Publiczny Szpital Kliniczny nr 1 imienia Prof. Stanisława Szyszko Śląskiego Uniwersytetu Medycznego w Katowicach",
+          "amenity": "hospital",
+          "healthcare": "hospital"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.7858823,
+              50.3022913
+            ],
+            [
+              18.7861163,
+              50.3008482
+            ],
+            [
+              18.7855886,
+              50.30079979999999
+            ],
+            [
+              18.7856738,
+              50.3003952
+            ],
+            [
+              18.78369,
+              50.300233999999996
+            ],
+            [
+              18.7836226,
+              50.30061769999998
+            ],
+            [
+              18.783582,
+              50.300616299999994
+            ],
+            [
+              18.7833181,
+              50.30225949999999
+            ],
+            [
+              18.7858823,
+              50.3022913
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/265240025",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "amenity": "hospital",
+          "healthcare": "hospital"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.6579994,
+              50.29121029999999
+            ],
+            [
+              18.6580143,
+              50.29120029999999
+            ],
+            [
+              18.6580274,
+              50.291191500000004
+            ],
+            [
+              18.6581004,
+              50.29114239999999
+            ],
+            [
+              18.658212600000002,
+              50.29106800000001
+            ],
+            [
+              18.6581991,
+              50.29105959999999
+            ],
+            [
+              18.658355,
+              50.2909562
+            ],
+            [
+              18.6583633,
+              50.29096140000001
+            ],
+            [
+              18.6584754,
+              50.29088709999999
+            ],
+            [
+              18.6583715,
+              50.2908228
+            ],
+            [
+              18.6583622,
+              50.290829
+            ],
+            [
+              18.6581119,
+              50.2906741
+            ],
+            [
+              18.6580985,
+              50.29066579999999
+            ],
+            [
+              18.6581094,
+              50.290658499999985
+            ],
+            [
+              18.657999,
+              50.29059019999999
+            ],
+            [
+              18.6580072,
+              50.2905848
+            ],
+            [
+              18.6579707,
+              50.2905622
+            ],
+            [
+              18.6579428,
+              50.29054500000001
+            ],
+            [
+              18.6579354,
+              50.290549899999995
+            ],
+            [
+              18.6578239,
+              50.290480999999986
+            ],
+            [
+              18.6578159,
+              50.29048629999998
+            ],
+            [
+              18.6575511,
+              50.29032239999999
+            ],
+            [
+              18.657561300000005,
+              50.2903157
+            ],
+            [
+              18.6574592,
+              50.2902525
+            ],
+            [
+              18.6573478,
+              50.290326399999984
+            ],
+            [
+              18.6573597,
+              50.29033379999999
+            ],
+            [
+              18.6572028,
+              50.290438
+            ],
+            [
+              18.6571892,
+              50.2904296
+            ],
+            [
+              18.6570828,
+              50.29050009999999
+            ],
+            [
+              18.6569261,
+              50.29059500000001
+            ],
+            [
+              18.6562884,
+              50.291013
+            ],
+            [
+              18.6564179,
+              50.291093599999996
+            ],
+            [
+              18.6564311,
+              50.29109209999999
+            ],
+            [
+              18.65649,
+              50.2911267
+            ],
+            [
+              18.6571523,
+              50.29151949999999
+            ],
+            [
+              18.6573571,
+              50.29164249999999
+            ],
+            [
+              18.6579994,
+              50.29121029999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/277435232",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Szpital Chorób Płuc",
+          "operator": "Marszałek Województwa Śląskiego",
+          "website": "https://www.szpitalorzesze.pl/",
+          "amenity": "hospital",
+          "healthcare": "hospital",
+          "phone": "+48 32 2213661",
+          "email": "dyrekcja@szpitalorzesze.pl"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.7739044,
+              50.15221489999999
+            ],
+            [
+              18.7736733,
+              50.151315999999994
+            ],
+            [
+              18.7735702,
+              50.1509277
+            ],
+            [
+              18.7733231,
+              50.1505357
+            ],
+            [
+              18.773318,
+              50.1505276
+            ],
+            [
+              18.7733124,
+              50.1505323
+            ],
+            [
+              18.7729747,
+              50.1508177
+            ],
+            [
+              18.7728712,
+              50.150834
+            ],
+            [
+              18.7725173,
+              50.1508896
+            ],
+            [
+              18.7723794,
+              50.1510402
+            ],
+            [
+              18.7723951,
+              50.1513594
+            ],
+            [
+              18.7722008,
+              50.15154209999999
+            ],
+            [
+              18.7719309,
+              50.151508799999995
+            ],
+            [
+              18.7724276,
+              50.15226349999999
+            ],
+            [
+              18.772474,
+              50.15233400000001
+            ],
+            [
+              18.7727436,
+              50.1527347
+            ],
+            [
+              18.7739044,
+              50.15221489999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/320003713",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Szpital Kliniczny Nr 7 Górnośląskie Centrum Medyczne",
+          "operator": "Śląski Uniwersytet Medyczny w Katowicach",
+          "website": "https://www.gcm.pl/",
+          "alt_name": "Szpital w Ochojcu",
+          "amenity": "hospital",
+          "healthcare": "hospital",
+          "contact:phone": "+48 32 3598000",
+          "contact:email": "sekretariat@gcm.pl"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              19.001013100000005,
+              50.2095309
+            ],
+            [
+              19.0004866,
+              50.2096712
+            ],
+            [
+              19.0004826,
+              50.20967220000001
+            ],
+            [
+              19.000364000000005,
+              50.209703899999994
+            ],
+            [
+              19.0003119,
+              50.20971780000001
+            ],
+            [
+              19.0002525,
+              50.20973359999999
+            ],
+            [
+              19.0000899,
+              50.2097769
+            ],
+            [
+              18.9999996,
+              50.20978869999999
+            ],
+            [
+              18.9996403,
+              50.2098663
+            ],
+            [
+              18.9996254,
+              50.20988500000001
+            ],
+            [
+              18.9996067,
+              50.20994820000001
+            ],
+            [
+              18.9995241,
+              50.20993719999999
+            ],
+            [
+              18.9994968,
+              50.2100217
+            ],
+            [
+              18.9995117,
+              50.2100238
+            ],
+            [
+              18.9994956,
+              50.21007039999999
+            ],
+            [
+              18.9994737,
+              50.21013930000001
+            ],
+            [
+              18.9988073,
+              50.21004030000001
+            ],
+            [
+              18.9984209,
+              50.2101345
+            ],
+            [
+              18.997851300000004,
+              50.21025899999999
+            ],
+            [
+              18.9977864,
+              50.21027300000001
+            ],
+            [
+              18.997585,
+              50.2103163
+            ],
+            [
+              18.9973167,
+              50.2103936
+            ],
+            [
+              18.9971916,
+              50.21045689999999
+            ],
+            [
+              18.996991,
+              50.21081259999999
+            ],
+            [
+              18.9967462,
+              50.21133619999999
+            ],
+            [
+              18.998153,
+              50.21163000000001
+            ],
+            [
+              18.998653000000004,
+              50.2117344
+            ],
+            [
+              18.9986649,
+              50.2117369
+            ],
+            [
+              18.9991912,
+              50.2118351
+            ],
+            [
+              18.9999385,
+              50.2119717
+            ],
+            [
+              19.000797200000004,
+              50.2121011
+            ],
+            [
+              19.0008091,
+              50.21210299999999
+            ],
+            [
+              19.0013361,
+              50.212186
+            ],
+            [
+              19.001469300000004,
+              50.212226
+            ],
+            [
+              19.0024344,
+              50.21236580000001
+            ],
+            [
+              19.002533,
+              50.21232609999999
+            ],
+            [
+              19.0025851,
+              50.21219879999999
+            ],
+            [
+              19.00293,
+              50.211286999999984
+            ],
+            [
+              19.0030306,
+              50.211211199999994
+            ],
+            [
+              19.0031458,
+              50.2110133
+            ],
+            [
+              19.0035705,
+              50.21106329999999
+            ],
+            [
+              19.0035853,
+              50.2110276
+            ],
+            [
+              19.0040243,
+              50.21108799999999
+            ],
+            [
+              19.0040527,
+              50.21109190000001
+            ],
+            [
+              19.0041584,
+              50.21085979999999
+            ],
+            [
+              19.0051588,
+              50.21100669999999
+            ],
+            [
+              19.0052412,
+              50.2107427
+            ],
+            [
+              19.0054722,
+              50.21000690000001
+            ],
+            [
+              19.0046207,
+              50.20988380000001
+            ],
+            [
+              19.0045045,
+              50.209866999999996
+            ],
+            [
+              19.004387,
+              50.20985
+            ],
+            [
+              19.0034173,
+              50.20970729999999
+            ],
+            [
+              19.0015244,
+              50.20944420000001
+            ],
+            [
+              19.0011789,
+              50.2094867
+            ],
+            [
+              19.001013100000005,
+              50.2095309
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/334366211",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Prywatny Szpital Położniczo Ginekologiczny",
+          "website": "https://www.narodziny.com.pl/",
+          "amenity": "hospital",
+          "healthcare": "hospital",
+          "phone": "+48 32 2025521",
+          "email": "szpital@narodziny.com.pl"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.9898067,
+              50.205857800000004
+            ],
+            [
+              18.9897985,
+              50.2058825
+            ],
+            [
+              18.9897346,
+              50.2060783
+            ],
+            [
+              18.9897087,
+              50.20618029999999
+            ],
+            [
+              18.9897302,
+              50.20620220000001
+            ],
+            [
+              18.9900188,
+              50.20621609999999
+            ],
+            [
+              18.9900729,
+              50.2062187
+            ],
+            [
+              18.9902888,
+              50.2062274
+            ],
+            [
+              18.9903938,
+              50.206231999999986
+            ],
+            [
+              18.9904291,
+              50.205879199999984
+            ],
+            [
+              18.989973,
+              50.205856600000004
+            ],
+            [
+              18.9898269,
+              50.205850500000004
+            ],
+            [
+              18.9898067,
+              50.205857800000004
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/369604972",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Samodzielny Publiczny Szpital Kliniczny nr 3 Śląskiego Uniwersytetu Medycznego",
+          "amenity": "hospital",
+          "healthcare": "hospital"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.8097015,
+              50.3203395
+            ],
+            [
+              18.8082078,
+              50.31984169999999
+            ],
+            [
+              18.80708,
+              50.321141300000015
+            ],
+            [
+              18.8080601,
+              50.321566799999985
+            ],
+            [
+              18.8085059,
+              50.3217493
+            ],
+            [
+              18.8097015,
+              50.3203395
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/412761310",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Wielospecjalistyczny Szpital TOMMED",
+          "website": "https://tommed.pl/",
+          "amenity": "hospital",
+          "healthcare": "hospital",
+          "phone": "+48 328800333",
+          "email": "fredry22@tommed.pl"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.9766557,
+              50.2097679
+            ],
+            [
+              18.9764376,
+              50.21044569999999
+            ],
+            [
+              18.977016,
+              50.21052850000001
+            ],
+            [
+              18.9774818,
+              50.21058599999999
+            ],
+            [
+              18.9775662,
+              50.2103242
+            ],
+            [
+              18.9777213,
+              50.20992179999998
+            ],
+            [
+              18.9777333,
+              50.209889600000004
+            ],
+            [
+              18.9776551,
+              50.20987850000001
+            ],
+            [
+              18.9774538,
+              50.20984949999999
+            ],
+            [
+              18.9769365,
+              50.20977150000001
+            ],
+            [
+              18.9768186,
+              50.209754800000006
+            ],
+            [
+              18.9766686,
+              50.209735599999995
+            ],
+            [
+              18.9766557,
+              50.2097679
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/466038773",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Moravskoslezská nemocnice Karviná - Ráj",
+          "operator": "Moravskoslezský kraj",
+          "amenity": "hospital",
+          "healthcare": "hospital",
+          "emergency": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.5504926,
+              49.8491901
+            ],
+            [
+              18.5506133,
+              49.84911579999999
+            ],
+            [
+              18.5507063,
+              49.849047199999994
+            ],
+            [
+              18.5519614,
+              49.84812029999999
+            ],
+            [
+              18.5521449,
+              49.8479888
+            ],
+            [
+              18.5523295,
+              49.84785359999999
+            ],
+            [
+              18.5523836,
+              49.847807799999984
+            ],
+            [
+              18.5528122,
+              49.84742349999999
+            ],
+            [
+              18.5527822,
+              49.8474064
+            ],
+            [
+              18.5534343,
+              49.846825300000006
+            ],
+            [
+              18.5518821,
+              49.846054300000006
+            ],
+            [
+              18.5517623,
+              49.84602
+            ],
+            [
+              18.551675800000005,
+              49.846056499999996
+            ],
+            [
+              18.551309600000003,
+              49.84582679999999
+            ],
+            [
+              18.5512198,
+              49.84575170000001
+            ],
+            [
+              18.5508703,
+              49.84545729999998
+            ],
+            [
+              18.5508226,
+              49.8454257
+            ],
+            [
+              18.5504585,
+              49.8453492
+            ],
+            [
+              18.5503481,
+              49.84536239999999
+            ],
+            [
+              18.5502205,
+              49.84540630000001
+            ],
+            [
+              18.5499142,
+              49.84559180000001
+            ],
+            [
+              18.5494871,
+              49.84556640000001
+            ],
+            [
+              18.5491676,
+              49.845813299999996
+            ],
+            [
+              18.5486849,
+              49.845794
+            ],
+            [
+              18.5480154,
+              49.84644230000001
+            ],
+            [
+              18.5477198,
+              49.846634599999994
+            ],
+            [
+              18.5477698,
+              49.846813899999994
+            ],
+            [
+              18.5477883,
+              49.8468798
+            ],
+            [
+              18.5477018,
+              49.847735699999994
+            ],
+            [
+              18.5477325,
+              49.847749799999995
+            ],
+            [
+              18.548337,
+              49.84810370000001
+            ],
+            [
+              18.5483147,
+              49.848116999999995
+            ],
+            [
+              18.548575,
+              49.8482657
+            ],
+            [
+              18.5484804,
+              49.848336
+            ],
+            [
+              18.548709700000003,
+              49.84846809999999
+            ],
+            [
+              18.5494683,
+              49.8488952
+            ],
+            [
+              18.54976,
+              49.84906419999999
+            ],
+            [
+              18.5497529,
+              49.849069400000005
+            ],
+            [
+              18.5499731,
+              49.849196899999995
+            ],
+            [
+              18.550267900000005,
+              49.84936759999999
+            ],
+            [
+              18.5503761,
+              49.849278
+            ],
+            [
+              18.5504926,
+              49.8491901
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/471161698",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "amenity": "hospital"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.3508103,
+              49.818155
+            ],
+            [
+              18.3509224,
+              49.81866420000001
+            ],
+            [
+              18.3515004,
+              49.81920479999999
+            ],
+            [
+              18.3525653,
+              49.818885200000004
+            ],
+            [
+              18.3539089,
+              49.81871889999999
+            ],
+            [
+              18.3538548,
+              49.81824299999999
+            ],
+            [
+              18.3531985,
+              49.81806819999999
+            ],
+            [
+              18.352159,
+              49.8181194
+            ],
+            [
+              18.350414300000004,
+              49.8180127
+            ],
+            [
+              18.3508103,
+              49.818155
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/473993884",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Samodzielny Publiczny Szpital Kliniczny nr 2 Śląskiego Uniwersytetu Medycznego",
+          "amenity": "hospital",
+          "healthcare": "hospital"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.7802599,
+              50.3142449
+            ],
+            [
+              18.7802593,
+              50.3143476
+            ],
+            [
+              18.7807237,
+              50.31442069999999
+            ],
+            [
+              18.7804365,
+              50.315164499999995
+            ],
+            [
+              18.7805004,
+              50.315189100000005
+            ],
+            [
+              18.7805834,
+              50.31519719999999
+            ],
+            [
+              18.7807678,
+              50.315191399999996
+            ],
+            [
+              18.7811304,
+              50.3151802
+            ],
+            [
+              18.7813156,
+              50.315175399999994
+            ],
+            [
+              18.782769100000003,
+              50.31511089999999
+            ],
+            [
+              18.7827162,
+              50.3146916
+            ],
+            [
+              18.7826904,
+              50.3144933
+            ],
+            [
+              18.7826868,
+              50.3144653
+            ],
+            [
+              18.7826847,
+              50.31443659999999
+            ],
+            [
+              18.78267,
+              50.314263499999996
+            ],
+            [
+              18.782616600000004,
+              50.31380870000001
+            ],
+            [
+              18.781685900000003,
+              50.3138455
+            ],
+            [
+              18.7816152,
+              50.31384849999999
+            ],
+            [
+              18.781447600000003,
+              50.313849399999995
+            ],
+            [
+              18.7814048,
+              50.313851
+            ],
+            [
+              18.7811338,
+              50.313861800000005
+            ],
+            [
+              18.7808684,
+              50.313872200000006
+            ],
+            [
+              18.7804267,
+              50.313892599999996
+            ],
+            [
+              18.7803067,
+              50.313904
+            ],
+            [
+              18.7801821,
+              50.3139259
+            ],
+            [
+              18.780072,
+              50.313971900000006
+            ],
+            [
+              18.7800305,
+              50.31402509999999
+            ],
+            [
+              18.7799887,
+              50.3142347
+            ],
+            [
+              18.7802599,
+              50.3142449
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/475822849",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "VITO-MED Sp. z o.o.",
+          "amenity": "hospital"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.63977,
+              50.29344329999999
+            ],
+            [
+              18.6407771,
+              50.294161599999995
+            ],
+            [
+              18.6411866,
+              50.29454609999999
+            ],
+            [
+              18.6413074,
+              50.294434
+            ],
+            [
+              18.6413662,
+              50.294375599999995
+            ],
+            [
+              18.6414403,
+              50.2942859
+            ],
+            [
+              18.6415223,
+              50.2939829
+            ],
+            [
+              18.6404612,
+              50.2932274
+            ],
+            [
+              18.6396741,
+              50.293343799999995
+            ],
+            [
+              18.63977,
+              50.29344329999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/491747109",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Szpital Powiatowy w Pszczynie",
+          "amenity": "hospital",
+          "healthcare": "hospital"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.940718,
+              49.97274899999999
+            ],
+            [
+              18.940056,
+              49.9725869
+            ],
+            [
+              18.939233300000005,
+              49.9723889
+            ],
+            [
+              18.9392239,
+              49.972404000000004
+            ],
+            [
+              18.9390644,
+              49.97236889999999
+            ],
+            [
+              18.938959,
+              49.9726434
+            ],
+            [
+              18.9386225,
+              49.9725945
+            ],
+            [
+              18.9382372,
+              49.973567599999996
+            ],
+            [
+              18.9394169,
+              49.9737373
+            ],
+            [
+              18.9400718,
+              49.97382799999999
+            ],
+            [
+              18.9406227,
+              49.9739576
+            ],
+            [
+              18.9407236,
+              49.974044
+            ],
+            [
+              18.9415105,
+              49.974199399999996
+            ],
+            [
+              18.9419928,
+              49.97431829999999
+            ],
+            [
+              18.9421866,
+              49.97436729999998
+            ],
+            [
+              18.9425418,
+              49.97378710000001
+            ],
+            [
+              18.9424302,
+              49.9737585
+            ],
+            [
+              18.9423666,
+              49.973797899999994
+            ],
+            [
+              18.9419226,
+              49.9736836
+            ],
+            [
+              18.9422276,
+              49.9731446
+            ],
+            [
+              18.9416821,
+              49.9729956
+            ],
+            [
+              18.940718,
+              49.97274899999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/591337610",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Szpital Chorób Płuc. im. Św. Józefa w Pilchowicach",
+          "amenity": "hospital"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.5637832,
+              50.21515399999999
+            ],
+            [
+              18.5646336,
+              50.21554879999999
+            ],
+            [
+              18.5658625,
+              50.215039000000004
+            ],
+            [
+              18.5657867,
+              50.2149742
+            ],
+            [
+              18.565542,
+              50.21482650000001
+            ],
+            [
+              18.5652339,
+              50.21464649999999
+            ],
+            [
+              18.5646862,
+              50.2143285
+            ],
+            [
+              18.5644615,
+              50.2142293
+            ],
+            [
+              18.5640823,
+              50.21410279999999
+            ],
+            [
+              18.5639118,
+              50.21406319999999
+            ],
+            [
+              18.5638252,
+              50.21405879999999
+            ],
+            [
+              18.5636926,
+              50.21406139999999
+            ],
+            [
+              18.5634142,
+              50.2141202
+            ],
+            [
+              18.5633111,
+              50.21413789999999
+            ],
+            [
+              18.5631471,
+              50.2143376
+            ],
+            [
+              18.562939,
+              50.214513399999994
+            ],
+            [
+              18.562836,
+              50.21456659999999
+            ],
+            [
+              18.5627047,
+              50.214666699999995
+            ],
+            [
+              18.5627832,
+              50.21470169999999
+            ],
+            [
+              18.5628459,
+              50.21472959999999
+            ],
+            [
+              18.5628605,
+              50.21474209999999
+            ],
+            [
+              18.5637832,
+              50.21515399999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/669481277",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Szpital Miejski w Tychach",
+          "website": "https://www.szpitalmiejskitychy.pl/",
+          "amenity": "hospital",
+          "healthcare": "hospital"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.9821841,
+              50.119451399999996
+            ],
+            [
+              18.9822193,
+              50.1194469
+            ],
+            [
+              18.9826503,
+              50.119392299999994
+            ],
+            [
+              18.9830714,
+              50.1192883
+            ],
+            [
+              18.9827489,
+              50.11876459999999
+            ],
+            [
+              18.9822237,
+              50.1188216
+            ],
+            [
+              18.9821568,
+              50.1188289
+            ],
+            [
+              18.9819892,
+              50.1188471
+            ],
+            [
+              18.9820063,
+              50.1190812
+            ],
+            [
+              18.9820311,
+              50.119421899999985
+            ],
+            [
+              18.9820598,
+              50.1194672
+            ],
+            [
+              18.9821841,
+              50.119451399999996
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/699181777",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Wojewódzki Szpital Chorób Płuc im. dr Alojzego Pawelca",
+          "website": "https://www.wscp.wodzislaw.pl/",
+          "amenity": "hospital",
+          "healthcare": "hospital"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.4885358,
+              49.9986604
+            ],
+            [
+              18.4892246,
+              49.9987702
+            ],
+            [
+              18.4897691,
+              49.9988565
+            ],
+            [
+              18.4898973,
+              49.99850849999999
+            ],
+            [
+              18.4904678,
+              49.9985919
+            ],
+            [
+              18.4905217,
+              49.9985738
+            ],
+            [
+              18.4906698,
+              49.998524100000004
+            ],
+            [
+              18.491751,
+              49.998153499999994
+            ],
+            [
+              18.4930854,
+              49.9980827
+            ],
+            [
+              18.4929347,
+              49.9975812
+            ],
+            [
+              18.4931101,
+              49.996372900000004
+            ],
+            [
+              18.4920652,
+              49.99624260000001
+            ],
+            [
+              18.4912395,
+              49.9961275
+            ],
+            [
+              18.4883206,
+              49.9957307
+            ],
+            [
+              18.4882699,
+              49.9957484
+            ],
+            [
+              18.4881918,
+              49.9960941
+            ],
+            [
+              18.4881302,
+              49.996316199999995
+            ],
+            [
+              18.48812,
+              49.9963818
+            ],
+            [
+              18.4879678,
+              49.9966454
+            ],
+            [
+              18.4879679,
+              49.9966837
+            ],
+            [
+              18.487882400000004,
+              49.99711740000001
+            ],
+            [
+              18.4878289,
+              49.997349199999995
+            ],
+            [
+              18.4880405,
+              49.99806619999999
+            ],
+            [
+              18.4880874,
+              49.99822459999999
+            ],
+            [
+              18.4885884,
+              49.9983059
+            ],
+            [
+              18.4886778,
+              49.998318899999994
+            ],
+            [
+              18.4885358,
+              49.9986604
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/720893233",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "VITA LONGA",
+          "amenity": "clinic",
+          "healthcare": "hospital"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.9695357,
+              50.1761663
+            ],
+            [
+              18.9697477,
+              50.176093
+            ],
+            [
+              18.9699332,
+              50.176031
+            ],
+            [
+              18.9697122,
+              50.175506000000006
+            ],
+            [
+              18.9692272,
+              50.17560670000001
+            ],
+            [
+              18.9694461,
+              50.1759428
+            ],
+            [
+              18.9695357,
+              50.1761663
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/733669826",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Angelius",
+          "website": "https://angelius.pl/",
+          "amenity": "hospital",
+          "healthcare": "hospital"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.9841906,
+              50.21678210000001
+            ],
+            [
+              18.9842119,
+              50.21683650000001
+            ],
+            [
+              18.9851533,
+              50.2166576
+            ],
+            [
+              18.9851041,
+              50.2165815
+            ],
+            [
+              18.9848205,
+              50.21628549999999
+            ],
+            [
+              18.984231,
+              50.2165525
+            ],
+            [
+              18.9840343,
+              50.216653699999995
+            ],
+            [
+              18.9841906,
+              50.21678210000001
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/856492492",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Wojewódzki Szpital Specjalistyczny nr 3",
+          "website": "https://www.szpital.rybnik.pl/",
+          "amenity": "hospital",
+          "healthcare": "hospital",
+          "emergency": "yes",
+          "phone": "+48 32 429 10 00",
+          "email": "szpital@szpital.rybnik.pl"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.5207156,
+              50.113766199999986
+            ],
+            [
+              18.5208001,
+              50.1137733
+            ],
+            [
+              18.5208462,
+              50.11377709999999
+            ],
+            [
+              18.5218217,
+              50.1140468
+            ],
+            [
+              18.521839,
+              50.1140185
+            ],
+            [
+              18.5219147,
+              50.1138946
+            ],
+            [
+              18.5220235,
+              50.1140024
+            ],
+            [
+              18.5223503,
+              50.11392740000001
+            ],
+            [
+              18.522412100000004,
+              50.113372999999996
+            ],
+            [
+              18.522412100000004,
+              50.113301299999996
+            ],
+            [
+              18.5227044,
+              50.1132983
+            ],
+            [
+              18.5228375,
+              50.11329219999999
+            ],
+            [
+              18.5228898,
+              50.1132777
+            ],
+            [
+              18.5229064,
+              50.113265899999995
+            ],
+            [
+              18.5229165,
+              50.1132499
+            ],
+            [
+              18.5229225,
+              50.11323200000001
+            ],
+            [
+              18.5229475,
+              50.11298539999999
+            ],
+            [
+              18.5229523,
+              50.1129148
+            ],
+            [
+              18.5229552,
+              50.11279679999999
+            ],
+            [
+              18.5229433,
+              50.1126753
+            ],
+            [
+              18.5229237,
+              50.11267599999999
+            ],
+            [
+              18.522913,
+              50.1125168
+            ],
+            [
+              18.5229204,
+              50.1124777
+            ],
+            [
+              18.5227734,
+              50.112443400000004
+            ],
+            [
+              18.5228872,
+              50.11179680000001
+            ],
+            [
+              18.5229576,
+              50.111500299999996
+            ],
+            [
+              18.5231328,
+              50.1115105
+            ],
+            [
+              18.5231822,
+              50.111514199999995
+            ],
+            [
+              18.5232166,
+              50.11132329999999
+            ],
+            [
+              18.5232131,
+              50.111305
+            ],
+            [
+              18.5232,
+              50.111288200000004
+            ],
+            [
+              18.5231804,
+              50.1112749
+            ],
+            [
+              18.5231513,
+              50.11126839999999
+            ],
+            [
+              18.523153,
+              50.111243400000006
+            ],
+            [
+              18.5231546,
+              50.1112194
+            ],
+            [
+              18.5231578,
+              50.1111735
+            ],
+            [
+              18.5231881,
+              50.1111712
+            ],
+            [
+              18.523216,
+              50.111163999999995
+            ],
+            [
+              18.5232368,
+              50.11115109999999
+            ],
+            [
+              18.5232505,
+              50.11113389999999
+            ],
+            [
+              18.523257,
+              50.11111220000001
+            ],
+            [
+              18.5232618,
+              50.111084
+            ],
+            [
+              18.5232388,
+              50.1110841
+            ],
+            [
+              18.5228008,
+              50.11104989999999
+            ],
+            [
+              18.522802,
+              50.1110432
+            ],
+            [
+              18.5228709,
+              50.1106484
+            ],
+            [
+              18.5229116,
+              50.110415
+            ],
+            [
+              18.5227424,
+              50.11037290000001
+            ],
+            [
+              18.5221947,
+              50.110660200000005
+            ],
+            [
+              18.5220282,
+              50.110568400000005
+            ],
+            [
+              18.5219765,
+              50.11055149999999
+            ],
+            [
+              18.5219976,
+              50.1103885
+            ],
+            [
+              18.5221163,
+              50.10947349999999
+            ],
+            [
+              18.522191,
+              50.108897000000006
+            ],
+            [
+              18.5221934,
+              50.108876
+            ],
+            [
+              18.5221992,
+              50.10882659999999
+            ],
+            [
+              18.5222167,
+              50.10842060000001
+            ],
+            [
+              18.519607,
+              50.108258600000006
+            ],
+            [
+              18.5194527,
+              50.108365000000006
+            ],
+            [
+              18.5194406,
+              50.10843859999999
+            ],
+            [
+              18.5193013,
+              50.10928449999999
+            ],
+            [
+              18.5192464,
+              50.109618
+            ],
+            [
+              18.5187929,
+              50.10958660000001
+            ],
+            [
+              18.517333,
+              50.1094857
+            ],
+            [
+              18.5173297,
+              50.109507
+            ],
+            [
+              18.5173292,
+              50.109537599999996
+            ],
+            [
+              18.5174198,
+              50.1095821
+            ],
+            [
+              18.517364000000004,
+              50.1099151
+            ],
+            [
+              18.5172504,
+              50.110573099999996
+            ],
+            [
+              18.5171204,
+              50.1113262
+            ],
+            [
+              18.5169459,
+              50.112707699999994
+            ],
+            [
+              18.5169291,
+              50.1128405
+            ],
+            [
+              18.5187996,
+              50.1130002
+            ],
+            [
+              18.5190049,
+              50.11301769999999
+            ],
+            [
+              18.5193613,
+              50.1131094
+            ],
+            [
+              18.5196212,
+              50.11325500000001
+            ],
+            [
+              18.5198607,
+              50.113286900000006
+            ],
+            [
+              18.5199432,
+              50.113297900000006
+            ],
+            [
+              18.5200157,
+              50.11334439999999
+            ],
+            [
+              18.5199562,
+              50.1136905
+            ],
+            [
+              18.5199696,
+              50.1137112
+            ],
+            [
+              18.5200365,
+              50.1137156
+            ],
+            [
+              18.5206474,
+              50.1137564
+            ],
+            [
+              18.5207162,
+              50.113761
+            ],
+            [
+              18.5207156,
+              50.113766199999986
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/966981945",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Szpital Miejski w Żorach",
+          "website": "https://www.mzoz.zory.pl/",
+          "name:pl": "Szpital Miejski w Żorach",
+          "name:en": "City Hospital",
+          "amenity": "hospital",
+          "healthcare": "hospital",
+          "emergency": "yes",
+          "phone": "+48324341224",
+          "email": "szpital@mzoz.zory.pl",
+          "wheelchair": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.684737,
+              50.03599299999999
+            ],
+            [
+              18.6847537,
+              50.0357996
+            ],
+            [
+              18.6847719,
+              50.03558929999999
+            ],
+            [
+              18.684773,
+              50.03557700000002
+            ],
+            [
+              18.6847852,
+              50.035409699999995
+            ],
+            [
+              18.6847622,
+              50.03534820000001
+            ],
+            [
+              18.6846542,
+              50.0350985
+            ],
+            [
+              18.6845355,
+              50.03467319999999
+            ],
+            [
+              18.6844995,
+              50.03462470000001
+            ],
+            [
+              18.6842836,
+              50.03462700000001
+            ],
+            [
+              18.6824411,
+              50.03481419999999
+            ],
+            [
+              18.682387100000003,
+              50.03488359999999
+            ],
+            [
+              18.6822056,
+              50.0351313
+            ],
+            [
+              18.6821712,
+              50.035475299999995
+            ],
+            [
+              18.682153,
+              50.0357592
+            ],
+            [
+              18.682149600000002,
+              50.035812699999994
+            ],
+            [
+              18.6823735,
+              50.035815499999984
+            ],
+            [
+              18.6832292,
+              50.035793899999994
+            ],
+            [
+              18.6835423,
+              50.03578960000001
+            ],
+            [
+              18.6835639,
+              50.03601609999999
+            ],
+            [
+              18.684737,
+              50.03599299999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/967339672",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Wojewódzki Ośrodek Leczenia Odwykowego",
+          "amenity": "hospital",
+          "healthcare": "hospital",
+          "emergency": "no"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.3830604,
+              49.95746309999999
+            ],
+            [
+              18.3822305,
+              49.9572574
+            ],
+            [
+              18.380438700000003,
+              49.95692609999999
+            ],
+            [
+              18.379419500000004,
+              49.9584239
+            ],
+            [
+              18.3776814,
+              49.958078799999996
+            ],
+            [
+              18.3769948,
+              49.959334999999996
+            ],
+            [
+              18.3758575,
+              49.9609915
+            ],
+            [
+              18.376762,
+              49.96150159999998
+            ],
+            [
+              18.3779116,
+              49.961738199999985
+            ],
+            [
+              18.3781567,
+              49.9613494
+            ],
+            [
+              18.378708,
+              49.961527100000005
+            ],
+            [
+              18.3792706,
+              49.9609073
+            ],
+            [
+              18.379376100000005,
+              49.960834399999996
+            ],
+            [
+              18.3802259,
+              49.9611511
+            ],
+            [
+              18.380291,
+              49.96107200000001
+            ],
+            [
+              18.38087,
+              49.96045759999999
+            ],
+            [
+              18.3818632,
+              49.95940259999999
+            ],
+            [
+              18.382848,
+              49.95840199999999
+            ],
+            [
+              18.3833002,
+              49.9577549
+            ],
+            [
+              18.3833999,
+              49.957547299999995
+            ],
+            [
+              18.3830604,
+              49.95746309999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1097544936",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Szpital w Pyskowicach",
+          "amenity": "hospital",
+          "healthcare": "hospital"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.6236863,
+              50.3995809
+            ],
+            [
+              18.6236595,
+              50.39960409999998
+            ],
+            [
+              18.6236009,
+              50.399791
+            ],
+            [
+              18.6235643,
+              50.3997907
+            ],
+            [
+              18.623517,
+              50.3999446
+            ],
+            [
+              18.6240433,
+              50.399963
+            ],
+            [
+              18.6242027,
+              50.3995736
+            ],
+            [
+              18.6242799,
+              50.3993863
+            ],
+            [
+              18.6244033,
+              50.3990605
+            ],
+            [
+              18.6244433,
+              50.398969599999994
+            ],
+            [
+              18.6247352,
+              50.3986084
+            ],
+            [
+              18.6245207,
+              50.3985639
+            ],
+            [
+              18.6234858,
+              50.3984474
+            ],
+            [
+              18.6230928,
+              50.39948030000001
+            ],
+            [
+              18.6236863,
+              50.3995809
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1245923109",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "amenity": "hospital",
+          "healthcare": "hospital"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.8313058,
+              50.2672744
+            ],
+            [
+              18.8312297,
+              50.267515200000005
+            ],
+            [
+              18.8312108,
+              50.2675749
+            ],
+            [
+              18.8311611,
+              50.267745399999995
+            ],
+            [
+              18.8311537,
+              50.267770899999995
+            ],
+            [
+              18.8319337,
+              50.2678314
+            ],
+            [
+              18.8319725,
+              50.26783319999999
+            ],
+            [
+              18.8319763,
+              50.2678129
+            ],
+            [
+              18.8319883,
+              50.26775
+            ],
+            [
+              18.8319936,
+              50.2677222
+            ],
+            [
+              18.832007500000003,
+              50.267649799999994
+            ],
+            [
+              18.832017,
+              50.2676001
+            ],
+            [
+              18.8320659,
+              50.2673275
+            ],
+            [
+              18.8318464,
+              50.2673138
+            ],
+            [
+              18.8317732,
+              50.267307800000005
+            ],
+            [
+              18.8313058,
+              50.2672744
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1283800115",
+        "domain": "emergency",
+        "asset_type": "hospital",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Poliklinika Hlučín",
+          "amenity": "hospital",
+          "healthcare": "hospital"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.1875133,
+              49.89997670000001
+            ],
+            [
+              18.187065,
+              49.899718699999994
+            ],
+            [
+              18.1870608,
+              49.89969459999999
+            ],
+            [
+              18.1874044,
+              49.89944779999998
+            ],
+            [
+              18.1870512,
+              49.89925
+            ],
+            [
+              18.1873665,
+              49.89900149999999
+            ],
+            [
+              18.1871814,
+              49.8989136
+            ],
+            [
+              18.1870938,
+              49.89898819999999
+            ],
+            [
+              18.186893,
+              49.898889399999995
+            ],
+            [
+              18.1866879,
+              49.899053599999995
+            ],
+            [
+              18.1864165,
+              49.89891399999999
+            ],
+            [
+              18.186272,
+              49.899017699999995
+            ],
+            [
+              18.1861915,
+              49.89903160000001
+            ],
+            [
+              18.185897,
+              49.89922249999999
+            ],
+            [
+              18.186151400000004,
+              49.899386699999994
+            ],
+            [
+              18.1861829,
+              49.8994162
+            ],
+            [
+              18.1861884,
+              49.899450699999996
+            ],
+            [
+              18.1861665,
+              49.89948009999999
+            ],
+            [
+              18.1859431,
+              49.899628299999996
+            ],
+            [
+              18.185913300000003,
+              49.8996428
+            ],
+            [
+              18.1858885,
+              49.8996471
+            ],
+            [
+              18.1862211,
+              49.8998592
+            ],
+            [
+              18.1863093,
+              49.89989219999999
+            ],
+            [
+              18.1864604,
+              49.8999882
+            ],
+            [
+              18.1865134,
+              49.90004849999999
+            ],
+            [
+              18.1865437,
+              49.90006449999999
+            ],
+            [
+              18.1870131,
+              49.9003466
+            ],
+            [
+              18.1875133,
+              49.89997670000001
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

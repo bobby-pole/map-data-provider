@@ -4,12 +4,17 @@ from __future__ import annotations
 
 import argparse
 import json
+import signal
 import shutil
 import sys
+import threading
 import uuid
+from concurrent.futures import FIRST_COMPLETED, ProcessPoolExecutor, ThreadPoolExecutor, wait
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
+
+from shapely.geometry import shape
 
 from geo_pipeline.adapters import AdapterError, resolve_adapter
 from geo_pipeline.aoi_runtime import RuntimeRequestError, context_outcomes, profile_outcomes, resolve_runtime_request
@@ -20,6 +25,14 @@ from geo_pipeline.runtime_osm import refresh_runtime_osm_domain
 
 EXIT_INVALID_REQUEST = 2
 EXIT_WORKER_FAILURE = 3
+MAX_CONCURRENT_LIVE_DOMAINS = 3
+MIN_DOMAIN_ACQUISITION_TIMEOUT_SECONDS = 120
+EXTRA_TIMEOUT_PER_AOI_PART_SECONDS = 15
+MAX_DOMAIN_ACQUISITION_TIMEOUT_SECONDS = 240
+
+
+class DomainAcquisitionTimeout(BaseException):
+    """Interrupt one isolated live-domain process without ending its job."""
 
 
 def run_worker(*, aoi: str, domain: str, input_mode: str, cache_root: Path) -> dict[str, Any]:
@@ -52,7 +65,18 @@ def run_worker(*, aoi: str, domain: str, input_mode: str, cache_root: Path) -> d
         shutil.rmtree(staging_root, ignore_errors=True)
 
 
-def run_runtime_worker(*, request: dict[str, Any], input_mode: str, cache_root: Path, runtime_root: Path | None = None) -> dict[str, Any]:
+RuntimeProgressCallback = Callable[[dict[str, Any]], None]
+
+
+def run_runtime_worker(
+    *,
+    request: dict[str, Any],
+    input_mode: str,
+    cache_root: Path,
+    runtime_root: Path | None = None,
+    progress: RuntimeProgressCallback | None = None,
+    executor_type: type[ProcessPoolExecutor] | type[ThreadPoolExecutor] = ProcessPoolExecutor,
+) -> dict[str, Any]:
     """Resolve a v2 request and publish selected qualified OSM runtime packs."""
     if input_mode not in {"fixture", "live"}:
         raise WorkerError(EXIT_INVALID_REQUEST, "unsupported_input", f"Unsupported input mode: {input_mode}")
@@ -70,12 +94,24 @@ def run_runtime_worker(*, request: dict[str, Any], input_mode: str, cache_root: 
             # A fresh state record is not enough: missing or corrupt artifacts
             # are a cache miss and must follow the normal refresh/failure path.
             cached = None
-        if cached is not None:
+        if cached is not None and not _has_retryable_failures(cached["outcomes"]):
+            _emit_runtime_progress(progress, event="cache_hit", outcomes=cached["outcomes"])
             return {**cached, "request_result": "cache"}
     try:
         outcomes = profile_outcomes(request, fixture_mode=input_mode == "fixture")
+        _emit_runtime_progress(progress, event="started", outcomes=[], total_domains=len(outcomes))
         if input_mode == "live":
-            outcomes = _refresh_live_runtime_outcomes(resolved, outcomes, cache_root)
+            if cached is not None:
+                previous_by_domain = {outcome["domain"]: outcome for outcome in cached["outcomes"]}
+                retry_domains = {domain for domain, outcome in previous_by_domain.items() if outcome.get("status") == "failed"}
+                retry_outcomes = [outcome for outcome in outcomes if outcome["domain"] in retry_domains]
+                refreshed = _refresh_live_runtime_outcomes(resolved, retry_outcomes, cache_root, progress=progress, executor_type=executor_type)
+                refreshed_by_domain = {outcome["domain"]: outcome for outcome in refreshed}
+                outcomes = [refreshed_by_domain.get(outcome["domain"], previous_by_domain.get(outcome["domain"], outcome)) for outcome in outcomes]
+            else:
+                outcomes = _refresh_live_runtime_outcomes(resolved, outcomes, cache_root, progress=progress, executor_type=executor_type)
+        else:
+            outcomes = _report_existing_runtime_outcomes(outcomes, progress=progress)
         _validate_ready_runtime_artifacts(outcomes, cache_root)
         response = {"status": "ok", **resolved, "outcomes": outcomes, "contexts": context_outcomes(request), "job_state": "ready", "request_result": "refresh", "cached_at": _utc_timestamp()}
         _write_runtime_state(state_path, response)
@@ -103,29 +139,137 @@ def _validate_ready_runtime_artifacts(outcomes: list[dict[str, Any]], cache_root
         read_domain_pack(artifact_aoi_id, outcome["domain"], root=cache_root)
 
 
-def _refresh_live_runtime_outcomes(resolved: dict[str, Any], outcomes: list[dict[str, Any]], cache_root: Path) -> list[dict[str, Any]]:
-    refreshed = []
+def _refresh_live_runtime_outcomes(
+    resolved: dict[str, Any], outcomes: list[dict[str, Any]], cache_root: Path, *, progress: RuntimeProgressCallback | None = None,
+    executor_type: type[ProcessPoolExecutor] | type[ThreadPoolExecutor] = ProcessPoolExecutor,
+) -> list[dict[str, Any]]:
+    """Refresh domains independently, with bounded parallelism and retryable failures.
+
+    OSMnx stores its endpoint settings process-globally, so production work uses
+    separate processes.  Individual domains write to separate cache paths and
+    therefore can safely publish while other domains are still running.
+    """
+    if not outcomes:
+        return []
+    completed: list[dict[str, Any]] = []
+    by_domain: dict[str, dict[str, Any]] = {}
+    workers = min(MAX_CONCURRENT_LIVE_DOMAINS, len(outcomes))
+    with executor_type(max_workers=workers) as executor:
+        futures = {}
+        for outcome in outcomes:
+            _emit_runtime_progress(progress, event="domain_started", outcomes=completed, total_domains=len(outcomes), active_domain=outcome["domain"])
+            if outcome["artifact_aoi_id"] is not None:
+                by_domain[outcome["domain"]] = outcome
+                completed.append(outcome)
+                remaining_domains = [f_outcome["domain"] for f_outcome in futures.values()]
+                active_domain = remaining_domains[0] if remaining_domains else None
+                _emit_runtime_progress(progress, event="domain_completed", outcomes=completed, total_domains=len(outcomes), active_domain=active_domain)
+                continue
+            future = executor.submit(_refresh_runtime_domain, resolved["aoi"], outcome["domain"], str(cache_root))
+            futures[future] = outcome
+        while futures:
+            done, _ = wait(futures, return_when=FIRST_COMPLETED)
+            for future in done:
+                outcome = futures.pop(future)
+                try:
+                    result = future.result()
+                    next_outcome = {**outcome, **result, "failure_reason": None}
+                except BaseException as error:
+                    next_outcome = _failed_runtime_outcome(outcome, error)
+                by_domain[outcome["domain"]] = next_outcome
+                completed.append(next_outcome)
+                remaining_domains = [f_outcome["domain"] for f_outcome in futures.values()]
+                active_domain = remaining_domains[0] if remaining_domains else None
+                _emit_runtime_progress(progress, event="domain_completed", outcomes=completed, total_domains=len(outcomes), active_domain=active_domain)
+    return [by_domain[outcome["domain"]] for outcome in outcomes]
+
+
+def _refresh_runtime_domain(aoi: dict[str, Any], domain: str, cache_root: str) -> dict[str, Any]:
+    """Run live acquisition for one domain with isolated settings and timeouts.
+
+    Timeout Protection Hierarchy:
+    1. Layer 1 (POSIX per-domain signal): SIGALRM in the isolated process main
+       thread, scaled dynamically by the number of polygonal parts (120-240s).
+    2. Layer 2 (Network socket timeout): OSMnx/requests requests_timeout (180s).
+    3. Layer 3 (Host orchestrator safety ceiling): Node runtime coordinator
+       terminates worker subprocess after 8 minutes (RUNTIME_WORKER_TIMEOUT_MS).
+    """
+    if not hasattr(signal, "SIGALRM") or threading.current_thread() is not threading.main_thread():
+        return refresh_runtime_osm_domain(aoi=aoi, domain=domain, root=Path(cache_root))
+
+    timeout_seconds = _domain_acquisition_timeout(aoi)
+
+    def timed_out(_signal: int, _frame: Any) -> None:
+        raise DomainAcquisitionTimeout(f"Timed out after {timeout_seconds} seconds while acquiring '{domain}'.")
+
+    previous = signal.signal(signal.SIGALRM, timed_out)
+    signal.setitimer(signal.ITIMER_REAL, timeout_seconds)
+    try:
+        return refresh_runtime_osm_domain(aoi=aoi, domain=domain, root=Path(cache_root))
+    finally:
+        signal.setitimer(signal.ITIMER_REAL, 0)
+        signal.signal(signal.SIGALRM, previous)
+
+
+def _failed_runtime_outcome(outcome: dict[str, Any], error: BaseException) -> dict[str, Any]:
+    if isinstance(error, DomainAcquisitionTimeout):
+        detail = str(error)
+        reason = "timeout"
+    else:
+        detail = f"Live acquisition failed: {error}"
+        reason = "acquisition_error"
+    return {
+        **outcome,
+        "status": "failed",
+        "detail": f"{detail} The domain remains queued for a later retry.",
+        "failure_reason": reason,
+        "cache_status": "missing",
+        "artifact_aoi_id": None,
+        "queried_feature_count": None,
+        "accepted_feature_count": None,
+        "derived_feature_count": None,
+    }
+
+
+def _has_retryable_failures(outcomes: list[dict[str, Any]]) -> bool:
+    return any(outcome.get("status") == "failed" for outcome in outcomes)
+
+
+def _domain_acquisition_timeout(aoi: dict[str, Any]) -> int:
+    """Allow more time for an official AOI that has several disconnected parts.
+
+    OSMnx must query each polygonal part individually.  The cap keeps one slow
+    public endpoint from holding a retry forever while avoiding a fixed limit
+    that is unrealistically small for a genuine multi-gmina selection.
+    """
+    geometry = shape(aoi["geometry"])
+    parts = len(geometry.geoms) if geometry.geom_type == "MultiPolygon" else 1
+    return min(MAX_DOMAIN_ACQUISITION_TIMEOUT_SECONDS, MIN_DOMAIN_ACQUISITION_TIMEOUT_SECONDS + max(parts - 1, 0) * EXTRA_TIMEOUT_PER_AOI_PART_SECONDS)
+
+
+def _report_existing_runtime_outcomes(outcomes: list[dict[str, Any]], *, progress: RuntimeProgressCallback | None = None) -> list[dict[str, Any]]:
+    """Report deterministic fixture/domain-pack work with the same progress contract."""
+    reported: list[dict[str, Any]] = []
     for outcome in outcomes:
-        # The committed Rybnik demo remains a deterministic fixture fallback.
-        # Every other requested qualified OSM AOI uses a bounded refresh.
-        if outcome["domain"] in {"power", "emergency", "public", "transport", "bridges", "water", "gas", "sewer", "industrial", "telecom", "district_heating"} and outcome["artifact_aoi_id"] is None:
-            try:
-                res = refresh_runtime_osm_domain(aoi=resolved["aoi"], domain=outcome["domain"], root=cache_root)
-                refreshed.append({**outcome, **res})
-            except Exception as error:
-                refreshed.append({
-                    **outcome,
-                    "status": "needs_source",
-                    "detail": f"Live acquisition for domain '{outcome['domain']}' failed: {error}",
-                    "cache_status": "missing",
-                    "artifact_aoi_id": None,
-                    "queried_feature_count": None,
-                    "accepted_feature_count": None,
-                    "derived_feature_count": None,
-                })
-        else:
-            refreshed.append(outcome)
-    return refreshed
+        _emit_runtime_progress(progress, event="domain_started", outcomes=reported, total_domains=len(outcomes), active_domain=outcome["domain"])
+        reported.append(outcome)
+        _emit_runtime_progress(progress, event="domain_completed", outcomes=reported, total_domains=len(outcomes))
+    return reported
+
+
+def _emit_runtime_progress(progress: RuntimeProgressCallback | None, *, event: str, outcomes: list[dict[str, Any]], total_domains: int | None = None, active_domain: str | None = None) -> None:
+    """Emit only observable preparation progress; Overpass has no reliable total beforehand."""
+    if progress is None:
+        return
+    progress({
+        "event": event,
+        "total_domains": total_domains if total_domains is not None else len(outcomes),
+        "completed_domains": len(outcomes),
+        "active_domain": active_domain,
+        "queried_feature_count": sum(item.get("queried_feature_count") or 0 for item in outcomes),
+        "accepted_feature_count": sum(item.get("accepted_feature_count") or 0 for item in outcomes),
+        "derived_feature_count": sum(item.get("derived_feature_count") or 0 for item in outcomes),
+    })
 
 
 def _read_fresh_runtime_state(path: Path) -> dict[str, Any] | None:
@@ -222,6 +366,7 @@ def main() -> int:
     parser.add_argument("--input", choices=["fixture", "cache", "live"], default="fixture")
     parser.add_argument("--cache-root", type=Path, default=CACHE_DIR)
     parser.add_argument("--runtime-request", help="JSON provider_aoi_request/v2 payload")
+    parser.add_argument("--progress-jsonl", action="store_true", help="Write runtime preparation progress as prefixed JSON lines to stderr.")
     args = parser.parse_args()
     try:
         if args.runtime_request:
@@ -231,7 +376,11 @@ def main() -> int:
                 request = json.loads(args.runtime_request)
             except json.JSONDecodeError as error:
                 raise WorkerError(EXIT_INVALID_REQUEST, "invalid_aoi_request", "Runtime request must be valid JSON.") from error
-            print(json.dumps(run_runtime_worker(request=request, input_mode=args.input, cache_root=args.cache_root)))
+            def report_progress(event: dict[str, Any]) -> None:
+                if args.progress_jsonl:
+                    print(f"MDQ_PROGRESS:{json.dumps(event)}", file=sys.stderr, flush=True)
+
+            print(json.dumps(run_runtime_worker(request=request, input_mode=args.input, cache_root=args.cache_root, progress=report_progress)))
             return 0
         if not args.aoi or not args.domain:
             raise WorkerError(EXIT_INVALID_REQUEST, "invalid_request", "--aoi and --domain are required without --runtime-request.")

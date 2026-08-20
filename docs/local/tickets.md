@@ -2027,6 +2027,128 @@ Verification: Unified `./scripts/verify_provider.sh` as the single repository-ow
 
 ## Milestone 14 - VPS Portfolio Deployment
 
+### MDQ-054 - Redesign Provider Preview UX and National PRG AOI Selection
+
+Priority: P0
+
+Status: Done
+
+Goal: `G-006`
+
+Depends on: `MDQ-026`, `MDQ-043`, `MDQ-051`
+
+Type: full-stack preview UX, AOI catalogue and preparation observability
+
+Repo area: `frontend/`, `backend/geo_pipeline/aoi_runtime.py`, `backend/data/fixtures/aoi/`, `backend-node/`, `README.md`, `docs/`
+
+Objective: turn the dense provider inspector into a map-first, source-aware exploration surface that can be shown before the VPS demo. Use OpenInfraMap as interaction inspiration for a compact icon rail, expandable layer groups and readable cartography, while preserving MDQ's distinct role as an AOI-scoped, provenance/readiness-aware data provider.
+
+Inspiration and boundary: [OpenInfraMap](https://openinframap.org/about) is a useful interaction and infrastructure-visualisation reference because it makes OSM infrastructure layers discoverable on a map. This ticket must not copy its code, assets, global-data architecture, PostGIS/Tegola stack or imply that MDQ is an OpenInfraMap clone.
+
+Scope:
+
+- Replace the permanently wide inspector sidebar with a map-first shell: a compact, keyboard-accessible icon rail fixed to the right map edge for Layers, Providers, Legend, AOI/settings and Activity. In its resting state it shows icons only, with a concise tooltip and accessible name on hover/focus. A click opens the selected right-aligned sidebar/drawer with its controls; the rail remains available, at most one drawer/popover is open at a time, mobile presentation stays responsive and the map remains the dominant viewport.
+- Replace the flat layer checkbox list with an expandable tree grouped as `provider/source role -> domain -> artifact`. Each group exposes a tri-state master control and each artifact remains individually controllable. Analytical provider data, KIUT/orthophoto reference overlays and the visual base map remain visibly distinct; a group control must never change source provenance, readiness or analytical eligibility.
+- Define one presentation-style descriptor used by map rendering, the layer tree and a collapsible legend. The legend explains currently available line colours, point/polygon symbols, readiness/source-role markers and reference-overlay status; colour alone cannot be the only meaning-bearing signal.
+- Replace emoji/colour-only controls with a coherent accessible icon set, tooltips, text labels on focus/expanded panels and ARIA names. The visual vocabulary may be inspired by OpenInfraMap's density and discoverability, not copied from it.
+- Move AOI preparation and cache controls behind the Settings icon. On a first visit with no selected AOI, render a deliberate welcome/preparation dialog and a neutral map state; do not silently fetch or display `rybnik_60km`. Persist only safe local UI preferences, never an unlabelled provider snapshot as a default AOI.
+- Add point-and-radius placement directly on the map: clicking a map point updates the coordinate form, renders the true circle boundary and remains equivalent to manually entered coordinates. Cancellation or a failed acquisition leaves the currently prepared map unchanged.
+- Replace the Rybnik-only administrative fixture selector with a versioned, source-labelled national PRG catalogue containing current voivodeship, county and gmina identifiers, parent relationships, names and validated boundary geometry/provenance. The selector is one expandable checkbox tree, `voivodeship -> county -> gmina`, rather than separate filters/lists. It supports a full voivodeship, full county, one or more gminas or an explicit union within exactly one voivodeship; after a branch is selected, all other voivodeship branches are disabled in the UI and rejected by the API. A selected parent visibly selects its descendants, while every selected county and gmina stays editable: removing a descendant expands the compact parent selection into the remaining explicit child union. Selected units draw their actual PRG geometry, never a bounding rectangle.
+- Preserve bounded-provider safeguards for large administrative choices. A full selected unit is a valid selection, but before any OSM call the UI/API must show whether its true geometry is cacheable/prepared under the current area and deployment policy. It must return a typed, actionable limit/source outcome rather than silently simplify the geometry, make an unbounded call or claim that data was downloaded. Changing the maximum AOI acquisition policy or splitting a province into multi-job ingestion remains a separately approved data-pipeline decision.
+- Add a floating Activity window for AOI preparation, movable by its title bar and closeable without cancelling an active operation. It shows only real client/API/worker lifecycle events with timestamps (validation, cache hit/miss, acquisition start, publication, outcome/error), keeps the existing map after failure and can be reopened from Settings. Do not fabricate streaming logs; if progress events are not available from the current synchronous request contract, introduce a typed progress/status contract rather than displaying invented stages.
+- Keep source attribution, confidence, limitations, review and export actions available through the new panels. Reference WMS remains rendered reference context only and never becomes an analytical layer because it appears in the Provider tree.
+
+Acceptance criteria:
+
+- [x] On desktop, the map is the primary surface and no permanent configuration panel consumes roughly a quarter of the viewport. The compact rail is fixed on the right edge, exposes icon names by hover/focus and opens a keyboard-operable right-side drawer only after interaction.
+- [x] A user can enable/disable a whole provider/domain group or one artifact, with correct checked/mixed/off state and no loss of individual layer choice. Providers and source roles remain explicit in the tree.
+- [x] The legend derives from the same registered presentation semantics as the map and explains visible symbology, colours and source/readiness markers without relying on colour alone.
+- [x] A first visit does not request or render the Rybnik fallback. The user must choose at least one domain and an AOI before preparation; a prepared AOI can subsequently be restored only with clear local-state labelling.
+- [x] A point can be chosen on the map for a radius AOI, and the rendered outline is the exact resolved circle.
+- [x] The national PRG selector is one expandable `voivodeship -> county -> gmina` checkbox tree; a selected parent visibly checks all descendants while retaining editable county/gmina checkboxes, and unchecking a child preserves the remaining explicit union. It can select a complete unit or an explicit union within one voivodeship only, disables other province branches and rejects a multi-province API request, while showing the exact source-labelled administrative boundary on the map.
+- [x] A large or unavailable administrative selection is handled before acquisition by a typed, comprehensible outcome with no unbounded Overpass request, no rectangle substitution and no replacement of a valid existing map.
+- [x] The Activity window is draggable by its title bar, closeable and reopenable without cancelling work; it presents real preparation/cache/error events and explains whether the displayed map came from cache, refresh or was deliberately retained after failure.
+- [x] Existing provider API contracts, source-role boundaries, cached read behaviour, PMTiles rendering, feature inspection, exports and responsive use remain functional. Focused backend/Node/frontend tests and a browser interaction check cover the new first-run, layer-tree, administrative-boundary, map-point and activity-window flows.
+
+Non-goals: copying OpenInfraMap, replacing MDQ's provider UX with a global OSM basemap, public national-scale Overpass acquisition, automatic enlargement of AOI limits, freehand-polygon AOIs, a job queue unrelated to verified progress delivery, changing source qualification/provenance, or implementing the VPS deployment itself.
+
+Verification: `prg_administrative_catalog/v2` was generated from the official Geoportal PRG FeatureServer with 16 voivodeships, 380 counties and 2,479 gminas; the compact index is versioned and the selected boundary is resolved locally before any provider request. Browser QA verified a neutral no-Rybnik first run, map point selection, typed Mazowieckie preflight (35,530.3 km² over the 31,415.9 km² bound; not sent to Overpass), and close/reopen activity behaviour. Follow-up correction replaced the separate hierarchy filters with a lazy expandable tree, enforces the one-voivodeship limit both in its checkbox state and in the API, and keeps selected parent branches editable by materialising the remaining children after an exclusion. The runtime repairs invalid polygonal topology caused by interactive PRG generalisation before calculating that real union. Passed: 26 focused Python tests, 37 AOI route tests, 22 frontend tests with lint/build and browser QA of province selection plus county/gmina deselection, in addition to the original completion gate.
+
+### MDQ-055 - Extend Runtime Power Relation Evidence for PRG AOIs
+
+Priority: P0
+
+Status: Done
+
+Goal: `G-006`
+
+Depends on: `MDQ-050`, `MDQ-051`, `MDQ-054`
+
+Type: runtime source acquisition and power inspection
+
+Repo area: `backend/geo_pipeline/`, `backend-node/`, `frontend/`, `docs/local/`
+
+Objective: make the existing source-verified power relation inspection available for every bounded live power AOI, including AOIs selected from the national PRG catalogue.
+
+Scope:
+
+- During a live power refresh, acquire only OSM relations explicitly tagged as power circuits that intersect the resolved AOI, then retain only relation members that correspond to delivered source features in that AOI.
+- Persist a checksum-validated private `power.osm_relation_evidence` artifact alongside the runtime power domain pack, with snapshot time, bounded AOI coverage, original relation/member IDs, roles, original way endpoint-node IDs where available, and no unbounded geometry.
+- Build a deterministic reverse member index for selected lines, stations and other delivered OSM features. Never infer station-to-line connectivity from touching, proximity, shared tags, or clipped geometry.
+- Preserve the existing circuit API and map highlighting. Selecting a station or line with source evidence lists only its committed OSM relations; selecting a relation draws only the retained AOI member geometry and verified endpoints.
+- From a selected station or node, show the retained line members directly as selectable line controls; selecting one highlights only that line and its two source endpoints.
+- Make a missing relation-evidence artifact an explicit UI/source state, not a claim that no relation exists.
+
+Acceptance criteria:
+
+- [x] A fixture-backed non-Rybnik runtime power pack contains a validated private relation-evidence artifact and the existing circuit routes return its relation list/detail.
+- [x] A selected station or line receives only relations that list its exact OSM source ID; unrelated features receive `not_applicable`.
+- [x] Relation members outside the resolved AOI are not served as geometry, while their missing or clipped state remains explicit.
+- [x] Original endpoint-node IDs are retained only from source relation/member evidence; no endpoint or connectivity is inferred.
+- [x] Runtime cache identity invalidates packs created before relation evidence is required.
+- [x] Python, Node API and frontend verification cover available, unavailable, malformed and unrelated relation cases.
+- [x] A station/node with eligible relation evidence exposes its retained lines directly, and a selected line is visually isolated with its endpoints.
+
+Non-goals: electrical-flow modelling, inferred network topology, direct KIUT/GESUT vector use, public export of relation evidence, or unbounded live OSM requests.
+
+Verification: 27 focused Python tests verify runtime-pack publication, exact reverse membership, endpoint-node evidence and exclusion of an out-of-AOI relation member. The existing Node circuit route tests (58 Node tests total) validate available, unrelated and malformed relation routes against the private validated artifact; 22 frontend tests, lint and a TypeScript production build verify the presentation remains compatible with direct line-selection wiring. Runtime identity is `geo_pipeline/runtime/v17` and the pack writer uses `geo_pipeline/runtime-osm/v6`.
+
+### MDQ-056 - Modernize the Full-Screen Provider Preview
+
+Priority: P0
+
+Status: Done
+
+Goal: `G-006`
+
+Depends on: `MDQ-054`, `MDQ-055`
+
+Type: frontend presentation and map interaction
+
+Repo area: `frontend/`, `docs/local/`
+
+Objective: turn the provider preview into a modern, full-screen, map-led portfolio interface while preserving the current AOI, source, layer, inspection and reference-overlay boundaries.
+
+Scope:
+
+- Use a full-viewport application shell: compact top bar, map as the primary surface, right-side icon rail, optional translucent glass drawers and a compact bottom status capsule.
+- Replace emoji or dense text controls with a coherent inline SVG icon vocabulary, keyboard names/tooltips and responsive drawer presentation. Keep every existing AOI, layer, legend, provider and activity action available.
+- Add a labelled visual base-map selector with `Standard OSM`, `Dark OSM` and `No base map`. `Dark OSM` is a local visual treatment of the same attributed OSM raster tiles; it is not a CARTO, provider or analytical data source.
+- Preserve the map's analytical vectors, PMTiles sources, reference-only WMS overlays, attribution, feature click inspection, AOI outline and failure-retention behaviour. A visual base-map change must not alter source qualification, provenance, readiness or cached provider data.
+- Do not use CARTO Dark Matter CDN in the public preview without a verified applicable CARTO Enterprise licence or non-commercial grant. The 2026-08-14 decision follows CARTO's published basemap terms.
+
+Acceptance criteria:
+
+- [x] Desktop view uses the entire viewport: header, map and status are compact overlays/surfaces rather than a page with unused margins; drawers are translucent, legible and keyboard-operable.
+- [x] The icon rail retains accessible labels and opens the existing panels without breaking AOI selection, layer selection, inspection or the activity window.
+- [x] The base-map selector switches between standard OSM, local dark OSM and no raster base map without recreating provider sources or changing analytical/reference semantics; OSM attribution remains visible in the two OSM modes.
+- [x] Narrow-screen layout remains usable and does not block map controls.
+- [x] Frontend tests, lint and production build pass; a browser check confirms the full-screen shell and all three base-map states.
+
+Non-goals: copying OpenInfraMap, using unlicensed CARTO tiles, adding an API token, changing data pipelines or source contracts, replacing MapLibre/PMTiles, or representing visual base-map tiles as provider data.
+
+Verification: `baseMapRasterPaint` has focused regression coverage for standard and local dark OSM presentation, while the existing presentation tests preserve layer/style policy. Passed: 23 frontend tests, `npm run lint` and `npm run build`; the only build observation is the existing non-failing Vite chunk-size warning. Browser QA at desktop and 390 px width confirmed the full-screen map shell, translucent AOI drawer, accessible icon rail, `Standard OSM`, `Dark OSM` and `No base map` states, retained OSM attribution in the two raster modes, and a narrow drawer without horizontal overflow.
+
 ### MDQ-052 - Deploy Read-Only Portfolio Demo on VPS
 
 Priority: P1
@@ -2035,7 +2157,7 @@ Status: Ready
 
 Goal: `G-006`
 
-Depends on: `MDQ-047`, `MDQ-051`
+Depends on: `MDQ-047`, `MDQ-051`, `MDQ-054`
 
 Type: deployment/portfolio release
 
@@ -2070,37 +2192,155 @@ Acceptance criteria:
 
 Non-goals: production multi-region scaling, user accounts, automatic public data-refresh jobs, a managed database, public job queue, Steel Sentinel hosting, Steel Sentinel's offline download/cache implementation, live-data completeness claims or using a VPS deployment as evidence of a production SLA.
 
-### SS-INT-001 - Consume Provider Layer Packs in Steel Sentinel
+## Milestone 15 - Regional Demo Snapshot Delivery
+
+### MDQ-057 - Publish Rybnik Regional Snapshots and Controlled AOI Acquisition Status
+
+Priority: P0
+
+Status: Todo
+
+Goal: `G-006`
+
+Depends on: `MDQ-052`
+
+Type: prepared regional artifacts, snapshot availability and trusted runtime acquisition
+
+Repo area: `backend/geo_pipeline/`, `backend/data/sources/`, artifact/bootstrap scripts, `backend-node/`, `frontend/`, `README.md`, `docs/`
+
+Objective: power the first Steel Sentinel demo with small, versioned, ready-to-serve regional MDQ snapshots rather than a Poland-wide inventory. The VPS must serve prebuilt Rybnik-area packs immediately. When a Steel Sentinel user selects an AOI without a prepared snapshot, the user sees truthful availability, expected-wait and source-limit states; only a trusted MDQ/operator path may start bounded acquisition.
+
+Scope and decision boundary:
+
+- Publish two explicit, operator-prepared coverage snapshots: `rybnik_50km` (the existing Rybnik centre with a true 50 km circle) and `rybnik_prg_neighbours` (Rybnik's PRG gmina plus every county-level PRG unit touching that gmina). The resolved geometries, source date, pipeline version, domains, checksums and coverage limitations are immutable snapshot metadata.
+- The VPS serves only published artifacts from its configured persistent root. It does not store a Poland PBF, build national tiles, or expose a public unbounded Overpass refresh route.
+- A public browser and unauthenticated Steel Sentinel client can read availability and prepared artifacts only. A new bounded AOI acquisition is submitted solely by an operator or a trusted, authenticated Steel Sentinel service identity, using the existing job/progress model and configured area/concurrency limits.
+- Every snapshot/export preserves OSM provenance, source time, checksums, readiness and limitations. A prepared regional snapshot is dated source evidence, never a claim of completeness or live operational state.
+
+Scope:
+
+- Prepare and validate the two named regional snapshot configurations for the required demo domains. Publish only a complete or explicitly partial pack; a failed domain must carry its source-acquisition reason and be retryable without replacing completed domains.
+- Add a compact read-only snapshot catalogue and `AOI availability` contract. Given a circle or PRG selection, it returns whether a published snapshot fully covers it, partially overlaps it, is absent, is queued/running, or failed; it includes a source-labelled explanation and the relevant prepared snapshot IDs.
+- Expose actual job phase/progress after a trusted acquisition starts. Show an expected wait only when derived from recorded comparable job timings; otherwise say that duration is unknown. Never fabricate a total object count, completion time or successful result before publication.
+- Retain the current map while a requested AOI is unavailable or being acquired. The Steel Sentinel settings UI can display the availability contract and later poll progress, but it cannot itself create an anonymous/public acquisition job.
+- Serve the prepared regional PMTiles and feature-detail artifacts by local byte range. Pan/zoom inside either prepared coverage works without Python, Overpass, a worker or a full GeoJSON response.
+- Export only from a published snapshot. The export identifies the source snapshot, exact AOI geometry, domain outcomes, provenance, readiness and limitations so Steel Sentinel has no upstream-source dependency.
+- Record snapshot size, preparation time, memory/disk use, PMTiles range traffic and warm/cold viewport timings. Use these measurements to decide later whether a wider regional or Poland-wide baseline is affordable; do not build it in this ticket.
+- Add fixture-sized tests for deterministic coverage matching, partial/absent/queued/failed states, no public acquisition authorization, progress truthfulness, partial-snapshot retries, PMTiles range reads and export provenance.
+
+Acceptance criteria:
+
+- [ ] `rybnik_50km` and `rybnik_prg_neighbours` are separately versioned, checksum-validated, source-labelled snapshots outside Git, with resolved coverage geometry, per-domain manifests, validation/readiness, PMTiles and safe rollback to the previous published version.
+- [ ] The VPS immediately serves a prepared snapshot's PMTiles byte ranges, feature details and AOI-scoped export without invoking Python, Overpass, a worker or a full GeoJSON serialization during normal map/API reads.
+- [ ] A circle or PRG selection receives a typed availability result: `ready`, `partial_coverage`, `not_prepared`, `queued`, `running` or `failed`, with snapshot identifiers, source limitations and no false claim that data is available.
+- [ ] Only an operator or authenticated Steel Sentinel service identity can create a bounded acquisition job. Anonymous/public requests are rejected explicitly; they can read status but cannot cause upstream acquisition.
+- [ ] Once acquisition begins, the availability/progress result exposes only real job phases and completed-domain outcomes. Any expected-wait value is labelled as an estimate derived from comparable recorded jobs, and is omitted when no valid estimate exists.
+- [ ] The Steel Sentinel settings flow can retain the current map, inform the user that the requested AOI is pending or incomplete, and surface published-domain results and source failures after completion.
+- [ ] Exports include the selected prepared snapshot ID, exact AOI, per-domain outcome, provenance, readiness and limitations, and require no upstream OSM request from Steel Sentinel.
+- [ ] Focused offline tests, Node/frontend contracts, artifact bootstrap/configuration checks and the canonical provider gate pass without a Poland PBF or live Overpass dependency.
+
+Non-goals: a Poland-wide PBF import, national PMTiles, scraping OSM raster tiles, an unbounded/tiled-bbox Overpass sweep, browser download of a full GeoJSON/PBF, live/minutely state, a claim of regional completeness, direct KIUT/GESUT WMS vector extraction, a public ingestion endpoint, paid Infrageomatics dependency, automatic OSM replication, or Steel Sentinel application/offline-cache implementation.
+
+### MDQ-058 - Expose a Consumer Data-Quality Capability Profile
+
+Priority: P1
+
+Status: Todo
+
+Goal: `G-006`
+
+Depends on: `MDQ-044`, `MDQ-057`
+
+Type: data-quality consumer contract
+
+Repo area: `backend/geo_pipeline/`, `backend-node/`, `frontend/`, `docs/`
+
+Objective: let a consumer such as Steel Sentinel decide which delivered domains to present, inspect or defer without loading whole layers or guessing from raw feature counts. MDQ must expose a compact, snapshot-versioned quality capability profile that makes coverage, validation, provenance, freshness and limitations explicit without claiming real-world completeness or tactical suitability.
+
+Scope:
+
+- Define and version `provider_domain_quality_profile/v1` for a prepared snapshot and AOI-scoped export. Each domain/artifact records snapshot/source IDs and times, source role, available/partial/missing coverage, feature and required-attribute completeness evidence, validation/readiness outcomes, unresolved quality issues, known limitations, attribution and checksums.
+- Expose consumer-oriented capabilities separately from raw layer payloads: `available_for_display`, `available_for_inspection`, `available_for_export` and a source-evidence suitability statement. Each value includes machine-readable reasons; no single opaque quality score may replace the evidence.
+- Add a compact read endpoint and include the same profile in exports and AOI-availability responses. It returns no full GeoJSON geometry and never invokes Python or an upstream source service during normal reads.
+- Give the MDQ preview a concise domain-quality summary that uses the same contract and links to its source/issue evidence. A layer may be off by default for density or limitation reasons, but a consumer must never silently hide that the domain is partial, unavailable or excluded.
+- Keep operational simulation, unit placement, C2 control, procedural/NATO RAG, tactical recommendations and dependency-graph interpretation in Steel Sentinel. MDQ reports data evidence and quality only.
+
+Acceptance criteria:
+
+- [ ] Every prepared regional snapshot and AOI export returns a checksum-validated `provider_domain_quality_profile/v1` without serializing full domain geometry.
+- [ ] The profile distinguishes ready/partial/missing source coverage, validation/readiness, unresolved issue severity, required-field completeness, freshness/source timestamp, provenance and limitations for each delivered domain/artifact.
+- [ ] Capability flags contain explicit reasons and do not turn an unknown/partial source state into a numeric “good enough” score or a claim that the data is suitable for a C2 decision.
+- [ ] Steel Sentinel can determine, before fetching a layer, whether it can display, inspect or export that domain and can show the matching source limitation to the user.
+- [ ] MDQ preview, Node contracts and exported profiles agree for ready, partial, missing, reference-only and failed-domain fixtures.
+- [ ] Focused offline Python/Node/frontend tests and the provider verification gate pass without live OSM access.
+
+Non-goals: a consumer-specific layer UI, online/offline C2 commands, tactical risk scoring, a recommendation engine, RAG, inferred infrastructure dependencies, replacing domain provenance with one aggregate score, or claiming data completeness from a passing validation schema.
+
+### MDQ-059 - Incrementally Extend Fresh Nested Circle Snapshots
+
+Priority: P1
+
+Status: Todo
+
+Goal: `G-006`
+
+Depends on: `MDQ-057`, `MDQ-058`
+
+Type: bounded AOI acquisition and cache-freshness contract
+
+Repo area: `backend/geo_pipeline/`, `backend-node/`, `frontend/`, `docs/`
+
+Objective: make a small increase of a circular AOI fast without hiding source age. When an authorised request expands a fresh, concentric cached circle, reuse the verified inner coverage and acquire only the added ring; publish a new immutable snapshot whose feature/domain provenance makes every observation time explicit.
+
+Scope:
+
+- Define a versioned reusable-fragment record and attach `source_observed_at` plus fragment identity to every reusable source feature. Expose oldest/newest observation times, coverage and freshness state in the snapshot manifest and `provider_domain_quality_profile/v1`.
+- Use 30 days as the default maximum reuse age. Permit a documented operator/domain policy up to 60 days; reject expired, missing, failed or incompatible-pipeline fragments for incremental reuse.
+- Support only concentric nested `point_radius` circles in v1. Resolve the geometric difference for the added ring, acquire it independently per requested domain, deduplicate by stable source identity, validate the merged target pack and publish it atomically without changing the smaller snapshot.
+- Provide an explicit, authorised full-AOI force refresh. It bypasses reusable fragments for selected domains and publishes a new target snapshot; anonymous/public clients can observe freshness but cannot start either mode.
+- Return typed availability/freshness evidence for `fresh`, `ageing`, `expired`, `mixed_observation_times` and `full_refresh_required`. Retain the existing map/snapshot until a new target snapshot validates and publishes.
+
+Acceptance criteria:
+
+- [ ] A fresh 30 km circle expanded to a concentric 35 km circle calls each selected upstream domain only for the geometric ring, retains the source-observation timestamp for reused inner features and publishes a distinct validated 35 km snapshot.
+- [ ] Each domain/export/profile exposes fragment coverage, observation-time range and explicit freshness reason; a consumer cannot interpret reused data as a current upstream read.
+- [ ] An expired, missing, failed or provenance-incompatible inner fragment never contributes to an incremental target snapshot; the typed result requires a full refresh or reports why acquisition cannot start.
+- [ ] An authorised force refresh performs a full target-AOI acquisition, preserves the prior published snapshot on failure and publishes a new checksum-validated snapshot only after all successful/partial domain outcomes are recorded.
+- [ ] A browser without trusted service/operator authority cannot trigger ring or force acquisition, but can read the actual availability and freshness state.
+- [ ] Focused geometry, cache/provenance, partial-retry, Node/frontend-contract and canonical provider tests pass without live OSM access; recorded measurements compare full versus nested expansion latency and upstream requests.
+
+Non-goals: arbitrary overlapping circles, PRG-shape incremental reuse, OSM replication/history diffs, automatic scheduled refresh, silent background refresh, reusing expired data without a limitation, merging manual/inferred data as OSM evidence, a national inventory or a public acquisition endpoint.
+
+### SS-INT-001 - Validate the MDQ Provider Boundary with Steel Sentinel
 
 Priority: P1
 
 Status: External
 
-Goal: `G-002`
+Goal: `G-006`
 
-Depends on: `G-004`, `MDQ-043`, `MDQ-044`
+Depends on: `MDQ-052`, `MDQ-057`, `MDQ-058`
 
 Type: cross-repo integration
 
 Repo area: Steel Sentinel
 
-Objective: prove that Map Data Quality Lab is useful by consuming parameterized multi-domain provider output in Steel Sentinel.
+Objective: prove that Map Data Quality Lab is useful to Steel Sentinel through a stable, source-aware snapshot, availability, export and data-quality contract. The canonical Steel Sentinel product decision is ADR-4.3 and tickets `SS-012`/`SS-013` in the Steel Sentinel repository; this cross-repo ticket owns only the MDQ consumer boundary.
 
 Scope:
 
-- Add a Steel Sentinel client for parameterized AOI requests and v2 layer-pack exports.
-- Render the required provider domains with application-owned toggles, popups, counts and readiness/source warnings.
-- Treat provider features as base infrastructure evidence and never call OSM, Geoportal or other upstream source services directly.
-- In the online demo, read approved MDQ API/PMTiles/object-detail responses. In the separate offline mode, let Steel Sentinel choose, download, verify, retain and expire an approved MDQ tile/object package; do not make MDQ host or own that local offline cache.
-- Keep operational status, dependency logic and simulation state inside Steel Sentinel.
+- Verify that Steel Sentinel can read published MDQ snapshot PMTiles, object details, exports, AOI availability and `provider_domain_quality_profile/v1` without calling OSM, Geoportal or another upstream service.
+- Verify that snapshot IDs, exact AOI, domain outcomes, provenance, checksums, readiness and limitations survive the consumer hand-off unchanged.
+- Give Steel Sentinel the typed availability and capability evidence required for its own Settings, viewer and offline-package decisions; MDQ does not define or implement those consumer features.
+- Treat provider features as base infrastructure evidence, never as live operational state or a tactical conclusion.
 
 Acceptance criteria:
 
-- Steel Sentinel can render all required provider domain packs for a selected AOI.
-- Steel Sentinel does not call Overpass, PRG, BDOT10k, KIUT or other upstream source services directly.
-- Steel Sentinel can read provider source, confidence, limitation and readiness metadata.
-- Steel Sentinel's offline package records the MDQ artifact version, checksum, provenance and retrieval time before it is used without network access.
+- Steel Sentinel reads a prepared MDQ snapshot and its compact quality profile before loading a whole domain layer.
+- The hand-off preserves snapshot ID, AOI, domain outcome, source provenance, checksum, readiness and limitations, and requires no upstream request from Steel Sentinel.
+- The consumer receives typed ready/partial/pending/failed/unavailable evidence and explicit domain capability reasons; no opaque score or incomplete data is presented as a tactical conclusion.
 - Provider data is not treated as live infrastructure state.
+- Steel Sentinel-specific behavior is covered and accepted in its own repository under ADR-4.3, `SS-012` and `SS-013`.
 
 ## Suggested Execution Order
 

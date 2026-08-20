@@ -1,0 +1,123 @@
+{
+  "domain_pack_version": "provider_domain_pack/v2",
+  "aoi_id": "rybnik_35km",
+  "domain": "power",
+  "source_provenance": [
+    {
+      "source_id": "openstreetmap",
+      "contribution_role": "primary"
+    },
+    {
+      "source_id": "kiut_gesut_wms",
+      "contribution_role": "validation_reference"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "power.lines",
+      "kind": "processed_vector",
+      "format": "geojson",
+      "path": "layers/power.lines.geojson",
+      "sha256": "8801ada438f5728eb842cc954fb3c45983baaef4144b575d5e6e13ca3a339223",
+      "feature_count": 6796,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "power.assets",
+      "kind": "processed_vector",
+      "format": "geojson",
+      "path": "layers/power.assets.geojson",
+      "sha256": "cba517856c40eefd13ffd6059f3cdf1be5ef5bd6217a54cc8fb6353cac5824ed",
+      "feature_count": 2379,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "power.supports",
+      "kind": "processed_vector",
+      "format": "geojson",
+      "path": "layers/power.supports.geojson",
+      "sha256": "45939e128e4cf73f8652d99c61ea83df8d3ded7751cea5d6ccccbc94a3d0b099",
+      "feature_count": 43801,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "power.representative_points",
+      "kind": "representative_points",
+      "format": "geojson",
+      "path": "layers/power.representative_points.geojson",
+      "sha256": "ee58539e5fab5ec7cb11b029c3876ad7e482c0c6ea6f9c97b0122cc875446f23",
+      "feature_count": 6796,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": false
+    },
+    {
+      "id": "power.osm_source_evidence",
+      "kind": "native_vector",
+      "format": "json",
+      "path": "native/osm-source-evidence.json",
+      "sha256": "004f775b44a2c3c0744b5abf3586e27dd060ddbf2a1257545f18a7e59fb214c6",
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": false
+    },
+    {
+      "id": "power.osm_relation_evidence",
+      "kind": "native_vector",
+      "format": "json",
+      "path": "native/osm-relation-evidence.json",
+      "sha256": "7815d9d6708f365dfba4f17917b80d0bce5b010f4df74d27492582f820211958",
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": false
+    },
+    {
+      "id": "power.kiut_reference",
+      "kind": "remote_service",
+      "format": "wms",
+      "source_provenance": [
+        {
+          "source_id": "kiut_gesut_wms",
+          "contribution_role": "validation_reference"
+        }
+      ],
+      "public_export": false
+    }
+  ],
+  "validation": {
+    "path": "validation/metadata.json"
+  },
+  "readiness": {
+    "path": "readiness/readiness.json"
+  }
+}

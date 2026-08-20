@@ -1,0 +1,2472 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "cache_layout_version": "provider_cache/v1",
+    "geojson_contract_version": "provider_geojson/v1",
+    "aoi_id": "rybnik_35km",
+    "domain": "emergency",
+    "layer_id": "emergency.ambulance_rescue",
+    "source": "OpenStreetMap",
+    "source_type": "analytical_vector",
+    "source_registry_id": "openstreetmap",
+    "source_url": "https://overpass-api.de/api/interpreter",
+    "source_query": "Overpass bounded snapshot: explicit amenity=hospital|fire_station|police|ambulance_station, healthcare=hospital and emergency=ambulance_station|mountain_rescue|lifeguard_base within the Rybnik 35 km AOI.",
+    "snapshot_at": "2026-08-03T10:14:06Z",
+    "pipeline_version": "geo_pipeline/emergency/v1",
+    "query_version": "emergency-osm/v1",
+    "validation_status_raw": "warning",
+    "quality_status": "warning",
+    "confidence": "medium",
+    "limitations": [
+      "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+      "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+      "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+    ],
+    "eligible_for_analysis": true,
+    "readiness": "usable_with_limitations",
+    "contract_version": "provider_geojson/v1",
+    "feature_count": 30
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/3596524726",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Miejsce Stacjonowania Zespołu Ratownictwa Medycznego",
+          "operator": "Wojewódzkie Pogotowie Ratunkowe w Katowicach",
+          "emergency": "ambulance_station"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.9951691,
+          50.19258419999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/3860512733",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Stacja Pogotowia Ratunkowego",
+          "operator": "Pogotowie Ratunkowe Wodzisław Śląski",
+          "emergency": "ambulance_station",
+          "opening_hours": "24/7"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4642327,
+          50.00873049999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/4280996691",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Wojewódzkie Pogotowie Ratunkowe w Katowicach",
+          "description": "ambulatorium ogólne oraz stacja",
+          "emergency": "ambulance_station"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7841535,
+          50.3060851
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/4424372121",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Pogotowie Ratunkowe NZOZ MAWO-MED",
+          "emergency": "ambulance_station"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.3024566,
+          50.1950608
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/5271898322",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Wojewódzkie Pogotowie Ratunkowe Katowice",
+          "emergency": "ambulance_station"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.9234292,
+          50.292529
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/5515299271",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Ratownictwo Medyczne Racibórz",
+          "emergency": "ambulance_station"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.2028239,
+          50.10096659999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/8734720458",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Podstacja Pogotowia Ratunkowego Rydułtowy",
+          "operator": "Zespół Opieki Zdrowotnej w Wodzisławiu Śląskim",
+          "emergency": "ambulance_station"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4249394,
+          50.05967749999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/10782842679",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Pogotowie Ratunkowe Świerklany",
+          "emergency": "ambulance_station"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5880007,
+          50.0269063
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/11463870296",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Pogotowie Ratunkowe Krzyżanowice",
+          "emergency": "ambulance_station"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.2693402,
+          49.982260499999995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/11463883179",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "emergency": "ambulance_station"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.6700915,
+          50.154598
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/11463917433",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "emergency": "ambulance_station"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.6713392,
+          50.2227284
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/11463926620",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "emergency": "ambulance_station"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7911883,
+          50.02832759999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/11466483713",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "emergency": "ambulance_station"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8659452,
+          50.141652
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/11466648806",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Podstacja Pogotowia Ratunkowego Gliwice",
+          "emergency": "ambulance_station"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7232983,
+          50.307707099999995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/11466687193",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "emergency": "ambulance_station"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8009292,
+          50.3649513
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/11466691228",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "emergency": "ambulance_station"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.6234455,
+          50.3994523
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/11466698425",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "emergency": "ambulance_station"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7954035,
+          50.2587126
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/11466715167",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "emergency": "ambulance_station"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7588622,
+          49.915725900000005
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/11466744740",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "emergency": "ambulance_station"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.613500800000004,
+          49.87656570000001
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/13798067554",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "emergency": "ambulance_station"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4428663,
+          50.00719599999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/91105288",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "E",
+          "source": "cuzk:ruian",
+          "emergency": "ambulance_station",
+          "building": "civic"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.1869971,
+              49.8989609
+            ],
+            [
+              18.1869548,
+              49.8989968
+            ],
+            [
+              18.1868855,
+              49.8989625
+            ],
+            [
+              18.1867519,
+              49.899073800000004
+            ],
+            [
+              18.1868054,
+              49.8991004
+            ],
+            [
+              18.1868026,
+              49.8991027
+            ],
+            [
+              18.1868575,
+              49.8991297
+            ],
+            [
+              18.1869344,
+              49.8990662
+            ],
+            [
+              18.186975,
+              49.89908609999999
+            ],
+            [
+              18.186991,
+              49.8990726
+            ],
+            [
+              18.1870896,
+              49.89912100000001
+            ],
+            [
+              18.1871753,
+              49.8990482
+            ],
+            [
+              18.1871527,
+              49.89903709999999
+            ],
+            [
+              18.1870859,
+              49.899004399999995
+            ],
+            [
+              18.1869971,
+              49.8989609
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/169827428",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "emergency": "ambulance_station",
+          "building": "yes",
+          "phone": "+48 32 226 26 65"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.8965139,
+              50.17350029999999
+            ],
+            [
+              18.8965541,
+              50.173425900000005
+            ],
+            [
+              18.8968208,
+              50.17348499999999
+            ],
+            [
+              18.8968304,
+              50.17346719999999
+            ],
+            [
+              18.8969035,
+              50.1734834
+            ],
+            [
+              18.8969417,
+              50.1734125
+            ],
+            [
+              18.8964675,
+              50.1733075
+            ],
+            [
+              18.8963795,
+              50.17347049999999
+            ],
+            [
+              18.8965139,
+              50.17350029999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/170568342",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Stacja Pogotowia Ratunkowego i Ośrodek Szkolenia Ratowników Medycznych w Rudzie Śląskiej",
+          "emergency": "ambulance_station",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.8803385,
+              50.28433179999998
+            ],
+            [
+              18.8803358,
+              50.28433810000001
+            ],
+            [
+              18.8803893,
+              50.284347700000005
+            ],
+            [
+              18.8804445,
+              50.28422179999999
+            ],
+            [
+              18.880449,
+              50.28421170000001
+            ],
+            [
+              18.8803946,
+              50.28420189999999
+            ],
+            [
+              18.8803929,
+              50.2842058
+            ],
+            [
+              18.8798823,
+              50.28411440000001
+            ],
+            [
+              18.8798271,
+              50.2842402
+            ],
+            [
+              18.8803385,
+              50.28433179999998
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/182981732",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Pogotowie Ratunkowe",
+          "source": "UM Tychy",
+          "emergency": "ambulance_station",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              19.0003166,
+              50.11345679999999
+            ],
+            [
+              19.0002964,
+              50.11346739999999
+            ],
+            [
+              19.0003529,
+              50.113508800000005
+            ],
+            [
+              19.0004748,
+              50.1134413
+            ],
+            [
+              19.000423,
+              50.113400799999994
+            ],
+            [
+              19.0004383,
+              50.1133933
+            ],
+            [
+              19.000226,
+              50.11323899999999
+            ],
+            [
+              19.0000894,
+              50.113317
+            ],
+            [
+              19.0001917,
+              50.113389899999994
+            ],
+            [
+              19.0002237,
+              50.113414000000006
+            ],
+            [
+              19.0002343,
+              50.11340799999999
+            ],
+            [
+              19.0003166,
+              50.11345679999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/210589087",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Wojewódzkie Pogotowie Ratunkowe w Katowicach — Stacja Pogotowia Ratunkowego w Rybniku",
+          "source": "www.geoportal.gov.pl",
+          "emergency": "ambulance_station",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.5221892,
+              50.11323670000001
+            ],
+            [
+              18.5221897,
+              50.1132357
+            ],
+            [
+              18.5221902,
+              50.113234899999995
+            ],
+            [
+              18.5221908,
+              50.113234199999994
+            ],
+            [
+              18.5221916,
+              50.113233599999994
+            ],
+            [
+              18.5221923,
+              50.113233
+            ],
+            [
+              18.5221933,
+              50.1132325
+            ],
+            [
+              18.5221943,
+              50.11323209999999
+            ],
+            [
+              18.5221954,
+              50.11323169999999
+            ],
+            [
+              18.5221968,
+              50.113231400000004
+            ],
+            [
+              18.522198,
+              50.1132312
+            ],
+            [
+              18.5221992,
+              50.113231
+            ],
+            [
+              18.5222003,
+              50.113231
+            ],
+            [
+              18.5222016,
+              50.11323109999999
+            ],
+            [
+              18.5222027,
+              50.113231200000016
+            ],
+            [
+              18.5222195,
+              50.113123699999996
+            ],
+            [
+              18.5222186,
+              50.11312319999998
+            ],
+            [
+              18.5222178,
+              50.1131228
+            ],
+            [
+              18.522217,
+              50.1131222
+            ],
+            [
+              18.5222163,
+              50.1131217
+            ],
+            [
+              18.5222157,
+              50.1131211
+            ],
+            [
+              18.5222152,
+              50.113120499999994
+            ],
+            [
+              18.5222146,
+              50.113119899999994
+            ],
+            [
+              18.5222142,
+              50.1131192
+            ],
+            [
+              18.5222139,
+              50.11311849999999
+            ],
+            [
+              18.5222136,
+              50.1131179
+            ],
+            [
+              18.5222135,
+              50.1131172
+            ],
+            [
+              18.5222138,
+              50.11311390000001
+            ],
+            [
+              18.5222178,
+              50.1130899
+            ],
+            [
+              18.522218000000002,
+              50.113089300000006
+            ],
+            [
+              18.522218300000002,
+              50.1130888
+            ],
+            [
+              18.5222185,
+              50.11308820000001
+            ],
+            [
+              18.522219,
+              50.1130877
+            ],
+            [
+              18.5222194,
+              50.1130872
+            ],
+            [
+              18.5222198,
+              50.1130867
+            ],
+            [
+              18.5222204,
+              50.1130862
+            ],
+            [
+              18.522221,
+              50.11308580000001
+            ],
+            [
+              18.5222217,
+              50.1130854
+            ],
+            [
+              18.5222224,
+              50.11308499999999
+            ],
+            [
+              18.5222231,
+              50.11308459999999
+            ],
+            [
+              18.5222238,
+              50.11308439999998
+            ],
+            [
+              18.5222246,
+              50.1130841
+            ],
+            [
+              18.5222254,
+              50.11308379999999
+            ],
+            [
+              18.5222263,
+              50.1130837
+            ],
+            [
+              18.5222271,
+              50.1130835
+            ],
+            [
+              18.522228,
+              50.11308339999999
+            ],
+            [
+              18.522229,
+              50.1130833
+            ],
+            [
+              18.5222298,
+              50.1130832
+            ],
+            [
+              18.5222308,
+              50.11308319999999
+            ],
+            [
+              18.5222316,
+              50.11308319999999
+            ],
+            [
+              18.5222324,
+              50.1130833
+            ],
+            [
+              18.5222334,
+              50.1130834
+            ],
+            [
+              18.5222343,
+              50.1130836
+            ],
+            [
+              18.5222351,
+              50.113083800000005
+            ],
+            [
+              18.5222359,
+              50.113084099999995
+            ],
+            [
+              18.5222368,
+              50.1130843
+            ],
+            [
+              18.5222375,
+              50.11308459999999
+            ],
+            [
+              18.522238200000004,
+              50.113085
+            ],
+            [
+              18.5222389,
+              50.1130853
+            ],
+            [
+              18.522239600000002,
+              50.113085799999986
+            ],
+            [
+              18.5222422,
+              50.113084400000005
+            ],
+            [
+              18.5222533,
+              50.11309299999999
+            ],
+            [
+              18.5222574,
+              50.11309089999999
+            ],
+            [
+              18.5222463,
+              50.1130821
+            ],
+            [
+              18.5222488,
+              50.113080799999985
+            ],
+            [
+              18.5222484,
+              50.1130802
+            ],
+            [
+              18.5222482,
+              50.11307959999999
+            ],
+            [
+              18.5222477,
+              50.1130791
+            ],
+            [
+              18.5222476,
+              50.1130785
+            ],
+            [
+              18.5222473,
+              50.11307790000001
+            ],
+            [
+              18.5222473,
+              50.1130773
+            ],
+            [
+              18.5222472,
+              50.11307659999999
+            ],
+            [
+              18.5222474,
+              50.11307610000001
+            ],
+            [
+              18.5222474,
+              50.1130755
+            ],
+            [
+              18.5222475,
+              50.11307479999999
+            ],
+            [
+              18.5222478,
+              50.11307430000001
+            ],
+            [
+              18.5222481,
+              50.113073699999994
+            ],
+            [
+              18.5222484,
+              50.11307310000001
+            ],
+            [
+              18.5222488,
+              50.113072599999995
+            ],
+            [
+              18.5222493,
+              50.1130721
+            ],
+            [
+              18.5222498,
+              50.11307159999999
+            ],
+            [
+              18.5222503,
+              50.11307109999999
+            ],
+            [
+              18.522251,
+              50.11307059999999
+            ],
+            [
+              18.5222517,
+              50.113070199999996
+            ],
+            [
+              18.5222524,
+              50.1130698
+            ],
+            [
+              18.5222532,
+              50.113069499999995
+            ],
+            [
+              18.522254,
+              50.1130691
+            ],
+            [
+              18.5222548,
+              50.1130688
+            ],
+            [
+              18.5222557,
+              50.11306859999999
+            ],
+            [
+              18.5222565,
+              50.1130684
+            ],
+            [
+              18.5222575,
+              50.1130682
+            ],
+            [
+              18.5222583,
+              50.11306809999999
+            ],
+            [
+              18.522259300000005,
+              50.11306799999999
+            ],
+            [
+              18.5222603,
+              50.113068
+            ],
+            [
+              18.5222611,
+              50.11306799999999
+            ],
+            [
+              18.5222621,
+              50.11306809999999
+            ],
+            [
+              18.5222787,
+              50.1129524
+            ],
+            [
+              18.5222775,
+              50.1129524
+            ],
+            [
+              18.5222763,
+              50.112952299999996
+            ],
+            [
+              18.5222752,
+              50.1129522
+            ],
+            [
+              18.522274,
+              50.112952099999994
+            ],
+            [
+              18.5222729,
+              50.1129519
+            ],
+            [
+              18.5222718,
+              50.1129516
+            ],
+            [
+              18.5222707,
+              50.1129513
+            ],
+            [
+              18.5222697,
+              50.112950999999995
+            ],
+            [
+              18.5222687,
+              50.112950600000005
+            ],
+            [
+              18.5222661,
+              50.1129484
+            ],
+            [
+              18.5222656,
+              50.1129479
+            ],
+            [
+              18.5222651,
+              50.11294730000001
+            ],
+            [
+              18.5222647,
+              50.11294649999999
+            ],
+            [
+              18.5222645,
+              50.1129457
+            ],
+            [
+              18.5222643,
+              50.1129448
+            ],
+            [
+              18.5222645,
+              50.11294399999999
+            ],
+            [
+              18.5222648,
+              50.11294319999999
+            ],
+            [
+              18.522265,
+              50.11294259999999
+            ],
+            [
+              18.5222655,
+              50.112942
+            ],
+            [
+              18.5222662,
+              50.1129413
+            ],
+            [
+              18.5222637,
+              50.112939700000005
+            ],
+            [
+              18.522281,
+              50.112930799999994
+            ],
+            [
+              18.5222779,
+              50.1129281
+            ],
+            [
+              18.522260900000003,
+              50.11293749999999
+            ],
+            [
+              18.5222584,
+              50.112935400000005
+            ],
+            [
+              18.522257,
+              50.1129357
+            ],
+            [
+              18.5222555,
+              50.112936
+            ],
+            [
+              18.5222539,
+              50.11293599999999
+            ],
+            [
+              18.5222524,
+              50.11293589999999
+            ],
+            [
+              18.5222508,
+              50.1129356
+            ],
+            [
+              18.5222495,
+              50.1129353
+            ],
+            [
+              18.5222481,
+              50.112934900000006
+            ],
+            [
+              18.5222471,
+              50.1129344
+            ],
+            [
+              18.5222464,
+              50.11293409999998
+            ],
+            [
+              18.5222456,
+              50.11293359999999
+            ],
+            [
+              18.5222449,
+              50.11293299999999
+            ],
+            [
+              18.5222442,
+              50.11293249999999
+            ],
+            [
+              18.5222435,
+              50.11293189999999
+            ],
+            [
+              18.5222429,
+              50.1129312
+            ],
+            [
+              18.5222424,
+              50.11293049999999
+            ],
+            [
+              18.5222418,
+              50.112929900000005
+            ],
+            [
+              18.5222415,
+              50.112929199999996
+            ],
+            [
+              18.5222411,
+              50.1129284
+            ],
+            [
+              18.522241,
+              50.11292769999999
+            ],
+            [
+              18.5222407,
+              50.112927
+            ],
+            [
+              18.5222407,
+              50.11292620000001
+            ],
+            [
+              18.5222407,
+              50.11292549999999
+            ],
+            [
+              18.5222407,
+              50.11292469999999
+            ],
+            [
+              18.5222409,
+              50.11292399999999
+            ],
+            [
+              18.5220625,
+              50.1129132
+            ],
+            [
+              18.5220626,
+              50.11291379999999
+            ],
+            [
+              18.5220627,
+              50.1129143
+            ],
+            [
+              18.5220627,
+              50.11291479999999
+            ],
+            [
+              18.5220627,
+              50.11291539999999
+            ],
+            [
+              18.5220627,
+              50.112916000000006
+            ],
+            [
+              18.5220626,
+              50.11291649999999
+            ],
+            [
+              18.5220624,
+              50.11291709999999
+            ],
+            [
+              18.5220622,
+              50.112917599999996
+            ],
+            [
+              18.5220617,
+              50.11291830000001
+            ],
+            [
+              18.5220612,
+              50.11291909999999
+            ],
+            [
+              18.5220607,
+              50.112919599999984
+            ],
+            [
+              18.5220603,
+              50.11292
+            ],
+            [
+              18.5220597,
+              50.1129205
+            ],
+            [
+              18.5220592,
+              50.1129209
+            ],
+            [
+              18.5220585,
+              50.1129213
+            ],
+            [
+              18.5220578,
+              50.112921699999994
+            ],
+            [
+              18.5220571,
+              50.11292199999998
+            ],
+            [
+              18.5220564,
+              50.11292229999999
+            ],
+            [
+              18.5220557,
+              50.1129225
+            ],
+            [
+              18.5220548,
+              50.11292279999999
+            ],
+            [
+              18.522054,
+              50.112922999999995
+            ],
+            [
+              18.5220531,
+              50.11292319999999
+            ],
+            [
+              18.5220523,
+              50.11292329999999
+            ],
+            [
+              18.5220515,
+              50.1129234
+            ],
+            [
+              18.5220506,
+              50.11292339999999
+            ],
+            [
+              18.5220498,
+              50.112923499999994
+            ],
+            [
+              18.5220489,
+              50.11292340000001
+            ],
+            [
+              18.522048,
+              50.1129234
+            ],
+            [
+              18.5220471,
+              50.1129233
+            ],
+            [
+              18.5220463,
+              50.112923099999996
+            ],
+            [
+              18.5220455,
+              50.11292300000001
+            ],
+            [
+              18.5220448,
+              50.1129228
+            ],
+            [
+              18.5220421,
+              50.11292410000001
+            ],
+            [
+              18.5220271,
+              50.1129123
+            ],
+            [
+              18.5220227,
+              50.1129146
+            ],
+            [
+              18.5220379,
+              50.11292629999999
+            ],
+            [
+              18.5220353,
+              50.1129276
+            ],
+            [
+              18.5220355,
+              50.112928200000006
+            ],
+            [
+              18.5220353,
+              50.1129288
+            ],
+            [
+              18.5220353,
+              50.11292949999999
+            ],
+            [
+              18.5220352,
+              50.1129301
+            ],
+            [
+              18.5220349,
+              50.1129306
+            ],
+            [
+              18.5220346,
+              50.1129313
+            ],
+            [
+              18.5220342,
+              50.11293179999999
+            ],
+            [
+              18.5220337,
+              50.11293239999999
+            ],
+            [
+              18.5220333,
+              50.11293299999999
+            ],
+            [
+              18.5220328,
+              50.112933399999996
+            ],
+            [
+              18.5220322,
+              50.112933999999996
+            ],
+            [
+              18.5220315,
+              50.1129344
+            ],
+            [
+              18.5220309,
+              50.112934900000006
+            ],
+            [
+              18.5220301,
+              50.112935199999995
+            ],
+            [
+              18.5220294,
+              50.1129356
+            ],
+            [
+              18.5220285,
+              50.11293589999999
+            ],
+            [
+              18.5220277,
+              50.112936199999986
+            ],
+            [
+              18.5220269,
+              50.1129365
+            ],
+            [
+              18.5220259,
+              50.1129367
+            ],
+            [
+              18.5220249,
+              50.1129368
+            ],
+            [
+              18.522024,
+              50.112936999999995
+            ],
+            [
+              18.522023100000002,
+              50.1129371
+            ],
+            [
+              18.5220221,
+              50.1129371
+            ],
+            [
+              18.5220211,
+              50.1129372
+            ],
+            [
+              18.5220201,
+              50.112937099999996
+            ],
+            [
+              18.5220192,
+              50.112936999999995
+            ],
+            [
+              18.5220183,
+              50.112936899999994
+            ],
+            [
+              18.5220008,
+              50.1130523
+            ],
+            [
+              18.5220016,
+              50.1130521
+            ],
+            [
+              18.5220025,
+              50.1130521
+            ],
+            [
+              18.5220035,
+              50.11305209999999
+            ],
+            [
+              18.5220043,
+              50.11305209999999
+            ],
+            [
+              18.5220051,
+              50.113052100000004
+            ],
+            [
+              18.5220061,
+              50.113052199999984
+            ],
+            [
+              18.522007,
+              50.1130523
+            ],
+            [
+              18.5220078,
+              50.1130524
+            ],
+            [
+              18.5220086,
+              50.1130526
+            ],
+            [
+              18.5220099,
+              50.11305300000001
+            ],
+            [
+              18.522011,
+              50.1130534
+            ],
+            [
+              18.5220117,
+              50.11305370000001
+            ],
+            [
+              18.5220127,
+              50.113054299999995
+            ],
+            [
+              18.5220136,
+              50.1130549
+            ],
+            [
+              18.5220142,
+              50.11305529999999
+            ],
+            [
+              18.5220148,
+              50.1130558
+            ],
+            [
+              18.5220152,
+              50.11305620000001
+            ],
+            [
+              18.5220156,
+              50.1130568
+            ],
+            [
+              18.5220161,
+              50.1130575
+            ],
+            [
+              18.5220165,
+              50.11305829999999
+            ],
+            [
+              18.5220167,
+              50.113059
+            ],
+            [
+              18.5220168,
+              50.113059499999984
+            ],
+            [
+              18.5220169,
+              50.11306
+            ],
+            [
+              18.5220169,
+              50.113060600000004
+            ],
+            [
+              18.5220168,
+              50.1130612
+            ],
+            [
+              18.5220168,
+              50.113061699999996
+            ],
+            [
+              18.5220166,
+              50.1130623
+            ],
+            [
+              18.5220164,
+              50.1130628
+            ],
+            [
+              18.5220161,
+              50.113063399999994
+            ],
+            [
+              18.5220158,
+              50.1130639
+            ],
+            [
+              18.522018,
+              50.1130653
+            ],
+            [
+              18.521999900000004,
+              50.11307490000001
+            ],
+            [
+              18.5220036,
+              50.11307729999999
+            ],
+            [
+              18.5220213,
+              50.11306810000001
+            ],
+            [
+              18.522023,
+              50.11306969999999
+            ],
+            [
+              18.5220238,
+              50.11306949999999
+            ],
+            [
+              18.5220251,
+              50.1130693
+            ],
+            [
+              18.5220262,
+              50.1130692
+            ],
+            [
+              18.5220271,
+              50.11306909999999
+            ],
+            [
+              18.5220279,
+              50.1130691
+            ],
+            [
+              18.5220287,
+              50.1130691
+            ],
+            [
+              18.5220296,
+              50.1130691
+            ],
+            [
+              18.5220304,
+              50.1130692
+            ],
+            [
+              18.5220313,
+              50.1130694
+            ],
+            [
+              18.5220321,
+              50.113069499999995
+            ],
+            [
+              18.5220328,
+              50.11306969999999
+            ],
+            [
+              18.5220336,
+              50.11306989999999
+            ],
+            [
+              18.5220343,
+              50.11307019999999
+            ],
+            [
+              18.522035,
+              50.1130705
+            ],
+            [
+              18.522036,
+              50.113071
+            ],
+            [
+              18.5220371,
+              50.1130717
+            ],
+            [
+              18.5220379,
+              50.11307239999999
+            ],
+            [
+              18.5220384,
+              50.113072800000005
+            ],
+            [
+              18.5220388,
+              50.11307330000001
+            ],
+            [
+              18.5220392,
+              50.1130737
+            ],
+            [
+              18.5220395,
+              50.11307430000001
+            ],
+            [
+              18.5220399,
+              50.113074999999995
+            ],
+            [
+              18.5220402,
+              50.1130758
+            ],
+            [
+              18.5220401,
+              50.11307630000001
+            ],
+            [
+              18.5220403,
+              50.1130769
+            ],
+            [
+              18.5220403,
+              50.1130774
+            ],
+            [
+              18.5220401,
+              50.11307790000001
+            ],
+            [
+              18.52204,
+              50.1130785
+            ],
+            [
+              18.5220398,
+              50.113079000000006
+            ],
+            [
+              18.5220411,
+              50.1130791
+            ],
+            [
+              18.5220369,
+              50.1131028
+            ],
+            [
+              18.5220369,
+              50.1131034
+            ],
+            [
+              18.5220368,
+              50.11310399999999
+            ],
+            [
+              18.5220366,
+              50.1131046
+            ],
+            [
+              18.5220364,
+              50.11310529999999
+            ],
+            [
+              18.5220361,
+              50.1131059
+            ],
+            [
+              18.5220358,
+              50.1131064
+            ],
+            [
+              18.5220354,
+              50.113107099999986
+            ],
+            [
+              18.5220348,
+              50.113107799999995
+            ],
+            [
+              18.5220341,
+              50.1131085
+            ],
+            [
+              18.5220334,
+              50.11310909999999
+            ],
+            [
+              18.5220327,
+              50.1131098
+            ],
+            [
+              18.5220318,
+              50.11311039999999
+            ],
+            [
+              18.5220309,
+              50.11311090000001
+            ],
+            [
+              18.52203,
+              50.113111499999995
+            ],
+            [
+              18.5220278,
+              50.1131115
+            ],
+            [
+              18.5220119,
+              50.113219699999995
+            ],
+            [
+              18.522013,
+              50.1132198
+            ],
+            [
+              18.5220142,
+              50.113219900000004
+            ],
+            [
+              18.5220152,
+              50.1132201
+            ],
+            [
+              18.5220165,
+              50.113220399999996
+            ],
+            [
+              18.5220177,
+              50.113220799999986
+            ],
+            [
+              18.522019,
+              50.1132214
+            ],
+            [
+              18.5220198,
+              50.113221999999986
+            ],
+            [
+              18.5220206,
+              50.1132225
+            ],
+            [
+              18.522021200000005,
+              50.1132232
+            ],
+            [
+              18.522021800000005,
+              50.11322390000001
+            ],
+            [
+              18.5220224,
+              50.1132247
+            ],
+            [
+              18.5220227,
+              50.11322569999999
+            ],
+            [
+              18.522022800000002,
+              50.11322679999999
+            ],
+            [
+              18.522022800000002,
+              50.113227699999996
+            ],
+            [
+              18.5221889,
+              50.1132378
+            ],
+            [
+              18.5221892,
+              50.11323670000001
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/376321049",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "FIREMED",
+          "operator": "FIREMED",
+          "emergency": "ambulance_station",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.4429316,
+              50.00722309999998
+            ],
+            [
+              18.4429193,
+              50.0072055
+            ],
+            [
+              18.4429446,
+              50.007197299999994
+            ],
+            [
+              18.4428918,
+              50.00712569999999
+            ],
+            [
+              18.4427831,
+              50.0071592
+            ],
+            [
+              18.442803000000005,
+              50.00718659999999
+            ],
+            [
+              18.4428489,
+              50.0072487
+            ],
+            [
+              18.4429316,
+              50.00722309999998
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/778800219",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Pogotowie Ratunkowe Pawłowice",
+          "source": "www.geoportal.gov.pl",
+          "emergency": "ambulance_station",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.6979843,
+              49.9604568
+            ],
+            [
+              18.698094,
+              49.960475699999996
+            ],
+            [
+              18.6981371,
+              49.96045449999999
+            ],
+            [
+              18.698068800000005,
+              49.960397399999984
+            ],
+            [
+              18.6980064,
+              49.960429399999995
+            ],
+            [
+              18.6979724,
+              49.9604467
+            ],
+            [
+              18.6979843,
+              49.9604568
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/832169198",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Oddział Wojewódzkiego Pogotowia Ratunkowego w Katowicach",
+          "emergency": "ambulance_station",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.444846,
+              50.3921113
+            ],
+            [
+              18.4447602,
+              50.39204639999999
+            ],
+            [
+              18.4446248,
+              50.392119099999995
+            ],
+            [
+              18.444710500000003,
+              50.392184
+            ],
+            [
+              18.444846,
+              50.3921113
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/888190768",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "emergency": "ambulance_station",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.5834921,
+              49.94624339999999
+            ],
+            [
+              18.5835824,
+              49.946177500000005
+            ],
+            [
+              18.5835521,
+              49.946160299999995
+            ],
+            [
+              18.583736,
+              49.94602629999999
+            ],
+            [
+              18.5836555,
+              49.94598059999999
+            ],
+            [
+              18.5834606,
+              49.94612260000001
+            ],
+            [
+              18.5833121,
+              49.9460382
+            ],
+            [
+              18.5832327,
+              49.946096000000004
+            ],
+            [
+              18.5834921,
+              49.94624339999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1473959480",
+        "domain": "emergency",
+        "asset_type": "ambulance_rescue",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+          "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+          "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "emergency": "ambulance_station",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.6883124,
+              50.0344939
+            ],
+            [
+              18.688352,
+              50.034447500000006
+            ],
+            [
+              18.6883427,
+              50.03443709999999
+            ],
+            [
+              18.688321800000004,
+              50.0344266
+            ],
+            [
+              18.6883171,
+              50.03441159999999
+            ],
+            [
+              18.6883381,
+              50.034405600000014
+            ],
+            [
+              18.6883055,
+              50.03430389999999
+            ],
+            [
+              18.688203,
+              50.0343129
+            ],
+            [
+              18.68821,
+              50.034347299999986
+            ],
+            [
+              18.6881518,
+              50.0343608
+            ],
+            [
+              18.6881355,
+              50.03435329999999
+            ],
+            [
+              18.6880889,
+              50.034413099999995
+            ],
+            [
+              18.6883124,
+              50.0344939
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

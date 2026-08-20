@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 
 
-FIXTURE_ROOT = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_60km" / "power"
+FIXTURE_ROOT = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_35km" / "power"
 
 
 def test_power_support_snapshot_is_full_bounded_and_classified() -> None:
@@ -12,7 +12,7 @@ def test_power_support_snapshot_is_full_bounded_and_classified() -> None:
     assert snapshot["metadata"]["snapshot_at"] == "2026-08-03T08:45:36Z"
     assert snapshot["metadata"]["coverage"] == "bounded_aoi_snapshot"
     assert snapshot["metadata"]["source_checksum"]
-    assert len(snapshot["features"]) == 133_129
+    assert len(snapshot["features"]) == 43_801
     classes = {feature["properties"].get("power") or feature["properties"].get("man_made") for feature in snapshot["features"]}
     assert classes == {"tower", "pole", "portal", "utility_pole"}
 

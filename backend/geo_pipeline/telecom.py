@@ -11,11 +11,11 @@ from geo_pipeline.contracts import normalize_analytical_vector_layer
 from geo_pipeline.query_catalog import TELECOM_OSM_QUERY
 from geo_pipeline.source_registry import guard_source_access
 
-TELECOM_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_60km" / "telecom" / "osm-telecom.geojson"
+TELECOM_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_35km" / "telecom" / "osm-telecom.geojson"
 TELECOM_SNAPSHOT_AT = "2026-08-10T10:00:00Z"
 TELECOM_LIMITATIONS = [
     "OSM telecom infrastructure and communication-network completeness varies significantly by area and operator.",
-    "The committed contract fixture demonstrates explicit telecom categories; it is not a complete Rybnik 60 km network, coverage or transmission model.",
+    "The committed contract fixture demonstrates explicit telecom categories; it is not a complete Rybnik 35 km network, coverage or transmission model.",
     "Generic masts, towers, poles, buildings, ducts and utilities without qualifying communication tags are excluded to prevent false telecom attribution.",
     "No qualified official analytical telecom-network vector feed is enabled; an empty telecom.lines layer remains an explicit source gap.",
     "KIUT telecom WMS layers are visual reference overlays only and do not replace analytical vector artifacts.",
@@ -86,7 +86,7 @@ def telecom_osm_metadata(*, layer_id: str, readiness: str) -> dict[str, Any]:
     return {
         "cache_layout_version": "provider_cache/v1",
         "geojson_contract_version": "provider_geojson/v1",
-        "aoi_id": "rybnik_60km",
+        "aoi_id": "rybnik_35km",
         "domain": "telecom",
         "layer_id": layer_id,
         "source": "OpenStreetMap",

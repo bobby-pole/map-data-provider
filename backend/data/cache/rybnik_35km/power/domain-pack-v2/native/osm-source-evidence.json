@@ -1,0 +1,10 @@
+{
+  "source_registry_id": "openstreetmap",
+  "source_url": "https://overpass-api.de/api/interpreter",
+  "source_query": "OSMnx features_from_point: power and man_made=utility_pole tags for Rybnik 35 km AOI.",
+  "snapshot_at": "2026-07-22T00:00:00Z",
+  "pipeline_version": "geo_pipeline/cache/v1",
+  "query_version": "power-osmnx/v1",
+  "attribute_snapshot_at": "2026-08-03T09:15:02Z",
+  "attribute_source_checksum": "ebb68592071626638662d835e1fa0a2d26f9edd68c1544da2aa697011b1e0b4c"
+}

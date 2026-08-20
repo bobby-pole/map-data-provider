@@ -7,8 +7,8 @@ from geo_pipeline.worker import run_worker
 
 
 def test_offline_fixture_pipeline_produces_a_complete_provider_contract(tmp_path: Path) -> None:
-    result = run_worker(aoi="rybnik_60km", domain="power", input_mode="fixture", cache_root=tmp_path)
-    cache = read_cached_layer(cache_paths("rybnik_60km", "power", root=tmp_path))
+    result = run_worker(aoi="rybnik_35km", domain="power", input_mode="fixture", cache_root=tmp_path)
+    cache = read_cached_layer(cache_paths("rybnik_35km", "power", root=tmp_path))
     sources = load_source_registry()["sources"]
 
     assert result["status"] == "ok"

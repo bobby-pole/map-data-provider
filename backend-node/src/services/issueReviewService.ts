@@ -14,7 +14,7 @@ import {
 import { ProviderDataError } from "./providerDataService.js";
 
 const projectRoot = path.resolve(fileURLToPath(new URL("../../../", import.meta.url)));
-const defaultIssueSnapshotPath = path.join(projectRoot, "backend", "data", "issues", "rybnik_60km.json");
+const defaultIssueSnapshotPath = path.join(projectRoot, "backend", "data", "issues", "rybnik_35km.json");
 const defaultReviewStorePath = path.join(projectRoot, "backend", "data", "reviews", "issue-reviews.json");
 let reviewUpdateQueue: Promise<void> = Promise.resolve();
 

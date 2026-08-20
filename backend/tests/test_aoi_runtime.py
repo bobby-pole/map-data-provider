@@ -1,24 +1,29 @@
-import json
+from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
+import json
 
 import pytest
 
-from geo_pipeline.aoi_runtime import RuntimeRequestError, administrative_catalog, context_outcomes, profile_outcomes, resolve_runtime_request
+from geo_pipeline.aoi_runtime import RuntimeRequestError, administrative_boundary, administrative_catalog, context_outcomes, preflight_runtime_request, profile_outcomes, resolve_runtime_request
 from geo_pipeline.config import CACHE_DIR
 from geo_pipeline.domain_pack import read_domain_pack
-from geo_pipeline.runtime_osm import publish_runtime_osm_collection
+from geo_pipeline.runtime_osm import _power_relation_evidence, _unavailable_power_relation_evidence, publish_runtime_osm_collection
 from geo_pipeline.query_catalog import DISTRICT_HEATING_OSM_QUERY, GAS_OSM_QUERY, POWER_OSM_QUERY, SEWER_OSM_QUERY, TELECOM_OSM_QUERY, TRANSPORT_OSM_QUERY, WATER_OSM_QUERY
 from geo_pipeline.worker import run_runtime_worker
 
 
 def point_radius() -> dict[str, object]:
-    return {"type": "point_radius", "longitude": 18.546285, "latitude": 50.102174, "radius_m": 60_000}
+    return {"type": "point_radius", "longitude": 18.546285, "latitude": 50.102174, "radius_m": 35_000}
 
 
-def test_administrative_catalog_is_source_labelled_and_distinguishes_rybnik_units() -> None:
+def test_administrative_catalog_is_source_labelled_national_hierarchy_without_bulk_geometry() -> None:
     catalogue = administrative_catalog()
     assert catalogue["source_registry_id"] == "prg_wfs"
-    assert {unit["id"] for unit in catalogue["units"]} >= {"county_rybnik_city", "county_rybnicki", "gmina_rybnik"}
+    assert catalogue["catalog_version"] == "prg_administrative_catalog/v2"
+    assert len(catalogue["units"]) == 2_875
+    assert {unit["id"] for unit in catalogue["units"]} >= {"county_2473", "county_2412", "gmina_2473011", "voivodeship_24"}
+    assert next(unit for unit in catalogue["units"] if unit["id"] == "gmina_2473011")["parent_id"] == "county_2473"
+    assert all("geometry" not in unit for unit in catalogue["units"])
 
 
 def test_administrative_union_and_profile_order_have_one_request_identity() -> None:
@@ -27,7 +32,40 @@ def test_administrative_union_and_profile_order_have_one_request_identity() -> N
 
     assert first["request_id"] == equivalent["request_id"]
     assert first["aoi"]["geometry"]["type"] in {"Polygon", "MultiPolygon"}
-    assert first["aoi"]["boundary_provenance"]["unit_ids"] == sorted(["county_rybnik_city", "county_rybnicki"])
+    assert first["aoi"]["boundary_provenance"]["unit_ids"] == ["county_2412", "county_2473"]
+
+
+def test_administrative_boundary_and_preflight_keep_actual_prg_geometry_before_acquisition() -> None:
+    boundary = administrative_boundary(["gmina_2473011"])
+    assert boundary["aoi"]["geometry"]["type"] in {"Polygon", "MultiPolygon"}
+    assert boundary["aoi"]["boundary_provenance"]["source_registry_id"] == "prg_wfs"
+    assert boundary["within_provider_area_limit"] is True
+
+    blocked = preflight_runtime_request({"aoi": {"type": "administrative_selection", "unit_ids": ["voivodeship_14"]}, "profiles": ["power"]})
+    assert blocked["status"] == "blocked"
+    assert blocked["code"] == "aoi_area_limit"
+    assert blocked["aoi"]["geometry"]["type"] in {"Polygon", "MultiPolygon"}
+
+
+def test_administrative_selection_rejects_more_than_one_voivodeship() -> None:
+    with pytest.raises(RuntimeRequestError, match="one voivodeship"):
+        administrative_boundary(["voivodeship_14", "county_2473"])
+    with pytest.raises(RuntimeRequestError, match="one voivodeship"):
+        preflight_runtime_request({"aoi": {"type": "administrative_selection", "unit_ids": ["voivodeship_14", "county_2473"]}, "profiles": ["power"]})
+
+
+def test_administrative_union_tolerates_generalised_prg_topology_when_excluding_a_county() -> None:
+    catalogue = administrative_catalog()["units"]
+    by_id = {unit["id"]: unit for unit in catalogue}
+    selected_gminas = [
+        unit["id"] for unit in catalogue
+        if unit["kind"] == "gmina"
+        and by_id[by_id[unit["parent_id"]]["parent_id"]]["id"] == "voivodeship_24"
+        and unit["parent_id"] != "county_2473"
+    ]
+    boundary = administrative_boundary(selected_gminas)
+    assert len(selected_gminas) > 100
+    assert boundary["aoi"]["geometry"]["type"] in {"Polygon", "MultiPolygon"}
 
 
 def test_runtime_profiles_are_explicit_and_do_not_fabricate_non_fixture_data() -> None:
@@ -36,8 +74,8 @@ def test_runtime_profiles_are_explicit_and_do_not_fabricate_non_fixture_data() -
     by_domain = {outcome["domain"]: outcome for outcome in outcomes}
 
     assert set(by_domain) == {"power", "public", "transport", "water", "gas", "sewer"}
-    assert all(outcome["status"] == "ready" and outcome["artifact_aoi_id"] == "rybnik_60km" for outcome in outcomes)
-    assert by_domain["transport"]["query_version"] == "transport-osm/v3"
+    assert all(outcome["status"] == "ready" and outcome["artifact_aoi_id"] == "rybnik_35km" for outcome in outcomes)
+    assert by_domain["transport"]["query_version"] == "transport-osm/v4"
     assert by_domain["transport"]["tags"] == TRANSPORT_OSM_QUERY.tags
     assert by_domain["power"]["tags"] == POWER_OSM_QUERY.tags
     assert by_domain["water"]["tags"] == WATER_OSM_QUERY.tags
@@ -61,7 +99,7 @@ def test_runtime_reuses_only_a_valid_local_request_cache(tmp_path, monkeypatch) 
     assert first["cached_at"].endswith("Z")
     assert second["request_result"] == "cache"
     assert second["outcomes"] == first["outcomes"]
-    assert validated == [("rybnik_60km", "power", CACHE_DIR), ("rybnik_60km", "public", CACHE_DIR)]
+    assert validated == [("rybnik_35km", "power", CACHE_DIR), ("rybnik_35km", "public", CACHE_DIR)]
 
 
 def test_runtime_ignores_incomplete_legacy_local_cache_and_refreshes_it(tmp_path) -> None:
@@ -78,7 +116,7 @@ def test_runtime_ignores_incomplete_legacy_local_cache_and_refreshes_it(tmp_path
 
     assert response["request_result"] == "refresh"
     assert response["contexts"]
-    assert response["outcomes"][0]["artifact_aoi_id"] == "rybnik_60km"
+    assert response["outcomes"][0]["artifact_aoi_id"] == "rybnik_35km"
 
 
 def test_runtime_ignores_cache_without_acquisition_counts(tmp_path) -> None:
@@ -143,7 +181,62 @@ def test_runtime_power_publication_builds_a_valid_pmtiles_domain_pack(tmp_path) 
         "accepted_feature_count": 2,
         "derived_feature_count": 0,
     }
-    assert [artifact["id"] for artifact in read_domain_pack(aoi["aoi_id"], "power", root=tmp_path)["artifacts"]] == ["power.lines", "power.assets"]
+    assert [artifact["id"] for artifact in read_domain_pack(aoi["aoi_id"], "power", root=tmp_path)["artifacts"]] == ["power.lines", "power.assets", "power.osm_relation_evidence"]
+
+
+def test_runtime_power_publication_keeps_only_delivered_osm_circuit_members(tmp_path) -> None:
+    aoi = resolve_runtime_request({"aoi": {"type": "administrative_selection", "unit_ids": ["county_rybnik_city"]}, "profiles": ["power"]})["aoi"]
+    source = {"type": "FeatureCollection", "features": [
+        {"type": "Feature", "properties": {"element": "way", "id": 1, "ss_power_category": "line", "power": "line"}, "geometry": {"type": "LineString", "coordinates": [[18.45, 50.05], [18.55, 50.15]]}},
+        {"type": "Feature", "properties": {"element": "node", "id": 2, "ss_power_category": "substation", "power": "substation"}, "geometry": {"type": "Point", "coordinates": [18.5, 50.1]}},
+        {"type": "Feature", "properties": {"element": "way", "id": 4, "ss_power_category": "line", "power": "line"}, "geometry": {"type": "LineString", "coordinates": [[18.46, 50.06], [18.56, 50.16]]}},
+    ]}
+    relation_elements = [
+        {"type": "relation", "id": 33, "tags": {"power": "circuit", "name": "Fixture circuit"}, "members": [
+            {"type": "node", "ref": 2, "role": "substation"},
+            {"type": "way", "ref": 1, "role": "section"},
+            {"type": "way", "ref": 3, "role": "section"},
+        ]},
+        {"type": "way", "id": 1, "nodes": [10, 11]},
+        {"type": "way", "id": 3, "nodes": [12, 13]},
+    ]
+
+    publish_runtime_osm_collection(aoi=aoi, domain="power", source=source, query_version="power-osm/v1", root=tmp_path, relation_elements=relation_elements)
+
+    pack = read_domain_pack(aoi["aoi_id"], "power", root=tmp_path)
+    relation_artifact = next(artifact for artifact in pack["artifacts"] if artifact["id"] == "power.osm_relation_evidence")
+    evidence = json.loads((tmp_path / aoi["aoi_id"] / "power" / "domain-pack-v2" / relation_artifact["path"]).read_text())
+    assert evidence["relations"][0]["relation_id"] == "relation/33"
+    assert [member["source_id"] for member in evidence["relations"][0]["members"]] == ["node/2", "way/1"]
+    assert evidence["relations"][0]["members"][1]["endpoint_evidence"] == {"start": "node/10", "end": "node/11"}
+    assert evidence["reverse_member_index"] == {"node/2": ["relation/33"], "way/1": ["relation/33"]}
+
+
+def test_unavailable_power_relation_evidence_keeps_the_power_snapshot_honest() -> None:
+    evidence = _unavailable_power_relation_evidence(
+        {"type": "Polygon", "coordinates": [[[18.4, 50.0], [18.6, 50.0], [18.6, 50.2], [18.4, 50.0]]]},
+        TimeoutError("Overpass relation endpoint timed out"),
+    )
+
+    assert evidence["availability"] == "unavailable"
+    assert evidence["relations"] == []
+    assert evidence["reverse_member_index"] == {}
+    assert "Overpass relation endpoint timed out" in evidence["limitations"][1]
+
+
+def test_power_relation_evidence_accepts_normalized_delivered_source_ids() -> None:
+    source = {"type": "FeatureCollection", "features": [
+        {"type": "Feature", "properties": {"source_id": "way/1"}, "geometry": {"type": "LineString", "coordinates": [[18.49, 50.09], [18.50, 50.10]]}},
+        {"type": "Feature", "properties": {"source_id": "way/2"}, "geometry": {"type": "Polygon", "coordinates": [[[18.49, 50.09], [18.50, 50.09], [18.50, 50.10], [18.49, 50.09]]]}},
+    ]}
+    elements = [{"type": "relation", "id": 8, "tags": {"power": "circuit", "name": "fixture circuit"}, "members": [
+        {"type": "way", "ref": 1, "role": "line"}, {"type": "way", "ref": 2, "role": "substation"}, {"type": "way", "ref": 3, "role": "line"},
+    ]}]
+
+    evidence = _power_relation_evidence({"type": "Polygon", "coordinates": [[[18.48, 50.08], [18.51, 50.08], [18.51, 50.11], [18.48, 50.08]]]}, source, elements)
+
+    assert evidence["reverse_member_index"] == {"way/1": ["relation/8"], "way/2": ["relation/8"]}
+    assert evidence["relations"][0]["members"][0]["geometry"]["type"] == "LineString"
 
 
 def test_runtime_public_publication_keeps_semantic_categories_independent(tmp_path) -> None:
@@ -224,7 +317,7 @@ def test_runtime_transport_publication_keeps_semantic_categories_independent(tmp
         {"type": "Feature", "properties": {"element": "node", "id": 2, "provider_category": "stations", "railway": "station", "name": "fixture station"}, "geometry": {"type": "Point", "coordinates": [18.5, 50.1]}},
     ]}
 
-    publish_runtime_osm_collection(aoi=aoi, domain="transport", source=source, query_version="transport-osm/v3", root=tmp_path)
+    publish_runtime_osm_collection(aoi=aoi, domain="transport", source=source, query_version="transport-osm/v4", root=tmp_path)
 
     pack = read_domain_pack(aoi["aoi_id"], "transport", root=tmp_path)
     assert [artifact["id"] for artifact in pack["artifacts"]] == ["transport.roads", "transport.stations", "transport.inspection_points"]
@@ -262,7 +355,7 @@ def test_live_worker_refreshes_transport_profile_for_non_demo_aoi(tmp_path, monk
     monkeypatch.setattr(worker_module, "refresh_runtime_osm_domain", mock_refresh)
     monkeypatch.setattr(worker_module, "read_domain_pack", lambda aoi_id, domain, *, root: validated.append((aoi_id, domain, root)))
 
-    response = run_runtime_worker(request=request, input_mode="live", cache_root=CACHE_DIR, runtime_root=tmp_path)
+    response = run_runtime_worker(request=request, input_mode="live", cache_root=CACHE_DIR, runtime_root=tmp_path, executor_type=ThreadPoolExecutor)
 
     assert response["request_result"] == "refresh"
     assert response["job_state"] == "ready"
@@ -286,7 +379,7 @@ def test_live_worker_refreshes_gas_profile_for_non_demo_aoi(tmp_path, monkeypatc
     monkeypatch.setattr(worker_module, "refresh_runtime_osm_domain", mock_refresh)
     monkeypatch.setattr(worker_module, "read_domain_pack", lambda aoi_id, domain, *, root: validated.append((aoi_id, domain, root)))
 
-    response = run_runtime_worker(request=request, input_mode="live", cache_root=CACHE_DIR, runtime_root=tmp_path)
+    response = run_runtime_worker(request=request, input_mode="live", cache_root=CACHE_DIR, runtime_root=tmp_path, executor_type=ThreadPoolExecutor)
 
     assert response["outcomes"][0]["domain"] == "gas"
     assert response["outcomes"][0]["status"] == "ready"
@@ -307,9 +400,36 @@ def test_live_worker_refreshes_sewer_profile_for_non_demo_aoi(tmp_path, monkeypa
     monkeypatch.setattr(worker_module, "refresh_runtime_osm_domain", mock_refresh)
     monkeypatch.setattr(worker_module, "read_domain_pack", lambda aoi_id, domain, *, root: validated.append((aoi_id, domain, root)))
 
-    response = run_runtime_worker(request=request, input_mode="live", cache_root=CACHE_DIR, runtime_root=tmp_path)
+    response = run_runtime_worker(request=request, input_mode="live", cache_root=CACHE_DIR, runtime_root=tmp_path, executor_type=ThreadPoolExecutor)
 
     assert response["outcomes"][0]["domain"] == "sewer"
     assert response["outcomes"][0]["status"] == "ready"
     assert calls and calls[0][1] == "sewer"
     assert validated == [(response["aoi"]["aoi_id"], "sewer", CACHE_DIR)]
+
+
+def test_live_worker_with_thread_pool_executor_isolates_from_network(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    request = {"aoi": {"type": "administrative_selection", "unit_ids": ["county_rybnicki"]}, "profiles": ["water"]}
+    called = False
+
+    def mock_refresh(*, aoi: dict, domain: str, root: Path) -> dict:
+        nonlocal called
+        called = True
+        return {
+            "status": "ready",
+            "detail": "Hermetic in-memory mock acquisition.",
+            "artifact_aoi_id": aoi["aoi_id"],
+            "cache_status": "fresh",
+            "queried_feature_count": 10,
+            "accepted_feature_count": 8,
+            "derived_feature_count": 2,
+        }
+
+    import geo_pipeline.worker as worker_module
+    monkeypatch.setattr(worker_module, "refresh_runtime_osm_domain", mock_refresh)
+    monkeypatch.setattr(worker_module, "read_domain_pack", lambda *args, **kwargs: None)
+
+    result = run_runtime_worker(request=request, input_mode="live", cache_root=CACHE_DIR, runtime_root=tmp_path, executor_type=ThreadPoolExecutor)
+    assert called is True
+    assert result["outcomes"][0]["status"] == "ready"
+    assert result["outcomes"][0]["detail"] == "Hermetic in-memory mock acquisition."

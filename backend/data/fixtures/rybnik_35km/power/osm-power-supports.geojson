@@ -1,0 +1,210 @@
+{
+  "type": "FeatureCollection",
+  "name": "osm-power-supports",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "element": "node",
+        "id": 1528794574,
+        "power": "tower",
+        "operator": "Tauron",
+        "operator:wikidata": "Q2397198",
+        "ref": "11"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5205587,
+          50.1095243
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "element": "node",
+        "id": 1528794589,
+        "power": "tower",
+        "operator": "Tauron",
+        "operator:wikidata": "Q2397198",
+        "ref": "10"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5243594,
+          50.1099813
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "element": "node",
+        "id": 1758409133,
+        "power": "tower",
+        "operator": "Tauron",
+        "operator:wikidata": "Q2397198",
+        "ref": "9"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5588499,
+          50.1080071
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "element": "node",
+        "id": 1954863228,
+        "power": "tower",
+        "operator": "Tauron",
+        "operator:wikidata": "Q2397198",
+        "ref": "20",
+        "material": "metal"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5592908,
+          50.0931996
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "element": "node",
+        "id": 1954863232,
+        "power": "tower",
+        "operator": "Tauron",
+        "operator:wikidata": "Q2397198",
+        "ref": "19",
+        "material": "metal"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5598525,
+          50.094289199999984
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "element": "node",
+        "id": 1954856086,
+        "power": "portal"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5584942,
+          50.0916154
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "element": "node",
+        "id": 1954856105,
+        "power": "portal"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5585582,
+          50.0917324
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "element": "node",
+        "id": 1758555079,
+        "power": "pole",
+        "material": "steel"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5595757,
+          50.1073779
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "element": "node",
+        "id": 4178078511,
+        "power": "pole"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5360138,
+          50.108408799999985
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "element": "node",
+        "id": 4178078542,
+        "power": "pole"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5365907,
+          50.1085277
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "element": "node",
+        "id": 4736100326,
+        "power": "pole"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5332981,
+          50.09083969999998
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "element": "node",
+        "id": 12514589575,
+        "power": "pole"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.558111,
+          50.1082654
+        ]
+      }
+    }
+  ]
+}

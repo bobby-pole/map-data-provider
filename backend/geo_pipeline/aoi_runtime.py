@@ -6,9 +6,11 @@ import hashlib
 import json
 import math
 from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Literal
 
+from shapely import make_valid
 from shapely.geometry import mapping, shape
 from shapely.ops import unary_union
 
@@ -16,12 +18,12 @@ from geo_pipeline.aoi import AoiResolutionError, MAX_AREA_SQ_M, WGS84, _resolved
 from geo_pipeline.query_catalog import GAS_OSM_QUERY, POWER_OSM_QUERY, SEWER_OSM_QUERY, TRANSPORT_OSM_QUERY, WATER_OSM_QUERY, INDUSTRIAL_OSM_QUERY, TELECOM_OSM_QUERY, DISTRICT_HEATING_OSM_QUERY
 
 AOI_REQUEST_CONTRACT_VERSION = "provider_aoi_request/v2"
-RUNTIME_CONTRACT_VERSION = "provider_runtime/v1"
-# v15 adds explicit district-heating profile/category semantics.
-PIPELINE_VERSION = "geo_pipeline/runtime/v15"
+RUNTIME_CONTRACT_VERSION = "provider_runtime/v2"
+# v18 records retryable per-domain acquisition failures in a publishable snapshot.
+PIPELINE_VERSION = "geo_pipeline/runtime/v18"
 CATALOG_PATH = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "aoi" / "prg_administrative_catalog.geojson"
 POLAND_BOUNDS = (14.05, 49.0, 24.25, 55.0)
-ProfileOutcome = Literal["ready", "needs_source", "reference_only", "pending_qualification"]
+ProfileOutcome = Literal["ready", "needs_source", "reference_only", "pending_qualification", "failed"]
 
 
 @dataclass(frozen=True)
@@ -58,11 +60,53 @@ class RuntimeRequestError(ValueError):
 def administrative_catalog() -> dict[str, Any]:
     payload = _read_catalog()
     metadata = payload["metadata"]
-    units = []
-    for feature in payload["features"]:
-        properties = feature["properties"]
-        units.append({"id": properties["id"], "kind": properties["kind"], "name": properties["name"], "prg_id": properties["prg_id"], "geometry": feature["geometry"]})
-    return {"catalog_version": metadata["catalog_version"], "source_registry_id": metadata["source_registry_id"], "snapshot_at": metadata["snapshot_at"], "source_crs": metadata["source_crs"], "limitations": metadata["limitations"], "units": units}
+    # Deliberately omit 41 MB of national geometry from the selector response.
+    # Selected boundaries are served through administrative_boundary() instead.
+    units = [{
+        "id": properties["id"], "kind": properties["kind"], "name": properties["name"], "prg_id": properties["prg_id"], "parent_id": properties.get("parent_id"),
+    } for feature in payload["features"] for properties in [feature["properties"]]]
+    return {
+        "catalog_version": metadata["catalog_version"], "source_registry_id": metadata["source_registry_id"], "snapshot_at": metadata["snapshot_at"], "source_crs": metadata["source_crs"],
+        "source_url": metadata["source_url"], "limitations": metadata["limitations"], "units": units,
+    }
+
+
+def administrative_boundary(unit_ids: list[Any]) -> dict[str, Any]:
+    """Resolve a real selected PRG union for map preview without acquisition."""
+    resolved, area_sq_m = _administrative_selection(unit_ids)
+    return {
+        "response_version": "provider_administrative_boundary/v1",
+        "aoi": resolved.as_dict(),
+        "metric_area_sq_m": area_sq_m,
+        "within_provider_area_limit": area_sq_m <= MAX_AREA_SQ_M,
+        "message": "Selected PRG boundary is within the current provider area limit." if area_sq_m <= MAX_AREA_SQ_M else "Selected PRG boundary exceeds the current provider area limit; it can be viewed but cannot start OSM acquisition.",
+    }
+
+
+def preflight_runtime_request(value: dict[str, Any]) -> dict[str, Any]:
+    """Return a typed pre-acquisition decision; do not invoke the OSM worker."""
+    if not isinstance(value, dict) or set(value) != {"aoi", "profiles"}:
+        raise RuntimeRequestError("AOI runtime request requires only aoi and profiles")
+    _resolve_profiles(value["profiles"])
+    aoi_value = value["aoi"]
+    if isinstance(aoi_value, dict) and aoi_value.get("type") == "administrative_selection":
+        if set(aoi_value) != {"type", "unit_ids"} or not isinstance(aoi_value["unit_ids"], list) or not aoi_value["unit_ids"]:
+            raise RuntimeRequestError("Administrative AOI requires one or more unit_ids")
+        resolved, area_sq_m = _administrative_selection(aoi_value["unit_ids"])
+        if area_sq_m > MAX_AREA_SQ_M:
+            return {
+                "response_version": "provider_aoi_preflight/v1", "status": "blocked", "code": "aoi_area_limit",
+                "message": f"The selected PRG boundary is {round(area_sq_m / 1_000_000, 1)} km²; the current bounded provider limit is {round(MAX_AREA_SQ_M / 1_000_000, 1)} km². It was not sent to Overpass.",
+                "aoi": resolved.as_dict(), "metric_area_sq_m": area_sq_m,
+            }
+    else:
+        resolved = _resolve_runtime_aoi(aoi_value)
+        area_sq_m = _metric_area_sq_m(resolved.geometry)
+    return {
+        "response_version": "provider_aoi_preflight/v1", "status": "ready", "code": "bounded_provider_request",
+        "message": "The selected AOI is within the current provider area limit. Cache lookup can proceed; OSM is contacted only for a cache miss.",
+        "aoi": resolved.as_dict(), "metric_area_sq_m": area_sq_m,
+    }
 
 
 def resolve_runtime_request(value: dict[str, Any]) -> dict[str, Any]:
@@ -90,14 +134,14 @@ def resolve_runtime_request(value: dict[str, Any]) -> dict[str, Any]:
 
 def profile_outcomes(request: dict[str, Any], *, fixture_mode: bool = True) -> list[dict[str, Any]]:
     resolved = resolve_runtime_request(request)
-    is_rybnik_demo = resolved["aoi"]["aoi_id"] == resolve_aoi("rybnik_60km").aoi_id
+    is_rybnik_demo = resolved["aoi"]["aoi_id"] == resolve_aoi("rybnik_35km").aoi_id
     outcomes = []
     for descriptor in resolved["profiles"]:
         profile = _PROFILE_BY_DOMAIN[descriptor["domain"]]
         if fixture_mode and is_rybnik_demo and profile.fixture_ready:
             status: ProfileOutcome = "ready"
             detail = "Committed bounded fixture artifacts are available for the Rybnik demo AOI."
-            artifact_aoi_id: str | None = "rybnik_60km"
+            artifact_aoi_id: str | None = "rybnik_35km"
         else:
             status = "needs_source"
             detail = "No AOI-matching fixture artifact is committed; live acquisition and domain vertical-slice semantics remain explicit separate work."
@@ -108,6 +152,7 @@ def profile_outcomes(request: dict[str, Any], *, fixture_mode: bool = True) -> l
             "detail": detail,
             "artifact_aoi_id": artifact_aoi_id,
             "cache_status": "fresh" if status == "ready" else "missing",
+            "failure_reason": None,
             "queried_feature_count": None,
             "accepted_feature_count": None,
             "derived_feature_count": None,
@@ -162,22 +207,71 @@ def _resolve_runtime_aoi(value: Any):
 
 
 def _resolve_administrative_union(unit_ids: list[Any]):
+    resolved, area_sq_m = _administrative_selection(unit_ids)
+    if area_sq_m > MAX_AREA_SQ_M:
+        raise RuntimeRequestError("Administrative AOI exceeds provider area limits; use a smaller county, gmina or explicit union")
+    return resolved
+
+
+_LEGACY_UNIT_ALIASES = {
+    "county_rybnik_city": "county_2473",
+    "county_rybnicki": "county_2412",
+    "gmina_rybnik": "gmina_2473011",
+}
+
+
+def _administrative_selection(unit_ids: list[Any]):
     if not all(isinstance(item, str) and item for item in unit_ids):
         raise RuntimeRequestError("Administrative unit IDs must be non-empty strings")
-    normalized_ids = sorted(set(unit_ids))
-    catalogue = administrative_catalog()
-    by_id = {unit["id"]: unit for unit in catalogue["units"]}
+    requested_ids = sorted(set(unit_ids))
+    normalized_ids = sorted({_LEGACY_UNIT_ALIASES.get(unit_id, unit_id) for unit_id in requested_ids})
+    payload = _read_catalog()
+    metadata = payload["metadata"]
+    by_id = {feature["properties"]["id"]: feature for feature in payload["features"]}
     unknown = [unit_id for unit_id in normalized_ids if unit_id not in by_id]
     if unknown:
         raise RuntimeRequestError(f"Unknown administrative unit: {unknown[0]}")
-    merged = unary_union([shape(by_id[unit_id]["geometry"]) for unit_id in normalized_ids])
+    selected_voivodeships = {_administrative_voivodeship_id(unit_id, by_id) for unit_id in normalized_ids}
+    if len(selected_voivodeships) > 1:
+        raise RuntimeRequestError("Administrative selection must stay within one voivodeship")
+    merged = unary_union([_valid_polygonal_geometry(shape(by_id[unit_id]["geometry"])) for unit_id in normalized_ids])
     if merged.is_empty or not merged.is_valid or merged.geom_type not in {"Polygon", "MultiPolygon"}:
         raise RuntimeRequestError("Administrative selection did not produce a valid polygonal AOI")
     geometry = _canonical_geometry(mapping(merged))
-    if _metric_area_sq_m(geometry) > MAX_AREA_SQ_M:
-        raise RuntimeRequestError("Administrative AOI exceeds provider area limits")
-    provenance = {"kind": "prg_administrative_selection", "source_registry_id": catalogue["source_registry_id"], "catalog_version": catalogue["catalog_version"], "snapshot_at": catalogue["snapshot_at"], "unit_ids": normalized_ids, "fixture": "backend/data/fixtures/aoi/prg_administrative_catalog.geojson"}
-    return _resolved(geometry, "administrative_selection", catalogue["source_crs"], provenance, radius_m=None)
+    provenance = {
+        "kind": "prg_administrative_selection", "source_registry_id": metadata["source_registry_id"], "catalog_version": metadata["catalog_version"], "snapshot_at": metadata["snapshot_at"],
+        "source_url": metadata["source_url"], "unit_ids": normalized_ids, "requested_unit_ids": requested_ids, "fixture": "backend/data/fixtures/aoi/prg_administrative_catalog.geojson",
+    }
+    return _resolved(geometry, "administrative_selection", metadata["source_crs"], provenance, radius_m=None), _metric_area_sq_m(geometry)
+
+
+def _administrative_voivodeship_id(unit_id: str, by_id: dict[str, dict[str, Any]]) -> str:
+    current = by_id[unit_id]
+    visited: set[str] = set()
+    while current["properties"].get("parent_id"):
+        current_id = current["properties"]["id"]
+        if current_id in visited:
+            raise RuntimeRequestError("Administrative catalogue hierarchy is invalid")
+        visited.add(current_id)
+        parent_id = current["properties"]["parent_id"]
+        parent = by_id.get(parent_id)
+        if parent is None:
+            raise RuntimeRequestError("Administrative catalogue hierarchy is invalid")
+        current = parent
+    if current["properties"].get("kind") != "voivodeship":
+        raise RuntimeRequestError("Administrative catalogue hierarchy is invalid")
+    return current["properties"]["id"]
+
+
+def _valid_polygonal_geometry(geometry: Any):
+    """Repair only invalid PRG topology introduced by the interactive generalisation."""
+    candidate = make_valid(geometry) if not geometry.is_valid else geometry
+    if candidate.geom_type == "GeometryCollection":
+        polygonal = [item for item in candidate.geoms if item.geom_type in {"Polygon", "MultiPolygon"}]
+        candidate = unary_union(polygonal) if polygonal else candidate
+    if candidate.geom_type not in {"Polygon", "MultiPolygon"} or candidate.is_empty:
+        raise RuntimeRequestError("Administrative catalogue geometry is invalid")
+    return candidate
 
 
 def _resolve_profiles(value: Any) -> tuple[ProviderProfile, ...]:
@@ -194,6 +288,7 @@ def _profile_descriptor(profile: ProviderProfile) -> dict[str, Any]:
     return {"domain": profile.domain, "source_registry_id": profile.source_registry_id, "source_role": profile.source_role, "output_kind": profile.output_kind, "query_version": profile.query_version, "tags": profile.tags}
 
 
+@lru_cache(maxsize=1)
 def _read_catalog() -> dict[str, Any]:
     try:
         payload = json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
@@ -201,6 +296,9 @@ def _read_catalog() -> dict[str, Any]:
         raise RuntimeRequestError("Administrative catalogue is unavailable") from error
     if payload.get("type") != "FeatureCollection" or not isinstance(payload.get("features"), list) or not isinstance(payload.get("metadata"), dict):
         raise RuntimeRequestError("Administrative catalogue is invalid")
+    metadata = payload["metadata"]
+    if metadata.get("catalog_version") != "prg_administrative_catalog/v2" or metadata.get("source_registry_id") != "prg_wfs" or metadata.get("source_crs") != WGS84 or not isinstance(metadata.get("source_url"), str):
+        raise RuntimeRequestError("Administrative catalogue metadata is invalid")
     return payload
 
 

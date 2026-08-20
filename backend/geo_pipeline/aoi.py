@@ -73,10 +73,10 @@ def validate_cache_key(cache_key: str) -> str:
 
 
 def _resolve_alias(alias: str) -> ResolvedAoi:
-    if alias != "rybnik_60km":
+    if alias != "rybnik_35km":
         raise AoiResolutionError(f"Unsupported AOI alias '{alias}'")
-    resolved = _resolve_circle({"type": "circle", "longitude": 18.546285, "latitude": 50.102174, "radius_m": 60_000})
-    return ResolvedAoi(**{**resolved.__dict__, "cache_key": "rybnik_60km", "aliases": ("rybnik_60km",)})
+    resolved = _resolve_circle({"type": "circle", "longitude": 18.546285, "latitude": 50.102174, "radius_m": 35_000})
+    return ResolvedAoi(**{**resolved.__dict__, "cache_key": "rybnik_35km", "aliases": ("rybnik_35km",)})
 
 
 def _resolve_circle(value: dict[str, Any]) -> ResolvedAoi:

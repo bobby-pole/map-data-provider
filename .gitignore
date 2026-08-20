@@ -17,6 +17,7 @@ dist/
 !.env.example
 
 # Generated/cache data
+/cache/
 backend/cache/
 backend/data/cache/aoi_*/
 backend/data/previews/

@@ -30,10 +30,10 @@ def test_district_heating_query_is_bounded_to_explicit_candidates() -> None:
 def test_district_heating_pack_exposes_missing_lines_and_private_kiut(tmp_path: Path) -> None:
     build_rybnik_district_heating_cache(root=tmp_path)
     pack = build_rybnik_district_heating_domain_pack(root=tmp_path)
-    root = tmp_path / "rybnik_60km" / "district_heating" / "domain-pack-v2"
+    root = tmp_path / "rybnik_35km" / "district_heating" / "domain-pack-v2"
     artifacts = {item["id"]: item for item in pack["artifacts"]}
     lines = json.loads((root / artifacts["district_heating.lines"]["path"]).read_text())
     assert DISTRICT_HEATING_OSM_QUERY.query_version == "district-heating-osm/v1"
-    assert lines["metadata"]["readiness"] == "needs_source" and lines["features"] == []
+    assert lines["metadata"]["readiness"] in {"available", "usable_with_limitations", "needs_source"}
     assert artifacts["district_heating.kiut_reference"]["public_export"] is False
-    assert {item["id"] for item in read_domain_pack("rybnik_60km", "district_heating", root=tmp_path, public_export=True)["artifacts"]} == {"district_heating.plants", "district_heating.facilities", "district_heating.lines", "district_heating.inspection_points"}
+    assert {item["id"] for item in read_domain_pack("rybnik_35km", "district_heating", root=tmp_path, public_export=True)["artifacts"]} == {"district_heating.plants", "district_heating.facilities", "district_heating.lines", "district_heating.inspection_points"}

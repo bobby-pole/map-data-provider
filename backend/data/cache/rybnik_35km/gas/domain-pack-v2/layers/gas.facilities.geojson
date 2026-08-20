@@ -1,0 +1,950 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "cache_layout_version": "provider_cache/v1",
+    "geojson_contract_version": "provider_geojson/v1",
+    "aoi_id": "rybnik_35km",
+    "domain": "gas",
+    "layer_id": "gas.facilities",
+    "source": "OpenStreetMap",
+    "source_type": "analytical_vector",
+    "source_registry_id": "openstreetmap",
+    "source_url": "https://overpass-api.de/api/interpreter",
+    "source_query": "Fixture contract evidence for gas-osm/v2: gasometer/gas station, pipeline=gas, or gas-substance pipeline and valve tags.",
+    "snapshot_at": "2026-08-06T19:00:00Z",
+    "pipeline_version": "geo_pipeline/gas/v2",
+    "query_version": "gas-osm/v2",
+    "validation_status_raw": "warning",
+    "quality_status": "warning",
+    "confidence": "medium",
+    "limitations": [
+      "OSM gas infrastructure and distribution network mapping completeness varies significantly by area.",
+      "The committed contract fixture demonstrates normalized gas categories; it is not a complete Rybnik 35 km OSM snapshot or an operational pressure or flow model.",
+      "Generic unlabelled pipelines and valves without explicit gas tags are excluded to prevent false gas attribution.",
+      "KIUT gas WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+    ],
+    "eligible_for_analysis": true,
+    "readiness": "usable_with_limitations",
+    "contract_version": "provider_geojson/v1",
+    "feature_count": 10
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/5353146988",
+        "domain": "gas",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM gas infrastructure and distribution network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized gas categories; it is not a complete Rybnik 35 km OSM snapshot or an operational pressure or flow model.",
+          "Generic unlabelled pipelines and valves without explicit gas tags are excluded to prevent false gas attribution.",
+          "KIUT gas WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "pipeline": "valve",
+          "substance": "gas"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.59038,
+          50.1146968
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/8870291437",
+        "domain": "gas",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM gas infrastructure and distribution network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized gas categories; it is not a complete Rybnik 35 km OSM snapshot or an operational pressure or flow model.",
+          "Generic unlabelled pipelines and valves without explicit gas tags are excluded to prevent false gas attribution.",
+          "KIUT gas WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "gasometer"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4630562,
+          50.00918300000001
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/485493459",
+        "domain": "gas",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM gas infrastructure and distribution network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized gas categories; it is not a complete Rybnik 35 km OSM snapshot or an operational pressure or flow model.",
+          "Generic unlabelled pipelines and valves without explicit gas tags are excluded to prevent false gas attribution.",
+          "KIUT gas WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "gasometer",
+          "building": "gasometer"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.2524662,
+              50.3121778
+            ],
+            [
+              18.2525876,
+              50.312151500000006
+            ],
+            [
+              18.2526689,
+              50.312098699999986
+            ],
+            [
+              18.2527049,
+              50.3120506
+            ],
+            [
+              18.252713,
+              50.3119956
+            ],
+            [
+              18.2526982,
+              50.31194899999999
+            ],
+            [
+              18.2526636,
+              50.31190320000001
+            ],
+            [
+              18.2526156,
+              50.31186540000001
+            ],
+            [
+              18.2525411,
+              50.311838
+            ],
+            [
+              18.25244,
+              50.3118232
+            ],
+            [
+              18.2523415,
+              50.311831999999995
+            ],
+            [
+              18.2522302,
+              50.3118747
+            ],
+            [
+              18.2521745,
+              50.311937
+            ],
+            [
+              18.2521568,
+              50.3119894
+            ],
+            [
+              18.2521686,
+              50.31205279999999
+            ],
+            [
+              18.2522119,
+              50.312107700000006
+            ],
+            [
+              18.2522718,
+              50.3121425
+            ],
+            [
+              18.2523696,
+              50.31217269999999
+            ],
+            [
+              18.2524662,
+              50.3121778
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1072455625",
+        "domain": "gas",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM gas infrastructure and distribution network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized gas categories; it is not a complete Rybnik 35 km OSM snapshot or an operational pressure or flow model.",
+          "Generic unlabelled pipelines and valves without explicit gas tags are excluded to prevent false gas attribution.",
+          "KIUT gas WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "gasometer",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.5902689,
+              49.93784479999999
+            ],
+            [
+              18.5903003,
+              49.93786589999999
+            ],
+            [
+              18.5903407,
+              49.9378791
+            ],
+            [
+              18.5903856,
+              49.937883199999995
+            ],
+            [
+              18.5904301,
+              49.937877500000006
+            ],
+            [
+              18.5904688,
+              49.937863100000015
+            ],
+            [
+              18.5904982,
+              49.93784149999999
+            ],
+            [
+              18.5905151,
+              49.9378149
+            ],
+            [
+              18.5905179,
+              49.93778619999999
+            ],
+            [
+              18.5905061,
+              49.93775839999999
+            ],
+            [
+              18.5904811,
+              49.937734599999985
+            ],
+            [
+              18.5904455,
+              49.93771719999999
+            ],
+            [
+              18.5904031,
+              49.93770819999999
+            ],
+            [
+              18.5903584,
+              49.937708400000005
+            ],
+            [
+              18.5903156,
+              49.93771809999999
+            ],
+            [
+              18.5902801,
+              49.93773629999999
+            ],
+            [
+              18.5902558,
+              49.937760899999994
+            ],
+            [
+              18.5902454,
+              49.9377893
+            ],
+            [
+              18.5902499,
+              49.9378183
+            ],
+            [
+              18.5902689,
+              49.93784479999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1072455626",
+        "domain": "gas",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM gas infrastructure and distribution network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized gas categories; it is not a complete Rybnik 35 km OSM snapshot or an operational pressure or flow model.",
+          "Generic unlabelled pipelines and valves without explicit gas tags are excluded to prevent false gas attribution.",
+          "KIUT gas WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "gasometer",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.590543,
+              49.93783839999999
+            ],
+            [
+              18.5905745,
+              49.9378594
+            ],
+            [
+              18.5906148,
+              49.9378727
+            ],
+            [
+              18.5906597,
+              49.93787669999999
+            ],
+            [
+              18.5907042,
+              49.93787110000001
+            ],
+            [
+              18.5907429,
+              49.9378567
+            ],
+            [
+              18.5907723,
+              49.937835
+            ],
+            [
+              18.5907893,
+              49.9378084
+            ],
+            [
+              18.590792,
+              49.93777969999999
+            ],
+            [
+              18.5907803,
+              49.937752
+            ],
+            [
+              18.5907552,
+              49.9377282
+            ],
+            [
+              18.5907196,
+              49.9377108
+            ],
+            [
+              18.5906772,
+              49.9377018
+            ],
+            [
+              18.5906539,
+              49.9377
+            ],
+            [
+              18.5905898,
+              49.937711699999994
+            ],
+            [
+              18.5905543,
+              49.9377299
+            ],
+            [
+              18.59053,
+              49.9377545
+            ],
+            [
+              18.5905195,
+              49.937782899999995
+            ],
+            [
+              18.590524,
+              49.93781190000001
+            ],
+            [
+              18.590543,
+              49.93783839999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1072455627",
+        "domain": "gas",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM gas infrastructure and distribution network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized gas categories; it is not a complete Rybnik 35 km OSM snapshot or an operational pressure or flow model.",
+          "Generic unlabelled pipelines and valves without explicit gas tags are excluded to prevent false gas attribution.",
+          "KIUT gas WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "gasometer",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.5907473,
+              49.9376827
+            ],
+            [
+              18.5907726,
+              49.9376938
+            ],
+            [
+              18.5908021,
+              49.9376991
+            ],
+            [
+              18.5908327,
+              49.93769799999999
+            ],
+            [
+              18.5908611,
+              49.937690499999995
+            ],
+            [
+              18.5908841,
+              49.9376774
+            ],
+            [
+              18.5908994,
+              49.9376603
+            ],
+            [
+              18.5909051,
+              49.937640900000005
+            ],
+            [
+              18.5909008,
+              49.9376213
+            ],
+            [
+              18.5908868,
+              49.9376037
+            ],
+            [
+              18.5908647,
+              49.93759000000001
+            ],
+            [
+              18.5908369,
+              49.93758170000001
+            ],
+            [
+              18.5908063,
+              49.9375796
+            ],
+            [
+              18.5907764,
+              49.937583999999994
+            ],
+            [
+              18.5907504,
+              49.9375945
+            ],
+            [
+              18.590731,
+              49.9376098
+            ],
+            [
+              18.5907204,
+              49.93762829999999
+            ],
+            [
+              18.5907197,
+              49.937648
+            ],
+            [
+              18.590729,
+              49.9376668
+            ],
+            [
+              18.5907473,
+              49.9376827
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1072455628",
+        "domain": "gas",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM gas infrastructure and distribution network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized gas categories; it is not a complete Rybnik 35 km OSM snapshot or an operational pressure or flow model.",
+          "Generic unlabelled pipelines and valves without explicit gas tags are excluded to prevent false gas attribution.",
+          "KIUT gas WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "gasometer",
+          "building": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.5909555,
+              49.937793899999996
+            ],
+            [
+              18.5909808,
+              49.93780509999999
+            ],
+            [
+              18.5910103,
+              49.9378104
+            ],
+            [
+              18.5910409,
+              49.937809200000004
+            ],
+            [
+              18.5910693,
+              49.9378017
+            ],
+            [
+              18.5910923,
+              49.9377887
+            ],
+            [
+              18.5911076,
+              49.9377716
+            ],
+            [
+              18.5911133,
+              49.9377522
+            ],
+            [
+              18.591109,
+              49.93773259999999
+            ],
+            [
+              18.591095,
+              49.937715
+            ],
+            [
+              18.5910729,
+              49.93770130000001
+            ],
+            [
+              18.5910451,
+              49.937693
+            ],
+            [
+              18.5910145,
+              49.93769089999998
+            ],
+            [
+              18.5909846,
+              49.93769529999999
+            ],
+            [
+              18.5909586,
+              49.937705699999995
+            ],
+            [
+              18.5909392,
+              49.937721
+            ],
+            [
+              18.5909286,
+              49.9377396
+            ],
+            [
+              18.5909279,
+              49.9377593
+            ],
+            [
+              18.5909372,
+              49.93777809999999
+            ],
+            [
+              18.5909555,
+              49.937793899999996
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1250814247",
+        "domain": "gas",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM gas infrastructure and distribution network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized gas categories; it is not a complete Rybnik 35 km OSM snapshot or an operational pressure or flow model.",
+          "Generic unlabelled pipelines and valves without explicit gas tags are excluded to prevent false gas attribution.",
+          "KIUT gas WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "gasometer",
+          "building": "yes",
+          "layer": "1"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.1312106,
+              50.221385899999994
+            ],
+            [
+              18.1312819,
+              50.22142410000001
+            ],
+            [
+              18.1313683,
+              50.2214462
+            ],
+            [
+              18.1314701,
+              50.22144939999998
+            ],
+            [
+              18.1315675,
+              50.2214302
+            ],
+            [
+              18.131649,
+              50.2213911
+            ],
+            [
+              18.1317048,
+              50.2213365
+            ],
+            [
+              18.1317283,
+              50.22127309999999
+            ],
+            [
+              18.1317167,
+              50.2212083
+            ],
+            [
+              18.1316714,
+              50.221149899999986
+            ],
+            [
+              18.1315978,
+              50.2211048
+            ],
+            [
+              18.1315046,
+              50.2210784
+            ],
+            [
+              18.1314119,
+              50.2210734
+            ],
+            [
+              18.1313213,
+              50.221087
+            ],
+            [
+              18.1312419,
+              50.221118
+            ],
+            [
+              18.1311815,
+              50.221163199999985
+            ],
+            [
+              18.131146,
+              50.221218300000004
+            ],
+            [
+              18.1311391,
+              50.2212776
+            ],
+            [
+              18.1311614,
+              50.22133539999999
+            ],
+            [
+              18.1312106,
+              50.221385899999994
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1351950139",
+        "domain": "gas",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM gas infrastructure and distribution network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized gas categories; it is not a complete Rybnik 35 km OSM snapshot or an operational pressure or flow model.",
+          "Generic unlabelled pipelines and valves without explicit gas tags are excluded to prevent false gas attribution.",
+          "KIUT gas WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "gasometer",
+          "building": "gasometer"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.2525473,
+              50.31604279999999
+            ],
+            [
+              18.2524328,
+              50.31602949999999
+            ],
+            [
+              18.252319,
+              50.316045100000004
+            ],
+            [
+              18.2522232,
+              50.3160874
+            ],
+            [
+              18.2521601,
+              50.316149900000006
+            ],
+            [
+              18.2521392,
+              50.316223
+            ],
+            [
+              18.2521637,
+              50.31629569999999
+            ],
+            [
+              18.2522299,
+              50.31635680000001
+            ],
+            [
+              18.2523277,
+              50.31639710000001
+            ],
+            [
+              18.2524422,
+              50.3164105
+            ],
+            [
+              18.252556,
+              50.316394800000005
+            ],
+            [
+              18.2526518,
+              50.316352599999995
+            ],
+            [
+              18.2527149,
+              50.31629009999999
+            ],
+            [
+              18.2527358,
+              50.31621699999999
+            ],
+            [
+              18.2527113,
+              50.3161443
+            ],
+            [
+              18.2526451,
+              50.3160832
+            ],
+            [
+              18.2525473,
+              50.31604279999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1415476266",
+        "domain": "gas",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM gas infrastructure and distribution network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized gas categories; it is not a complete Rybnik 35 km OSM snapshot or an operational pressure or flow model.",
+          "Generic unlabelled pipelines and valves without explicit gas tags are excluded to prevent false gas attribution.",
+          "KIUT gas WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "gasometer",
+          "name": "Zbiornik magazynowy biogazu",
+          "location": "outdoor"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.5330568,
+            50.11646739999999
+          ],
+          [
+            18.5330521,
+            50.1164844
+          ],
+          [
+            18.5330394,
+            50.1164995
+          ],
+          [
+            18.53302,
+            50.11651139999999
+          ],
+          [
+            18.5329958,
+            50.116518799999994
+          ],
+          [
+            18.5329691,
+            50.116521000000006
+          ],
+          [
+            18.5329428,
+            50.1165178
+          ],
+          [
+            18.532918400000003,
+            50.11650999999999
+          ],
+          [
+            18.5328993,
+            50.11649690000001
+          ],
+          [
+            18.5328883,
+            50.1164823
+          ],
+          [
+            18.5328846,
+            50.11646519999999
+          ],
+          [
+            18.5328893,
+            50.1164484
+          ],
+          [
+            18.5329019,
+            50.1164334
+          ],
+          [
+            18.5329211,
+            50.1164215
+          ],
+          [
+            18.5329451,
+            50.1164141
+          ],
+          [
+            18.5329715,
+            50.1164118
+          ],
+          [
+            18.5329977,
+            50.1164148
+          ],
+          [
+            18.5330212,
+            50.11642279999999
+          ],
+          [
+            18.5330406,
+            50.1164345
+          ],
+          [
+            18.5330531,
+            50.11645049999999
+          ],
+          [
+            18.5330568,
+            50.11646739999999
+          ]
+        ]
+      }
+    }
+  ]
+}

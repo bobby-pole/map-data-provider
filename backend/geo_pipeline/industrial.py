@@ -13,9 +13,9 @@ from geo_pipeline.contracts import (
     validate_provider_geojson,
 )
 
-INDUSTRIAL_LIMITATIONS = "OSM industrial facilities might lack complete boundary semantics. Fixture is bounded to Rybnik 60km."
+INDUSTRIAL_LIMITATIONS = "OSM industrial facilities might lack complete boundary semantics. Fixture is bounded to Rybnik 35km."
 
-INDUSTRIAL_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_60km" / "industrial" / "osm-industrial.geojson"
+INDUSTRIAL_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_35km" / "industrial" / "osm-industrial.geojson"
 
 IndustrialCategory = Literal["land_use", "facilities", "works", "building_context", "military_context"]
 
@@ -56,7 +56,7 @@ def industrial_osm_metadata(*, layer_id: str, readiness: str) -> dict[str, Any]:
     return {
         "cache_layout_version": "provider_cache/v1",
         "geojson_contract_version": "provider_geojson/v1",
-        "aoi_id": "rybnik_60km",
+        "aoi_id": "rybnik_35km",
         "domain": "industrial",
         "layer_id": layer_id,
         "source": "OpenStreetMap",

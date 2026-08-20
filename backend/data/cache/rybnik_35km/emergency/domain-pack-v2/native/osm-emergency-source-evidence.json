@@ -1,0 +1,28 @@
+{
+  "source_registry_id": "openstreetmap",
+  "fixture": "data/fixtures/rybnik_35km/emergency/osm-emergency-facilities.geojson",
+  "sha256": "8877e69f0bdc40a443f32688a73655ed093bbf5f16e060554e65a6046bd21b33",
+  "category_mappings": {
+    "hospital": [
+      "amenity=hospital",
+      "healthcare=hospital"
+    ],
+    "fire_service": [
+      "amenity=fire_station"
+    ],
+    "police": [
+      "amenity=police"
+    ],
+    "ambulance_rescue": [
+      "amenity=ambulance_station",
+      "emergency=ambulance_station",
+      "emergency=mountain_rescue",
+      "emergency=lifeguard_base"
+    ]
+  },
+  "limitations": [
+    "OSM emergency and healthcare mapping completeness varies by area and facility type.",
+    "The bounded committed snapshot is not a complete emergency-service registry or an operational-status statement.",
+    "No qualified official hospital or ambulance/rescue facility registry is enabled for this provider AOI."
+  ]
+}

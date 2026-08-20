@@ -1,7 +1,9 @@
 import { open, readdir, readFile, stat } from "node:fs/promises";
+import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { promisify } from "node:util";
 import type { z } from "zod";
 
 import {
@@ -40,6 +42,8 @@ const defaultCacheRoot = path.join(projectRoot, "backend", "data", "cache");
 const defaultRegistryPath = path.join(projectRoot, "backend", "data", "sources", "registry.json");
 const packDirectoryName = "domain-pack-v2";
 const verifiedMapArchives = new Map<string, { size: number; modifiedAt: number; sha256: string }>();
+const execFileAsync = promisify(execFile);
+const circuitRecoveryByFeature = new Map<string, Promise<void>>();
 
 export type ProviderDataPaths = {
   cacheRoot?: string;
@@ -270,7 +274,24 @@ export async function getMapCircuitsForFeature(aoiId: string, domain: string, so
   // A reverse-index hit is useful only for a feature that is actually present
   // in the delivered AOI. This avoids exposing stale or out-of-scope evidence.
   await getMapFeatureDetail(aoiId, domain, sourceId, dataPaths);
-  const evidence = await readPowerCircuitEvidence(aoiId, domain, dataPaths);
+  let evidence = await readPowerCircuitEvidence(aoiId, domain, dataPaths);
+  if (evidence.availability === "unavailable") {
+    try {
+      await recoverPowerCircuitEvidence(aoiId, sourceId, dataPaths);
+      evidence = await readPowerCircuitEvidence(aoiId, domain, dataPaths);
+    } catch {
+      return mapCircuitListResponseSchema.parse({
+        response_version: "provider_map_circuit_list/v1", aoi_id: aoiId, domain, source_id: sourceId,
+        state: "unavailable", circuits: [], limitations: evidence.limitations,
+      });
+    }
+  }
+  if (evidence.availability === "unavailable") {
+    return mapCircuitListResponseSchema.parse({
+      response_version: "provider_map_circuit_list/v1", aoi_id: aoiId, domain, source_id: sourceId,
+      state: "unavailable", circuits: [], limitations: evidence.limitations,
+    });
+  }
   const ids = evidence.reverse_member_index[sourceId] ?? [];
   const byId = new Map(evidence.relations.map((relation) => [relation.relation_id, relation]));
   const circuits = ids.map((id) => byId.get(id)).filter((relation): relation is PowerCircuitEvidence => relation !== undefined);
@@ -297,7 +318,9 @@ type PowerCircuitEvidence = {
   members: Array<{ source_id: string; role: string; availability?: string; endpoint_evidence?: { start: string; end: string }; geometry?: { type: "LineString"; coordinates: [number, number][] } }>;
 };
 
-type PowerCircuitEvidencePayload = { relations: PowerCircuitEvidence[]; reverse_member_index: Record<string, string[]> };
+type PowerCircuitEvidencePayload =
+  | { relations: PowerCircuitEvidence[]; reverse_member_index: Record<string, string[]>; availability?: never; limitations?: never }
+  | { relations: PowerCircuitEvidence[]; reverse_member_index: Record<string, string[]>; availability: "unavailable"; limitations: string[] };
 
 async function readPowerCircuitEvidence(aoiId: string, domain: string, dataPaths?: ProviderDataPaths): Promise<PowerCircuitEvidencePayload> {
   const { manifest, packRoot } = await validatedMapPresentation(aoiId, domain, dataPaths);
@@ -309,6 +332,45 @@ async function readPowerCircuitEvidence(aoiId: string, domain: string, dataPaths
   const parsed = powerCircuitEvidencePayloadSchema.safeParse(raw);
   if (!parsed.success) throw new ProviderDataError("not_found", "Circuit evidence has an invalid contract.");
   return parsed.data;
+}
+
+async function recoverPowerCircuitEvidence(aoiId: string, sourceId: string, dataPaths?: ProviderDataPaths): Promise<void> {
+  // Test fixtures can choose an isolated data root. A live recovery must never
+  // write outside the runtime worker's canonical cache root.
+  if (dataPaths?.cacheRoot) throw new ProviderDataError("not_found", "Circuit evidence recovery is unavailable for an isolated provider-data root.");
+  const key = `${aoiId}:${sourceId}`;
+  const existing = circuitRecoveryByFeature.get(key);
+  if (existing) return existing;
+  const recovery = (async () => {
+    const aoi = await runtimeAoiForId(aoiId);
+    const script = [
+      "from pathlib import Path",
+      "import json, sys",
+      "from geo_pipeline.runtime_osm import backfill_power_circuit_evidence_for_member",
+      "result = backfill_power_circuit_evidence_for_member(aoi=json.loads(sys.argv[1]), source_id=sys.argv[2], root=Path(sys.argv[3]))",
+      "print(json.dumps({'availability': result.get('availability', 'available')}))",
+    ].join("\n");
+    await execFileAsync("uv", ["run", "--offline", "python", "-c", script, JSON.stringify(aoi), sourceId, defaultCacheRoot], {
+      cwd: path.join(projectRoot, "backend"), timeout: 90_000, maxBuffer: 4 * 1024 * 1024,
+    });
+  })().finally(() => circuitRecoveryByFeature.delete(key));
+  circuitRecoveryByFeature.set(key, recovery);
+  return recovery;
+}
+
+async function runtimeAoiForId(aoiId: string): Promise<unknown> {
+  const stateRoot = path.join(projectRoot, "backend", "cache", "provider-runtime-v1");
+  const entries = await readdir(stateRoot, { withFileTypes: true });
+  for (const entry of entries) {
+    if (!entry.isFile() || !entry.name.endsWith(".json")) continue;
+    try {
+      const payload = JSON.parse((await readFile(path.join(stateRoot, entry.name), "utf8"))) as { aoi?: { aoi_id?: unknown } };
+      if (payload.aoi?.aoi_id === aoiId) return payload.aoi;
+    } catch {
+      // A partial or unrelated runtime state cannot authorize a recovery.
+    }
+  }
+  throw new ProviderDataError("not_found", `No runtime AOI state exists for circuit recovery '${aoiId}'.`);
 }
 
 function toV1SourceRegistry(registry: SourceRegistryV2): SourceRegistry {

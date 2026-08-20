@@ -1,0 +1,28 @@
+{
+  "source_registry_id": "openstreetmap",
+  "fixture": "data/fixtures/rybnik_35km/bridges/osm-bridges.geojson",
+  "sha256": "0363b0520e4633f9e33f9066e356c36e7e9fd16a63eba33d101a7000c39926ca",
+  "category_mappings": {
+    "bridges": [
+      "bridge=yes",
+      "bridge=aqueduct",
+      "bridge=boardwalk",
+      "man_made=bridge"
+    ],
+    "viaducts": [
+      "bridge=viaduct",
+      "highway=viaduct"
+    ],
+    "crossings": [
+      "railway=level_crossing",
+      "railway=crossing"
+    ]
+  },
+  "topographic_rule": "BDOT10k bridge or culvert objects without OSM bridge semantics are topographic context and not bridge analytical vectors.",
+  "limitations": [
+    "OSM bridge and crossing mapping completeness varies by area, operator and transport mode.",
+    "The bounded committed snapshot is fixture evidence for bridge structures and level crossings and not an operational criticality rating.",
+    "BDOT10k bridge and culvert geometry is retained only as topographic comparison context and cannot establish transport service semantics alone.",
+    "No qualified PRG bridge or crossing registry is enabled for this domain pack."
+  ]
+}

@@ -1,0 +1,4124 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "cache_layout_version": "provider_cache/v1",
+    "geojson_contract_version": "provider_geojson/v1",
+    "aoi_id": "rybnik_35km",
+    "domain": "water",
+    "layer_id": "water.pipelines",
+    "source": "OpenStreetMap",
+    "source_type": "analytical_vector",
+    "source_registry_id": "openstreetmap",
+    "source_url": "https://overpass-api.de/api/interpreter",
+    "source_query": "Bounded Overpass snapshot: explicit water facility, pipeline and waterway tags within the Rybnik 35 km AOI.",
+    "snapshot_at": "2026-08-04T23:00:00Z",
+    "pipeline_version": "geo_pipeline/water/v2",
+    "query_version": "water-osm/v2",
+    "validation_status_raw": "warning",
+    "quality_status": "warning",
+    "confidence": "medium",
+    "limitations": [
+      "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+      "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+      "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+      "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+    ],
+    "eligible_for_analysis": true,
+    "readiness": "usable_with_limitations",
+    "contract_version": "provider_geojson/v1",
+    "feature_count": 74
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/251851821",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "source": "bing",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.562809,
+            49.834656
+          ],
+          [
+            18.5625634,
+            49.8344948
+          ],
+          [
+            18.5627549,
+            49.834058
+          ],
+          [
+            18.5629116,
+            49.8340614
+          ],
+          [
+            18.5629551,
+            49.8339333
+          ],
+          [
+            18.5628332,
+            49.8339131
+          ],
+          [
+            18.563023,
+            49.8335279
+          ],
+          [
+            18.5630674,
+            49.8332749
+          ],
+          [
+            18.562501,
+            49.8332145
+          ],
+          [
+            18.5614878,
+            49.832429
+          ],
+          [
+            18.5606222,
+            49.8318851
+          ],
+          [
+            18.5606838,
+            49.8314928
+          ],
+          [
+            18.559492,
+            49.8306319
+          ],
+          [
+            18.5573916,
+            49.8305082
+          ],
+          [
+            18.5573829,
+            49.8305756
+          ],
+          [
+            18.5572975,
+            49.8305688
+          ],
+          [
+            18.557308,
+            49.8305003
+          ],
+          [
+            18.5556696,
+            49.8303891
+          ],
+          [
+            18.5553057,
+            49.83023069999999
+          ],
+          [
+            18.5552116,
+            49.830151
+          ],
+          [
+            18.554214,
+            49.8297534
+          ],
+          [
+            18.5531057,
+            49.8296635
+          ],
+          [
+            18.5531189,
+            49.82959550000001
+          ],
+          [
+            18.5530417,
+            49.8295894
+          ],
+          [
+            18.5530229,
+            49.8296671
+          ],
+          [
+            18.5504365,
+            49.8294461
+          ],
+          [
+            18.5504497,
+            49.8293891
+          ],
+          [
+            18.5503706,
+            49.8293842
+          ],
+          [
+            18.5503537,
+            49.8294376
+          ],
+          [
+            18.5477692,
+            49.8292361
+          ],
+          [
+            18.5477692,
+            49.8291741
+          ],
+          [
+            18.5476901,
+            49.8291705
+          ],
+          [
+            18.5476694,
+            49.8292239
+          ],
+          [
+            18.5465211,
+            49.8291389
+          ],
+          [
+            18.5423422,
+            49.8274146
+          ],
+          [
+            18.5417945,
+            49.8268402
+          ],
+          [
+            18.5418001,
+            49.82668480000001
+          ],
+          [
+            18.5407963,
+            49.82660759999999
+          ],
+          [
+            18.5408336,
+            49.825721399999985
+          ],
+          [
+            18.5407191,
+            49.825515299999985
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/291529649",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "water",
+          "diameter": "350"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.9946812,
+            50.16680190000001
+          ],
+          [
+            18.9896318,
+            50.1668689
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/311524563",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Spółka Wodociągowo–Kanalizacyjna Dzimierz – Nowa Wieś",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water",
+          "diameter": "32"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.3543631,
+            50.117334
+          ],
+          [
+            18.35445,
+            50.1171506
+          ],
+          [
+            18.3544559,
+            50.117124
+          ],
+          [
+            18.354448,
+            50.1171053
+          ],
+          [
+            18.3544343,
+            50.117086
+          ],
+          [
+            18.3542901,
+            50.1169243
+          ],
+          [
+            18.3542841,
+            50.1169176
+          ],
+          [
+            18.3542709,
+            50.1169116
+          ],
+          [
+            18.3542553,
+            50.116907
+          ],
+          [
+            18.3541677,
+            50.1168914
+          ],
+          [
+            18.3541636,
+            50.1168997
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/311524564",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Spółka Wodociągowo–Kanalizacyjna Dzimierz – Nowa Wieś",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water",
+          "diameter": "100"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.3550324,
+            50.1162951
+          ],
+          [
+            18.3563113,
+            50.1167439
+          ],
+          [
+            18.3569557,
+            50.1169718
+          ],
+          [
+            18.3570768,
+            50.1170052
+          ],
+          [
+            18.3571669,
+            50.1170184
+          ],
+          [
+            18.3572682,
+            50.1170313
+          ],
+          [
+            18.3579538,
+            50.1170584
+          ],
+          [
+            18.3594489,
+            50.1171141
+          ],
+          [
+            18.3605078,
+            50.1171487
+          ],
+          [
+            18.3605429,
+            50.1171512
+          ],
+          [
+            18.3610338,
+            50.11716339999999
+          ],
+          [
+            18.3617926,
+            50.117189
+          ],
+          [
+            18.362391,
+            50.117182
+          ],
+          [
+            18.3629996,
+            50.1171828
+          ],
+          [
+            18.363274,
+            50.1171928
+          ],
+          [
+            18.3633732,
+            50.1172006
+          ],
+          [
+            18.3635756,
+            50.1172168
+          ],
+          [
+            18.363716,
+            50.11723259999999
+          ],
+          [
+            18.3637695,
+            50.1172417
+          ],
+          [
+            18.3647696,
+            50.1174326
+          ],
+          [
+            18.3647771,
+            50.1174342
+          ],
+          [
+            18.3658996,
+            50.1176564
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/311524565",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Spółka Wodociągowo–Kanalizacyjna Dzimierz – Nowa Wieś",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water",
+          "diameter": "100"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.3550324,
+            50.1162951
+          ],
+          [
+            18.3550078,
+            50.1163275
+          ],
+          [
+            18.3549078,
+            50.116459
+          ],
+          [
+            18.3549064,
+            50.11646859999998
+          ],
+          [
+            18.3549128,
+            50.1164782
+          ],
+          [
+            18.3549285,
+            50.11648779999999
+          ],
+          [
+            18.3559908,
+            50.1168507
+          ],
+          [
+            18.3560269,
+            50.1168681
+          ],
+          [
+            18.3560529,
+            50.1168921
+          ],
+          [
+            18.3560715,
+            50.1169171
+          ],
+          [
+            18.3560922,
+            50.1169654
+          ],
+          [
+            18.3561849,
+            50.1171933
+          ],
+          [
+            18.3563039,
+            50.117476
+          ],
+          [
+            18.3563202,
+            50.1174992
+          ],
+          [
+            18.3563389,
+            50.117517
+          ],
+          [
+            18.3563631,
+            50.1175326
+          ],
+          [
+            18.356399,
+            50.1175481
+          ],
+          [
+            18.3564394,
+            50.1175585
+          ],
+          [
+            18.3566747,
+            50.1176086
+          ],
+          [
+            18.3568691,
+            50.1176339
+          ],
+          [
+            18.3576896,
+            50.1176575
+          ],
+          [
+            18.3580456,
+            50.1176642
+          ],
+          [
+            18.3591091,
+            50.1176873
+          ],
+          [
+            18.3594554,
+            50.117697
+          ],
+          [
+            18.3595837,
+            50.1177041
+          ],
+          [
+            18.3597564,
+            50.1177171
+          ],
+          [
+            18.3597634,
+            50.1177172
+          ],
+          [
+            18.3597698,
+            50.1177145
+          ],
+          [
+            18.359773,
+            50.11771
+          ],
+          [
+            18.3597748,
+            50.1176792
+          ],
+          [
+            18.3597775,
+            50.1176739
+          ],
+          [
+            18.3597834,
+            50.1176703
+          ],
+          [
+            18.3597882,
+            50.1176699
+          ],
+          [
+            18.360066,
+            50.1176717
+          ],
+          [
+            18.3600623,
+            50.1176814
+          ],
+          [
+            18.3600739,
+            50.117746299999986
+          ],
+          [
+            18.3600791,
+            50.1177616
+          ],
+          [
+            18.360091,
+            50.1177705
+          ],
+          [
+            18.360123,
+            50.1177723
+          ],
+          [
+            18.3607637,
+            50.1178472
+          ],
+          [
+            18.3609505,
+            50.1178717
+          ],
+          [
+            18.3613995,
+            50.1178891
+          ],
+          [
+            18.3633453,
+            50.11795990000001
+          ],
+          [
+            18.3641343,
+            50.117985699999984
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/311524566",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Spółka Wodociągowo–Kanalizacyjna Dzimierz – Nowa Wieś",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water",
+          "diameter": "80"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.3561849,
+            50.1171933
+          ],
+          [
+            18.3551307,
+            50.1171776
+          ],
+          [
+            18.3550843,
+            50.1171776
+          ],
+          [
+            18.3550415,
+            50.11718209999999
+          ],
+          [
+            18.3549902,
+            50.1171909
+          ],
+          [
+            18.3543631,
+            50.117334
+          ],
+          [
+            18.3542875,
+            50.1173565
+          ],
+          [
+            18.3542016,
+            50.1173803
+          ],
+          [
+            18.3541707,
+            50.1173888
+          ],
+          [
+            18.3541541,
+            50.1173669
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/313716118",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Spółka Wodociągowo–Kanalizacyjna Dzimierz – Nowa Wieś",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water",
+          "diameter": "32"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.360123,
+            50.1177723
+          ],
+          [
+            18.3601038,
+            50.1183473
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/313716120",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Spółka Wodociągowo–Kanalizacyjna Dzimierz – Nowa Wieś",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water",
+          "diameter": "150"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.3647771,
+            50.1174342
+          ],
+          [
+            18.3655033,
+            50.1166163
+          ],
+          [
+            18.3671123,
+            50.1171532
+          ],
+          [
+            18.3666473,
+            50.117794
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/313716121",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Spółka Wodociągowo–Kanalizacyjna Dzimierz – Nowa Wieś",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water",
+          "diameter": "80"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.3613995,
+            50.1178891
+          ],
+          [
+            18.3613906,
+            50.1183179
+          ],
+          [
+            18.3613906,
+            50.1184645
+          ],
+          [
+            18.3613833,
+            50.1185976
+          ],
+          [
+            18.3613681,
+            50.1187824
+          ],
+          [
+            18.3613136,
+            50.1188837
+          ],
+          [
+            18.361262,
+            50.1189691
+          ],
+          [
+            18.3611603,
+            50.1191312
+          ],
+          [
+            18.3609372,
+            50.119270599999986
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/313716122",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Spółka Wodociągowo–Kanalizacyjna Dzimierz – Nowa Wieś",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.362391,
+            50.117182
+          ],
+          [
+            18.3626438,
+            50.1167938
+          ],
+          [
+            18.3627228,
+            50.1166826
+          ],
+          [
+            18.362827,
+            50.11657
+          ],
+          [
+            18.3630102,
+            50.11638210000001
+          ],
+          [
+            18.3630912,
+            50.1162844
+          ],
+          [
+            18.3631394,
+            50.1162164
+          ],
+          [
+            18.3632589,
+            50.1160161
+          ],
+          [
+            18.3634884,
+            50.1156241
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/313886537",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Spółka Wodociągowo–Kanalizacyjna Dzimierz – Nowa Wieś",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water",
+          "diameter": "100"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.3605429,
+            50.1171512
+          ],
+          [
+            18.3605803,
+            50.1169724
+          ],
+          [
+            18.3607019,
+            50.1167584
+          ],
+          [
+            18.360861,
+            50.1165307
+          ],
+          [
+            18.361033,
+            50.11633709999999
+          ],
+          [
+            18.361275,
+            50.1160563
+          ],
+          [
+            18.361451,
+            50.1158125
+          ],
+          [
+            18.3615742,
+            50.1156139
+          ],
+          [
+            18.361643,
+            50.1154966
+          ],
+          [
+            18.3617142,
+            50.1153876
+          ],
+          [
+            18.3617639,
+            50.1153168
+          ],
+          [
+            18.3618593,
+            50.1152792
+          ],
+          [
+            18.3619351,
+            50.1152634
+          ],
+          [
+            18.3623957,
+            50.1152441
+          ],
+          [
+            18.3628879,
+            50.1152134
+          ],
+          [
+            18.3629405,
+            50.1152109
+          ],
+          [
+            18.3633652,
+            50.1152118
+          ],
+          [
+            18.3635515,
+            50.1152133
+          ],
+          [
+            18.3636924,
+            50.1152053
+          ],
+          [
+            18.363834,
+            50.1151775
+          ],
+          [
+            18.364305,
+            50.1150561
+          ],
+          [
+            18.3652953,
+            50.1147772
+          ],
+          [
+            18.3655553,
+            50.1145119
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/313886538",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Spółka Wodociągowo–Kanalizacyjna Dzimierz – Nowa Wieś",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water",
+          "diameter": "50"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.3566747,
+            50.1176086
+          ],
+          [
+            18.3565561,
+            50.1181758
+          ],
+          [
+            18.3565488,
+            50.1181984
+          ],
+          [
+            18.3565334,
+            50.1182069
+          ],
+          [
+            18.3565128,
+            50.1182087
+          ],
+          [
+            18.3562883,
+            50.1181871
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/319623618",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Spółka Wodociągowo–Kanalizacyjna Dzimierz – Nowa Wieś",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water",
+          "diameter": "160"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.3494432,
+            50.1048263
+          ],
+          [
+            18.3495178,
+            50.104728
+          ],
+          [
+            18.3496933,
+            50.1047252
+          ],
+          [
+            18.3496756,
+            50.1050272
+          ],
+          [
+            18.3501706,
+            50.105314
+          ],
+          [
+            18.3508845,
+            50.1054964
+          ],
+          [
+            18.3510985,
+            50.1053157
+          ],
+          [
+            18.3517725,
+            50.1055206
+          ],
+          [
+            18.3518084,
+            50.1055315
+          ],
+          [
+            18.352303,
+            50.1058344
+          ],
+          [
+            18.3526147,
+            50.1059291
+          ],
+          [
+            18.3532936,
+            50.1060665
+          ],
+          [
+            18.3534554,
+            50.1067533
+          ],
+          [
+            18.3534571,
+            50.107164
+          ],
+          [
+            18.3534218,
+            50.1080347
+          ],
+          [
+            18.3547772,
+            50.1136403
+          ],
+          [
+            18.3548425,
+            50.1143188
+          ],
+          [
+            18.3548842,
+            50.1147536
+          ],
+          [
+            18.354959,
+            50.1155309
+          ],
+          [
+            18.3550324,
+            50.1162951
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/319623620",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Spółka Wodociągowo–Kanalizacyjna Dzimierz – Nowa Wieś",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water",
+          "diameter": "80"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.3548842,
+            50.1147536
+          ],
+          [
+            18.3551377,
+            50.1147412
+          ],
+          [
+            18.3556478,
+            50.1147163
+          ],
+          [
+            18.35704,
+            50.1146886
+          ],
+          [
+            18.3587312,
+            50.11471
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/319713754",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Spółka Wodociągowo–Kanalizacyjna Dzimierz – Nowa Wieś",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water",
+          "diameter": "100"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.3532936,
+            50.1060665
+          ],
+          [
+            18.3535923,
+            50.106087
+          ],
+          [
+            18.3537511,
+            50.1059653
+          ],
+          [
+            18.3538267,
+            50.1059169
+          ],
+          [
+            18.3539835,
+            50.105838599999984
+          ],
+          [
+            18.3542779,
+            50.1057417
+          ],
+          [
+            18.3547525,
+            50.105559
+          ],
+          [
+            18.3550432,
+            50.105487
+          ],
+          [
+            18.3553868,
+            50.1054593
+          ],
+          [
+            18.3553819,
+            50.1054784
+          ],
+          [
+            18.3567228,
+            50.1056578
+          ],
+          [
+            18.3574609,
+            50.1055809
+          ],
+          [
+            18.357805,
+            50.1054966
+          ],
+          [
+            18.3590876,
+            50.1047878
+          ],
+          [
+            18.3599996,
+            50.10432019999999
+          ],
+          [
+            18.3601368,
+            50.1042189
+          ],
+          [
+            18.3603536,
+            50.1040587
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/319736471",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Spółka Wodociągowo–Kanalizacyjna Dzimierz – Nowa Wieś",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water",
+          "diameter": "100"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.3553868,
+            50.1054593
+          ],
+          [
+            18.3551673,
+            50.1048622
+          ],
+          [
+            18.3547427,
+            50.1041485
+          ],
+          [
+            18.3546528,
+            50.1037738
+          ],
+          [
+            18.3546002,
+            50.1032883
+          ],
+          [
+            18.3546304,
+            50.1029756
+          ],
+          [
+            18.3550253,
+            50.1005906
+          ],
+          [
+            18.3550582,
+            50.1003918
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/323115950",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Spółka Wodociągowo–Kanalizacyjna Dzimierz – Nowa Wieś",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water",
+          "diameter": "32"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.3542016,
+            50.1173803
+          ],
+          [
+            18.3542049,
+            50.117387
+          ],
+          [
+            18.354053,
+            50.1174268
+          ],
+          [
+            18.3538639,
+            50.1174782
+          ],
+          [
+            18.3538497,
+            50.1174909
+          ],
+          [
+            18.3538249,
+            50.117529
+          ],
+          [
+            18.3537466,
+            50.1178138
+          ],
+          [
+            18.3537125,
+            50.117997
+          ],
+          [
+            18.3537008,
+            50.1179988
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/327613695",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Spółka Wodociągowo–Kanalizacyjna Dzimierz – Nowa Wieś",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water",
+          "diameter": "80"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.3495178,
+            50.104728
+          ],
+          [
+            18.3496915,
+            50.1044832
+          ],
+          [
+            18.3499911,
+            50.1044255
+          ],
+          [
+            18.3503,
+            50.104398299999986
+          ],
+          [
+            18.3505122,
+            50.1043851
+          ],
+          [
+            18.3510032,
+            50.1043791
+          ],
+          [
+            18.3517169,
+            50.1043758
+          ],
+          [
+            18.3517208,
+            50.1043701
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/328320209",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Spółka Wodociągowo–Kanalizacyjna Dzimierz – Nowa Wieś",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.3534218,
+            50.1080347
+          ],
+          [
+            18.3539505,
+            50.1080313
+          ],
+          [
+            18.3560944,
+            50.1079122
+          ],
+          [
+            18.3563162,
+            50.1079281
+          ],
+          [
+            18.3567829,
+            50.1080003
+          ],
+          [
+            18.3569453,
+            50.1080089
+          ],
+          [
+            18.3573282,
+            50.1080292
+          ],
+          [
+            18.3574326,
+            50.108046899999984
+          ],
+          [
+            18.3577728,
+            50.10810450000001
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/328320210",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Spółka Wodociągowo–Kanalizacyjna Dzimierz – Nowa Wieś",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.3573282,
+            50.1080292
+          ],
+          [
+            18.3574856,
+            50.1071712
+          ],
+          [
+            18.357403,
+            50.1069761
+          ],
+          [
+            18.3573308,
+            50.1069108
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/328320211",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Spółka Wodociągowo–Kanalizacyjna Dzimierz – Nowa Wieś",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.3534218,
+            50.1080347
+          ],
+          [
+            18.3529133,
+            50.1080292
+          ],
+          [
+            18.3522553,
+            50.1081207
+          ],
+          [
+            18.3511878,
+            50.1084132
+          ],
+          [
+            18.348845,
+            50.109101299999985
+          ],
+          [
+            18.3476151,
+            50.109462499999985
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/329041199",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Spółka Wodociągowo–Kanalizacyjna Dzimierz – Nowa Wieś",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.3495186,
+            50.1047181
+          ],
+          [
+            18.3495604,
+            50.10461269999998
+          ],
+          [
+            18.3494317,
+            50.1039073
+          ],
+          [
+            18.3490723,
+            50.1038282
+          ],
+          [
+            18.3480847,
+            50.1036214
+          ],
+          [
+            18.3396108,
+            50.1020058
+          ],
+          [
+            18.3317876,
+            50.1005143
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/334903930",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Spółka Wodociągowo–Kanalizacyjna Dzimierz – Nowa Wieś",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water",
+          "diameter": "80"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.3613136,
+            50.1188837
+          ],
+          [
+            18.3613318,
+            50.11888659999999
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/334903931",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Spółka Wodociągowo–Kanalizacyjna Dzimierz – Nowa Wieś",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water",
+          "diameter": "80"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.3613681,
+            50.1187824
+          ],
+          [
+            18.3617789,
+            50.1187895
+          ],
+          [
+            18.3623096,
+            50.1188009
+          ],
+          [
+            18.3635486,
+            50.1188416
+          ],
+          [
+            18.3636664,
+            50.1188502
+          ],
+          [
+            18.3636643,
+            50.1188468
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/367700002",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Spółka Wodociągowo–Kanalizacyjna Dzimierz – Nowa Wieś",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water",
+          "diameter": "80"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.3579538,
+            50.1170584
+          ],
+          [
+            18.3579949,
+            50.1166221
+          ],
+          [
+            18.3580528,
+            50.1160942
+          ],
+          [
+            18.3580397,
+            50.1158961
+          ],
+          [
+            18.3580266,
+            50.1158247
+          ],
+          [
+            18.3580036,
+            50.11580270000001
+          ],
+          [
+            18.3579732,
+            50.1158029
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/438262734",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.7570675,
+            50.2609011
+          ],
+          [
+            18.7565258,
+            50.2609119
+          ],
+          [
+            18.7557823,
+            50.2609209
+          ],
+          [
+            18.7552794,
+            50.2609127
+          ],
+          [
+            18.7547308,
+            50.2608996
+          ],
+          [
+            18.7542361,
+            50.2606594
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/617345295",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Górnośląskie Przedsiębiorstwo Wodociągów S.A. w Katowicach",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water",
+          "diameter": "80 cm"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.7582361,
+            49.919618
+          ],
+          [
+            18.7580158,
+            49.9207456
+          ],
+          [
+            18.7577257,
+            49.9214997
+          ],
+          [
+            18.7575469,
+            49.9224743
+          ],
+          [
+            18.7572721,
+            49.9231567
+          ],
+          [
+            18.7570605,
+            49.923505
+          ],
+          [
+            18.7567988,
+            49.9237142
+          ],
+          [
+            18.756223,
+            49.9242042
+          ],
+          [
+            18.7554683,
+            49.9250495
+          ],
+          [
+            18.7547486,
+            49.9257418
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/617345734",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Górnośląskie Przedsiębiorstwo Wodociągów S.A. w Katowicach",
+          "location": "overground",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.7595688,
+            49.917530099999986
+          ],
+          [
+            18.7583356,
+            49.919093099999984
+          ],
+          [
+            18.7582361,
+            49.919618
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/697316931",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "layer": "1",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.4821866,
+            50.0411598
+          ],
+          [
+            18.4825174,
+            50.0412594
+          ],
+          [
+            18.4829502,
+            50.0417109
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/790964080",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            19.0091762,
+            50.1594837
+          ],
+          [
+            19.0091266,
+            50.1590858
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/810763858",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "source": "Gminna Spółka Wodno– Melioracyjna Gierałtowice",
+          "substance": "water",
+          "diameter": "500"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.7215321,
+            50.215634
+          ],
+          [
+            18.7217073,
+            50.2155871
+          ],
+          [
+            18.721757,
+            50.2155867
+          ],
+          [
+            18.7218226,
+            50.2155708
+          ],
+          [
+            18.7218404,
+            50.2155727
+          ],
+          [
+            18.721925,
+            50.2155825
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/836168942",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "outdoor",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.6981973,
+            50.2143224
+          ],
+          [
+            18.6982517,
+            50.2142722
+          ],
+          [
+            18.698451,
+            50.2141584
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/836168943",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "outdoor",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.6981905,
+            50.2143199
+          ],
+          [
+            18.6982433,
+            50.2142692
+          ],
+          [
+            18.6984449,
+            50.2141546
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/836168944",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underwater",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.698451,
+            50.2141584
+          ],
+          [
+            18.6985355,
+            50.2141102
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/836168945",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underwater",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.6984449,
+            50.2141546
+          ],
+          [
+            18.6985312,
+            50.2141055
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/853610636",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.6052358,
+            50.3508272
+          ],
+          [
+            18.6050732,
+            50.3510144
+          ],
+          [
+            18.6050608,
+            50.3510287
+          ],
+          [
+            18.6050484,
+            50.351043
+          ],
+          [
+            18.6050326,
+            50.3510612
+          ],
+          [
+            18.6050003,
+            50.3510496
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/854126682",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.6054327,
+            50.3505161
+          ],
+          [
+            18.6054868,
+            50.3505359
+          ],
+          [
+            18.6052358,
+            50.3508272
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/854126683",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.6050732,
+            50.3510144
+          ],
+          [
+            18.6050427,
+            50.3510036
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/854126684",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.6050484,
+            50.351043
+          ],
+          [
+            18.6050168,
+            50.3510318
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/854126685",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.6050608,
+            50.3510287
+          ],
+          [
+            18.6050302,
+            50.3510172
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/925221159",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overhead",
+          "source": "bing",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.5630802,
+            49.834834
+          ],
+          [
+            18.562809,
+            49.834656
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/925221160",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "source": "bing",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.5644786,
+            49.8352551
+          ],
+          [
+            18.5643776,
+            49.8353573
+          ],
+          [
+            18.5640294,
+            49.8352394
+          ],
+          [
+            18.5640816,
+            49.8351687
+          ],
+          [
+            18.5638866,
+            49.8351159
+          ],
+          [
+            18.5638327,
+            49.8351765
+          ],
+          [
+            18.5633608,
+            49.8350182
+          ],
+          [
+            18.5630802,
+            49.834834
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/925221161",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "source": "bing",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.5648731,
+            49.8354899
+          ],
+          [
+            18.5644786,
+            49.8352551
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/925221162",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overhead",
+          "source": "bing",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.5654215,
+            49.8358466
+          ],
+          [
+            18.5648731,
+            49.8354899
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/941933035",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.6257174,
+            50.1840586
+          ],
+          [
+            18.6233388,
+            50.1843881
+          ],
+          [
+            18.6207846,
+            50.1847372
+          ],
+          [
+            18.6189914,
+            50.1849839
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/941933036",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.6187867,
+            50.1850161
+          ],
+          [
+            18.6181349,
+            50.1851081
+          ],
+          [
+            18.6162154,
+            50.1853646
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/941933037",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.6189914,
+            50.1849839
+          ],
+          [
+            18.6187867,
+            50.1850161
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1004075129",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.646005,
+            50.2008234
+          ],
+          [
+            18.6449636,
+            50.2008345
+          ],
+          [
+            18.6438978,
+            50.2010176
+          ],
+          [
+            18.6428143,
+            50.2012622
+          ],
+          [
+            18.6410311,
+            50.2013994
+          ],
+          [
+            18.6398663,
+            50.2014091
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1004075130",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.6398663,
+            50.2014091
+          ],
+          [
+            18.6398637,
+            50.2014241
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1004075131",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.6460056,
+            50.2008297
+          ],
+          [
+            18.646005,
+            50.2008234
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1004075134",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.6460183,
+            50.200818
+          ],
+          [
+            18.6449609,
+            50.20083
+          ],
+          [
+            18.643891,
+            50.201009
+          ],
+          [
+            18.6428122,
+            50.2012526
+          ],
+          [
+            18.6410283,
+            50.2013879
+          ],
+          [
+            18.6398479,
+            50.2014006
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1004075135",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.6398479,
+            50.2014006
+          ],
+          [
+            18.6398439,
+            50.2014228
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1004075136",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.6460185,
+            50.2008292
+          ],
+          [
+            18.6460183,
+            50.200818
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1004078959",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.6465386,
+            50.1882764
+          ],
+          [
+            18.6449809,
+            50.1868866
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1004078960",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.6449809,
+            50.1868866
+          ],
+          [
+            18.6449587,
+            50.186869
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1004078961",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.647163,
+            50.18850039999999
+          ],
+          [
+            18.6471457,
+            50.1885066
+          ],
+          [
+            18.6469846,
+            50.1883526
+          ],
+          [
+            18.6465386,
+            50.1882764
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1004078962",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.6465276,
+            50.1882887
+          ],
+          [
+            18.6449615,
+            50.1868922
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1004078963",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.6449615,
+            50.1868922
+          ],
+          [
+            18.644942,
+            50.1868757
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1004078964",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.6471816,
+            50.1885178
+          ],
+          [
+            18.6471477,
+            50.1885308
+          ],
+          [
+            18.6469744,
+            50.188364
+          ],
+          [
+            18.6465276,
+            50.1882887
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1042055400",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "substance": "water",
+          "diameter": "500"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.7172889,
+            50.2333233
+          ],
+          [
+            18.7172839,
+            50.2322581
+          ],
+          [
+            18.7171721,
+            50.23204290000001
+          ],
+          [
+            18.71703,
+            50.2318431
+          ],
+          [
+            18.716597,
+            50.23161
+          ],
+          [
+            18.7159332,
+            50.2310107
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1042055401",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "substance": "water",
+          "diameter": "500"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.7215478,
+            50.2156624
+          ],
+          [
+            18.7217265,
+            50.2156158
+          ],
+          [
+            18.7217605,
+            50.2155954
+          ],
+          [
+            18.7218265,
+            50.2155787
+          ],
+          [
+            18.7218404,
+            50.2155727
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1042055402",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "substance": "water",
+          "diameter": "500"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.7215647,
+            50.21569
+          ],
+          [
+            18.7217445,
+            50.2156427
+          ],
+          [
+            18.7217892,
+            50.2156425
+          ],
+          [
+            18.7218531,
+            50.2156259
+          ],
+          [
+            18.7218759,
+            50.2156257
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1042055405",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "substance": "water",
+          "diameter": "500"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.7215789,
+            50.2157181
+          ],
+          [
+            18.7217629,
+            50.2156707
+          ],
+          [
+            18.7217948,
+            50.2156518
+          ],
+          [
+            18.7218564,
+            50.2156355
+          ],
+          [
+            18.7218759,
+            50.2156257
+          ],
+          [
+            18.721925,
+            50.2155825
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1042055406",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "substance": "water",
+          "diameter": "710"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.721925,
+            50.2155825
+          ],
+          [
+            18.7273825,
+            50.21409610000001
+          ],
+          [
+            18.7277766,
+            50.2141226
+          ],
+          [
+            18.7289492,
+            50.2142793
+          ],
+          [
+            18.7309585,
+            50.2139545
+          ],
+          [
+            18.7330412,
+            50.21376140000001
+          ],
+          [
+            18.7337571,
+            50.2137326
+          ],
+          [
+            18.7348564,
+            50.2138091
+          ],
+          [
+            18.7355096,
+            50.2139613
+          ],
+          [
+            18.7367296,
+            50.2140484
+          ],
+          [
+            18.7372775,
+            50.2141597
+          ],
+          [
+            18.7381768,
+            50.2142142
+          ],
+          [
+            18.7386999,
+            50.21424
+          ],
+          [
+            18.7392347,
+            50.214293
+          ],
+          [
+            18.7423049,
+            50.2148715
+          ],
+          [
+            18.7423185,
+            50.214845
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1053908838",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.9593744,
+            50.2304367
+          ],
+          [
+            18.9593554,
+            50.2304147
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1109203435",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.8042712,
+            50.3063881
+          ],
+          [
+            18.8045095,
+            50.3058142
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1109203436",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.8043388,
+            50.3063987
+          ],
+          [
+            18.804577,
+            50.3058249
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1144457446",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Górnośląskie Przedsiębiorstwo Wodociągów SA",
+          "location": "overground",
+          "layer": "1",
+          "substance": "water",
+          "diameter": "1200 mm"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.8552945,
+            50.2619301
+          ],
+          [
+            18.8552843,
+            50.2614511
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1152785446",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.8805541,
+            50.3268567
+          ],
+          [
+            18.8809148,
+            50.3275288
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1152785452",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.8800919,
+            50.3266512
+          ],
+          [
+            18.8802957,
+            50.3267345
+          ],
+          [
+            18.8803657,
+            50.3267778
+          ],
+          [
+            18.8805541,
+            50.3268567
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1157245796",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overhead",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.8923995,
+            50.2908387
+          ],
+          [
+            18.8911413,
+            50.2909487
+          ],
+          [
+            18.8910563,
+            50.290957
+          ],
+          [
+            18.8907004,
+            50.2909893
+          ],
+          [
+            18.8906202,
+            50.2909954
+          ],
+          [
+            18.8905728,
+            50.2910074
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1275787428",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.8372392,
+            50.2309837
+          ],
+          [
+            18.8372004,
+            50.231149
+          ],
+          [
+            18.8371939,
+            50.2311745
+          ],
+          [
+            18.8369741,
+            50.2311471
+          ],
+          [
+            18.8369253,
+            50.2311878
+          ],
+          [
+            18.8369283,
+            50.2315698
+          ],
+          [
+            18.8367459,
+            50.2319275
+          ],
+          [
+            18.8367798,
+            50.232040699999985
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1347382730",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.6290271,
+            50.1933501
+          ],
+          [
+            18.6285975,
+            50.1940856
+          ],
+          [
+            18.6285823,
+            50.1940983
+          ],
+          [
+            18.6285648,
+            50.1941013
+          ],
+          [
+            18.6285344,
+            50.1940945
+          ],
+          [
+            18.6276786,
+            50.1937724
+          ],
+          [
+            18.6276635,
+            50.1937716
+          ],
+          [
+            18.6276529,
+            50.1937769
+          ],
+          [
+            18.6276494,
+            50.19378359999999
+          ],
+          [
+            18.627556,
+            50.193954
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1476166178",
+        "domain": "water",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
+          "The bounded committed snapshot is fixture evidence for water facilities, supply pipelines and watercourses, not an operational hydraulic rating or pressure model.",
+          "BDOT10k hydrographic geometry is retained only as topographic comparison context and cannot establish water service semantics alone.",
+          "KIUT water WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "substance": "water"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.9691316,
+            49.9827069
+          ],
+          [
+            18.9690772,
+            49.9825757
+          ]
+        ]
+      }
+    }
+  ]
+}

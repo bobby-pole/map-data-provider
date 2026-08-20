@@ -1,75 +1,54 @@
-import { defaultLayerEnabled, previewLayerKey, sourceAttribution, transportRoadClassLabel, transportRoadClasses, type PreviewLayer, type TransportRoadClass } from "../previewCatalog";
+import { useEffect, useMemo, useRef, type CSSProperties } from "react";
 
-export function LayerCatalog({
-  layers,
-  enabledLayers,
-  onToggle,
-  enabledTransportRoadClasses,
-  onTransportRoadClassToggle,
-}: {
+import { defaultLayerEnabled, previewLayerKey, sourceAttribution, transportRoadClassLabel, transportRoadClasses, type PreviewLayer, type TransportRoadClass } from "../previewCatalog";
+import { pointSymbolKind } from "../mapSymbols";
+import { isLinePresentationLayer } from "../mapStyle";
+import { layerPresentationSemantic } from "../presentationSemantics";
+import { MapSymbolIcon } from "./LegendPanel";
+
+type LayerGroup = { provider: string; domains: Map<string, PreviewLayer[]> };
+
+export function LayerCatalog({ layers, enabledLayers, onToggle, enabledTransportRoadClasses, onTransportRoadClassToggle }: {
   layers: PreviewLayer[];
   enabledLayers: Record<string, boolean>;
   onToggle: (key: string, enabled: boolean) => void;
   enabledTransportRoadClasses: Record<TransportRoadClass, boolean>;
   onTransportRoadClassToggle: (roadClass: TransportRoadClass, enabled: boolean) => void;
 }) {
-  return (
-    <section className="inspectorSection">
-      <div className="sectionHeading"><h2>Layers</h2><span>{layers.length}</span></div>
-      {layers.length > 0 ? <ul className="layerList">{layers.map((layer) => {
-        const key = previewLayerKey(layer);
-        return <li key={key}>
-          <label className="layerToggle">
-            <input type="checkbox" checked={enabledLayers[key] ?? defaultLayerEnabled(layer)} onChange={(event) => onToggle(key, event.target.checked)} />
-            <span>
-              <strong>{formatLayerTitle(layer.artifact.artifact_id)}</strong>
-              <small>{layer.domain} · {layer.artifact.feature_count} features · {layer.artifact.readiness}</small>
-              <small>{sourceAttribution(layer)}</small>
-            </span>
-          </label>
-          {layer.artifact.artifact_id === "transport.roads" && (enabledLayers[key] ?? defaultLayerEnabled(layer)) && <div className="roadClassControls" aria-label="Transport road classes">
-            {transportRoadClasses.map((roadClass) => <label className="roadClassToggle" key={roadClass}>
-              <input type="checkbox" checked={enabledTransportRoadClasses[roadClass]} onChange={(event) => onTransportRoadClassToggle(roadClass, event.target.checked)} />
-              <span>{transportRoadClassLabel(roadClass)}{roadClass === "service" ? " (off by default)" : ""}</span>
-            </label>)}
-          </div>}
-        </li>;
-      })}</ul> : <p className="muted">Loading registered map-presentation manifests…</p>}
-    </section>
-  );
+  const groups = useMemo(() => {
+    const byProvider = new Map<string, LayerGroup>();
+    layers.forEach((layer) => {
+      const provider = layer.artifact.source_provenance.map((item) => item.source_id).join(" + ") || layer.artifact.source;
+      const group = byProvider.get(provider) ?? { provider, domains: new Map<string, PreviewLayer[]>() };
+      group.domains.set(layer.domain, [...(group.domains.get(layer.domain) ?? []), layer]);
+      byProvider.set(provider, group);
+    });
+    return [...byProvider.values()].sort((left, right) => left.provider.localeCompare(right.provider));
+  }, [layers]);
+  const isEnabled = (layer: PreviewLayer) => enabledLayers[previewLayerKey(layer)] ?? defaultLayerEnabled(layer);
+  const setAll = (items: PreviewLayer[], enabled: boolean) => items.forEach((layer) => onToggle(previewLayerKey(layer), enabled));
+
+  return <section className="drawerSection">
+    <div className="sectionHeading"><h2>Layers</h2><span>{layers.length}</span></div>
+    <p className="muted">Analytical provider artifacts are grouped by source and domain. Group toggles preserve each artifact’s provenance and readiness.</p>
+    {groups.length ? <div className="layerTree">{groups.map((group) => {
+      const providerLayers = [...group.domains.values()].flat();
+      return <details key={group.provider} open><summary><TriStateToggle items={providerLayers} isEnabled={isEnabled} onChange={(enabled) => setAll(providerLayers, enabled)} label={`Toggle provider ${group.provider}`} /><span><strong>{group.provider}</strong><small>source role: analytical vector</small></span></summary>{[...group.domains.entries()].sort(([left], [right]) => left.localeCompare(right)).map(([domain, domainLayers]) => <details key={domain} className="domainBranch" open><summary><TriStateToggle items={domainLayers} isEnabled={isEnabled} onChange={(enabled) => setAll(domainLayers, enabled)} label={`Toggle ${domain} domain`} /><span><strong>{domain}</strong><small>{domainLayers.length} artifact{domainLayers.length === 1 ? "" : "s"}</small></span></summary><ul className="layerList">{domainLayers.map((layer, index) => {
+        const key = previewLayerKey(layer); const semantic = layerPresentationSemantic(layer, index); const enabled = isEnabled(layer);
+        const marker = isLinePresentationLayer(layer.artifact.source_layer)
+          ? <i className={`semanticMark ${semantic.geometry}`} style={{ "--semantic-color": semantic.color } as CSSProperties} aria-hidden="true" />
+          : <MapSymbolIcon kind={pointSymbolKind(layer)} />;
+        return <li key={key}><label className="layerToggle"><input type="checkbox" checked={enabled} onChange={(event) => onToggle(key, event.target.checked)} /><span><strong>{marker}{semantic.label}</strong><small>{semantic.symbol} · {layer.artifact.feature_count} features · {layer.artifact.readiness}</small><small>{sourceAttribution(layer)}</small></span></label>{layer.artifact.artifact_id === "transport.roads" && enabled && <div className="roadClassControls" aria-label="Transport road classes">{transportRoadClasses.map((roadClass) => <label className="roadClassToggle" key={roadClass}><input type="checkbox" checked={enabledTransportRoadClasses[roadClass]} onChange={(event) => onTransportRoadClassToggle(roadClass, event.target.checked)} /><span>{transportRoadClassLabel(roadClass)}</span></label>)}</div>}</li>;
+      })}</ul></details>)}</details>;
+    })}</div> : <p className="muted">Prepare an AOI to load registered map-presentation artifacts.</p>}
+  </section>;
 }
 
-function formatLayerTitle(artifactId: string): string {
-  if (artifactId === "power.supports") return "Power supports";
-  if (artifactId === "transport.roads") return "Transport roads";
-  if (artifactId === "transport.railways") return "Transport railways";
-  if (artifactId === "transport.stations") return "Transport stations";
-  if (artifactId === "transport.aviation") return "Transport aviation";
-  if (artifactId === "transport.inspection_points") return "Transport inspection points";
-  if (artifactId === "bridges.bridges") return "Bridges";
-  if (artifactId === "bridges.viaducts") return "Viaducts";
-  if (artifactId === "bridges.crossings") return "Crossings";
-  if (artifactId === "bridges.inspection_points") return "Bridge inspection points";
-  if (artifactId === "water.facilities") return "Water facilities";
-  if (artifactId === "water.pipelines") return "Water pipelines";
-  if (artifactId === "water.waterways") return "Watercourses";
-  if (artifactId === "water.inspection_points") return "Water inspection points";
-  if (artifactId === "gas.facilities") return "Gas facilities";
-  if (artifactId === "gas.pipelines") return "Gas pipelines";
-  if (artifactId === "gas.inspection_points") return "Gas inspection points";
-  if (artifactId === "sewer.facilities") return "Sewer facilities";
-  if (artifactId === "sewer.pipelines") return "Sewer pipelines";
-  if (artifactId === "sewer.inspection_points") return "Sewer inspection points";
-  if (artifactId === "industrial.facilities") return "Industrial facilities";
-  if (artifactId === "industrial.works") return "Industrial works";
-  if (artifactId === "industrial.inspection_points") return "Industrial inspection points";
-  if (artifactId === "telecom.towers") return "Telecom towers and masts";
-  if (artifactId === "telecom.facilities") return "Telecom facilities";
-  if (artifactId === "telecom.lines") return "Telecom network lines";
-  if (artifactId === "telecom.inspection_points") return "Telecom inspection points";
-  if (artifactId === "district_heating.plants") return "District-heating plants";
-  if (artifactId === "district_heating.facilities") return "District-heating facilities";
-  if (artifactId === "district_heating.lines") return "District-heating network lines";
-  if (artifactId === "district_heating.inspection_points") return "District-heating inspection points";
-  return artifactId;
+function TriStateToggle({ items, isEnabled, onChange, label }: { items: PreviewLayer[]; isEnabled: (layer: PreviewLayer) => boolean; onChange: (enabled: boolean) => void; label: string }) {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const enabledCount = items.filter(isEnabled).length;
+  const checked = enabledCount === items.length && items.length > 0;
+  const mixed = enabledCount > 0 && !checked;
+  useEffect(() => { if (inputRef.current) inputRef.current.indeterminate = mixed; }, [mixed]);
+  return <input ref={inputRef} type="checkbox" checked={checked} aria-label={label} onClick={(event) => event.stopPropagation()} onChange={(event) => onChange(event.target.checked)} />;
 }

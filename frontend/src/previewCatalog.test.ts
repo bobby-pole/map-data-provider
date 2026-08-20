@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { configuredPreviewLayers, defaultLayerEnabled, popupDetails, previewLayerKey, sourceAttribution, transportRoadClassLabel } from "./previewCatalog";
+import { configuredPreviewLayers, defaultLayerEnabled, isInspectionPointArtifact, popupDetails, previewLayerKey, sourceAttribution, transportRoadClassLabel } from "./previewCatalog";
 import type { MapPresentation } from "./types/api";
 
 const fixturePresentation: MapPresentation = {
@@ -42,7 +42,14 @@ describe("manifest-driven preview catalog", () => {
     const transportLayers = configuredPreviewLayers([{ ...fixturePresentation, domain: "transport" }]);
     expect(defaultLayerEnabled(transportLayers[0]!)).toBe(false);
     expect(defaultLayerEnabled(configuredPreviewLayers([fixturePresentation])[0]!)).toBe(true);
+    expect(transportRoadClassLabel("major")).toBe("Major roads");
     expect(transportRoadClassLabel("secondary")).toBe("Secondary roads");
-    expect(transportRoadClassLabel("service")).toBe("Service roads");
+  });
+
+  it("keeps inspection samples in the provider pack but out of the map preview", () => {
+    const layers = configuredPreviewLayers([{ ...fixturePresentation, layers: [...fixturePresentation.layers, { ...fixturePresentation.layers[0]!, artifact_id: "water.inspection_points" }] }]);
+    expect(layers.map((layer) => layer.artifact.artifact_id)).not.toContain("water.inspection_points");
+    expect(isInspectionPointArtifact("gas.inspection_points")).toBe(true);
+    expect(isInspectionPointArtifact("water.facilities")).toBe(false);
   });
 });

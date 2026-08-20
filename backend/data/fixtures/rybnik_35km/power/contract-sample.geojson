@@ -1,0 +1,89 @@
+{
+  "type": "FeatureCollection",
+  "name": "contract-sample",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1",
+        "domain": "power",
+        "asset_type": "line",
+        "confidence": "high",
+        "missing_fields": [],
+        "limitations": [],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "power": "line",
+          "voltage": "110000"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.541,
+            50.101
+          ],
+          [
+            18.545,
+            50.103
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/2",
+        "domain": "power",
+        "asset_type": "line",
+        "confidence": "high",
+        "missing_fields": [],
+        "limitations": [],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "power": "line",
+          "voltage": "110000"
+        }
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            18.546,
+            50.104
+          ],
+          [
+            18.55,
+            50.106
+          ]
+        ]
+      }
+    }
+  ],
+  "metadata": {
+    "contract_version": "provider_geojson/v1",
+    "aoi_id": "rybnik_35km",
+    "domain": "power",
+    "layer_id": "power.lines",
+    "source": "OpenStreetMap",
+    "source_type": "analytical_vector",
+    "snapshot_at": "2026-07-22T00:00:00Z",
+    "feature_count": 2,
+    "readiness": "ready",
+    "confidence": "high",
+    "limitations": [
+      "OSM completeness varies by area and asset type.",
+      "Passed validation does not prove complete real-world infrastructure coverage."
+    ],
+    "eligible_for_analysis": true
+  }
+}

@@ -161,7 +161,7 @@ def test_analytical_cache_rejects_non_free_provenance_before_reading_fields() ->
 
 
 def test_cache_reader_keeps_v1_power_provenance_readable_through_v2_registry(tmp_path: Path) -> None:
-    source_paths = cache_paths("rybnik_60km", "power")
+    source_paths = cache_paths("rybnik_35km", "power")
     target_paths = cache_paths("fixture_aoi", "power", root=tmp_path)
     target_paths.root.mkdir(parents=True)
     for source, target in (
@@ -185,7 +185,7 @@ def test_cache_reader_keeps_v1_power_provenance_readable_through_v2_registry(tmp
 
 
 def test_cache_reader_rejects_missing_legacy_analytical_source_provenance(tmp_path: Path) -> None:
-    source_paths = cache_paths("rybnik_60km", "power")
+    source_paths = cache_paths("rybnik_35km", "power")
     target_paths = cache_paths("fixture_aoi", "power", root=tmp_path)
     target_paths.root.mkdir(parents=True)
     for source, target in (
@@ -238,7 +238,7 @@ if os.environ.get("MDQ_REJECT_WMS_VECTOR_PROBE") == "1":
 
 if os.environ.get("MDQ_REJECT_STALE_EVIDENCE_PROBE") == "1":
     def test_probe_stale_evidence_rejection_failure() -> None:
-        source_paths = cache_paths("rybnik_60km", "power")
+        source_paths = cache_paths("rybnik_35km", "power")
         metadata = json.loads(source_paths.metadata.read_text(encoding="utf-8"))
         has_valid_query = "query_version" in metadata and metadata["query_version"] == "stale_query_v0"
         assert has_valid_query, "Probe intentionally failed: stale or invalid query_version evidence must be rejected."

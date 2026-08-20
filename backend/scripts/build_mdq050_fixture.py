@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "data/fixtures/rybnik_60km/power"
+OUT = ROOT / "data/fixtures/rybnik_35km/power"
 BBOX = [17.7072648, 49.5643805, 19.3851569, 50.6410717]
 TAGS = ("power", "man_made", "name", "name:pl", "name:en", "alt_name", "description", "ref", "operator", "operator:short", "operator:wikidata", "wikidata", "wikipedia", "website", "image", "voltage", "voltage:primary", "voltage:secondary", "frequency", "circuits", "cables", "wires", "phases", "location", "line", "rating", "design", "height", "material", "tower:type", "tower:construction", "substation", "transformer", "generator:source", "generator:method", "generator:type", "plant:source", "plant:method", "plant:output:electricity", "start_date")
 
@@ -35,7 +35,7 @@ def main() -> None:
         if kind not in {"tower", "pole", "portal", "utility_pole"}: continue
         projected = {key: tags[key] for key in TAGS if key in tags}
         features.append({"type":"Feature", "properties":{"element":"node", "id":item["id"], **projected}, "geometry":{"type":"Point", "coordinates":[item["lon"], item["lat"]]}})
-    fc = {"type":"FeatureCollection", "metadata":{"source":"OpenStreetMap", "snapshot_at":snapshot_at, "source_query":"Captured bounded Overpass support snapshot for Rybnik 60 km AOI.", "source_url":"https://overpass-api.de/api/interpreter", "attribution":"© OpenStreetMap contributors", "license":"ODbL-1.0", "bbox":BBOX, "source_checksum":digest(supports_path), "coverage":"bounded_aoi_snapshot"}, "features":features}
+    fc = {"type":"FeatureCollection", "metadata":{"source":"OpenStreetMap", "snapshot_at":snapshot_at, "source_query":"Captured bounded Overpass support snapshot for Rybnik 35 km AOI.", "source_url":"https://overpass-api.de/api/interpreter", "attribution":"© OpenStreetMap contributors", "license":"ODbL-1.0", "bbox":BBOX, "source_checksum":digest(supports_path), "coverage":"bounded_aoi_snapshot"}, "features":features}
     (OUT / "osm-power-supports-full.geojson").write_text(json.dumps(fc, ensure_ascii=False), encoding="utf-8")
     elements = {(item["type"], item["id"]): item for item in circuits["elements"]}
     nodes = {key[1]: value for key, value in elements.items() if key[0] == "node"}

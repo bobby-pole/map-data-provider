@@ -15,10 +15,10 @@ class AoiConfig:
 
 
 RYBNIK_AOI = AoiConfig(
-    name="rybnik_60km",
+    name="rybnik_35km",
     center_lat=50.102174,
     center_lon=18.546285,
-    radius_m=60_000,
+    radius_m=35_000,
 )
 
 BACKEND_DIR = Path(__file__).resolve().parents[1]

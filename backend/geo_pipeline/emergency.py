@@ -10,12 +10,12 @@ from typing import Any
 from geo_pipeline.contracts import normalize_analytical_vector_layer
 from geo_pipeline.source_registry import guard_source_access
 
-EMERGENCY_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_60km" / "emergency" / "osm-emergency-facilities.geojson"
-PRG_EMERGENCY_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_60km" / "emergency" / "prg-police-fire-representative-points.geojson"
+EMERGENCY_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_35km" / "emergency" / "osm-emergency-facilities.geojson"
+PRG_EMERGENCY_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_35km" / "emergency" / "prg-police-fire-representative-points.geojson"
 EMERGENCY_SNAPSHOT_AT = "2026-08-03T10:14:06Z"
 EMERGENCY_SOURCE_QUERY = (
     "Overpass bounded snapshot: explicit amenity=hospital|fire_station|police|ambulance_station, "
-    "healthcare=hospital and emergency=ambulance_station|mountain_rescue|lifeguard_base within the Rybnik 60 km AOI."
+    "healthcare=hospital and emergency=ambulance_station|mountain_rescue|lifeguard_base within the Rybnik 35 km AOI."
 )
 EMERGENCY_LIMITATIONS = [
     "OSM emergency and healthcare mapping completeness varies by area and facility type.",
@@ -115,7 +115,7 @@ def emergency_osm_metadata(*, layer_id: str, readiness: str) -> dict[str, Any]:
     return {
         "cache_layout_version": "provider_cache/v1",
         "geojson_contract_version": "provider_geojson/v1",
-        "aoi_id": "rybnik_60km",
+        "aoi_id": "rybnik_35km",
         "domain": "emergency",
         "layer_id": layer_id,
         "source": "OpenStreetMap",
@@ -139,7 +139,7 @@ def prg_emergency_metadata(*, layer_id: str, readiness: str) -> dict[str, Any]:
     return {
         "cache_layout_version": "provider_cache/v1",
         "geojson_contract_version": "provider_geojson/v1",
-        "aoi_id": "rybnik_60km",
+        "aoi_id": "rybnik_35km",
         "domain": "emergency",
         "layer_id": layer_id,
         "source": "PRG (official unit-area evidence)",

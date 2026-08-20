@@ -11,7 +11,7 @@ from geo_pipeline.contracts import normalize_analytical_vector_layer
 from geo_pipeline.query_catalog import WATER_OSM_QUERY
 from geo_pipeline.source_registry import guard_source_access
 
-WATER_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_60km" / "water" / "osm-water.geojson"
+WATER_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_35km" / "water" / "osm-water.geojson"
 WATER_SNAPSHOT_AT = "2026-08-04T23:00:00Z"
 WATER_LIMITATIONS = [
     "OSM water infrastructure and waterway mapping completeness varies by area and operator.",
@@ -73,14 +73,14 @@ def water_osm_metadata(*, layer_id: str, readiness: str) -> dict[str, Any]:
     return {
         "cache_layout_version": "provider_cache/v1",
         "geojson_contract_version": "provider_geojson/v1",
-        "aoi_id": "rybnik_60km",
+        "aoi_id": "rybnik_35km",
         "domain": "water",
         "layer_id": layer_id,
         "source": "OpenStreetMap",
         "source_type": "analytical_vector",
         "source_registry_id": "openstreetmap",
         "source_url": "https://overpass-api.de/api/interpreter",
-        "source_query": "Bounded Overpass snapshot: explicit water facility, pipeline and waterway tags within the Rybnik 60 km AOI.",
+        "source_query": "Bounded Overpass snapshot: explicit water facility, pipeline and waterway tags within the Rybnik 35 km AOI.",
         "snapshot_at": WATER_SNAPSHOT_AT,
         "pipeline_version": "geo_pipeline/water/v2",
         "query_version": WATER_OSM_QUERY.query_version,

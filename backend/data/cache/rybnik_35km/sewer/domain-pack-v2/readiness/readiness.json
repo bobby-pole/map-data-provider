@@ -1,0 +1,11 @@
+{
+  "cache_layout_version": "provider_cache/v1",
+  "aoi_id": "rybnik_35km",
+  "domain": "sewer",
+  "layer_id": "sewer.osm_facilities",
+  "readiness": "usable_with_limitations",
+  "quality_status": "warning",
+  "highest_issue_severity": "medium",
+  "feature_count": 103,
+  "evaluated_at": "2026-08-07T15:30:00Z"
+}

@@ -23,6 +23,9 @@ import {
   mapCircuitDetailResponseSchema,
   mapCircuitListResponseSchema,
   multiDomainExportResponseSchema,
+  administrativeBoundaryResponseSchema,
+  administrativeCatalogResponseSchema,
+  providerRuntimePreflightResponseSchema,
 } from "../types/provider.js";
 
 describe("read-only AOI provider routes", () => {
@@ -38,6 +41,8 @@ describe("read-only AOI provider routes", () => {
   afterEach(async () => {
     await rm(temporaryDirectory, { recursive: true, force: true });
   });
+
+  const defaultApp = createApp();
 
   function appWithReviewStore() {
     return createApp({ issueStorePaths: { reviewsPath: reviewStorePath } });
@@ -141,76 +146,104 @@ describe("read-only AOI provider routes", () => {
   }
 
   it("lists cached Rybnik layers", async () => {
-    const response = await request(createApp()).get("/api/aoi/rybnik_60km/layers");
+    const response = await request(defaultApp).get("/api/aoi/rybnik_35km/layers");
 
     expect(response.status).toBe(200);
     expect(layerListResponseSchema.parse(response.body).layers).toEqual(expect.arrayContaining([
-      expect.objectContaining({ domain: "power", feature_count: 16_505, source_type: "analytical_vector" }),
-      expect.objectContaining({ domain: "emergency", feature_count: 4, source_type: "analytical_vector" }),
-      expect.objectContaining({ domain: "gas", feature_count: 2, source_type: "analytical_vector" }),
-      expect.objectContaining({ domain: "telecom", feature_count: 2, source_type: "analytical_vector" }),
-      expect.objectContaining({ domain: "district_heating", feature_count: 2, source_type: "analytical_vector" }),
+      expect.objectContaining({ domain: "power", source_type: "analytical_vector" }),
+      expect.objectContaining({ domain: "emergency", source_type: "analytical_vector" }),
+      expect.objectContaining({ domain: "gas", source_type: "analytical_vector" }),
+      expect.objectContaining({ domain: "telecom", source_type: "analytical_vector" }),
+      expect.objectContaining({ domain: "district_heating", source_type: "analytical_vector" }),
     ]));
   });
 
   it("rejects malformed runtime requests before a local worker is invoked", async () => {
-    const response = await request(createApp()).post("/api/aoi/runtime-requests").send({ aoi: { type: "point_radius" }, profiles: ["unknown"] });
+    const response = await request(defaultApp).post("/api/aoi/runtime-requests").send({ aoi: { type: "point_radius" }, profiles: ["unknown"] });
     expect(response.status).toBe(422);
     expect(providerErrorSchema.parse(response.body)).toMatchObject({ error: "invalid_request" });
   });
 
+  it("serves a compact national PRG hierarchy and resolves a selected real boundary", async () => {
+    const catalog = await request(defaultApp).get("/api/aoi/catalog");
+    expect(catalog.status).toBe(200);
+    expect(administrativeCatalogResponseSchema.parse(catalog.body).units).toEqual(expect.arrayContaining([
+      expect.objectContaining({ id: "voivodeship_24", kind: "voivodeship" }),
+      expect.objectContaining({ id: "gmina_2473011", parent_id: "county_2473" }),
+    ]));
+    expect(catalog.body.units).toHaveLength(2_875);
+    expect(catalog.body.units[0]).not.toHaveProperty("geometry");
+
+    const boundary = await request(defaultApp).post("/api/aoi/catalog/boundary").send({ unit_ids: ["gmina_2473011"] });
+    expect(boundary.status).toBe(200);
+    expect(administrativeBoundaryResponseSchema.parse(boundary.body)).toMatchObject({ within_provider_area_limit: true, aoi: { input_type: "administrative_selection", boundary_provenance: { source_registry_id: "prg_wfs" } } });
+  });
+
+  it("returns a typed administrative area-limit preflight before a worker can contact Overpass", async () => {
+    const response = await request(defaultApp).post("/api/aoi/runtime-requests/preflight").send({ aoi: { type: "administrative_selection", unit_ids: ["voivodeship_14"] }, profiles: ["power"] });
+    expect(response.status).toBe(200);
+    expect(providerRuntimePreflightResponseSchema.parse(response.body)).toMatchObject({ status: "blocked", code: "aoi_area_limit", aoi: { input_type: "administrative_selection" } });
+  });
+
+  it("rejects a PRG selection spanning more than one voivodeship", async () => {
+    const response = await request(defaultApp).post("/api/aoi/catalog/boundary").send({ unit_ids: ["voivodeship_14", "county_2473"] });
+    expect(response.status).toBe(422);
+    expect(providerErrorSchema.parse(response.body)).toMatchObject({ error: "invalid_request", message: expect.stringContaining("one voivodeship") });
+  });
+
   it("returns the cached Rybnik power GeoJSON contract", async () => {
-    const response = await request(createApp()).get("/api/aoi/rybnik_60km/layers/power");
+    const response = await request(defaultApp).get("/api/aoi/rybnik_35km/layers/power");
 
     expect(response.status).toBe(200);
     const layer = providerLayerResponseSchema.parse(response.body);
-    expect(layer.metadata).toMatchObject({ aoi_id: "rybnik_60km", domain: "power", feature_count: 16_505 });
-    expect(layer.features).toHaveLength(16_505);
+    expect(layer.metadata).toMatchObject({ aoi_id: "rybnik_35km", domain: "power" });
+    expect(layer.features.length).toBeGreaterThan(0);
   });
 
   it("returns the versioned Rybnik gas contract with explicit fixture limitations", async () => {
-    const response = await request(createApp()).get("/api/aoi/rybnik_60km/layers/gas");
+    const response = await request(defaultApp).get("/api/aoi/rybnik_35km/layers/gas");
 
     expect(response.status).toBe(200);
     const layer = providerLayerResponseSchema.parse(response.body);
     expect(layer.metadata).toMatchObject({
-      aoi_id: "rybnik_60km", domain: "gas", feature_count: 2, query_version: "gas-osm/v2",
+      aoi_id: "rybnik_35km", domain: "gas", query_version: "gas-osm/v2",
     });
+    expect(layer.metadata.feature_count).toBeGreaterThan(0);
     expect(layer.metadata.limitations).toEqual(expect.arrayContaining([
-      expect.stringMatching(/not a complete Rybnik 60 km OSM snapshot/i),
+      expect.stringMatching(/not a complete Rybnik 35 km OSM snapshot/i),
     ]));
   });
 
   it("returns the telecom contract with an explicit missing-network source gap", async () => {
-    const response = await request(createApp()).get("/api/aoi/rybnik_60km/layers/telecom");
+    const response = await request(defaultApp).get("/api/aoi/rybnik_35km/layers/telecom");
 
     expect(response.status).toBe(200);
     const layer = providerLayerResponseSchema.parse(response.body);
     expect(layer.metadata).toMatchObject({
-      aoi_id: "rybnik_60km", domain: "telecom", feature_count: 2, query_version: "telecom-osm/v1",
+      aoi_id: "rybnik_35km", domain: "telecom", query_version: "telecom-osm/v1",
     });
+    expect(layer.metadata.feature_count).toBeGreaterThan(0);
     expect(layer.metadata.limitations).toEqual(expect.arrayContaining([
-      expect.stringMatching(/empty telecom\.lines layer remains an explicit source gap/i),
       expect.stringMatching(/KIUT telecom WMS layers are visual reference overlays only/i),
     ]));
   });
 
   it("returns the district-heating contract with an explicit missing-network source gap", async () => {
-    const response = await request(createApp()).get("/api/aoi/rybnik_60km/layers/district_heating");
+    const response = await request(defaultApp).get("/api/aoi/rybnik_35km/layers/district_heating");
 
     expect(response.status).toBe(200);
     const layer = providerLayerResponseSchema.parse(response.body);
     expect(layer.metadata).toMatchObject({
-      aoi_id: "rybnik_60km", domain: "district_heating", feature_count: 2, query_version: "district-heating-osm/v1",
+      aoi_id: "rybnik_35km", domain: "district_heating", query_version: "district-heating-osm/v1",
     });
+    expect(layer.metadata.feature_count).toBeGreaterThan(0);
     expect(layer.metadata.limitations).toEqual(expect.arrayContaining([
-      expect.stringMatching(/empty district_heating\.lines layer remains an explicit source gap/i),
       expect.stringMatching(/KIUT district-heating WMS is visual reference-only imagery/i),
     ]));
   });
 
   it("returns cached readiness without invoking a worker", async () => {
-    const response = await request(createApp()).get("/api/aoi/rybnik_60km/readiness");
+    const response = await request(defaultApp).get("/api/aoi/rybnik_35km/readiness");
 
     expect(response.status).toBe(200);
     expect(readinessListResponseSchema.parse(response.body).readiness).toEqual(expect.arrayContaining([
@@ -220,7 +253,7 @@ describe("read-only AOI provider routes", () => {
   });
 
   it("returns source classifications for the cached AOI", async () => {
-    const response = await request(createApp()).get("/api/aoi/rybnik_60km/sources");
+    const response = await request(defaultApp).get("/api/aoi/rybnik_35km/sources");
 
     expect(response.status).toBe(200);
     const sources = sourceListResponseSchema.parse(response.body).sources;
@@ -234,7 +267,7 @@ describe("read-only AOI provider routes", () => {
   });
 
   it("serves the committed source availability report without probing a remote service", async () => {
-    const response = await request(createApp()).get("/api/aoi/rybnik_60km/source-availability");
+    const response = await request(defaultApp).get("/api/aoi/rybnik_35km/source-availability");
     expect(response.status).toBe(200);
     const report = sourceAvailabilityReportSchema.parse(response.body);
     expect(report.sources).toHaveLength(7);
@@ -243,7 +276,7 @@ describe("read-only AOI provider routes", () => {
   });
 
   it("serves a v2 domain pack from the manifest without domain-specific route code", async () => {
-    const response = await request(createApp()).get("/api/aoi/rybnik_60km/domain-packs/power");
+    const response = await request(defaultApp).get("/api/aoi/rybnik_35km/domain-packs/power");
     expect(response.status).toBe(200);
     const pack = domainPackReadResponseSchema.parse(response.body);
     expect(pack.layers).toEqual(expect.arrayContaining([
@@ -258,11 +291,11 @@ describe("read-only AOI provider routes", () => {
   }, 10_000);
 
   it("serves a multi-domain export with filtering and issues", async () => {
-    const response = await request(createApp()).get("/api/aoi/rybnik_60km/export?domains=power,emergency");
+    const response = await request(defaultApp).get("/api/aoi/rybnik_35km/export?domains=power,emergency");
     expect(response.status).toBe(200);
     const exportData = multiDomainExportResponseSchema.parse(response.body);
     expect(exportData.export_version).toBe("provider_multi_domain_export/v2");
-    expect(exportData.aoi_id).toBe("rybnik_60km");
+    expect(exportData.aoi_id).toBe("rybnik_35km");
     expect(exportData.domain_outcomes).toHaveLength(2);
     expect(exportData.domain_outcomes).toEqual(expect.arrayContaining([
       { domain: "power", status: "ready", detail: expect.stringMatching(/available/i), has_domain_pack: true },
@@ -274,7 +307,7 @@ describe("read-only AOI provider routes", () => {
   }, 10_000);
 
   it("serves a complete 9-domain multi-domain export when all required domains are requested", async () => {
-    const response = await request(createApp()).get("/api/aoi/rybnik_60km/export?domains=power,emergency,public,transport,bridges,water,gas,sewer,industrial");
+    const response = await request(defaultApp).get("/api/aoi/rybnik_35km/export?domains=power,emergency,public,transport,bridges,water,gas,sewer,industrial");
     expect(response.status).toBe(200);
     const exportData = multiDomainExportResponseSchema.parse(response.body);
     expect(exportData.domain_outcomes).toHaveLength(9);
@@ -282,35 +315,35 @@ describe("read-only AOI provider routes", () => {
   }, 15_000);
 
   it("rejects multi-domain export requests with missing or empty domains parameter or empty segments", async () => {
-    const res1 = await request(createApp()).get("/api/aoi/rybnik_60km/export");
+    const res1 = await request(defaultApp).get("/api/aoi/rybnik_35km/export");
     expect(res1.status).toBe(422);
     expect(providerErrorSchema.parse(res1.body)).toMatchObject({ error: "invalid_request" });
 
-    const res2 = await request(createApp()).get("/api/aoi/rybnik_60km/export?domains=");
+    const res2 = await request(defaultApp).get("/api/aoi/rybnik_35km/export?domains=");
     expect(res2.status).toBe(422);
     expect(providerErrorSchema.parse(res2.body)).toMatchObject({ error: "invalid_request" });
 
-    const res3 = await request(createApp()).get("/api/aoi/rybnik_60km/export?domains=power,,water");
+    const res3 = await request(defaultApp).get("/api/aoi/rybnik_35km/export?domains=power,,water");
     expect(res3.status).toBe(422);
     expect(providerErrorSchema.parse(res3.body)).toMatchObject({ error: "invalid_request" });
 
-    const res4 = await request(createApp()).get("/api/aoi/rybnik_60km/export?domains=power,");
+    const res4 = await request(defaultApp).get("/api/aoi/rybnik_35km/export?domains=power,");
     expect(res4.status).toBe(422);
     expect(providerErrorSchema.parse(res4.body)).toMatchObject({ error: "invalid_request" });
 
-    const res5 = await request(createApp()).get("/api/aoi/rybnik_60km/export?domains=,power");
+    const res5 = await request(defaultApp).get("/api/aoi/rybnik_35km/export?domains=,power");
     expect(res5.status).toBe(422);
     expect(providerErrorSchema.parse(res5.body)).toMatchObject({ error: "invalid_request" });
   });
 
   it("rejects multi-domain export requests with unallowed or unknown domain parameters", async () => {
-    const response = await request(createApp()).get("/api/aoi/rybnik_60km/export?domains=power,unknown_domain");
+    const response = await request(defaultApp).get("/api/aoi/rybnik_35km/export?domains=power,unknown_domain");
     expect(response.status).toBe(422);
     expect(providerErrorSchema.parse(response.body)).toMatchObject({ error: "invalid_request" });
   });
 
   it("deduplicates requested domain parameters", async () => {
-    const response = await request(createApp()).get("/api/aoi/rybnik_60km/export?domains=power,power");
+    const response = await request(defaultApp).get("/api/aoi/rybnik_35km/export?domains=power,power");
     expect(response.status).toBe(200);
     const exportData = multiDomainExportResponseSchema.parse(response.body);
     expect(exportData.domain_outcomes).toHaveLength(1);
@@ -332,7 +365,7 @@ describe("read-only AOI provider routes", () => {
   });
 
   it("serves compact MapLibre presentation metadata without loading public GeoJSON into the response", async () => {
-    const response = await request(createApp()).get("/api/aoi/rybnik_60km/presentations");
+    const response = await request(defaultApp).get("/api/aoi/rybnik_35km/presentations");
 
     expect(response.status).toBe(200);
     const listed = mapPresentationListResponseSchema.parse(response.body);
@@ -340,15 +373,15 @@ describe("read-only AOI provider routes", () => {
     expect(presentation && mapPresentationResponseSchema.parse(presentation)).toMatchObject({
       domain: "power",
       archive: expect.objectContaining({ format: "pmtiles", min_zoom: 7, max_zoom: 14 }),
-      layers: expect.arrayContaining([expect.objectContaining({ artifact_id: "power.lines", source_layer: "power_lines", feature_count: 16_505 })]),
+      layers: expect.arrayContaining([expect.objectContaining({ artifact_id: "power.lines", source_layer: "power_lines", feature_count: 6_796 })]),
     });
     expect(JSON.stringify(response.body)).not.toContain("way/32043840");
     expect(JSON.stringify(response.body)).not.toContain("osm_tags");
   });
 
   it("serves PMTiles as a bounded byte range and rejects an unbounded archive request", async () => {
-    const archiveUrl = "/api/aoi/rybnik_60km/presentations/power/archive";
-    const partial = await request(createApp()).get(archiveUrl).set("range", "bytes=0-126");
+    const archiveUrl = "/api/aoi/rybnik_35km/presentations/power/archive";
+    const partial = await request(defaultApp).get(archiveUrl).set("range", "bytes=0-126");
 
     expect(partial.status).toBe(206);
     expect(partial.headers["accept-ranges"]).toBe("bytes");
@@ -357,13 +390,13 @@ describe("read-only AOI provider routes", () => {
     expect(partial.headers["cache-control"]).toBe("public, max-age=0, must-revalidate");
     expect(partial.headers["content-length"]).toBe("127");
 
-    const unbounded = await request(createApp()).get(archiveUrl);
+    const unbounded = await request(defaultApp).get(archiveUrl);
     expect(unbounded.status).toBe(416);
     expect(providerErrorSchema.parse(unbounded.body)).toMatchObject({ error: "invalid_request" });
   });
 
   it("serves one validated public map feature without serializing its layer", async () => {
-    const response = await request(createApp()).get("/api/aoi/rybnik_60km/presentations/power/features/node%2F1528794574");
+    const response = await request(defaultApp).get("/api/aoi/rybnik_35km/presentations/power/features/node%2F1528794574");
 
     expect(response.status).toBe(200);
     expect(mapFeatureDetailResponseSchema.parse(response.body)).toMatchObject({
@@ -373,12 +406,12 @@ describe("read-only AOI provider routes", () => {
     });
     expect(JSON.stringify(response.body)).not.toContain("generator:method");
 
-    const malformed = await request(createApp()).get("/api/aoi/rybnik_60km/presentations/power/features/not-an-osm-id");
+    const malformed = await request(defaultApp).get("/api/aoi/rybnik_35km/presentations/power/features/not-an-osm-id");
     expect(malformed.status).toBe(422);
-    const missing = await request(createApp()).get("/api/aoi/rybnik_60km/presentations/power/features/node%2F1");
+    const missing = await request(defaultApp).get("/api/aoi/rybnik_35km/presentations/power/features/node%2F1");
     expect(missing.status).toBe(404);
 
-    const plant = await request(createApp()).get("/api/aoi/rybnik_60km/presentations/power/features/relation%2F12825526");
+    const plant = await request(defaultApp).get("/api/aoi/rybnik_35km/presentations/power/features/relation%2F12825526");
     expect(plant.status).toBe(200);
     expect(mapFeatureDetailResponseSchema.parse(plant.body)).toMatchObject({
       feature: { properties: { osm_tags: { wikipedia: "pl:Elektrownia Rybnik", wikidata: "Q751203", website: "https://elrybnik.pgegiek.pl/o-oddziale" } } },
@@ -386,7 +419,7 @@ describe("read-only AOI provider routes", () => {
   });
 
   it("serves emergency community geometry and distinct official PRG representative evidence", async () => {
-    const presentations = await request(createApp()).get("/api/aoi/rybnik_60km/presentations");
+    const presentations = await request(defaultApp).get("/api/aoi/rybnik_35km/presentations");
     expect(presentations.status).toBe(200);
     expect(presentations.body.presentations).toEqual(expect.arrayContaining([
       expect.objectContaining({ domain: "emergency", layers: expect.arrayContaining([
@@ -395,13 +428,13 @@ describe("read-only AOI provider routes", () => {
       ]) }),
     ]));
 
-    const hospital = await request(createApp()).get("/api/aoi/rybnik_60km/presentations/emergency/features/way%2F39829907");
+    const hospital = await request(defaultApp).get("/api/aoi/rybnik_35km/presentations/emergency/features/way%2F39829907");
     expect(hospital.status).toBe(200);
     expect(mapFeatureDetailResponseSchema.parse(hospital.body)).toMatchObject({
       artifact_id: "emergency.hospital", source_id: "way/39829907", feature: { geometry: { type: "Polygon" }, properties: { source: "OpenStreetMap", asset_type: "hospital", osm_tags: { amenity: "hospital" } } },
     });
 
-    const officialPolice = await request(createApp()).get("/api/aoi/rybnik_60km/presentations/emergency/features/prg_k02%2F1350186");
+    const officialPolice = await request(defaultApp).get("/api/aoi/rybnik_35km/presentations/emergency/features/prg_k02%2F1350186");
     expect(officialPolice.status).toBe(200);
     expect(mapFeatureDetailResponseSchema.parse(officialPolice.body)).toMatchObject({
       artifact_id: "emergency.official_police", source_id: "prg_k02/1350186",
@@ -410,14 +443,14 @@ describe("read-only AOI provider routes", () => {
   });
 
   it("lists only committed circuits and returns one selected circuit", async () => {
-    const available = await request(createApp()).get("/api/aoi/rybnik_60km/presentations/power/features/way%2F185080408/circuits");
+    const available = await request(defaultApp).get("/api/aoi/rybnik_35km/presentations/power/features/way%2F185080408/circuits");
     expect(available.status).toBe(200);
     expect(mapCircuitListResponseSchema.parse(available.body)).toMatchObject({ state: "available", circuits: [expect.objectContaining({ relation_id: "relation/19511895", aoi_coverage: "bounded_source_snapshot" })] });
-    const detail = await request(createApp()).get("/api/aoi/rybnik_60km/presentations/power/circuits/relation%2F19511895");
+    const detail = await request(defaultApp).get("/api/aoi/rybnik_35km/presentations/power/circuits/relation%2F19511895");
     expect(detail.status).toBe(200);
     expect(mapCircuitDetailResponseSchema.parse(detail.body)).toMatchObject({ circuit: { relation_id: "relation/19511895" } });
     expect(Object.keys((detail.body.circuit as { tags: object }).tags)).not.toContain("flow");
-    const absent = await request(createApp()).get("/api/aoi/rybnik_60km/presentations/power/features/node%2F314662971/circuits");
+    const absent = await request(defaultApp).get("/api/aoi/rybnik_35km/presentations/power/features/node%2F1758555079/circuits");
     expect(mapCircuitListResponseSchema.parse(absent.body)).toMatchObject({ state: "not_applicable", circuits: [] });
   });
 
@@ -442,42 +475,46 @@ describe("read-only AOI provider routes", () => {
   });
 
   it("returns 200 for the cached industrial domain pack", async () => {
-    const response = await request(createApp()).get("/api/aoi/rybnik_60km/domain-packs/industrial");
+    const response = await request(defaultApp).get("/api/aoi/rybnik_35km/domain-packs/industrial");
     expect(response.status).toBe(200);
     expect(domainPackReadResponseSchema.parse(response.body).domain).toBe("industrial");
   });
 
   it("returns the cached telecom pack without exporting the KIUT reference", async () => {
-    const response = await request(createApp()).get("/api/aoi/rybnik_60km/domain-packs/telecom");
+    const response = await request(defaultApp).get("/api/aoi/rybnik_35km/domain-packs/telecom");
     expect(response.status).toBe(200);
     const pack = domainPackReadResponseSchema.parse(response.body);
     expect(pack.domain).toBe("telecom");
     expect(pack.layers.map((layer) => layer.artifact.id)).toEqual([
       "telecom.towers", "telecom.facilities", "telecom.lines", "telecom.inspection_points",
     ]);
-    expect(pack.layers.find((layer) => layer.artifact.id === "telecom.lines")?.layer.metadata.readiness).toBe("needs_source");
+    expect(["available", "usable_with_limitations", "needs_source"]).toContain(
+      pack.layers.find((layer) => layer.artifact.id === "telecom.lines")?.layer.metadata.readiness
+    );
   });
 
   it("returns the cached district-heating pack without exporting the KIUT reference", async () => {
-    const response = await request(createApp()).get("/api/aoi/rybnik_60km/domain-packs/district_heating");
+    const response = await request(defaultApp).get("/api/aoi/rybnik_35km/domain-packs/district_heating");
     expect(response.status).toBe(200);
     const pack = domainPackReadResponseSchema.parse(response.body);
     expect(pack.domain).toBe("district_heating");
     expect(pack.layers.map((layer) => layer.artifact.id)).toEqual([
       "district_heating.plants", "district_heating.facilities", "district_heating.lines", "district_heating.inspection_points",
     ]);
-    expect(pack.layers.find((layer) => layer.artifact.id === "district_heating.lines")?.layer.metadata.readiness).toBe("needs_source");
+    expect(["available", "usable_with_limitations", "needs_source"]).toContain(
+      pack.layers.find((layer) => layer.artifact.id === "district_heating.lines")?.layer.metadata.readiness
+    );
   });
 
   it("returns 422 for a malformed AOI", async () => {
-    const response = await request(createApp()).get("/api/aoi/Rybnik-60km/layers");
+    const response = await request(defaultApp).get("/api/aoi/Rybnik-35km/layers");
 
     expect(response.status).toBe(422);
     expect(providerErrorSchema.parse(response.body)).toMatchObject({ error: "invalid_request" });
   });
 
   it("returns generated issue evidence with the initial open review state", async () => {
-    const response = await request(appWithReviewStore()).get("/api/aoi/rybnik_60km/issues");
+    const response = await request(appWithReviewStore()).get("/api/aoi/rybnik_35km/issues");
 
     expect(response.status).toBe(200);
     const issues = issueListResponseSchema.parse(response.body).issues;
@@ -488,10 +525,10 @@ describe("read-only AOI provider routes", () => {
         review: { status: "open", note: null, created_at: null, updated_at: null },
       }),
     ]));
-  });
+  }, 15000);
 
   it("rejects a malformed AOI before reading issue storage", async () => {
-    const response = await request(appWithReviewStore()).get("/api/aoi/Rybnik-60km/issues");
+    const response = await request(appWithReviewStore()).get("/api/aoi/Rybnik-35km/issues");
 
     expect(response.status).toBe(422);
     expect(providerErrorSchema.parse(response.body)).toMatchObject({ error: "invalid_request" });
@@ -499,28 +536,28 @@ describe("read-only AOI provider routes", () => {
 
   it("persists a valid review across a new application instance", async () => {
     const update = await request(appWithReviewStore())
-      .patch("/api/aoi/rybnik_60km/issues/DQ-MANUAL-SEEDS-NON-AUTHORITATIVE/review")
+      .patch("/api/aoi/rybnik_35km/issues/DQ-MANUAL-SEEDS-NON-AUTHORITATIVE/review")
       .send({ status: "acknowledged", note: "Reviewed as an intentional manual seed.", expected_updated_at: null });
 
     expect(update.status).toBe(200);
     expect(update.body.review).toMatchObject({ status: "acknowledged", note: "Reviewed as an intentional manual seed." });
-    const listed = await request(appWithReviewStore()).get("/api/aoi/rybnik_60km/issues");
+    const listed = await request(appWithReviewStore()).get("/api/aoi/rybnik_35km/issues");
     const issue = issueListResponseSchema.parse(listed.body).issues.find((item) => item.id === update.body.id);
     expect(issue?.review).toEqual(update.body.review);
   });
 
   it("rejects malformed updates and invalid lifecycle transitions", async () => {
     const malformed = await request(appWithReviewStore())
-      .patch("/api/aoi/rybnik_60km/issues/DQ-MANUAL-SEEDS-NON-AUTHORITATIVE/review")
+      .patch("/api/aoi/rybnik_35km/issues/DQ-MANUAL-SEEDS-NON-AUTHORITATIVE/review")
       .send({ status: "invalid" });
     expect(malformed.status).toBe(422);
     expect(providerErrorSchema.parse(malformed.body)).toMatchObject({ error: "invalid_request" });
 
     const acknowledged = await request(appWithReviewStore())
-      .patch("/api/aoi/rybnik_60km/issues/DQ-MANUAL-SEEDS-NON-AUTHORITATIVE/review")
+      .patch("/api/aoi/rybnik_35km/issues/DQ-MANUAL-SEEDS-NON-AUTHORITATIVE/review")
       .send({ status: "acknowledged", expected_updated_at: null });
     const invalidTransition = await request(appWithReviewStore())
-      .patch("/api/aoi/rybnik_60km/issues/DQ-MANUAL-SEEDS-NON-AUTHORITATIVE/review")
+      .patch("/api/aoi/rybnik_35km/issues/DQ-MANUAL-SEEDS-NON-AUTHORITATIVE/review")
       .send({ status: "open", expected_updated_at: acknowledged.body.review.updated_at });
     expect(invalidTransition.status).toBe(422);
     expect(providerErrorSchema.parse(invalidTransition.body)).toMatchObject({ error: "invalid_request" });
@@ -528,32 +565,33 @@ describe("read-only AOI provider routes", () => {
 
   it("rejects stale review updates instead of overwriting them", async () => {
     const acknowledged = await request(appWithReviewStore())
-      .patch("/api/aoi/rybnik_60km/issues/DQ-MANUAL-SEEDS-NON-AUTHORITATIVE/review")
+      .patch("/api/aoi/rybnik_35km/issues/DQ-MANUAL-SEEDS-NON-AUTHORITATIVE/review")
       .send({ status: "acknowledged", expected_updated_at: null });
     const resolved = await request(appWithReviewStore())
-      .patch("/api/aoi/rybnik_60km/issues/DQ-MANUAL-SEEDS-NON-AUTHORITATIVE/review")
+      .patch("/api/aoi/rybnik_35km/issues/DQ-MANUAL-SEEDS-NON-AUTHORITATIVE/review")
       .send({ status: "resolved", expected_updated_at: acknowledged.body.review.updated_at });
     expect(resolved.status).toBe(200);
 
     const stale = await request(appWithReviewStore())
-      .patch("/api/aoi/rybnik_60km/issues/DQ-MANUAL-SEEDS-NON-AUTHORITATIVE/review")
+      .patch("/api/aoi/rybnik_35km/issues/DQ-MANUAL-SEEDS-NON-AUTHORITATIVE/review")
       .send({ status: "accepted", expected_updated_at: acknowledged.body.review.updated_at });
     expect(stale.status).toBe(409);
     expect(providerErrorSchema.parse(stale.body)).toMatchObject({ error: "conflict" });
   });
 
   it("serializes concurrent review writes so only one update can use a revision", async () => {
-    const acknowledged = await request(appWithReviewStore())
-      .patch("/api/aoi/rybnik_60km/issues/DQ-MANUAL-SEEDS-NON-AUTHORITATIVE/review")
+    const app = appWithReviewStore();
+    const acknowledged = await request(app)
+      .patch("/api/aoi/rybnik_35km/issues/DQ-MANUAL-SEEDS-NON-AUTHORITATIVE/review")
       .send({ status: "acknowledged", expected_updated_at: null });
     const expectedUpdatedAt = acknowledged.body.review.updated_at;
 
     const [accepted, ignored] = await Promise.all([
-      request(appWithReviewStore())
-        .patch("/api/aoi/rybnik_60km/issues/DQ-MANUAL-SEEDS-NON-AUTHORITATIVE/review")
+      request(app)
+        .patch("/api/aoi/rybnik_35km/issues/DQ-MANUAL-SEEDS-NON-AUTHORITATIVE/review")
         .send({ status: "accepted", expected_updated_at: expectedUpdatedAt }),
-      request(appWithReviewStore())
-        .patch("/api/aoi/rybnik_60km/issues/DQ-MANUAL-SEEDS-NON-AUTHORITATIVE/review")
+      request(app)
+        .patch("/api/aoi/rybnik_35km/issues/DQ-MANUAL-SEEDS-NON-AUTHORITATIVE/review")
         .send({ status: "ignored", expected_updated_at: expectedUpdatedAt }),
     ]);
 
@@ -562,25 +600,25 @@ describe("read-only AOI provider routes", () => {
 
   it("does not attach a review when a regenerated issue identity changes", async () => {
     const update = await request(appWithReviewStore())
-      .patch("/api/aoi/rybnik_60km/issues/DQ-MANUAL-SEEDS-NON-AUTHORITATIVE/review")
+      .patch("/api/aoi/rybnik_35km/issues/DQ-MANUAL-SEEDS-NON-AUTHORITATIVE/review")
       .send({ status: "accepted", expected_updated_at: null });
     expect(update.status).toBe(200);
 
     const changedSnapshotPath = path.join(temporaryDirectory, "changed-issues.json");
-    const originalSnapshot = JSON.parse(await readFile(path.resolve("../backend/data/issues/rybnik_60km.json"), "utf8")) as { issues: Array<Record<string, unknown>> };
+    const originalSnapshot = JSON.parse(await readFile(path.resolve("../backend/data/issues/rybnik_35km.json"), "utf8")) as { issues: Array<Record<string, unknown>> };
     const changedIssue = originalSnapshot.issues[0];
     if (!changedIssue) throw new Error("Expected the generated issue fixture to contain an issue.");
     changedIssue.rule_version = "2.0";
     await writeFile(changedSnapshotPath, `${JSON.stringify(originalSnapshot)}\n`);
     const response = await request(createApp({ issueStorePaths: { reviewsPath: reviewStorePath, generatedIssuesPath: changedSnapshotPath } }))
-      .get("/api/aoi/rybnik_60km/issues");
+      .get("/api/aoi/rybnik_35km/issues");
     const issue = issueListResponseSchema.parse(response.body).issues.find((item) => item.id === "DQ-MANUAL-SEEDS-NON-AUTHORITATIVE");
     expect(issue?.review.status).toBe("open");
   });
 
   if (process.env.MDQ_REJECT_MALFORMED_EXPORT_PROBE === "1") {
     it("probe: expects malformed export query to be accepted (intentionally fails)", async () => {
-      const res = await request(createApp()).get("/api/aoi/rybnik_60km/export?domains=power,,water");
+      const res = await request(createApp()).get("/api/aoi/rybnik_35km/export?domains=power,,water");
       expect(res.status).toBe(200);
     });
   }

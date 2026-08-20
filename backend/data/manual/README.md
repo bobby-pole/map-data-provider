@@ -6,7 +6,7 @@ Manual layers are not authoritative infrastructure data. They are used as clearl
 
 Current layer:
 
-- `rybnik_60km_power_seed_nodes.geojson` - seed nodes for future synthetic power topology generation.
+- `rybnik_35km_power_seed_nodes.geojson` - seed nodes for future synthetic power topology generation.
 
 Rules:
 

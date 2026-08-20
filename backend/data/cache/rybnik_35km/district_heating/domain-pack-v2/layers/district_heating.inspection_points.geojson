@@ -1,0 +1,4611 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "cache_layout_version": "provider_cache/v1",
+    "geojson_contract_version": "provider_geojson/v1",
+    "aoi_id": "rybnik_35km",
+    "domain": "district_heating",
+    "layer_id": "district_heating.inspection_points",
+    "source": "OpenStreetMap",
+    "source_type": "analytical_vector",
+    "source_registry_id": "openstreetmap",
+    "source_url": "https://overpass-api.de/api/interpreter",
+    "source_query": "Fixture contract evidence for explicit district-heating plants, heat exchangers and heat-network lines.",
+    "snapshot_at": "2026-08-10T12:00:00Z",
+    "pipeline_version": "geo_pipeline/district-heating/v1",
+    "query_version": "district-heating-osm/v1",
+    "validation_status_raw": "warning",
+    "quality_status": "warning",
+    "confidence": "medium",
+    "limitations": [
+      "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+      "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+      "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+      "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+      "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+    ],
+    "eligible_for_analysis": true,
+    "readiness": "usable_with_limitations",
+    "contract_version": "provider_geojson/v1",
+    "feature_count": 137
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/33711545",
+        "domain": "district_heating",
+        "asset_type": "plants",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "power": "plant",
+          "name": "Ciepłownia Gliwice",
+          "operator": "Przedsiębiorstwo Energetyki Cieplnej Gliwice",
+          "plant:source": "coal",
+          "plant:method": "combustion",
+          "plant:output:electricity": "no"
+        },
+        "origin_artifact": "district_heating.plants",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.71087778005542,
+          50.29182215
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/206737167",
+        "domain": "district_heating",
+        "asset_type": "plants",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "power": "plant",
+          "name": "Elektrociepłownia Moszczenica",
+          "operator": "PGNiG TERMIKA Energetyka Przemysłowa S.A.",
+          "website": "https://www.ptep.pl/o-nas/zaklady/oddzial-moszczenica-1",
+          "plant:source": "coal;gas",
+          "plant:output:electricity": "38,3 MW",
+          "source": "UM Jastrzębie-Zdrój"
+        },
+        "origin_artifact": "district_heating.plants",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.569678475387782,
+          49.940562549999996
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1068198611",
+        "domain": "district_heating",
+        "asset_type": "plants",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "power": "plant",
+          "name": "Teplárna Karviná",
+          "operator": "Veolia",
+          "operator:wikidata": "Q1632461",
+          "plant:source": "coal",
+          "plant:method": "combustion",
+          "plant:output:electricity": "yes"
+        },
+        "origin_artifact": "district_heating.plants",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.478722238572928,
+          49.823951650000005
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1366986256",
+        "domain": "district_heating",
+        "asset_type": "plants",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "origin_artifact": "district_heating.plants",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.54491137726749,
+          50.0879639
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/68555841",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "source": "uhul:ortofoto;cuzk:kn",
+          "layer": "-1",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4489864,
+          49.802003799999994
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/90915907",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7110809,
+          50.2870382
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/90915909",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7166374,
+          50.2868931
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/90915919",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7101338,
+          50.28583020000001
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/98724564",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.6981802,
+          50.2884523
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/155142411",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7590655,
+          50.3245104
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/155142468",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7629165,
+          50.318509
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/157408813",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "bridge": "yes",
+          "layer": "1",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7456583,
+          50.30421749999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/157408814",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7453194,
+          50.3038048
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/157408816",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7461549,
+          50.30495419999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/168628733",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Elektrárna Dětmarovice",
+          "location": "overground",
+          "substance": "steam"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4380603,
+          49.80306
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/168632179",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Elektrárna Dětmarovice",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4457109,
+          49.8063535
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/168632180",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Elektrárna Dětmarovice",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4663471,
+          49.810671199999994
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/168632181",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Elektrárna Dětmarovice",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4462952,
+          49.805161699999985
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/173080519",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8455307,
+          50.3438814
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/194741818",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.9354826,
+          50.27897469999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/198488150",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8280859,
+          50.3366259
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/209544656",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "bridge": "yes",
+          "layer": "1",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8445698,
+          50.3437547
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/209544659",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "tunnel": "yes",
+          "layer": "-1",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8447856,
+          50.343749100000004
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/209544672",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8446851,
+          50.3437278
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/215800393",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8711286,
+          50.31447719999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/218599809",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "source": "uhul:ortofoto;cuzk:kn",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4478884,
+          49.7972934
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/231824375",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "ČEZ, a.s.",
+          "location": "overground",
+          "source": "ortofoto",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4373463,
+          49.880916299999996
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/245993608",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Elektrárna Dětmarovice",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5014463,
+          49.8377156
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/245993612",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Elektrárna Dětmarovice",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5011642,
+          49.8423664
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/263678894",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7061343,
+          50.2901046
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/263678895",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7152768,
+          50.293846800000004
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/263950876",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "source": "geoportal.gov.pl:ortofoto",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.707493300000003,
+          50.27968569999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/266783897",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8229106,
+          50.3260704
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/285891062",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8519517,
+          50.3431677
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/358969872",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8632239,
+          50.309935599999996
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/358969873",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8652322,
+          50.310769
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/358977568",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8684484,
+          50.3127686
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/358977569",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overhead",
+          "layer": "1",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8706096,
+          50.314119100000006
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/371616995",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7761975,
+          50.32233399999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/371616996",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7758038,
+          50.322863500000004
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/371616997",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "bridge": "yes",
+          "layer": "1",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7763674,
+          50.32203009999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/371616998",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7761775,
+          50.32236979999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/371616999",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7759627,
+          50.3229924
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/371617000",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "bridge": "yes",
+          "layer": "1",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7761975,
+          50.32233399999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/430813957",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7988185,
+          50.29216069999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/430813958",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "bridge": "yes",
+          "layer": "1",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8048677,
+          50.2929047
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/430813959",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8050055,
+          50.292834199999994
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/430813960",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8012371,
+          50.29199629999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/430813961",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8038152,
+          50.292477000000005
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/430813962",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8046964,
+          50.29286119999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/440661758",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5452069,
+          50.08224539999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/440661759",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5451931,
+          50.08224679999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/440661760",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5445433,
+          50.080235099999996
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/440661761",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5447273,
+          50.0803796
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/440661762",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5442668,
+          50.08000999999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/440661763",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5442536,
+          50.08000770000001
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/625971523",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8306106,
+          50.295950299999994
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/625971524",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "bridge": "yes",
+          "layer": "1",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8371965,
+          50.297815799999995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/625971525",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8348087,
+          50.2973169
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/625971526",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.845151,
+          50.298383599999994
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/625971528",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8407525,
+          50.29817870000001
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/686081339",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8658703,
+          50.3112446
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/686081341",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.865274,
+          50.31084700000001
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/705452369",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.85901,
+          50.28244
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/705452370",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8589918,
+          50.2824368
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/705470816",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.861858100000003,
+          50.30765290000001
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/801628459",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8554176,
+          50.30411620000001
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/809292548",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overhead",
+          "layer": "1",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.6817651,
+          50.29303459999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/813175989",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.711431,
+          50.291581300000004
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/813175990",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overhead",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7120084,
+          50.2869449
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/813175991",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7124491,
+          50.2869006
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/813280472",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overhead",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8673978,
+          50.31205049999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/813280473",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8668411,
+          50.31164219999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/820368235",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "bridge",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8451551,
+          50.2961583
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/820368236",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8451551,
+          50.2961583
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/820368237",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.845112600000004,
+          50.29589429999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/821345144",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.84611,
+          50.2984906
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/931740694",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5445746,
+          50.07550619999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/931740695",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5442321,
+          50.07925980000001
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/931740696",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.543917,
+          50.0783016
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/931740697",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5436465,
+          50.077566399999995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/931740698",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5445622,
+          50.07550239999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/931740699",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5439903,
+          50.084900899999994
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/931740700",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5448476,
+          50.08374559999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/931740701",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.544832600000003,
+          50.083667199999994
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/931740702",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5448436,
+          50.08367299999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/931740703",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.54486,
+          50.08374390000001
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/931740704",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5440092,
+          50.0849072
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/951232271",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8701517,
+          50.313833
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/951232272",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overhead",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8694284,
+          50.3133236
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/956078914",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overhead",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8410118,
+          50.3467295
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/957033659",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5379116,
+          50.0887329
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/957033661",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "layer": "1",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5387283,
+          50.08865329999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1023156927",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7691973,
+          50.3040663
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1046437023",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4143514,
+          50.05558899999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1068198605",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4784648,
+          49.8230529
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1068198606",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Elektrárna Dětmarovice",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4906317,
+          49.8316427
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1068198607",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "operator": "Elektrárna Dětmarovice",
+          "location": "overhead",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4793882,
+          49.8259379
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1077622230",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water",
+          "diameter": "600"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8682321,
+          50.2774692
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1077622231",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water",
+          "diameter": "600"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8682215,
+          50.2774541
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1077623775",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8735708,
+          50.3143193
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1077623776",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8748965,
+          50.31379779999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1077623777",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8726979,
+          50.314664199999996
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1077623778",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8713431,
+          50.31461579999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1104356536",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water",
+          "diameter": "600"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.866231,
+          50.279738599999995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1104356537",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water",
+          "diameter": "600"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8662401,
+          50.27972569999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1117325243",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8469926,
+          50.349926599999996
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1117325244",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.84695247943013,
+          50.3507062762069
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1117325245",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8462076,
+          50.34809919999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1130684168",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5995837,
+          49.7914911
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1130684169",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5998571,
+          49.7915989
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1130684189",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.6011011,
+          49.79203929999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1130684191",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5992058,
+          49.79212249999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1130684193",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "heat"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.6000538,
+          49.790125499999995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1153742505",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8565985,
+          50.284450199999995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1153742506",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8566091,
+          50.2844628
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1154442539",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7947208,
+          50.2920297
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1154442540",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "bridge": "yes",
+          "layer": "1",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7969722,
+          50.29222969999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1174632474",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7896984,
+          50.28761889999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1177100474",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8715009,
+          50.3147221
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1177100479",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overhead",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8621769,
+          50.30709689999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1180733769",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8000097,
+          50.2913836
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1180954315",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8065306,
+          50.29471229999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1180954316",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8065032,
+          50.29472
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1180954318",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8051206,
+          50.2939716
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1180954319",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7974458,
+          50.2898633
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1180954320",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7983594,
+          50.2903989
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1180954321",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7957521,
+          50.28876849999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1188522432",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7787223,
+          50.3045472
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1188522433",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overhead",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7813478,
+          50.3046441
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1188522434",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7798745,
+          50.3046141
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1188522435",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overhead",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.779776,
+          50.30460870000001
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1188522436",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7757297,
+          50.304578
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1188522437",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overhead",
+          "layer": "1",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7766178,
+          50.30457479999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1237359737",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.6231274,
+          50.3613933
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1267456836",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "overground",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7053119,
+          50.2902458
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1299604145",
+        "domain": "district_heating",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "substance": "hot_water"
+        },
+        "origin_artifact": "district_heating.lines",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.644130400000005,
+          50.3274512
+        ]
+      }
+    }
+  ]
+}

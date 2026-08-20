@@ -1,0 +1,156 @@
+{
+  "domain_pack_version": "provider_domain_pack/v2",
+  "aoi_id": "rybnik_35km",
+  "domain": "emergency",
+  "source_provenance": [
+    {
+      "source_id": "openstreetmap",
+      "contribution_role": "primary"
+    },
+    {
+      "source_id": "prg_wfs",
+      "contribution_role": "supplementary"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "emergency.hospital",
+      "kind": "processed_vector",
+      "format": "geojson",
+      "path": "layers/emergency.hospital.geojson",
+      "sha256": "8ca6aa69bef7cb936dee9401016f351e5a69e0e24156305f54ba6f6cd46e2e8d",
+      "feature_count": 53,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "emergency.fire_service",
+      "kind": "processed_vector",
+      "format": "geojson",
+      "path": "layers/emergency.fire_service.geojson",
+      "sha256": "3a2d79217a243854b5ae644f941ca152e799f8ec30b93630a58afee8c83b45f7",
+      "feature_count": 329,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "emergency.police",
+      "kind": "processed_vector",
+      "format": "geojson",
+      "path": "layers/emergency.police.geojson",
+      "sha256": "f6389556a5c803e22afe6ec0df1ddee08a661e7dc2355912fff122ff110fe16c",
+      "feature_count": 102,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "emergency.ambulance_rescue",
+      "kind": "processed_vector",
+      "format": "geojson",
+      "path": "layers/emergency.ambulance_rescue.geojson",
+      "sha256": "ad846472afe91d1291b99a4cba3cd7b4b05f24bf8074764fa1ce656ff099fb2b",
+      "feature_count": 30,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "emergency.official_fire_service",
+      "kind": "representative_points",
+      "format": "geojson",
+      "path": "layers/emergency.official_fire_service.geojson",
+      "sha256": "dc47dc9a32f2aae8ae7da66764610c013797f15240d489dfce9b4c252aba9bf2",
+      "feature_count": 1,
+      "source_provenance": [
+        {
+          "source_id": "prg_wfs",
+          "contribution_role": "supplementary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "emergency.official_police",
+      "kind": "representative_points",
+      "format": "geojson",
+      "path": "layers/emergency.official_police.geojson",
+      "sha256": "2f99f5529b2572e8ba045e23d1619194f9f3f9f675077f329ff04ba6717945e2",
+      "feature_count": 1,
+      "source_provenance": [
+        {
+          "source_id": "prg_wfs",
+          "contribution_role": "supplementary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "emergency.inspection_points",
+      "kind": "derived_vector",
+      "format": "geojson",
+      "path": "layers/emergency.inspection_points.geojson",
+      "sha256": "51bac9d659df443a0d30d5ed13156fde3a84646346441bdf7a696bcfaac853ec",
+      "feature_count": 514,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "emergency.osm_source_evidence",
+      "kind": "native_vector",
+      "format": "json",
+      "path": "native/osm-emergency-source-evidence.json",
+      "sha256": "6d51dcdfe30add7a599b7341fed073643897446fff0e6036606fa3f9258e8ad9",
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": false
+    },
+    {
+      "id": "emergency.prg_police_fire_source_evidence",
+      "kind": "native_vector",
+      "format": "json",
+      "path": "native/prg-police-fire-source-evidence.json",
+      "sha256": "cc68a05e78323992fadc4562413db2852236ce35a050a894bd6f48cd360bb4d7",
+      "source_provenance": [
+        {
+          "source_id": "prg_wfs",
+          "contribution_role": "supplementary"
+        }
+      ],
+      "public_export": false
+    }
+  ],
+  "validation": {
+    "path": "validation/metadata.json"
+  },
+  "readiness": {
+    "path": "readiness/readiness.json"
+  }
+}

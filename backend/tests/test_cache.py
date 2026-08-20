@@ -116,13 +116,13 @@ def test_cache_reader_rejects_mismatched_readiness_records(tmp_path: Path) -> No
 
 
 def test_committed_rybnik_power_cache_is_complete_and_source_aware() -> None:
-    cache = read_cached_layer(cache_paths("rybnik_60km", "power"))
+    cache = read_cached_layer(cache_paths("rybnik_35km", "power"))
 
     assert cache["metadata"]["source"] == "OpenStreetMap"
     assert cache["metadata"]["source_type"] == "analytical_vector"
     assert cache["metadata"]["source_registry_id"] == "openstreetmap"
     assert cache["metadata"]["source_query"]
     assert cache["metadata"]["pipeline_version"] == "geo_pipeline/cache/v1"
-    assert cache["metadata"]["feature_count"] == 16_505
+    assert cache["metadata"]["feature_count"] == 6_796
     assert cache["readiness"]["readiness"] == "usable_with_limitations"
     assert cache["readiness"]["highest_issue_severity"] == "medium"

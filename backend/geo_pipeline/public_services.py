@@ -10,7 +10,7 @@ from typing import Any
 from geo_pipeline.contracts import normalize_analytical_vector_layer
 from geo_pipeline.source_registry import guard_source_access
 
-PUBLIC_SERVICES_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_60km" / "public" / "osm-public-services.geojson"
+PUBLIC_SERVICES_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_35km" / "public" / "osm-public-services.geojson"
 PUBLIC_SERVICES_SNAPSHOT_AT = "2026-08-03T20:30:00Z"
 PUBLIC_SERVICES_LIMITATIONS = [
     "OSM public-service completeness and tagging vary by area and facility type.",
@@ -61,10 +61,10 @@ def categorized_osm_features() -> dict[str, list[dict[str, Any]]]:
 def public_services_osm_metadata(*, layer_id: str, readiness: str) -> dict[str, Any]:
     return {
         "cache_layout_version": "provider_cache/v1", "geojson_contract_version": "provider_geojson/v1",
-        "aoi_id": "rybnik_60km", "domain": "public", "layer_id": layer_id,
+        "aoi_id": "rybnik_35km", "domain": "public", "layer_id": layer_id,
         "source": "OpenStreetMap", "source_type": "analytical_vector", "source_registry_id": "openstreetmap",
         "source_url": "https://overpass-api.de/api/interpreter",
-        "source_query": "Bounded Overpass snapshot: explicit public-service amenity and office tags within the Rybnik 60 km AOI.",
+        "source_query": "Bounded Overpass snapshot: explicit public-service amenity and office tags within the Rybnik 35 km AOI.",
         "snapshot_at": PUBLIC_SERVICES_SNAPSHOT_AT, "pipeline_version": "geo_pipeline/public-services/v1",
         "query_version": "public-osm/v1", "validation_status_raw": "warning", "quality_status": "warning",
         "confidence": "medium", "limitations": list(PUBLIC_SERVICES_LIMITATIONS), "eligible_for_analysis": True,

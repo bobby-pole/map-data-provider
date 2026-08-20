@@ -5,6 +5,7 @@ This directory contains documentation for Map Data Quality Lab.
 ## Public documentation — tracked by Git
 
 - [`architecture.md`](./architecture.md) describes the public provider architecture, contracts and planned API.
+- [`../DESIGN.md`](../DESIGN.md) is the canonical UI/UX baseline for the map preview and visual changes.
 - [`../README.md`](../README.md) is the repository entry point, setup guide and product overview.
 - README files kept next to data or code are also public and tracked when they describe those assets, for example [`../backend/data/manual/README.md`](../backend/data/manual/README.md).
 

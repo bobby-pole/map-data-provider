@@ -1,0 +1,749 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "cache_layout_version": "provider_cache/v1",
+    "geojson_contract_version": "provider_geojson/v1",
+    "aoi_id": "rybnik_35km",
+    "domain": "district_heating",
+    "layer_id": "district_heating.plants",
+    "source": "OpenStreetMap",
+    "source_type": "analytical_vector",
+    "source_registry_id": "openstreetmap",
+    "source_url": "https://overpass-api.de/api/interpreter",
+    "source_query": "Fixture contract evidence for explicit district-heating plants, heat exchangers and heat-network lines.",
+    "snapshot_at": "2026-08-10T12:00:00Z",
+    "pipeline_version": "geo_pipeline/district-heating/v1",
+    "query_version": "district-heating-osm/v1",
+    "validation_status_raw": "warning",
+    "quality_status": "warning",
+    "confidence": "medium",
+    "limitations": [
+      "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+      "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+      "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+      "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+      "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+    ],
+    "eligible_for_analysis": true,
+    "readiness": "usable_with_limitations",
+    "contract_version": "provider_geojson/v1",
+    "feature_count": 7
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/33711545",
+        "domain": "district_heating",
+        "asset_type": "plants",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "power": "plant",
+          "name": "Ciepłownia Gliwice",
+          "operator": "Przedsiębiorstwo Energetyki Cieplnej Gliwice",
+          "plant:source": "coal",
+          "plant:method": "combustion",
+          "plant:output:electricity": "no"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.7110526,
+              50.29358380000001
+            ],
+            [
+              18.7129465,
+              50.29366550000001
+            ],
+            [
+              18.7130059,
+              50.2932746
+            ],
+            [
+              18.713125700000003,
+              50.29251269999999
+            ],
+            [
+              18.713153,
+              50.292118099999996
+            ],
+            [
+              18.7122341,
+              50.29146790000001
+            ],
+            [
+              18.7120299,
+              50.290932
+            ],
+            [
+              18.711995,
+              50.290930599999996
+            ],
+            [
+              18.7118157,
+              50.2909211
+            ],
+            [
+              18.7117666,
+              50.2909185
+            ],
+            [
+              18.7117749,
+              50.29085419999999
+            ],
+            [
+              18.7117477,
+              50.2908464
+            ],
+            [
+              18.7116902,
+              50.29084389999999
+            ],
+            [
+              18.7117493,
+              50.29027429999999
+            ],
+            [
+              18.7112913,
+              50.2902582
+            ],
+            [
+              18.7112834,
+              50.29031559999999
+            ],
+            [
+              18.7112709,
+              50.2904062
+            ],
+            [
+              18.7092088,
+              50.29030290000001
+            ],
+            [
+              18.7091159,
+              50.2915262
+            ],
+            [
+              18.7090674,
+              50.29152349999999
+            ],
+            [
+              18.7087808,
+              50.293360799999995
+            ],
+            [
+              18.7088887,
+              50.2934032
+            ],
+            [
+              18.7098684,
+              50.293523300000004
+            ],
+            [
+              18.7110526,
+              50.29358380000001
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/206737167",
+        "domain": "district_heating",
+        "asset_type": "plants",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "power": "plant",
+          "name": "Elektrociepłownia Moszczenica",
+          "operator": "PGNiG TERMIKA Energetyka Przemysłowa S.A.",
+          "website": "https://www.ptep.pl/o-nas/zaklady/oddzial-moszczenica-1",
+          "plant:source": "coal;gas",
+          "plant:output:electricity": "38,3 MW",
+          "source": "UM Jastrzębie-Zdrój"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.5683009,
+              49.93994169999998
+            ],
+            [
+              18.5685974,
+              49.940254499999995
+            ],
+            [
+              18.5687665,
+              49.940433
+            ],
+            [
+              18.5690363,
+              49.94072100000001
+            ],
+            [
+              18.5690682,
+              49.94081550000001
+            ],
+            [
+              18.5690889,
+              49.94084569999999
+            ],
+            [
+              18.5691447,
+              49.940925
+            ],
+            [
+              18.569197,
+              49.9409989
+            ],
+            [
+              18.5692539,
+              49.94111910000001
+            ],
+            [
+              18.5692985,
+              49.941279300000005
+            ],
+            [
+              18.5693149,
+              49.941414699999996
+            ],
+            [
+              18.569291,
+              49.941666000000005
+            ],
+            [
+              18.569289,
+              49.94168739999999
+            ],
+            [
+              18.569264,
+              49.9419417
+            ],
+            [
+              18.5692539,
+              49.942043399999996
+            ],
+            [
+              18.5693195,
+              49.94209099999999
+            ],
+            [
+              18.5696256,
+              49.942102600000005
+            ],
+            [
+              18.5698421,
+              49.94212039999999
+            ],
+            [
+              18.5704965,
+              49.94214949999999
+            ],
+            [
+              18.5709518,
+              49.94217369999999
+            ],
+            [
+              18.57188,
+              49.9422229
+            ],
+            [
+              18.5720784,
+              49.94223779999999
+            ],
+            [
+              18.5724278,
+              49.9421955
+            ],
+            [
+              18.5723916,
+              49.9420694
+            ],
+            [
+              18.5724059,
+              49.94144459999999
+            ],
+            [
+              18.5724199,
+              49.9408619
+            ],
+            [
+              18.5704606,
+              49.9406921
+            ],
+            [
+              18.570481100000002,
+              49.94037920000001
+            ],
+            [
+              18.5719487,
+              49.9404053
+            ],
+            [
+              18.5726743,
+              49.940366100000006
+            ],
+            [
+              18.5732886,
+              49.94018469999999
+            ],
+            [
+              18.5743165,
+              49.94002939999999
+            ],
+            [
+              18.5738857,
+              49.9395027
+            ],
+            [
+              18.5737651,
+              49.93935269999999
+            ],
+            [
+              18.5735976,
+              49.9391381
+            ],
+            [
+              18.5734207,
+              49.93905229999999
+            ],
+            [
+              18.5734157,
+              49.939046899999994
+            ],
+            [
+              18.5732373,
+              49.9389566
+            ],
+            [
+              18.5724042,
+              49.93893
+            ],
+            [
+              18.5722163,
+              49.93875080000001
+            ],
+            [
+              18.571447,
+              49.93889500000001
+            ],
+            [
+              18.5713125,
+              49.9389058
+            ],
+            [
+              18.5711063,
+              49.93891360000001
+            ],
+            [
+              18.5702491,
+              49.93888650000001
+            ],
+            [
+              18.5693141,
+              49.9388334
+            ],
+            [
+              18.5692492,
+              49.9392372
+            ],
+            [
+              18.5691996,
+              49.93923590000001
+            ],
+            [
+              18.5691334,
+              49.939652800000005
+            ],
+            [
+              18.5682425,
+              49.9396317
+            ],
+            [
+              18.5680831,
+              49.93974209999999
+            ],
+            [
+              18.5683009,
+              49.93994169999998
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1068198611",
+        "domain": "district_heating",
+        "asset_type": "plants",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "power": "plant",
+          "name": "Teplárna Karviná",
+          "operator": "Veolia",
+          "operator:wikidata": "Q1632461",
+          "plant:source": "coal",
+          "plant:method": "combustion",
+          "plant:output:electricity": "yes"
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.477680000000003,
+              49.8223766
+            ],
+            [
+              18.477522,
+              49.8229031
+            ],
+            [
+              18.4765658,
+              49.82277079999999
+            ],
+            [
+              18.4762586,
+              49.823843999999994
+            ],
+            [
+              18.4763029,
+              49.8238887
+            ],
+            [
+              18.4767146,
+              49.8238861
+            ],
+            [
+              18.4771187,
+              49.82398279999999
+            ],
+            [
+              18.4780671,
+              49.82401829999999
+            ],
+            [
+              18.478163,
+              49.824000899999994
+            ],
+            [
+              18.4782934,
+              49.82415579999999
+            ],
+            [
+              18.4783815,
+              49.8242666
+            ],
+            [
+              18.4784199,
+              49.82431439999999
+            ],
+            [
+              18.4780242,
+              49.8244134
+            ],
+            [
+              18.4780084,
+              49.824452900000004
+            ],
+            [
+              18.4792201,
+              49.8255268
+            ],
+            [
+              18.4794052,
+              49.8253777
+            ],
+            [
+              18.480485,
+              49.82450759999999
+            ],
+            [
+              18.4804684,
+              49.82448569999999
+            ],
+            [
+              18.4806521,
+              49.82420189999999
+            ],
+            [
+              18.4807009,
+              49.824002
+            ],
+            [
+              18.4804489,
+              49.8239742
+            ],
+            [
+              18.480463,
+              49.82392910000001
+            ],
+            [
+              18.480409700000003,
+              49.82391989999999
+            ],
+            [
+              18.4805739,
+              49.82341879999999
+            ],
+            [
+              18.479887,
+              49.82332099999999
+            ],
+            [
+              18.4798432,
+              49.82325389999999
+            ],
+            [
+              18.4798041,
+              49.823246499999996
+            ],
+            [
+              18.4797853,
+              49.8232091
+            ],
+            [
+              18.4798476,
+              49.82311529999999
+            ],
+            [
+              18.4798656,
+              49.823006299999996
+            ],
+            [
+              18.4799136,
+              49.82288749999999
+            ],
+            [
+              18.477680000000003,
+              49.8223766
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1366986256",
+        "domain": "district_heating",
+        "asset_type": "plants",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.5448517,
+              50.0880223
+            ],
+            [
+              18.544983200000004,
+              50.088133
+            ],
+            [
+              18.5450771,
+              50.08819919999999
+            ],
+            [
+              18.5451831,
+              50.0881577
+            ],
+            [
+              18.5451821,
+              50.088106200000006
+            ],
+            [
+              18.545156200000005,
+              50.0880078
+            ],
+            [
+              18.5448998,
+              50.087789499999985
+            ],
+            [
+              18.5448831,
+              50.08779760000001
+            ],
+            [
+              18.5448862,
+              50.087776799999986
+            ],
+            [
+              18.5448303,
+              50.087729499999995
+            ],
+            [
+              18.544785,
+              50.0877514
+            ],
+            [
+              18.5447019,
+              50.087791499999994
+            ],
+            [
+              18.5446928,
+              50.087833599999996
+            ],
+            [
+              18.5447345,
+              50.087868500000006
+            ],
+            [
+              18.5446571,
+              50.0879033
+            ],
+            [
+              18.5446177,
+              50.08792
+            ],
+            [
+              18.5448517,
+              50.0880223
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/99000001",
+        "domain": "district_heating",
+        "asset_type": "plants",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "name": "Elektrociepłownia Rybnik (PGE Energia Ciepła)"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5284,
+          50.1347
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/99000001",
+        "domain": "district_heating",
+        "asset_type": "plants",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "power": "plant",
+          "name": "Elektrociepłownia Rybnik (PGE Energia Ciepła)"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5284,
+          50.1347
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/99000001",
+        "domain": "district_heating",
+        "asset_type": "plants",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "power": "plant",
+          "name": "Elektrociepłownia Rybnik (PGE Energia Ciepła)"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5284,
+          50.1347
+        ]
+      }
+    }
+  ]
+}

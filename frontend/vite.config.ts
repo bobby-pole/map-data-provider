@@ -8,4 +8,16 @@ export default defineConfig({
       '/api': 'http://localhost:3001',
     },
   },
+  build: {
+    chunkSizeWarningLimit: 1200,
+    rollupOptions: {
+      output: {
+        manualChunks(id: string) {
+          if (id.includes('node_modules/maplibre-gl') || id.includes('node_modules/pmtiles')) {
+            return 'maplibre';
+          }
+        },
+      },
+    },
+  },
 })

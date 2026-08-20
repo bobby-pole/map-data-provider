@@ -1,0 +1,309 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "cache_layout_version": "provider_cache/v1",
+    "geojson_contract_version": "provider_geojson/v1",
+    "aoi_id": "rybnik_35km",
+    "domain": "telecom",
+    "layer_id": "telecom.inspection_points",
+    "source": "OpenStreetMap",
+    "source_type": "analytical_vector",
+    "source_registry_id": "openstreetmap",
+    "source_url": "https://overpass-api.de/api/interpreter",
+    "source_query": "Fixture contract evidence for telecom-osm/v1: explicit communication towers/masts, telecom facilities and communication=line or cable=communication routes.",
+    "snapshot_at": "2026-08-10T10:00:00Z",
+    "pipeline_version": "geo_pipeline/telecom/v1",
+    "query_version": "telecom-osm/v1",
+    "validation_status_raw": "warning",
+    "quality_status": "warning",
+    "confidence": "medium",
+    "limitations": [
+      "OSM telecom infrastructure and communication-network completeness varies significantly by area and operator.",
+      "The committed contract fixture demonstrates explicit telecom categories; it is not a complete Rybnik 35 km network, coverage or transmission model.",
+      "Generic masts, towers, poles, buildings, ducts and utilities without qualifying communication tags are excluded to prevent false telecom attribution.",
+      "No qualified official analytical telecom-network vector feed is enabled; an empty telecom.lines layer remains an explicit source gap.",
+      "KIUT telecom WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+    ],
+    "eligible_for_analysis": true,
+    "readiness": "usable_with_limitations",
+    "contract_version": "provider_geojson/v1",
+    "feature_count": 7
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/78446497",
+        "domain": "telecom",
+        "asset_type": "towers",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM telecom infrastructure and communication-network completeness varies significantly by area and operator.",
+          "The committed contract fixture demonstrates explicit telecom categories; it is not a complete Rybnik 35 km network, coverage or transmission model.",
+          "Generic masts, towers, poles, buildings, ducts and utilities without qualifying communication tags are excluded to prevent false telecom attribution.",
+          "No qualified official analytical telecom-network vector feed is enabled; an empty telecom.lines layer remains an explicit source gap.",
+          "KIUT telecom WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "tower",
+          "name": "Ostrava - Lanová",
+          "height": "60",
+          "tower:type": "communication",
+          "source": "cuzk:ruian",
+          "building": "yes"
+        },
+        "origin_artifact": "telecom.towers",
+        "origin_source_id": "way/78446497",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.308896203703704,
+          49.84556810000001
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/89954086",
+        "domain": "telecom",
+        "asset_type": "towers",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM telecom infrastructure and communication-network completeness varies significantly by area and operator.",
+          "The committed contract fixture demonstrates explicit telecom categories; it is not a complete Rybnik 35 km network, coverage or transmission model.",
+          "Generic masts, towers, poles, buildings, ducts and utilities without qualifying communication tags are excluded to prevent false telecom attribution.",
+          "No qualified official analytical telecom-network vector feed is enabled; an empty telecom.lines layer remains an explicit source gap.",
+          "KIUT telecom WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "tower",
+          "name": "Radiostacja Gliwice",
+          "wikidata": "Q597596",
+          "wikipedia": "pl:Radiostacja gliwicka",
+          "name:pl": "Radiostacja gliwicka",
+          "name:en": "Gliwice Radio Tower",
+          "height": "112 m",
+          "material": "wood",
+          "tower:type": "communication",
+          "tower:construction": "lattice",
+          "building": "tower"
+        },
+        "origin_artifact": "telecom.towers",
+        "origin_source_id": "way/89954086",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.688764643763136,
+          50.31333885
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/187697529",
+        "domain": "telecom",
+        "asset_type": "towers",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM telecom infrastructure and communication-network completeness varies significantly by area and operator.",
+          "The committed contract fixture demonstrates explicit telecom categories; it is not a complete Rybnik 35 km network, coverage or transmission model.",
+          "Generic masts, towers, poles, buildings, ducts and utilities without qualifying communication tags are excluded to prevent false telecom attribution.",
+          "No qualified official analytical telecom-network vector feed is enabled; an empty telecom.lines layer remains an explicit source gap.",
+          "KIUT telecom WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "tower",
+          "tower:type": "communication",
+          "tower:construction": "freestanding",
+          "building": "yes",
+          "aeroway": "obstacle"
+        },
+        "origin_artifact": "telecom.towers",
+        "origin_source_id": "way/187697529",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.43774664302098,
+          50.014390649999996
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1451132472",
+        "domain": "telecom",
+        "asset_type": "towers",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM telecom infrastructure and communication-network completeness varies significantly by area and operator.",
+          "The committed contract fixture demonstrates explicit telecom categories; it is not a complete Rybnik 35 km network, coverage or transmission model.",
+          "Generic masts, towers, poles, buildings, ducts and utilities without qualifying communication tags are excluded to prevent false telecom attribution.",
+          "No qualified official analytical telecom-network vector feed is enabled; an empty telecom.lines layer remains an explicit source gap.",
+          "KIUT telecom WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "mast",
+          "ref": "KED7005",
+          "operator": "Play",
+          "tower:type": "communication",
+          "tower:construction": "lattice"
+        },
+        "origin_artifact": "telecom.towers",
+        "origin_source_id": "way/1451132472",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.3616008,
+          50.279329000000004
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/308738723",
+        "domain": "telecom",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM telecom infrastructure and communication-network completeness varies significantly by area and operator.",
+          "The committed contract fixture demonstrates explicit telecom categories; it is not a complete Rybnik 35 km network, coverage or transmission model.",
+          "Generic masts, towers, poles, buildings, ducts and utilities without qualifying communication tags are excluded to prevent false telecom attribution.",
+          "No qualified official analytical telecom-network vector feed is enabled; an empty telecom.lines layer remains an explicit source gap.",
+          "KIUT telecom WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "power": "line",
+          "name": "daw. 110kV Halemba–Wirek I odg. Radoszowy",
+          "operator": "Tauron",
+          "operator:wikidata": "Q2397198",
+          "description": "W 2025 r. ogłoszono przetarg na demontaż odcinka. Zweryfikować jego dalsze istnienie.",
+          "voltage": "110000",
+          "frequency": "50",
+          "circuits": "1",
+          "cables": "3",
+          "wires": "single"
+        },
+        "origin_artifact": "telecom.lines",
+        "origin_source_id": "way/308738723",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.9068205,
+          50.2448482
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/935798460",
+        "domain": "telecom",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM telecom infrastructure and communication-network completeness varies significantly by area and operator.",
+          "The committed contract fixture demonstrates explicit telecom categories; it is not a complete Rybnik 35 km network, coverage or transmission model.",
+          "Generic masts, towers, poles, buildings, ducts and utilities without qualifying communication tags are excluded to prevent false telecom attribution.",
+          "No qualified official analytical telecom-network vector feed is enabled; an empty telecom.lines layer remains an explicit source gap.",
+          "KIUT telecom WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "power": "line",
+          "name": "daw. 110kV Halemba–Wirek I odg. Radoszowy",
+          "operator": "Tauron",
+          "operator:wikidata": "Q2397198",
+          "description": "W 2025 r. ogłoszono przetarg na demontaż odcinka. Zweryfikować jego dalsze istnienie.",
+          "voltage": "110000",
+          "frequency": "50",
+          "circuits": "1",
+          "cables": "3",
+          "wires": "single"
+        },
+        "origin_artifact": "telecom.lines",
+        "origin_source_id": "way/935798460",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8976094,
+          50.2430286
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/935798461",
+        "domain": "telecom",
+        "asset_type": "lines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM telecom infrastructure and communication-network completeness varies significantly by area and operator.",
+          "The committed contract fixture demonstrates explicit telecom categories; it is not a complete Rybnik 35 km network, coverage or transmission model.",
+          "Generic masts, towers, poles, buildings, ducts and utilities without qualifying communication tags are excluded to prevent false telecom attribution.",
+          "No qualified official analytical telecom-network vector feed is enabled; an empty telecom.lines layer remains an explicit source gap.",
+          "KIUT telecom WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "power": "cable",
+          "name": "daw. 110kV Halemba–Wirek I odg. Radoszowy",
+          "operator": "Tauron",
+          "operator:wikidata": "Q2397198",
+          "description": "W 2025 r. ogłoszono przetarg na demontaż odcinka. Zweryfikować jego dalsze istnienie.",
+          "voltage": "110000",
+          "frequency": "50",
+          "circuits": "1",
+          "cables": "3",
+          "location": "underground",
+          "layer": "-1"
+        },
+        "origin_artifact": "telecom.lines",
+        "origin_source_id": "way/935798461",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8996476,
+          50.243440199999995
+        ]
+      }
+    }
+  ]
+}

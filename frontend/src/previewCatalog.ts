@@ -17,7 +17,7 @@ export type PopupDetails = {
   limitations: string[];
 };
 
-export const transportRoadClasses = ["major", "secondary", "local", "service"] as const;
+export const transportRoadClasses = ["major", "secondary"] as const;
 export type TransportRoadClass = typeof transportRoadClasses[number];
 
 /** Network and representative geometry must be intentionally enabled. */
@@ -29,13 +29,13 @@ export function transportRoadClassLabel(roadClass: TransportRoadClass): string {
   return {
     major: "Major roads",
     secondary: "Secondary roads",
-    local: "Local roads",
-    service: "Service roads",
   }[roadClass];
 }
 
 export function configuredPreviewLayers(presentations: MapPresentation[]): PreviewLayer[] {
-  return presentations.flatMap((presentation) => presentation.layers.map((artifact) => ({
+  return presentations.flatMap((presentation) => presentation.layers
+    .filter((artifact) => !isInspectionPointArtifact(artifact.artifact_id))
+    .map((artifact) => ({
     artifact,
     domain: presentation.domain,
     archiveUrl: presentation.archive_url,
@@ -43,6 +43,11 @@ export function configuredPreviewLayers(presentations: MapPresentation[]): Previ
     archiveMinZoom: presentation.archive.min_zoom,
     archiveMaxZoom: presentation.archive.max_zoom,
   })));
+}
+
+/** Inspection samples remain in the exported provider pack, not in the map preview. */
+export function isInspectionPointArtifact(artifactId: string): boolean {
+  return artifactId.endsWith(".inspection_points");
 }
 
 export function previewLayerKey(layer: PreviewLayer): string {

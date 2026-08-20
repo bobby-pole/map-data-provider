@@ -1,0 +1,109 @@
+{
+  "domain_pack_version": "provider_domain_pack/v2",
+  "aoi_id": "rybnik_35km",
+  "domain": "district_heating",
+  "source_provenance": [
+    {
+      "source_id": "openstreetmap",
+      "contribution_role": "primary"
+    },
+    {
+      "source_id": "kiut_gesut_wms",
+      "contribution_role": "validation_reference"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "district_heating.plants",
+      "kind": "processed_vector",
+      "format": "geojson",
+      "path": "layers/district_heating.plants.geojson",
+      "sha256": "508cd2cd93fa4895064e9b31cccf6e442811f400c19037600ec9fa8e467e3c43",
+      "feature_count": 7,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "district_heating.facilities",
+      "kind": "processed_vector",
+      "format": "geojson",
+      "path": "layers/district_heating.facilities.geojson",
+      "sha256": "4aa90facbaf8d5269a1913342f19e9e0b3a04cdbfb62b6098f63b7abe3b93f7e",
+      "feature_count": 1,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "district_heating.lines",
+      "kind": "processed_vector",
+      "format": "geojson",
+      "path": "layers/district_heating.lines.geojson",
+      "sha256": "a45f2fc1970e74e06904f207a99540c0f5427fbc6c344defee1ac0dae1fdb4bc",
+      "feature_count": 133,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "district_heating.inspection_points",
+      "kind": "derived_vector",
+      "format": "geojson",
+      "path": "layers/district_heating.inspection_points.geojson",
+      "sha256": "b1bb4709149d2de4ad99d410f1d0ed0016b27ecd5682f8857a511296e9a71779",
+      "feature_count": 137,
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": true
+    },
+    {
+      "id": "district_heating.osm_source_evidence",
+      "kind": "native_vector",
+      "format": "json",
+      "path": "native/osm-district-heating-source-evidence.json",
+      "sha256": "5530510e7fb3f60933627e2e0e8e47485723cb30bbeced67ceb639fc5ba9132a",
+      "source_provenance": [
+        {
+          "source_id": "openstreetmap",
+          "contribution_role": "primary"
+        }
+      ],
+      "public_export": false
+    },
+    {
+      "id": "district_heating.kiut_reference",
+      "kind": "remote_service",
+      "format": "wms",
+      "source_provenance": [
+        {
+          "source_id": "kiut_gesut_wms",
+          "contribution_role": "validation_reference"
+        }
+      ],
+      "public_export": false
+    }
+  ],
+  "validation": {
+    "path": "validation/metadata.json"
+  },
+  "readiness": {
+    "path": "readiness/readiness.json"
+  }
+}

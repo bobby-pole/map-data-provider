@@ -49,11 +49,10 @@ PUBLIC_OSM_QUERY = OsmQueryDefinition(
 
 TRANSPORT_OSM_QUERY = OsmQueryDefinition(
     source_registry_id="openstreetmap",
-    # v3 invalidates v2 runtime artifacts whose PMTiles payload omitted the
-    # normalized road_class field required for client-side class filtering.
-    query_version="transport-osm/v3",
+    # v4 trims residential/living_street/service/tertiary to focus on core arterial and transit network.
+    query_version="transport-osm/v4",
     tags={
-        "highway": ["motorway", "trunk", "primary", "secondary", "tertiary", "unclassified", "residential", "living_street", "service"],
+        "highway": ["motorway", "trunk", "primary", "secondary"],
         "railway": ["rail", "station", "halt"],
         "aeroway": ["aerodrome", "helipad"],
     },
@@ -94,7 +93,7 @@ GAS_OSM_QUERY = OsmQueryDefinition(
     source_registry_id="openstreetmap",
     # OSMnx expands entries in this catalog as an OR query.  Request the
     # explicit gas substance instead of every man_made=pipeline feature in a
-    # 60 km AOI; category normalization composes the required tag pairs.
+    # 35 km AOI; category normalization composes the required tag pairs.
     query_version="gas-osm/v2",
     tags={
         "pipeline": ["gas", "valve"],

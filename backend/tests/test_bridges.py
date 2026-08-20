@@ -21,7 +21,7 @@ def test_category_for_osm_feature_normalizes_bridge_tags_and_rejects_unmapped() 
 def test_bridges_domain_pack_builds_independent_categories_and_inspection_points(tmp_path: Path) -> None:
     build_rybnik_bridges_cache(root=tmp_path)
     pack = build_rybnik_bridges_domain_pack(root=tmp_path)
-    pack_root = tmp_path / "rybnik_60km" / "bridges" / "domain-pack-v2"
+    pack_root = tmp_path / "rybnik_35km" / "bridges" / "domain-pack-v2"
     artifacts = {artifact["id"]: artifact for artifact in pack["artifacts"]}
 
     bridges = json.loads((pack_root / artifacts["bridges.bridges"]["path"]).read_text(encoding="utf-8"))
@@ -39,7 +39,7 @@ def test_bridges_domain_pack_builds_independent_categories_and_inspection_points
     assert context["bdot10k"]["status"] == "context_only"
     assert context["comparison"][0]["outcome"] == "ambiguous"
 
-    public = read_domain_pack("rybnik_60km", "bridges", root=tmp_path, public_export=True)["artifacts"]
+    public = read_domain_pack("rybnik_35km", "bridges", root=tmp_path, public_export=True)["artifacts"]
     assert {artifact["id"] for artifact in public} == {
         "bridges.bridges", "bridges.viaducts", "bridges.crossings", "bridges.inspection_points",
     }

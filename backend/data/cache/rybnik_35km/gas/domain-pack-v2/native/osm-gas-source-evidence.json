@@ -1,0 +1,27 @@
+{
+  "source_registry_id": "openstreetmap",
+  "fixture": "data/fixtures/rybnik_35km/gas/osm-gas.geojson",
+  "sha256": "ae27646bae568d739617405c25ed8811a57683453345034ef28646299cc7c0bd",
+  "category_mappings": {
+    "facilities": [
+      "man_made=gasometer",
+      "man_made=gas_station",
+      "pipeline=valve"
+    ],
+    "pipelines": [
+      "pipeline=gas",
+      "man_made=pipeline"
+    ]
+  },
+  "category_rules": {
+    "gas.facilities": "man_made=gasometer or man_made=gas_station; pipeline=valve requires substance=gas.",
+    "gas.pipelines": "man_made=pipeline requires substance=gas; pipeline=gas is retained only as explicit legacy semantics."
+  },
+  "pipeline_rule": "Generic unlabelled pipelines and valves without explicit gas tags are excluded to prevent false gas attribution.",
+  "limitations": [
+    "OSM gas infrastructure and distribution network mapping completeness varies significantly by area.",
+    "The committed contract fixture demonstrates normalized gas categories; it is not a complete Rybnik 35 km OSM snapshot or an operational pressure or flow model.",
+    "Generic unlabelled pipelines and valves without explicit gas tags are excluded to prevent false gas attribution.",
+    "KIUT gas WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+  ]
+}

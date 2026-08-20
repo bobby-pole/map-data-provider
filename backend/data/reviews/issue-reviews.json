@@ -2,7 +2,7 @@
   "review_store_version": "provider_issue_reviews/v1",
   "reviews": [
     {
-      "aoi_id": "rybnik_60km",
+      "aoi_id": "rybnik_35km",
       "issue_id": "DQ-MANUAL-SEEDS-NON-AUTHORITATIVE",
       "rule_id": "manual.non_authoritative",
       "rule_version": "1.0",

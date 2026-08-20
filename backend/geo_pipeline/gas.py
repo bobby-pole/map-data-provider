@@ -10,11 +10,11 @@ from typing import Any
 from geo_pipeline.contracts import normalize_analytical_vector_layer
 from geo_pipeline.source_registry import guard_source_access
 
-GAS_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_60km" / "gas" / "osm-gas.geojson"
+GAS_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_35km" / "gas" / "osm-gas.geojson"
 GAS_SNAPSHOT_AT = "2026-08-06T19:00:00Z"
 GAS_LIMITATIONS = [
     "OSM gas infrastructure and distribution network mapping completeness varies significantly by area.",
-    "The committed contract fixture demonstrates normalized gas categories; it is not a complete Rybnik 60 km OSM snapshot or an operational pressure or flow model.",
+    "The committed contract fixture demonstrates normalized gas categories; it is not a complete Rybnik 35 km OSM snapshot or an operational pressure or flow model.",
     "Generic unlabelled pipelines and valves without explicit gas tags are excluded to prevent false gas attribution.",
     "KIUT gas WMS layers are visual reference overlays only and do not replace analytical vector artifacts.",
 ]
@@ -73,7 +73,7 @@ def gas_osm_metadata(*, layer_id: str, readiness: str) -> dict[str, Any]:
     return {
         "cache_layout_version": "provider_cache/v1",
         "geojson_contract_version": "provider_geojson/v1",
-        "aoi_id": "rybnik_60km",
+        "aoi_id": "rybnik_35km",
         "domain": "gas",
         "layer_id": layer_id,
         "source": "OpenStreetMap",

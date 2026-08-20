@@ -10,7 +10,7 @@ from typing import Any
 from geo_pipeline.contracts import normalize_analytical_vector_layer
 from geo_pipeline.source_registry import guard_source_access
 
-TRANSPORT_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_60km" / "transport" / "osm-transport.geojson"
+TRANSPORT_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_35km" / "transport" / "osm-transport.geojson"
 TRANSPORT_SNAPSHOT_AT = "2026-08-03T21:00:00Z"
 TRANSPORT_LIMITATIONS = [
     "OSM transport mapping completeness and classification vary by area, operator and transport mode.",
@@ -23,8 +23,6 @@ FACILITY_MAPPINGS: dict[str, tuple[tuple[str, str], ...]] = {
     "roads": (
         ("highway", "motorway"), ("highway", "trunk"), ("highway", "primary"),
         ("highway", "secondary"), ("highway", "tertiary"),
-        ("highway", "unclassified"), ("highway", "residential"), ("highway", "living_street"),
-        ("highway", "service"),
     ),
     "railways": (("railway", "rail"),),
     "stations": (("railway", "station"), ("railway", "halt")),
@@ -34,8 +32,6 @@ FACILITY_MAPPINGS: dict[str, tuple[tuple[str, str], ...]] = {
 ROAD_CLASS_MAPPINGS: dict[str, tuple[tuple[str, str], ...]] = {
     "major": (("highway", "motorway"), ("highway", "trunk"), ("highway", "primary")),
     "secondary": (("highway", "secondary"), ("highway", "tertiary")),
-    "local": (("highway", "unclassified"), ("highway", "residential"), ("highway", "living_street")),
-    "service": (("highway", "service"),),
 }
 
 
@@ -69,7 +65,7 @@ def categorized_osm_features() -> dict[str, list[dict[str, Any]]]:
             raise ValueError("Transport OSM fixture feature requires properties")
         category = category_for_osm_feature(properties)
         if category is None:
-            raise ValueError("Transport OSM fixture contains a feature without an allow-listed facility mapping")
+            continue
         props = {**deepcopy(properties), "provider_category": category}
         if category == "roads":
             road_class = road_class_for_osm_feature(properties)
@@ -86,17 +82,17 @@ def transport_osm_metadata(*, layer_id: str, readiness: str) -> dict[str, Any]:
     return {
         "cache_layout_version": "provider_cache/v1",
         "geojson_contract_version": "provider_geojson/v1",
-        "aoi_id": "rybnik_60km",
+        "aoi_id": "rybnik_35km",
         "domain": "transport",
         "layer_id": layer_id,
         "source": "OpenStreetMap",
         "source_type": "analytical_vector",
         "source_registry_id": "openstreetmap",
         "source_url": "https://overpass-api.de/api/interpreter",
-        "source_query": "Bounded Overpass snapshot: explicit transport highway, railway and aeroway tags within the Rybnik 60 km AOI.",
+        "source_query": "Bounded Overpass snapshot: explicit transport highway, railway and aeroway tags within the Rybnik 35 km AOI.",
         "snapshot_at": TRANSPORT_SNAPSHOT_AT,
         "pipeline_version": "geo_pipeline/transport/v1",
-        "query_version": "transport-osm/v3",
+        "query_version": "transport-osm/v4",
         "validation_status_raw": "warning",
         "quality_status": "warning",
         "confidence": "medium",

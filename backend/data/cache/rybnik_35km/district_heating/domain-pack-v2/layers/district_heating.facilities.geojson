@@ -1,0 +1,64 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "cache_layout_version": "provider_cache/v1",
+    "geojson_contract_version": "provider_geojson/v1",
+    "aoi_id": "rybnik_35km",
+    "domain": "district_heating",
+    "layer_id": "district_heating.facilities",
+    "source": "OpenStreetMap",
+    "source_type": "analytical_vector",
+    "source_registry_id": "openstreetmap",
+    "source_url": "https://overpass-api.de/api/interpreter",
+    "source_query": "Fixture contract evidence for explicit district-heating plants, heat exchangers and heat-network lines.",
+    "snapshot_at": "2026-08-10T12:00:00Z",
+    "pipeline_version": "geo_pipeline/district-heating/v1",
+    "query_version": "district-heating-osm/v1",
+    "validation_status_raw": "warning",
+    "quality_status": "warning",
+    "confidence": "medium",
+    "limitations": [
+      "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+      "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+      "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+      "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+      "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+    ],
+    "eligible_for_analysis": true,
+    "readiness": "usable_with_limitations",
+    "contract_version": "provider_geojson/v1",
+    "feature_count": 1
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "node/99000001",
+        "domain": "district_heating",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM district-heating infrastructure completeness varies significantly by area and operator.",
+          "The committed contract fixture is not a complete Rybnik 35 km heat-network, capacity, pressure or flow model.",
+          "Generic industrial buildings, chimneys, power equipment and pipelines without explicit heating semantics are excluded.",
+          "No qualified official analytical district-heating-network vector feed is enabled; an empty district_heating.lines layer remains an explicit source gap.",
+          "KIUT district-heating WMS is visual reference-only imagery and does not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "heat_exchanger",
+          "name": "Główny Węzeł Ciepłowniczy Rybnik Śródmieście"
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5401,
+          50.0982
+        ]
+      }
+    }
+  ]
+}

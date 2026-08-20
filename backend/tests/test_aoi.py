@@ -19,13 +19,13 @@ def test_equivalent_circle_inputs_resolve_to_one_deterministic_identity() -> Non
 
 
 def test_rybnik_alias_preserves_v1_cache_key_but_has_geometry_identity() -> None:
-    alias = resolve_aoi("rybnik_60km")
-    direct = resolve_aoi({"type": "circle", "longitude": 18.546285, "latitude": 50.102174, "radius_m": 60_000})
+    alias = resolve_aoi("rybnik_35km")
+    direct = resolve_aoi({"type": "circle", "longitude": 18.546285, "latitude": 50.102174, "radius_m": 35_000})
 
     assert alias.aoi_id == direct.aoi_id
-    assert alias.cache_key == "rybnik_60km"
-    assert alias.aliases == ("rybnik_60km",)
-    assert cache_paths(alias.cache_key, "power", root=Path("/tmp/cache")).root == Path("/tmp/cache/rybnik_60km/power")
+    assert alias.cache_key == "rybnik_35km"
+    assert alias.aliases == ("rybnik_35km",)
+    assert cache_paths(alias.cache_key, "power", root=Path("/tmp/cache")).root == Path("/tmp/cache/rybnik_35km/power")
 
 
 def test_approved_prg_reference_keeps_fixture_provenance_without_live_access() -> None:

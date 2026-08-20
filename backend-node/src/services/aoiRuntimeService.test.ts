@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { createRuntimeRequestCoordinator, workerFailureMessage } from "./aoiRuntimeService.js";
-import { type ProviderRuntimeRequest, providerRuntimeResponseSchema } from "../types/provider.js";
+import { createRuntimeJobCoordinator, createRuntimeRequestCoordinator, workerFailureMessage } from "./aoiRuntimeService.js";
+import { type ProviderRuntimeRequest, providerRuntimeJobSchema, providerRuntimeResponseSchema } from "../types/provider.js";
 
 const request: ProviderRuntimeRequest = { aoi: { type: "administrative_selection", unit_ids: ["county_rybnik_city", "county_rybnicki"] }, profiles: ["power", "water"] };
 const response = providerRuntimeResponseSchema.parse({
@@ -30,5 +30,49 @@ describe("runtime request coordinator", () => {
   it("preserves structured worker failures without exposing raw subprocess output", () => {
     expect(workerFailureMessage({ stderr: '{"status":"error","code":"worker_failed","message":"Overpass timed out."}' }, "fallback")).toBe("worker_failed: Overpass timed out.");
     expect(workerFailureMessage({ stderr: "not-json" }, "Safe fallback.")).toBe("Safe fallback.");
+  });
+
+  it("exposes real worker progress before the final runtime response is available", async () => {
+    const coordinator = createRuntimeJobCoordinator(async (_request, report) => {
+      report({ event: "domain_started", total_domains: 2, completed_domains: 1, active_domain: "power", queried_feature_count: 12, accepted_feature_count: 9, derived_feature_count: 2 });
+      return response;
+    });
+    const job = coordinator.submit(request);
+    expect(providerRuntimeJobSchema.parse(coordinator.get(job.job_id))).toMatchObject({ state: "running", event: "domain_started", completed_domains: 1, active_domain: "power", accepted_feature_count: 9 });
+    await new Promise<void>((resolve) => queueMicrotask(resolve));
+    expect(coordinator.get(job.job_id)).toMatchObject({ state: "succeeded", event: "published", result: response });
+  });
+
+  it("caches the administrative catalog promise and reuses it on subsequent calls", async () => {
+    const service = await import("./aoiRuntimeService.js");
+    service.resetAdministrativeCatalogCache();
+    let calls = 0;
+    const fetcher = async () => {
+      calls += 1;
+      return { stdout: JSON.stringify({ units: [] }) };
+    };
+    const first = await service.getAdministrativeCatalog(fetcher);
+    const second = await service.getAdministrativeCatalog(fetcher);
+    expect(first).toEqual({ units: [] });
+    expect(first).toBe(second);
+    expect(calls).toBe(1);
+  });
+
+  it("evicts the cached catalog promise on error so a subsequent attempt can succeed", async () => {
+    const service = await import("./aoiRuntimeService.js");
+    service.resetAdministrativeCatalogCache();
+    let attempts = 0;
+    const flakyFetcher = async () => {
+      attempts += 1;
+      if (attempts === 1) {
+        throw new Error("Temporary Python worker failure");
+      }
+      return { stdout: JSON.stringify({ units: ["recovered"] }) };
+    };
+
+    await expect(service.getAdministrativeCatalog(flakyFetcher)).rejects.toThrow("Administrative catalogue could not be read.");
+    const recovered = await service.getAdministrativeCatalog(flakyFetcher);
+    expect(recovered).toEqual({ units: ["recovered"] });
+    expect(attempts).toBe(2);
   });
 });

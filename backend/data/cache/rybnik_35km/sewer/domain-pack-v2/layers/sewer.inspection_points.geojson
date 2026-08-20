@@ -1,0 +1,3294 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "cache_layout_version": "provider_cache/v1",
+    "geojson_contract_version": "provider_geojson/v1",
+    "aoi_id": "rybnik_35km",
+    "domain": "sewer",
+    "layer_id": "sewer.inspection_points",
+    "source": "OpenStreetMap",
+    "source_type": "analytical_vector",
+    "source_registry_id": "openstreetmap",
+    "source_url": "https://overpass-api.de/api/interpreter",
+    "source_query": "Fixture contract evidence for sewer-osm/v2: wastewater_plant, septic_tank, pipeline=sewer, and explicit sewer/wastewater tags.",
+    "snapshot_at": "2026-08-07T15:30:00Z",
+    "pipeline_version": "geo_pipeline/sewer/v2",
+    "query_version": "sewer-osm/v2",
+    "validation_status_raw": "warning",
+    "quality_status": "warning",
+    "confidence": "medium",
+    "limitations": [
+      "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+      "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+      "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+      "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+    ],
+    "eligible_for_analysis": true,
+    "readiness": "usable_with_limitations",
+    "contract_version": "provider_geojson/v1",
+    "feature_count": 102
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/30472172",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Ústřední čistírna odpadních vod"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/30472172",
+        "source_geometry_type": "MultiLineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.2454654,
+          49.85723939999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/33898974",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Oczyszczalnia ścieków Mikulczyce",
+          "source": "European Urban Atlas"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/33898974",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.744018898540244,
+          50.34152854999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/44459059",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Zabrzańskie Przedsiębiorstwo Wodociągów i Kanalizacji - Oczyszczalnia Ścieków Śródmieście"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/44459059",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.747574815850918,
+          50.309328099999995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/51884754",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "ČOV",
+          "building": "yes"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/51884754",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.350927078864167,
+          49.819089049999995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/51893191",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "source": "cuzk:km"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/51893191",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.3791691,
+          49.864203499999995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/51893298",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "source": "cuzk:ruian"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/51893298",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.3790862,
+          49.8644354
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/51893299",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "source": "cuzk:km"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/51893299",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.3790875,
+          49.86444319999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/90923697",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/90923697",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7203662,
+          50.285967299999996
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/91304615",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Centralna Oczyszczalnia Ścieków",
+          "operator": "PWiK Gliwice",
+          "website": "https://pwik.gliwice.pl/"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/91304615",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.644882675715106,
+          50.3125089
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/98613838",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Oczyszczalnia Ścieków w Pszowie",
+          "source": "image/rapideye"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/98613838",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4119762,
+          50.0245358
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/101956256",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Oczyszczalnia ścieków",
+          "source": "Ortofotomapa UM Ruda Śląska"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/101956256",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.880628452962426,
+          50.32630375
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/105361172",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Oczyszczalnia ścieków Rokitnica",
+          "source": "European Urban Atlas"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/105361172",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.791507728246213,
+          50.3573387
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/107896977",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "oczyszczalnia ścieków",
+          "source": "Bing"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/107896977",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.68826011312212,
+          50.372731849999994
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/110244764",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "oczyszczalnia ścieków",
+          "source": "European Urban Atlas"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/110244764",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.624258775163437,
+          50.04795745
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/112953672",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Oczyszczalnia Ścieków „Halemba-Centrum”",
+          "source": "European Urban Atlas"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/112953672",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.819399153743316,
+          50.24758215
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/134463605",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Oczyszczalnia Ścieków"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/134463605",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.66054187475322,
+          50.153472449999995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/149484540",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Oczyszczalnia Ścieków"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/149484540",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.59163664098226,
+          50.3873952
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/154559754",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Oczyszczalnia Ścieków Ruptawa"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/154559754",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5904739,
+          49.93797709999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/163924620",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/163924620",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.75106900862876,
+          50.30794979999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/176487573",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Gminny Zakład Wodociągów i Kanalizacji",
+          "website": "http://www.gzwik.pawlowice.pl/asp/pl_start.asp?",
+          "source": "Bing"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/176487573",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.6758797,
+          49.97981939999998
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/176718970",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/176718970",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.9025137,
+          50.1113952
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/179145158",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/179145158",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.6449829,
+          50.224765100000006
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/180117667",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Zakład Wodociągów i Kanalizacji",
+          "website": "https://zwik-rac.com.pl/",
+          "phone": "+4832 415 24 18",
+          "email": "wodociagi@zwik-rac.com.pl"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/180117667",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.2219330445279,
+          50.105434849999995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/185264071",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Oczyszczalnia ścieków w Krzanowicach",
+          "access": "designated"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/185264071",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.155327746654244,
+          50.027078700000004
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/201642424",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Zakład Ochrony Wód “Dolna”",
+          "source": "Sagan"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/201642424",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.562711286321843,
+          49.953169
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/204090081",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Zabrzańskie Przedsiębiorstwo Wodociągów i Kanalizacji"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/204090081",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.74609541501807,
+          50.30690745
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/206535025",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "source": "UM Jastrzębie-Zdrój"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/206535025",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.6264708,
+          49.991568099999995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/206535033",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "source": "UM Jastrzębie-Zdrój"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/206535033",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.6151232,
+          50.0026283
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/206673152",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "source": "UM Jastrzębie-Zdrój"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/206673152",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.6674547,
+          49.9588102
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/206685800",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "source": "UM Jastrzębie-Zdrój"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/206685800",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5931377,
+          49.93767789999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/206700908",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "source": "UM Jastrzębie-Zdrój"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/206700908",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.6248095,
+          49.9634424
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/206736892",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "source": "UM Jastrzębie-Zdrój"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/206736892",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5623741,
+          49.95411219999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/206736908",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "source": "UM Jastrzębie-Zdrój"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/206736908",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5977564,
+          49.95680190000001
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/206737060",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "source": "UM Jastrzębie-Zdrój"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/206737060",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5726933,
+          49.9444547
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/206737086",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "source": "UM Jastrzębie-Zdrój"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/206737086",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5589107,
+          49.95114819999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/206737175",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "source": "UM Jastrzębie-Zdrój"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/206737175",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5544574,
+          49.942856000000006
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/215059562",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Oczyszczalnia Ścieków",
+          "source": "BytomGIS"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/215059562",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.861479546006848,
+          50.3354514
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/216636774",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Przedsiębiorstwo Wodociągów i Kanalizacji Żory Sp. z o.o."
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/216636774",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.694301850968223,
+          50.0528559
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/221854640",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Oczyszczalnia ścieków"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/221854640",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.10372997183901,
+          50.1104097
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/222136741",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Oczyszczalnia Ścieków Karkoszka II"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/222136741",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4303411,
+          49.9848733
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/228436317",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/228436317",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5205738,
+          49.86585399999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/228436344",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/228436344",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5229797,
+          49.8631737
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/228436345",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/228436345",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5196635,
+          49.87083729999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/228436347",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/228436347",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5223918,
+          49.8648419
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/228436349",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/228436349",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5222441,
+          49.863387999999986
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/229843790",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Oczyszczalnia Ścieków",
+          "source": "OSM Tracker, Knowledge, Bing"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/229843790",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.892225,
+          50.260760299999994
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/231367568",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "ČOV",
+          "operator": "obec Šilheřovice"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/231367568",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.28879966145657,
+          49.92651185
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/235548705",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Oczyszczalnia PWiK w Rybniku"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/235548705",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.533136,
+          50.11541149999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/236860767",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/236860767",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4399313,
+          50.0698261
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/242336159",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Mechaniczno-biologiczna oczyszczalnia ścieków w Pogwizdowie",
+          "operator": "UG Hażlach"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/242336159",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.591440733701006,
+          49.8089279
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/256698230",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Oczyszczalnia ścieków Podlesie",
+          "operator": "Katowickie Wodociągi S.A."
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/256698230",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.97861333804395,
+          50.16888835
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/256760485",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Oczyszczalnia ścieków Panewniki",
+          "operator": "Katowickie Wodociągi S.A."
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/256760485",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.92791304264278,
+          50.230611249999995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/258791203",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Mechaniczno-biologiczną oczyszczalnię ścieków „Pszczyna”"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/258791203",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.97087524918033,
+          49.98388745
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/292281041",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Centralna Oczyszczalnia Ścieków",
+          "opening_hours": "Mo-Fr 07:00-15:00"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/292281041",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.6449829,
+          50.224765100000006
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/300569389",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/300569389",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.517392,
+          50.130917399999994
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/300569390",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/300569390",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5163718,
+          50.13109069999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/300569391",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/300569391",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5169253,
+          50.13137179999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/300569392",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/300569392",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.516006,
+          50.13093570000001
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/300569393",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/300569393",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5161874,
+          50.131013700000004
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/300569394",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/300569394",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.518177,
+          50.1311082
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/300569395",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/300569395",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5173391315707,
+          50.13114519999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/300569396",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/300569396",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5165525,
+          50.1311682
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/300569398",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/300569398",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5172155,
+          50.1311064
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/301617428",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Oczyszczalnia Ścieków \"Centrum\""
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/301617428",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.9070088,
+          50.1898161
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/307134667",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Oczyszczalnia Ścieków Nowe Nieboczowy"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/307134667",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.3409627,
+          50.015545499999995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/314618492",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Oczyszczalnia Ujazd"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/314618492",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.331500553251452,
+          50.38396569999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/372696386",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Zakładowa oczyszczalnia ścieków"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/372696386",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.272784108805986,
+          50.29411665000001
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/415158703",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/415158703",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8586222,
+          50.1865265
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/415158714",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Os. Leśna Bryza"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/415158714",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8553022,
+          50.1884995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/438469332",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/438469332",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8761507,
+          50.13131
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/450875762",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/450875762",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.9479426,
+          50.05890159999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/479026707",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/479026707",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.55119439447565,
+          50.248258699999994
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/680425437",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Vřesina"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/680425437",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.20181640922962,
+          49.9486917
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/715543879",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Oczyszczalnia ścieków Czułów"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/715543879",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.0125072,
+          50.157502699999995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/741608640",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/741608640",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4099777,
+          50.1278184
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/862993751",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/862993751",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.0134056,
+          50.17424170000001
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/894297412",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "PG5"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/894297412",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5067043,
+          49.903013400000006
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/907715064",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/907715064",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.6073818,
+          50.358510100000004
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/912439442",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/912439442",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7543852,
+          50.2451665
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/942667026",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Oczyszczalnia Ścieków Komunalnych „Wschód”"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/942667026",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8662378,
+          50.121555
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/991780605",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "ČOV",
+          "operator": "obec Darkovice",
+          "start_date": "2021-11-10",
+          "source": "cuzk:km"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/991780605",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.2228832,
+          49.9424438
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/993644228",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Oczyszczalnia ścieków Sierakowice"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/993644228",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4318975,
+          50.26519530000001
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1008903642",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/1008903642",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8372401,
+          50.1294932
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1018453876",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Przepompownia ścieków Brada"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/1018453876",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8178336,
+          50.1501673
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1033573582",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/1033573582",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.0020869,
+          50.09279469999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1035841395",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/1035841395",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.1940185,
+          49.8851081
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1056455169",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/1056455169",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.353906344064185,
+          49.93337399999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1096995108",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Oczyszczalnia ścieków dla gminy Nędza"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/1096995108",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.2588202,
+          50.175741499999994
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1098779749",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/1098779749",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5177991,
+          50.131136299999994
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1151332431",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/1151332431",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5020554,
+          50.2478171
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1207553425",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "building": "yes"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/1207553425",
+        "source_geometry_type": "Polygon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.501926530783134,
+          50.2477092
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1270666549",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "ČOV",
+          "operator": "obec Hať"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/1270666549",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.2766731,
+          49.9398826
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1355239803",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "ČOV"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/1355239803",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.324709,
+          49.85434070000001
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1355242588",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "ČOV"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/1355242588",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.3522068,
+          49.84211919999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1375562507",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/1375562507",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.8522314,
+          49.88760699999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1382398356",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "ČOV VVUÚ"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/1382398356",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.337821,
+          49.8286912
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1453262558",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/1453262558",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5969378,
+          49.8811777
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1466184538",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/1466184538",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5298644,
+          49.79066689999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1475261886",
+        "domain": "sewer",
+        "asset_type": "facilities",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "wastewater_plant",
+          "name": "Oczyszczalnia ścieków"
+        },
+        "origin_artifact": "sewer.facilities",
+        "origin_source_id": "way/1475261886",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.9564153,
+          49.9798723
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1314229279",
+        "domain": "sewer",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "wastewater",
+          "diameter": "500"
+        },
+        "origin_artifact": "sewer.pipelines",
+        "origin_source_id": "way/1314229279",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.9280414,
+          50.2296286
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1509849872",
+        "domain": "sewer",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "substance": "wastewater"
+        },
+        "origin_artifact": "sewer.pipelines",
+        "origin_source_id": "way/1509849872",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5218941,
+          50.0702235
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "OpenStreetMap",
+        "source_id": "way/1509849873",
+        "domain": "sewer",
+        "asset_type": "pipelines",
+        "confidence": "medium",
+        "missing_fields": [],
+        "limitations": [
+          "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
+          "The committed contract fixture demonstrates normalized sewer categories; it is not a complete Rybnik 35 km OSM snapshot or an operational hydraulic flow model.",
+          "Generic unlabelled pipelines, water pipelines, and gas pipelines are excluded to prevent false sewer attribution.",
+          "KIUT sewer WMS layers are visual reference overlays only and do not replace analytical vector artifacts."
+        ],
+        "eligible_for_analysis": true,
+        "osm_tags": {
+          "man_made": "pipeline",
+          "location": "underground",
+          "layer": "-1",
+          "substance": "wastewater"
+        },
+        "origin_artifact": "sewer.pipelines",
+        "origin_source_id": "way/1509849873",
+        "source_geometry_type": "LineString"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.5218668,
+          50.07022750000001
+        ]
+      }
+    }
+  ]
+}

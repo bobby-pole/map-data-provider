@@ -8,8 +8,8 @@ const execFileAsync = promisify(execFile);
 export const CACHE_FRESHNESS_MS = 24 * 60 * 60 * 1000;
 
 const RYBNIK_AOI = {
-  id: "rybnik_60km" as const,
-  boundary_reference: "Rybnik centre point with 60 km radius",
+  id: "rybnik_35km" as const,
+  boundary_reference: "Rybnik centre point with 35 km radius",
   crs: "EPSG:4326" as const,
   allowed_domains: ["power"] as const,
 };

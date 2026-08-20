@@ -14,7 +14,8 @@ from typing import Any
 import mapbox_vector_tile
 from pmtiles.tile import Compression, TileType, zxy_to_tileid
 from pmtiles.writer import Writer
-from shapely.geometry import box, mapping, shape
+from shapely import STRtree, box, clip_by_rect
+from shapely.geometry import mapping, shape
 
 from geo_pipeline.source_registry import load_source_registry, validate_ordered_provenance
 
@@ -146,6 +147,9 @@ def read_map_presentation(*, pack_root: Path, manifest: dict[str, Any]) -> dict[
 def _write_pmtiles(archive_path: Path, source_layers: list[dict[str, Any]]) -> dict[str, int]:
     tile_features: dict[tuple[int, int, int], dict[str, list[dict[str, Any]]]] = defaultdict(lambda: defaultdict(list))
     for source_layer in source_layers:
+        features_data: list[tuple[Any, dict[str, str], int]] = []
+        geometries: list[Any] = []
+        active_tiles: set[tuple[int, int, int]] = set()
         for feature in source_layer["features"]:
             geometry_data = feature.get("geometry")
             if not isinstance(geometry_data, dict):
@@ -154,14 +158,41 @@ def _write_pmtiles(archive_path: Path, source_layers: list[dict[str, Any]]) -> d
             if geometry.is_empty:
                 continue
             properties = _presentation_properties(feature.get("properties"), source_layer["metadata"])
-            for z, x, y in _tiles_for_bounds(geometry.bounds, min_zoom=_feature_min_zoom(properties)):
-                tile_bounds = _tile_bounds(z, x, y)
-                clipped = geometry.intersection(box(*tile_bounds))
-                if clipped.is_empty:
+            min_z = _feature_min_zoom(properties)
+            features_data.append((geometry, properties, min_z))
+            geometries.append(geometry)
+            if geometry.geom_type == "Point":
+                for z in range(max(MIN_ZOOM, min_z), MAX_ZOOM + 1):
+                    active_tiles.add((z, *_lon_lat_to_tile(geometry.x, geometry.y, z)))
+            else:
+                for tile_coord in _tiles_for_bounds(geometry.bounds, min_zoom=min_z):
+                    active_tiles.add(tile_coord)
+
+        if not geometries:
+            continue
+
+        tree = STRtree(geometries)
+
+        for z, x, y in active_tiles:
+            min_x, min_y, max_x, max_y = _tile_bounds(z, x, y)
+            candidate_indices = tree.query(box(min_x, min_y, max_x, max_y), predicate="intersects")
+            for idx in candidate_indices:
+                geometry, properties, min_z = features_data[idx]
+                if z < min_z:
                     continue
-                simplified = _simplify_for_zoom(clipped, z)
-                if simplified.is_empty or simplified.geom_type == "GeometryCollection":
-                    continue
+                if geometry.geom_type == "Point":
+                    simplified = geometry
+                else:
+                    gb = geometry.bounds
+                    if gb[0] >= min_x and gb[1] >= min_y and gb[2] <= max_x and gb[3] <= max_y:
+                        clipped = geometry
+                    else:
+                        clipped = clip_by_rect(geometry, min_x, min_y, max_x, max_y)
+                    if clipped.is_empty:
+                        continue
+                    simplified = _simplify_for_zoom(clipped, z)
+                    if simplified.is_empty or simplified.geom_type == "GeometryCollection":
+                        continue
                 tile_features[(z, x, y)][source_layer["source_layer"]].append({
                     "geometry": mapping(simplified),
                     "properties": properties,

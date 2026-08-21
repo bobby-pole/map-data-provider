@@ -1,0 +1,221 @@
+/* Source availability and data-lineage section */
+.sourceAvailabilityDrawer {
+  margin: 8px 0 0;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.sourceAvailabilityDrawer[open] {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.sourceAvailabilitySummary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.sourceAvailabilitySummary::-webkit-details-marker {
+  display: none;
+}
+
+.sourceAvailabilityTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #f1f5f9;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.sourceAvailabilityDrawer > summary::before {
+  display: inline-grid;
+  width: 14px;
+  height: 14px;
+  margin-right: 2px;
+  content: "›";
+  place-items: center;
+  color: #94a3b8;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  transition: transform 0.14s ease;
+}
+
+.sourceAvailabilityDrawer[open] > summary::before {
+  color: #f8fafc;
+  transform: rotate(90deg);
+}
+
+.sourceBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.sourceBadge.warningBadge {
+  color: #fde047;
+  background: rgba(245, 158, 11, 0.18);
+  border: 1px solid rgba(245, 158, 11, 0.45);
+}
+
+.sourceBadge.successBadge {
+  color: #86efac;
+  background: rgba(34, 197, 94, 0.16);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+}
+
+.sourceBadge.mutedBadge {
+  color: #cbd5e1;
+  background: rgba(148, 163, 184, 0.12);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.sourceAvailabilityContent {
+  padding: 0 12px 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sourceSubheader {
+  margin: 10px 0 8px;
+  color: #94a3b8;
+  font-size: 11.5px;
+  font-weight: 500;
+}
+
+.sourceHealthyNotice {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+  padding: 10px 12px;
+  color: #f1f5f9;
+  font-size: 12px;
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: 6px;
+}
+
+.sourceHealthyIcon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  color: #4ade80;
+  font-size: 12px;
+  font-weight: 700;
+  background: rgba(34, 197, 94, 0.2);
+  border-radius: 50%;
+}
+
+.sourceProblemList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sourceProblemCard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 10px;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+}
+
+.sourceProblemCard.severity-error {
+  border-left: 3px solid #ef4444;
+}
+
+.sourceProblemCard.severity-warning {
+  border-left: 3px solid #f59e0b;
+}
+
+.sourceProblemCard.severity-info {
+  border-left: 3px solid #38bdf8;
+}
+
+.sourceProblemCard.severity-healthy {
+  border-left: 3px solid #22c55e;
+}
+
+.sourceCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.sourceCardHeader strong {
+  color: #f8fafc;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.sourceCardTag {
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 10.5px;
+  font-weight: 600;
+}
+
+.sourceCardTag.tag-error {
+  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.sourceCardTag.tag-warning {
+  color: #fde047;
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.sourceCardTag.tag-info {
+  color: #7dd3fc;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.sourceCardExplanation {
+  margin: 0;
+  color: #e2e8f0;
+  font-size: 11.5px;
+  line-height: 1.4;
+}
+
+.sourceCardFooter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 2px;
+  color: #94a3b8;
+  font-size: 10.5px;
+}
+
+.sourceCardId {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.sourceAvailabilityActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+  padding-top: 6px;
+}

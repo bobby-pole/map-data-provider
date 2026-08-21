@@ -1,18 +1,18 @@
 /* AOI Settings Drawer, Coordinates, and Administrative Selection */
 .aoiSettings .aoiFields .secondaryButton {
   grid-column: 1 / -1;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 8px;
+  background: var(--surface-control);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
   padding: 9px 12px;
-  color: #f1f5f9;
+  color: var(--color-text-strong);
   font-weight: 500;
 }
 
 .aoiSettings .aoiFields .secondaryButton:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--surface-control-hover);
   border-color: rgba(255, 255, 255, 0.22);
-  color: #fff;
+  color: var(--color-text-bright);
 }
 
 .modeButtons {
@@ -33,22 +33,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  color: #cbd5e1;
+  background: var(--surface-control);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--color-text-soft);
 }
 
 .modeButtons button:hover {
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.18);
-  color: #fff;
+  color: var(--color-text-bright);
 }
 
 .modeButtons button.active {
-  border-color: #38bdf8;
+  border-color: var(--color-accent);
   background: rgba(56, 189, 248, 0.18);
-  color: #fff;
+  color: var(--color-text-bright);
   font-weight: 600;
 }
 
@@ -86,13 +86,13 @@
   width: 100%;
   min-width: 0;
   background: rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  color: #ffffff;
+  border: 1px solid var(--border-strong);
+  color: var(--color-text-bright);
   font-size: 12.5px;
 }
 
 .contextDrawer .aoiFields input:focus {
-  border-color: #38bdf8;
+  border-color: var(--color-accent);
   outline: none;
 }
 
@@ -102,20 +102,20 @@
   gap: 10px;
   padding: 12px;
   border: 1px solid rgba(56, 189, 248, 0.24);
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   background: rgba(56, 189, 248, 0.06);
 }
 
 .defaultAoiInfo strong {
   display: block;
-  color: #f8fafc;
+  color: var(--color-text-strong);
   font-size: 13px;
   font-weight: 600;
 }
 
 .defaultAoiInfo p {
   margin: 4px 0 0;
-  color: #94a3b8;
+  color: var(--color-text-muted);
   font-size: 11.5px;
   line-height: 1.4;
 }
@@ -133,14 +133,14 @@
   font-weight: 500;
   border-radius: 7px;
   background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  color: #e2e8f0;
+  border: 1px solid var(--border-strong);
+  color: var(--color-text);
 }
 
 .defaultAoiCard button:hover:not(:disabled) {
   background: rgba(255, 255, 255, 0.15);
   border-color: rgba(255, 255, 255, 0.25);
-  color: #fff;
+  color: var(--color-text-bright);
 }
 
 /* AOI Rules Banner */
@@ -155,7 +155,7 @@
 }
 
 .aoiRulesBanner > strong {
-  color: #38bdf8;
+  color: var(--color-accent);
   display: block;
   margin-bottom: 5px;
   font-weight: 600;
@@ -164,7 +164,7 @@
 .aoiRulesBanner ul {
   margin: 0;
   padding-left: 18px;
-  color: #cbd5e1;
+  color: var(--color-text-soft);
 }
 
 .aoiRulesBanner li {
@@ -172,7 +172,7 @@
 }
 
 .aoiRulesBanner li strong {
-  color: #f1f5f9;
+  color: var(--color-text-strong);
   font-weight: 600;
 }
 
@@ -189,9 +189,9 @@
   font-size: 13px;
   font-weight: 600;
   border-radius: 8px;
-  background: #0284c7;
+  background: var(--color-accent-strong);
   border: 1px solid rgba(56, 189, 248, 0.4);
-  color: #ffffff;
+  color: var(--color-text-bright);
   box-shadow:
     0 2px 8px rgba(2, 132, 199, 0.35),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
@@ -201,9 +201,9 @@
 
 .prepareAoiButton:hover:not(:disabled),
 .aoiSettings .prepareAoiButton:hover:not(:disabled) {
-  background: #0369a1;
-  border-color: #38bdf8;
-  color: #ffffff;
+  background: var(--color-accent-dark);
+  border-color: var(--color-accent);
+  color: var(--color-text-bright);
 }
 
 .prepareAoiButton:disabled,
@@ -212,7 +212,7 @@
   cursor: not-allowed;
   background: rgba(255, 255, 255, 0.06);
   border-color: rgba(255, 255, 255, 0.1);
-  color: #64748b;
+  color: var(--color-text-subtle);
   box-shadow: none;
 }
 
@@ -377,210 +377,4 @@
   border-radius: 0 6px 6px 0;
   color: #f1f5f9;
   font-size: 12px;
-}
-
-/* Floating Toast & Contextual Preflight Bubbles */
-.floatingToast {
-  position: sticky;
-  top: 8px;
-  z-index: 100;
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 10px 12px;
-  margin: 10px 0;
-  background: rgba(127, 29, 29, 0.92);
-  border: 1px solid rgba(239, 68, 68, 0.7);
-  border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(12px);
-  color: #fef2f2;
-  font-size: 12px;
-  line-height: 1.4;
-  animation: toastSlideIn 0.25s ease-out;
-}
-
-@keyframes toastSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.floatingToastIcon {
-  font-size: 14px;
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-
-.floatingToastText {
-  flex: 1;
-  overflow-wrap: anywhere;
-}
-
-.floatingToastClose {
-  background: none;
-  border: none;
-  color: #fca5a5;
-  font-size: 14px;
-  cursor: pointer;
-  padding: 0 4px;
-  margin: -2px -4px 0 0;
-  line-height: 1;
-}
-
-.floatingToastClose:hover {
-  color: #ffffff;
-}
-
-.contextualAnchor {
-  position: relative;
-}
-
-.contextualBubble {
-  position: absolute;
-  bottom: calc(100% + 7px);
-  left: 0;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  width: auto;
-  max-width: 100%;
-  box-sizing: border-box;
-  padding: 6px 10px;
-  background: rgba(185, 28, 28, 0.96);
-  border: 1px solid rgba(248, 113, 113, 0.85);
-  border-radius: 6px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(12px);
-  color: #ffffff;
-  font-size: 11.5px;
-  font-weight: 500;
-  line-height: 1.35;
-  pointer-events: none;
-  animation: contextualBubblePop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.contextualBubble::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 16px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: rgba(185, 28, 28, 0.96) transparent transparent transparent;
-}
-
-@keyframes contextualBubblePop {
-  from {
-    opacity: 0;
-    transform: translateY(6px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* Runtime Worker Progress & Snapshot Feedback */
-.runtimeProgress {
-  display: grid;
-  gap: 7px;
-  padding: 10px;
-  color: #e2e8f0;
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  border-radius: 8px;
-  background: rgba(56, 189, 248, 0.06);
-}
-
-.runtimeProgress > div:first-child {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  font-size: 12px;
-}
-
-.runtimeProgress > div:first-child strong {
-  color: #f8fafc;
-  font-weight: 600;
-}
-
-.runtimeProgress > div:first-child span,
-.runtimeProgress p {
-  color: #94a3b8;
-  font-variant-numeric: tabular-nums;
-}
-
-.runtimeProgressTrack {
-  height: 6px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.35);
-}
-
-.runtimeProgressTrack i {
-  display: block;
-  height: 100%;
-  min-width: 3px;
-  border-radius: inherit;
-  background: #38bdf8;
-  box-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
-  transition: width 0.3s ease;
-}
-
-.runtimeProgress p {
-  margin: 0;
-  font-size: 11px;
-}
-
-.runtimeOutcomeSummary {
-  margin: 10px 0 0;
-  font-size: 12px;
-}
-
-.partialSnapshot {
-  display: grid;
-  gap: 7px;
-  padding: 10px;
-  color: #fecaca;
-  border: 1px solid rgba(239, 68, 68, 0.5);
-  border-radius: 8px;
-  background: rgba(127, 29, 29, 0.5);
-}
-
-.partialSnapshot > strong {
-  color: #fff;
-  font-weight: 600;
-}
-
-.partialSnapshot p {
-  margin: 0;
-  color: #fca5a5;
-  font-size: 11.5px;
-}
-
-.partialSnapshot ul {
-  display: grid;
-  gap: 6px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.partialSnapshot li {
-  display: grid;
-  gap: 2px;
-  padding-top: 6px;
-  border-top: 1px solid rgba(254, 205, 211, 0.2);
-  font-size: 11.5px;
-}
-
-.partialSnapshot li span {
-  color: #fecaca;
-  overflow-wrap: anywhere;
 }

@@ -11,7 +11,7 @@ body,
 }
 
 body {
-  background: #050a12;
+  background: var(--color-bg);
 }
 
 .previewLayout {
@@ -21,7 +21,7 @@ body {
   min-height: 100dvh;
   padding: 0;
   overflow: hidden;
-  background: #050a12;
+  background: var(--color-bg);
 }
 
 .mapWorkspace {
@@ -37,7 +37,7 @@ body {
   min-height: 0;
   border: 0;
   border-radius: 0;
-  background: #050a12;
+  background: var(--color-bg);
 }
 
 .mapWorkspace .map,
@@ -57,14 +57,14 @@ body {
   min-height: 52px;
   margin: 0;
   padding: 9px 20px;
-  color: #f8fafc;
-  background: rgba(15, 23, 42, 0.72);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--color-text-strong);
+  background: var(--surface-glass);
+  border-bottom: 1px solid var(--border-default);
   box-shadow:
     0 4px 24px rgba(0, 0, 0, 0.28),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: var(--blur-glass);
+  -webkit-backdrop-filter: var(--blur-glass);
 }
 
 .brandLockup {
@@ -76,7 +76,7 @@ body {
 .brandMark {
   width: 22px;
   height: 22px;
-  color: #38bdf8;
+  color: var(--color-accent);
   filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.4));
 }
 
@@ -85,7 +85,7 @@ body {
   font-size: 17px;
   font-weight: 600;
   letter-spacing: -0.015em;
-  color: #ffffff;
+  color: var(--color-text-bright);
 }
 
 .brandLockup p {
@@ -100,25 +100,25 @@ body {
 }
 
 .settingsButton {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--surface-control);
+  border: 1px solid var(--border-default);
   white-space: nowrap;
 }
 
 .previewContext {
   padding: 5px 12px;
-  color: #cbd5e1;
+  color: var(--color-text-soft);
   font-size: 11.5px;
   font-weight: 500;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-pill);
+  background: var(--surface-control);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 }
 
 .previewContext strong {
-  color: #f1f5f9;
+  color: var(--color-text-strong);
 }
 
 .previewError {

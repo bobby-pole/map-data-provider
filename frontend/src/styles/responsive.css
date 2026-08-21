@@ -1,0 +1,23 @@
+/* Shared narrow-preview adjustments */
+@media (max-width: 900px) {
+  .modeButtons,
+  .aoiFields,
+  .categoryGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .modeButtons button,
+  .aoiFields > *,
+  .categoryGrid > * {
+    min-width: 0;
+  }
+
+  .modeButtons button {
+    white-space: normal;
+  }
+
+  .aoiFields input {
+    width: 100%;
+    min-width: 0;
+  }
+}

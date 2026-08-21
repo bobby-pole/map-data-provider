@@ -1,0 +1,113 @@
+/* Feature inspection and quality-review drawer content */
+.inspectorSection {
+  padding: 2px 0 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.inspectorSection + .inspectorSection {
+  padding-top: 16px;
+}
+
+.inspectorSection h2,
+.featureDetails h3,
+.featureDetails h4 {
+  margin: 0 0 10px;
+  color: #f8fafc;
+}
+
+.featureDetails h3 {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.featureDetails h4 {
+  margin-top: 16px;
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.selectedLineGeometry {
+  margin-top: 14px;
+}
+
+.issueDrawer {
+  margin-top: 16px;
+}
+
+.issueDrawer summary {
+  cursor: pointer;
+  color: #cbd5e1;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.issueDrawerContent {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.issueList {
+  display: grid;
+  gap: 10px;
+}
+
+.issue {
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+}
+
+.issue strong,
+.issue small {
+  display: block;
+  margin-top: 4px;
+}
+
+.issue strong {
+  color: #f1f5f9;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.issue small {
+  color: #94a3b8;
+  font-size: 11px;
+}
+
+.issue p {
+  margin: 6px 0 0;
+  color: #cbd5e1;
+  font-size: 12.5px;
+}
+
+.severity {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.severity-high {
+  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.severity-medium {
+  color: #fcd34d;
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+.severity-low {
+  color: #7dd3fc;
+  background: rgba(56, 189, 248, 0.2);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+}

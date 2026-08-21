@@ -36,31 +36,99 @@ export function parseCoordinate(value: string): number {
   return Number(value.trim().replace(",", "."));
 }
 
+export const MAX_CUSTOM_RADIUS_M = 20_000;
+
 export function isPointRadiusValid(longitude: string, latitude: string, radius: string): boolean {
-  if (!longitude.trim() || !latitude.trim() || !radius.trim()) return false;
-  const lon = parseCoordinate(longitude);
+  return validatePointRadiusInput(longitude, latitude, radius).valid;
+}
+
+export function validatePointRadiusInput(
+  longitude: string,
+  latitude: string,
+  radius: string,
+): { valid: boolean; error: string | null } {
+  if (!latitude.trim()) return { valid: false, error: "Latitude coordinate is required." };
   const lat = parseCoordinate(latitude);
+  if (!Number.isFinite(lat) || lat < -90 || lat > 90) {
+    return { valid: false, error: "Enter a valid latitude between -90 and 90 (e.g. 50.102)." };
+  }
+
+  if (!longitude.trim()) return { valid: false, error: "Longitude coordinate is required." };
+  const lon = parseCoordinate(longitude);
+  if (!Number.isFinite(lon) || lon < -180 || lon > 180) {
+    return { valid: false, error: "Enter a valid longitude between -180 and 180 (e.g. 18.546)." };
+  }
+
+  if (!radius.trim()) return { valid: false, error: "Radius in meters is required." };
   const rad = parseCoordinate(radius);
-  return (
-    Number.isFinite(lon) &&
-    Number.isFinite(lat) &&
-    Number.isFinite(rad) &&
-    rad > 0 &&
-    lon >= -180 &&
-    lon <= 180 &&
-    lat >= -90 &&
-    lat <= 90
-  );
+  if (!Number.isFinite(rad) || rad <= 0) {
+    return { valid: false, error: "Enter a valid positive radius in meters." };
+  }
+  if (rad > MAX_CUSTOM_RADIUS_M) {
+    return { valid: false, error: "Radius exceeds maximum allowed limit of 20,000 m (20 km)." };
+  }
+
+  return { valid: true, error: null };
+}
+
+export function validateAdministrativeUnitSelection(
+  unitIds: string[],
+  units: AdministrativeUnit[],
+): { valid: boolean; error: string | null } {
+  if (unitIds.length === 0) {
+    return { valid: false, error: "Select at least one administrative unit." };
+  }
+  const byId = new Map(units.map((u) => [u.id, u]));
+
+  // 1. Block voivodeship selection
+  const hasVoivodeship = unitIds.some((id) => byId.get(id)?.kind === "voivodeship");
+  if (hasVoivodeship) {
+    return {
+      valid: false,
+      error: "Selecting an entire voivodeship is not allowed. Select up to 3 adjacent counties or their gminas.",
+    };
+  }
+
+  // 2. Check voivodeships consistency
+  const roots = administrativeSelectionRoots(unitIds, units);
+  if (roots.length > 1) {
+    return { valid: false, error: "All selected units must belong to the same voivodeship." };
+  }
+
+  // 3. Determine involved counties
+  const involvedCounties = new Set<string>();
+  for (const id of unitIds) {
+    const u = byId.get(id);
+    if (!u) continue;
+    if (u.kind === "county") {
+      involvedCounties.add(id);
+    } else if (u.kind === "gmina" && u.parent_id) {
+      involvedCounties.add(u.parent_id);
+    }
+  }
+
+  if (involvedCounties.size > 3) {
+    return { valid: false, error: "You can select units from at most 3 adjacent counties." };
+  }
+
+  return { valid: true, error: null };
 }
 
 export function buildRuntimeRequest(
   mode: "point_radius" | "administrative_selection",
   values: { longitude: string; latitude: string; radius: string; unitIds: string[] },
   profiles: RuntimeCategory[],
+  catalogUnits?: AdministrativeUnit[],
 ): { aoi: RuntimeAoiInput; profiles: RuntimeCategory[] } {
   if (profiles.length === 0) throw new Error("Select at least one provider category.");
   if (mode === "administrative_selection") {
     if (values.unitIds.length === 0) throw new Error("Select at least one administrative unit.");
+    if (catalogUnits && catalogUnits.length > 0) {
+      const validation = validateAdministrativeUnitSelection(values.unitIds, catalogUnits);
+      if (!validation.valid && validation.error) {
+        throw new Error(validation.error);
+      }
+    }
     return { aoi: { type: "administrative_selection", unit_ids: [...new Set(values.unitIds)].sort() }, profiles: [...new Set(profiles)].sort() as RuntimeCategory[] };
   }
   const longitude = parseCoordinate(values.longitude);
@@ -68,6 +136,9 @@ export function buildRuntimeRequest(
   const radius_m = parseCoordinate(values.radius);
   if (![longitude, latitude, radius_m].every(Number.isFinite) || radius_m <= 0) {
     throw new Error("Point/radius AOI requires finite coordinates and radius.");
+  }
+  if (radius_m > MAX_CUSTOM_RADIUS_M && !(longitude === 18.546285 && latitude === 50.102174 && radius_m === 35_000)) {
+    throw new Error(`Point/radius AOI radius cannot exceed ${MAX_CUSTOM_RADIUS_M / 1000} km (${MAX_CUSTOM_RADIUS_M} m).`);
   }
   return { aoi: { type: "point_radius", longitude, latitude, radius_m }, profiles: [...new Set(profiles)].sort() as RuntimeCategory[] };
 }

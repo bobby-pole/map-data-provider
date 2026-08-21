@@ -15,6 +15,7 @@ import { orthophotoReference } from "./orthophotoReference";
 import { type VisualBasemapMode, visualBasemapOptions } from "./mapStyle";
 import { DEFAULT_AOI_OUTLINE, displayedAoiOutlines } from "./aoiSettings";
 import type { MapCircuit, MapCircuitMember, MapFeatureDetail, ProviderRuntimeResponse } from "./types/api";
+import { SourceAvailabilitySection } from "./components/SourceAvailabilitySection";
 import "./index.css";
 
 const FeatureDetails = lazy(() => import("./components/FeatureDetails").then((m) => ({ default: m.FeatureDetails })));
@@ -40,6 +41,7 @@ export default function App() {
   const [activityOpen, setActivityOpen] = useState(false);
   const [activityEvents, setActivityEvents] = useState<ActivityEvent[]>([]);
   const [runtimeResult, setRuntimeResult] = useState<ProviderRuntimeResponse | null>(null);
+  const [defaultAoiHidden, setDefaultAoiHidden] = useState(false);
   const [mapZoom, setMapZoom] = useState<number | null>(null);
 
   const draftAoiOutline = useAoiStore((s) => s.draftAoiOutline);
@@ -48,10 +50,16 @@ export default function App() {
   const setPickingAoi = useAoiStore((s) => s.setPickingAoi);
   const pickPoint = useAoiStore((s) => s.pickPoint);
 
+  const isDefaultAoiActive = !runtimeResult || (runtimeResult.outcomes.every((o) => o.status !== "ready") && DEFAULT_AOI_ID === "rybnik_35km");
+  const shouldHideDefaultObjects = isDefaultAoiActive && defaultAoiHidden;
+
   const preparedAoiId = runtimeResult?.outcomes.some((outcome) => outcome.status === "ready") ? runtimeResult.aoi.aoi_id : DEFAULT_AOI_ID;
   const { aoiId, presentations, issues, sourceAvailability, updateReview, error } = useProviderPreview(preparedAoiId);
   const catalog = useMemo(() => configuredPreviewLayers(presentations), [presentations]);
-  const visibleLayers = useMemo(() => catalog.filter((layer) => enabledLayers[previewLayerKey(layer)] ?? defaultLayerEnabled(layer)), [catalog, enabledLayers]);
+  const visibleLayers = useMemo(
+    () => (shouldHideDefaultObjects ? [] : catalog.filter((layer) => enabledLayers[previewLayerKey(layer)] ?? defaultLayerEnabled(layer))),
+    [catalog, enabledLayers, shouldHideDefaultObjects],
+  );
   const featureCount = useMemo(() => visibleLayers.reduce((total, layer) => total + layer.artifact.feature_count, 0), [visibleLayers]);
   const visibleReferences = useMemo(() => kiutReferenceLayers.filter((reference) => enabledReferences[reference.id] ?? false), [enabledReferences]);
 
@@ -88,6 +96,7 @@ export default function App() {
 
   const applyResult = useCallback((result: ProviderRuntimeResponse) => {
     setRuntimeResult(result);
+    setDefaultAoiHidden(false);
     useAoiStore.setState({ draftAoiOutline: null, aoiViewport: null });
     setSelectedFeature(null);
     setSelectedDetail(null);
@@ -99,6 +108,7 @@ export default function App() {
 
   const resetToDefault = useCallback(() => {
     setRuntimeResult(null);
+    setDefaultAoiHidden(false);
     useAoiStore.setState({ draftAoiOutline: null, aoiViewport: null, result: null, preflight: null, error: null });
     setSelectedFeature(null);
     setSelectedDetail(null);
@@ -107,7 +117,9 @@ export default function App() {
     addActivity({ phase: "cache", message: "Loaded default offline snapshot for Rybnik (35 km)." });
   }, [addActivity]);
 
-  const preparedGeometry = runtimeResult?.aoi.geometry ?? (preparedAoiId === DEFAULT_AOI_ID ? DEFAULT_AOI_OUTLINE : null);
+  const preparedGeometry = shouldHideDefaultObjects
+    ? null
+    : (runtimeResult?.aoi.geometry ?? (preparedAoiId === DEFAULT_AOI_ID ? DEFAULT_AOI_OUTLINE : null));
   const aoiOutlines = displayedAoiOutlines(draftAoiOutline, preparedGeometry);
   const currentMapLabel = visualBasemapOptions.find((option) => option.id === basemapMode)?.label ?? basemapMode;
   const transportInspectionNeedsZoom = visibleLayers.some((layer) => layer.artifact.artifact_id === "transport.roads" || layer.artifact.artifact_id === "transport.railways") && (mapZoom ?? 0) < 11;
@@ -167,7 +179,9 @@ export default function App() {
                   onActivity={addActivity}
                   onApplied={applyResult}
                   onResetToDefault={resetToDefault}
-                  isDefaultAoiActive={!runtimeResult || preparedAoiId === DEFAULT_AOI_ID}
+                  isDefaultAoiActive={isDefaultAoiActive}
+                  isDefaultAoiHidden={defaultAoiHidden}
+                  onToggleDefaultAoiHidden={() => setDefaultAoiHidden((h) => !h)}
                 />
               )}
               {activePanel === "layers" && (
@@ -302,21 +316,7 @@ function ProviderPanel({
           <span><strong>{orthophotoReference.label}</strong><small>{orthophotoReference.limitation}</small></span>
         </label>
       </section>
-      <section className="providerGroup">
-        <h3>Source availability</h3>
-        {sourceAvailability ? (
-          <ul className="layerList">
-            {sourceAvailability.sources.map((source) => (
-              <li key={source.source_id}>
-                <strong>{source.source_id}: {source.availability}</strong>
-                <small>{source.evidence}{source.actionable_gap ? " Actionable source gap." : ""}</small>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="muted">Prepare an AOI to inspect cached source availability.</p>
-        )}
-      </section>
+      <SourceAvailabilitySection sourceAvailability={sourceAvailability} />
       {issues.length > 0 && (
         <Suspense fallback={null}>
           <IssueReviewDrawer issues={issues} updateReview={updateReview} />

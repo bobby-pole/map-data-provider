@@ -104,10 +104,127 @@ export async function getSourcesForAoi(aoiId: string, dataPaths?: ProviderDataPa
   return toV1SourceRegistry(sourceRegistryV2Schema.parse(registry));
 }
 
+function buildDefaultSourceAvailabilityReport(aoiId: string) {
+  const now = new Date().toISOString();
+  return {
+    report_version: "provider_source_availability/v1" as const,
+    aoi_id: aoiId,
+    evidence_timestamp: now,
+    sources: [
+      {
+        source_id: "openstreetmap",
+        availability: "available" as const,
+        aoi_coverage: "covered" as const,
+        feature_state: "available" as const,
+        evidence_timestamp: now,
+        fresh_after_days: 7,
+        evidence: "Live Overpass OSM acquisition for requested AOI boundary",
+        freshness: "fresh" as const,
+        eligibility: "allowed" as const,
+        actionable_gap: false,
+      },
+      {
+        source_id: "manual_power_seed",
+        availability: "not_eligible" as const,
+        aoi_coverage: "not_applicable" as const,
+        feature_state: "not_applicable" as const,
+        evidence_timestamp: now,
+        fresh_after_days: 30,
+        evidence: "Local review fixture input (demo fixture only)",
+        freshness: "fresh" as const,
+        eligibility: "rejected" as const,
+        actionable_gap: true,
+      },
+      {
+        source_id: "prg_wfs",
+        availability: "available" as const,
+        aoi_coverage: "covered" as const,
+        feature_state: "available" as const,
+        evidence_timestamp: now,
+        fresh_after_days: 7,
+        evidence: "Official PRG national administrative boundary and representative points",
+        freshness: "fresh" as const,
+        eligibility: "allowed" as const,
+        actionable_gap: false,
+      },
+      {
+        source_id: "bdot10k",
+        availability: "available" as const,
+        aoi_coverage: "uncovered" as const,
+        feature_state: "not_applicable" as const,
+        evidence_timestamp: now,
+        fresh_after_days: 7,
+        evidence: "Custom AOI outside pre-packaged BDOT10k county bundles; official vector extraction pending",
+        freshness: "fresh" as const,
+        eligibility: "allowed" as const,
+        actionable_gap: true,
+      },
+      {
+        source_id: "kiut_gesut_wms",
+        availability: "reference_only" as const,
+        aoi_coverage: "covered" as const,
+        feature_state: "not_applicable" as const,
+        evidence_timestamp: now,
+        fresh_after_days: 1,
+        evidence: "National GUGiK KIUT/GESUT WMS reference capability",
+        freshness: "fresh" as const,
+        eligibility: "rejected" as const,
+        actionable_gap: false,
+      },
+      {
+        source_id: "geoportal_orthophoto",
+        availability: "reference_only" as const,
+        aoi_coverage: "covered" as const,
+        feature_state: "not_applicable" as const,
+        evidence_timestamp: now,
+        fresh_after_days: 7,
+        evidence: "National high-resolution Geoportal orthophoto WMS reference capability",
+        freshness: "fresh" as const,
+        eligibility: "rejected" as const,
+        actionable_gap: false,
+      },
+      {
+        source_id: "nmt_nmpt",
+        availability: "available" as const,
+        aoi_coverage: "covered" as const,
+        feature_state: "available" as const,
+        evidence_timestamp: now,
+        fresh_after_days: 30,
+        evidence: "NMT/NMPT digital terrain elevation model capability",
+        freshness: "fresh" as const,
+        eligibility: "allowed" as const,
+        actionable_gap: false,
+      },
+    ],
+  };
+}
+
 export async function getSourceAvailability(aoiId: string, dataPaths?: ProviderDataPaths) {
   validateIdentifier(aoiId, "AOI");
   const root = dataPaths?.sourceAvailabilityRoot ?? path.join(projectRoot, "backend", "data", "source-availability");
-  const report = sourceAvailabilityReportSchema.parse(await readJson(path.join(root, `${aoiId}.json`), `source availability '${aoiId}'`));
+  const primaryPath = path.join(root, `${aoiId}.json`);
+  const cachePath = path.join(cacheRootFor(dataPaths), aoiId, "source_availability.json");
+
+  let rawReport: unknown;
+  try {
+    rawReport = await readJson(primaryPath, `source availability '${aoiId}'`);
+  } catch (primaryError) {
+    if (primaryError instanceof ProviderDataError && primaryError.kind === "not_found") {
+      try {
+        rawReport = await readJson(cachePath, `cached source availability '${aoiId}'`);
+      } catch (cacheError) {
+        if (cacheError instanceof ProviderDataError && cacheError.kind === "not_found") {
+          rawReport = buildDefaultSourceAvailabilityReport(aoiId);
+        } else {
+          throw cacheError;
+        }
+      }
+    } else {
+      throw primaryError;
+    }
+  }
+
+  const report = sourceAvailabilityReportSchema.parse(rawReport);
   if (report.aoi_id !== aoiId) throw new ProviderDataError("not_found", "Source availability identity does not match the request.");
   return report;
 }

@@ -2,13 +2,50 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable
 
-from geo_pipeline.cache import build_rybnik_bridges_cache, build_rybnik_emergency_cache, build_rybnik_gas_cache, build_rybnik_power_cache, build_rybnik_public_cache, build_rybnik_sewer_cache, build_rybnik_transport_cache, build_rybnik_water_cache, build_rybnik_industrial_cache, build_rybnik_telecom_cache, build_rybnik_district_heating_cache
-from geo_pipeline.domain_pack import build_rybnik_bridges_domain_pack, build_rybnik_emergency_domain_pack, build_rybnik_gas_domain_pack, build_rybnik_power_domain_pack, build_rybnik_public_domain_pack, build_rybnik_sewer_domain_pack, build_rybnik_transport_domain_pack, build_rybnik_water_domain_pack, build_rybnik_industrial_domain_pack, build_rybnik_telecom_domain_pack, build_rybnik_district_heating_domain_pack
-from geo_pipeline.query_catalog import BRIDGES_OSM_QUERY, EMERGENCY_OSM_QUERY, GAS_OSM_QUERY, PUBLIC_OSM_QUERY, OsmQueryDefinition, POWER_OSM_QUERY, SEWER_OSM_QUERY, TRANSPORT_OSM_QUERY, WATER_OSM_QUERY, INDUSTRIAL_OSM_QUERY, TELECOM_OSM_QUERY, DISTRICT_HEATING_OSM_QUERY
+from geo_pipeline.cache import (
+    build_rybnik_bridges_cache,
+    build_rybnik_district_heating_cache,
+    build_rybnik_emergency_cache,
+    build_rybnik_gas_cache,
+    build_rybnik_industrial_cache,
+    build_rybnik_power_cache,
+    build_rybnik_public_cache,
+    build_rybnik_sewer_cache,
+    build_rybnik_telecom_cache,
+    build_rybnik_transport_cache,
+    build_rybnik_water_cache,
+)
+from geo_pipeline.domain_pack import (
+    build_rybnik_bridges_domain_pack,
+    build_rybnik_district_heating_domain_pack,
+    build_rybnik_emergency_domain_pack,
+    build_rybnik_gas_domain_pack,
+    build_rybnik_industrial_domain_pack,
+    build_rybnik_power_domain_pack,
+    build_rybnik_public_domain_pack,
+    build_rybnik_sewer_domain_pack,
+    build_rybnik_telecom_domain_pack,
+    build_rybnik_transport_domain_pack,
+    build_rybnik_water_domain_pack,
+)
+from geo_pipeline.query_catalog import (
+    BRIDGES_OSM_QUERY,
+    DISTRICT_HEATING_OSM_QUERY,
+    EMERGENCY_OSM_QUERY,
+    GAS_OSM_QUERY,
+    INDUSTRIAL_OSM_QUERY,
+    POWER_OSM_QUERY,
+    PUBLIC_OSM_QUERY,
+    SEWER_OSM_QUERY,
+    TELECOM_OSM_QUERY,
+    TRANSPORT_OSM_QUERY,
+    WATER_OSM_QUERY,
+    OsmQueryDefinition,
+)
 
 
 class AdapterError(ValueError):
@@ -58,7 +95,9 @@ EMERGENCY_ADAPTER = DomainAdapter(
 
 
 def _public_live() -> None:
-    raise AdapterError("Use the AOI runtime path for bounded public-service OSM acquisition; the fixture adapter is offline-only.")
+    raise AdapterError(
+        "Use the AOI runtime path for bounded public-service OSM acquisition; the fixture adapter is offline-only."
+    )
 
 
 PUBLIC_ADAPTER = DomainAdapter(
@@ -72,7 +111,9 @@ PUBLIC_ADAPTER = DomainAdapter(
 
 
 def _transport_live() -> None:
-    raise AdapterError("Use the AOI runtime path for bounded transport OSM acquisition; the fixture adapter is offline-only.")
+    raise AdapterError(
+        "Use the AOI runtime path for bounded transport OSM acquisition; the fixture adapter is offline-only."
+    )
 
 
 TRANSPORT_ADAPTER = DomainAdapter(
@@ -86,7 +127,9 @@ TRANSPORT_ADAPTER = DomainAdapter(
 
 
 def _bridges_live() -> None:
-    raise AdapterError("Use the AOI runtime path for bounded bridges OSM acquisition; the fixture adapter is offline-only.")
+    raise AdapterError(
+        "Use the AOI runtime path for bounded bridges OSM acquisition; the fixture adapter is offline-only."
+    )
 
 
 BRIDGES_ADAPTER = DomainAdapter(
@@ -100,7 +143,9 @@ BRIDGES_ADAPTER = DomainAdapter(
 
 
 def _water_live() -> None:
-    raise AdapterError("Use the AOI runtime path for bounded water OSM acquisition; the fixture adapter is offline-only.")
+    raise AdapterError(
+        "Use the AOI runtime path for bounded water OSM acquisition; the fixture adapter is offline-only."
+    )
 
 
 WATER_ADAPTER = DomainAdapter(
@@ -114,7 +159,9 @@ WATER_ADAPTER = DomainAdapter(
 
 
 def _gas_live() -> None:
-    raise AdapterError("Use the AOI runtime path for bounded gas OSM acquisition; the fixture adapter is offline-only.")
+    raise AdapterError(
+        "Use the AOI runtime path for bounded gas OSM acquisition; the fixture adapter is offline-only."
+    )
 
 
 GAS_ADAPTER = DomainAdapter(
@@ -128,7 +175,9 @@ GAS_ADAPTER = DomainAdapter(
 
 
 def _sewer_live() -> None:
-    raise AdapterError("Use the AOI runtime path for bounded sewer OSM acquisition; the fixture adapter is offline-only.")
+    raise AdapterError(
+        "Use the AOI runtime path for bounded sewer OSM acquisition; the fixture adapter is offline-only."
+    )
 
 
 SEWER_ADAPTER = DomainAdapter(
@@ -142,7 +191,9 @@ SEWER_ADAPTER = DomainAdapter(
 
 
 def _industrial_live() -> None:
-    raise AdapterError("Use the AOI runtime path for bounded industrial OSM acquisition; the fixture adapter is offline-only.")
+    raise AdapterError(
+        "Use the AOI runtime path for bounded industrial OSM acquisition; the fixture adapter is offline-only."
+    )
 
 
 INDUSTRIAL_ADAPTER = DomainAdapter(
@@ -156,7 +207,9 @@ INDUSTRIAL_ADAPTER = DomainAdapter(
 
 
 def _telecom_live() -> None:
-    raise AdapterError("Use the AOI runtime path for bounded telecom OSM acquisition; the fixture adapter is offline-only.")
+    raise AdapterError(
+        "Use the AOI runtime path for bounded telecom OSM acquisition; the fixture adapter is offline-only."
+    )
 
 
 TELECOM_ADAPTER = DomainAdapter(
@@ -167,6 +220,7 @@ TELECOM_ADAPTER = DomainAdapter(
     run_live=_telecom_live,
     build_domain_pack=lambda root: build_rybnik_telecom_domain_pack(root=root),
 )
+
 
 def _district_heating_live() -> None:
     raise AdapterError(
@@ -195,7 +249,10 @@ _ADAPTERS = {
     (SEWER_ADAPTER.aoi_alias, SEWER_ADAPTER.domain): SEWER_ADAPTER,
     (INDUSTRIAL_ADAPTER.aoi_alias, INDUSTRIAL_ADAPTER.domain): INDUSTRIAL_ADAPTER,
     (TELECOM_ADAPTER.aoi_alias, TELECOM_ADAPTER.domain): TELECOM_ADAPTER,
-    (DISTRICT_HEATING_ADAPTER.aoi_alias, DISTRICT_HEATING_ADAPTER.domain): DISTRICT_HEATING_ADAPTER,
+    (
+        DISTRICT_HEATING_ADAPTER.aoi_alias,
+        DISTRICT_HEATING_ADAPTER.domain,
+    ): DISTRICT_HEATING_ADAPTER,
 }
 
 
@@ -203,7 +260,9 @@ def resolve_adapter(aoi_alias: str, domain: str) -> DomainAdapter:
     try:
         return _ADAPTERS[(aoi_alias, domain)]
     except KeyError as error:
-        raise AdapterError(f"Unsupported registered AOI/domain target: {aoi_alias}/{domain}") from error
+        raise AdapterError(
+            f"Unsupported registered AOI/domain target: {aoi_alias}/{domain}"
+        ) from error
 
 
 def registered_adapters() -> tuple[DomainAdapter, ...]:

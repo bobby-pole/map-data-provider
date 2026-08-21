@@ -1,0 +1,11 @@
+dist/
+coverage/
+node_modules/
+backend/data/
+backend/.venv/
+.githooks/
+uv.lock
+pnpm-lock.yaml
+*.pmtiles
+*.parquet
+*.geojson

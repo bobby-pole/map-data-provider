@@ -5,7 +5,13 @@ from typing import Any
 
 import geopandas as gpd
 
-from geo_pipeline.config import MANUAL_DIR, REPORTS_DIR, RYBNIK_AOI, AoiConfig, ensure_data_dirs
+from geo_pipeline.config import (
+    MANUAL_DIR,
+    REPORTS_DIR,
+    RYBNIK_AOI,
+    AoiConfig,
+    ensure_data_dirs,
+)
 from geo_pipeline.validate import validate_geojson, write_validation_report
 
 DEFAULT_SEED_PATH = MANUAL_DIR / f"{RYBNIK_AOI.name}_power_seed_nodes.geojson"
@@ -26,7 +32,13 @@ REQUIRED_PROPERTIES = {
     "notes",
 }
 
-ALLOWED_SEED_TYPES = {"substation", "traction_substation", "plant", "industrial_node", "grid_node"}
+ALLOWED_SEED_TYPES = {
+    "substation",
+    "traction_substation",
+    "plant",
+    "industrial_node",
+    "grid_node",
+}
 ALLOWED_ROLES = {"anchor", "source", "sink", "junction", "candidate"}
 ALLOWED_IMPORTANCE = {"high", "medium", "low"}
 ALLOWED_CONFIDENCE = {"high", "medium", "low"}
@@ -64,7 +76,11 @@ def _validate_seed_schema(path: Path) -> dict[str, Any]:
     if missing_columns:
         errors.append(f"missing_properties: {', '.join(missing_columns)}")
 
-    duplicate_ids = _duplicates(gdf["seed_id"].dropna().astype(str).tolist()) if "seed_id" in gdf.columns else []
+    duplicate_ids = (
+        _duplicates(gdf["seed_id"].dropna().astype(str).tolist())
+        if "seed_id" in gdf.columns
+        else []
+    )
     if duplicate_ids:
         errors.append(f"duplicate_seed_id: {', '.join(duplicate_ids)}")
 
@@ -90,7 +106,7 @@ def _validate_seed_schema(path: Path) -> dict[str, Any]:
     return {
         "status": "fail" if errors else "warn" if warnings else "pass",
         "required_properties": sorted(REQUIRED_PROPERTIES),
-        "feature_count": int(len(gdf)),
+        "feature_count": len(gdf),
         "errors": errors,
         "warnings": warnings,
     }
@@ -135,14 +151,26 @@ def _as_bool(value: object) -> bool:
 def _is_positive_number(value: object) -> bool:
     try:
         return float(value) > 0
-    except (TypeError, ValueError):
+    except TypeError, ValueError:
         return False
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Validate manual power seed nodes for synthetic topology generation.")
-    parser.add_argument("--input", type=Path, default=DEFAULT_SEED_PATH, help="Manual seed GeoJSON path.")
-    parser.add_argument("--report", type=Path, default=DEFAULT_REPORT_PATH, help="Output validation report path.")
+    parser = argparse.ArgumentParser(
+        description="Validate manual power seed nodes for synthetic topology generation."
+    )
+    parser.add_argument(
+        "--input",
+        type=Path,
+        default=DEFAULT_SEED_PATH,
+        help="Manual seed GeoJSON path.",
+    )
+    parser.add_argument(
+        "--report",
+        type=Path,
+        default=DEFAULT_REPORT_PATH,
+        help="Output validation report path.",
+    )
     args = parser.parse_args()
 
     ensure_data_dirs()

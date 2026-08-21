@@ -4,4 +4,4 @@ set -euo pipefail
 repository_root="$(git rev-parse --show-toplevel)"
 cd "$repository_root"
 
-pnpm run verify:provider
+pnpm run verify:pre-push

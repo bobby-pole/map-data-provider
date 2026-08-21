@@ -26,14 +26,15 @@ metrics = client.get("/api/data-quality/metrics").json()
 assert catalog, "Layer catalog should not be empty"
 assert issues, "Data quality issues should not be empty"
 assert metrics["total_issues"] == len(issues), "Metrics should match issue count"
-assert all(layer["quality_status"] in {"passed", "warning", "failed", "unknown"} for layer in catalog)
+assert all(
+    layer["quality_status"] in {"passed", "warning", "failed", "unknown"} for layer in catalog
+)
 assert all(
     layer["readiness"] in {"ready", "usable_with_limitations", "needs_source", "not_usable"}
     for layer in catalog
 )
 assert all(
-    {"source_type", "confidence", "limitations", "not_authoritative"}
-    <= set(layer)
+    {"source_type", "confidence", "limitations", "not_authoritative"} <= set(layer)
     for layer in catalog
 )
 assert {layer["source_type"] for layer in catalog} == {

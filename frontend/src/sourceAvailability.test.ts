@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { getSourceProblemInfo } from "./sourceAvailability";
 
 describe("SourceAvailabilitySection logic", () => {

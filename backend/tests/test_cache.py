@@ -16,8 +16,16 @@ def _write_valid_cache(root: Path) -> Path:
             "features": [
                 {
                     "type": "Feature",
-                    "properties": {"element": "way", "id": 1, "power": "line", "voltage": "220000"},
-                    "geometry": {"type": "LineString", "coordinates": [[18.5, 50.1], [18.6, 50.2]]},
+                    "properties": {
+                        "element": "way",
+                        "id": 1,
+                        "power": "line",
+                        "voltage": "220000",
+                    },
+                    "geometry": {
+                        "type": "LineString",
+                        "coordinates": [[18.5, 50.1], [18.6, 50.2]],
+                    },
                 }
             ],
         },
@@ -66,18 +74,28 @@ def _write_valid_cache(root: Path) -> Path:
         "feature_count": 1,
         "evaluated_at": "2026-07-22T00:00:00Z",
     }
-    for path, payload in ((paths.layer, layer), (paths.metadata, metadata), (paths.readiness, readiness)):
+    for path, payload in (
+        (paths.layer, layer),
+        (paths.metadata, metadata),
+        (paths.readiness, readiness),
+    ):
         path.write_text(json.dumps(payload), encoding="utf-8")
     return paths.root
 
 
-def test_cache_reader_returns_complete_valid_layout_without_extraction(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_cache_reader_returns_complete_valid_layout_without_extraction(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     _write_valid_cache(tmp_path)
     paths = cache_paths("fixture_aoi", "power", root=tmp_path)
 
-    import geo_pipeline.extract as extract
+    from geo_pipeline import extract
 
-    monkeypatch.setattr(extract, "fetch_osm_features", lambda *args, **kwargs: pytest.fail("cache read extracted data"))
+    monkeypatch.setattr(
+        extract,
+        "fetch_osm_features",
+        lambda *args, **kwargs: pytest.fail("cache read extracted data"),
+    )
     result = read_cached_layer(paths)
 
     assert result["metadata"]["source_type"] == "analytical_vector"

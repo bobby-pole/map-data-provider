@@ -17,7 +17,6 @@ from geo_pipeline.source_registry import (
     validate_source_registry,
 )
 
-
 FIXTURE_ROOT = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "source_registry"
 
 
@@ -34,7 +33,14 @@ def test_source_registry_v2_registers_required_source_families_and_dimensions() 
     sources = {source["id"]: source for source in registry["sources"]}
 
     assert registry["registry_version"] == "source_registry/v2"
-    assert {"openstreetmap", "prg_wfs", "bdot10k", "kiut_gesut_wms", "geoportal_orthophoto", "nmt_nmpt"} <= set(sources)
+    assert {
+        "openstreetmap",
+        "prg_wfs",
+        "bdot10k",
+        "kiut_gesut_wms",
+        "geoportal_orthophoto",
+        "nmt_nmpt",
+    } <= set(sources)
     assert sources["openstreetmap"]["data_kind"] == "vector"
     assert sources["prg_wfs"]["format"] == "wfs_gml"
     assert sources["bdot10k"]["format"] == "gpkg_geoparquet"
@@ -74,23 +80,42 @@ def test_source_registry_rejects_restricted_access_claiming_to_be_qualified_free
         ("invalid-contradictory-v2.json", "cannot use rendered imagery"),
     ],
 )
-def test_source_registry_rejects_incomplete_or_contradictory_v2_fixtures(fixture_name: str, message: str) -> None:
+def test_source_registry_rejects_incomplete_or_contradictory_v2_fixtures(
+    fixture_name: str, message: str
+) -> None:
     with pytest.raises(ValueError, match=message):
         validate_source_registry(_fixture(fixture_name))
 
 
 def test_public_export_provenance_rejects_reference_and_duplicate_sources() -> None:
     registry = load_source_registry()
-    validate_ordered_provenance([{ "source_id": "openstreetmap", "contribution_role": "primary" }], registry, public_export=True)
+    validate_ordered_provenance(
+        [{"source_id": "openstreetmap", "contribution_role": "primary"}],
+        registry,
+        public_export=True,
+    )
 
     with pytest.raises(SourceEligibilityError, match="public_export"):
-        validate_ordered_provenance([{ "source_id": "kiut_gesut_wms", "contribution_role": "validation_reference" }], registry, public_export=True)
-    validate_ordered_provenance([{ "source_id": "prg_wfs", "contribution_role": "primary" }], registry, public_export=True)
+        validate_ordered_provenance(
+            [
+                {
+                    "source_id": "kiut_gesut_wms",
+                    "contribution_role": "validation_reference",
+                }
+            ],
+            registry,
+            public_export=True,
+        )
+    validate_ordered_provenance(
+        [{"source_id": "prg_wfs", "contribution_role": "primary"}],
+        registry,
+        public_export=True,
+    )
     with pytest.raises(ValueError, match="must be unique"):
         validate_ordered_provenance(
             [
-                { "source_id": "openstreetmap", "contribution_role": "primary" },
-                { "source_id": "openstreetmap", "contribution_role": "supplementary" },
+                {"source_id": "openstreetmap", "contribution_role": "primary"},
+                {"source_id": "openstreetmap", "contribution_role": "supplementary"},
             ],
             registry,
         )
@@ -100,14 +125,44 @@ def test_public_export_provenance_rejects_reference_and_duplicate_sources() -> N
     ("source_id", "requested_use", "outcome", "reason_code"),
     [
         ("free_analytical_vector", "acquisition", "allowed", "qualified_free"),
-        ("free_analytical_vector", "analytical_processing", "allowed", "qualified_free_analytical"),
-        ("free_analytical_vector", "comparison", "allowed", "qualified_free_analytical_vector"),
-        ("free_analytical_vector", "public_export", "allowed", "qualified_free_public_export"),
+        (
+            "free_analytical_vector",
+            "analytical_processing",
+            "allowed",
+            "qualified_free_analytical",
+        ),
+        (
+            "free_analytical_vector",
+            "comparison",
+            "allowed",
+            "qualified_free_analytical_vector",
+        ),
+        (
+            "free_analytical_vector",
+            "public_export",
+            "allowed",
+            "qualified_free_public_export",
+        ),
         ("free_registration_vector", "acquisition", "allowed", "qualified_free"),
-        ("free_registration_vector", "public_export", "rejected", "public_export_prohibited"),
+        (
+            "free_registration_vector",
+            "public_export",
+            "rejected",
+            "public_export_prohibited",
+        ),
         ("free_reference_wms", "reference", "allowed", "qualified_free_reference"),
-        ("free_reference_wms", "analytical_processing", "rejected", "not_analytical_source"),
-        ("free_reference_wms", "comparison", "not_comparable", "reference_or_review_only"),
+        (
+            "free_reference_wms",
+            "analytical_processing",
+            "rejected",
+            "not_analytical_source",
+        ),
+        (
+            "free_reference_wms",
+            "comparison",
+            "not_comparable",
+            "reference_or_review_only",
+        ),
         ("free_reference_wms", "public_export", "rejected", "public_export_prohibited"),
         ("paid_source", "acquisition", "rejected", "not_qualified_free"),
         ("agreement_only_source", "local_import", "rejected", "not_qualified_free"),
@@ -128,7 +183,10 @@ def test_source_eligibility_decisions_are_deterministic(
 
 def test_rejected_candidate_never_invokes_remote_or_local_access_callback() -> None:
     candidates = _eligibility_candidates()
-    registry = {"registry_version": "source_registry/v2", "sources": [candidates["paid_source"]]}
+    registry = {
+        "registry_version": "source_registry/v2",
+        "sources": [candidates["paid_source"]],
+    }
     calls = 0
 
     def access() -> str:
@@ -160,7 +218,9 @@ def test_analytical_cache_rejects_non_free_provenance_before_reading_fields() ->
         validate_analytical_cache_provenance(metadata, registry)
 
 
-def test_cache_reader_keeps_v1_power_provenance_readable_through_v2_registry(tmp_path: Path) -> None:
+def test_cache_reader_keeps_v1_power_provenance_readable_through_v2_registry(
+    tmp_path: Path,
+) -> None:
     source_paths = cache_paths("rybnik_35km", "power")
     target_paths = cache_paths("fixture_aoi", "power", root=tmp_path)
     target_paths.root.mkdir(parents=True)
@@ -184,7 +244,9 @@ def test_cache_reader_keeps_v1_power_provenance_readable_through_v2_registry(tmp
     assert read_cached_layer(target_paths)["metadata"]["source_registry_id"] == "openstreetmap"
 
 
-def test_cache_reader_rejects_missing_legacy_analytical_source_provenance(tmp_path: Path) -> None:
+def test_cache_reader_rejects_missing_legacy_analytical_source_provenance(
+    tmp_path: Path,
+) -> None:
     source_paths = cache_paths("rybnik_35km", "power")
     target_paths = cache_paths("fixture_aoi", "power", root=tmp_path)
     target_paths.root.mkdir(parents=True)
@@ -211,6 +273,7 @@ def test_cache_reader_rejects_missing_legacy_analytical_source_provenance(tmp_pa
 
 
 if os.environ.get("MDQ_REJECT_NONFREE_PROBE") == "1":
+
     def test_probe_nonfree_source_rejection_failure() -> None:
         paid_source = {
             "id": "paid_analytical_vector",
@@ -224,6 +287,7 @@ if os.environ.get("MDQ_REJECT_NONFREE_PROBE") == "1":
 
 
 if os.environ.get("MDQ_REJECT_WMS_VECTOR_PROBE") == "1":
+
     def test_probe_wms_vector_export_rejection_failure() -> None:
         wms_source = {
             "id": "kiut_gesut_wms",
@@ -233,14 +297,19 @@ if os.environ.get("MDQ_REJECT_WMS_VECTOR_PROBE") == "1":
             "data_kind": "rendered_imagery",
         }
         res = evaluate_source_eligibility(wms_source, "public_export")
-        assert res["allowed"], "Probe intentionally failed: WMS source must not be allowed for public vector export."
+        assert res["allowed"], (
+            "Probe intentionally failed: WMS source must not be allowed for public vector export."
+        )
 
 
 if os.environ.get("MDQ_REJECT_STALE_EVIDENCE_PROBE") == "1":
+
     def test_probe_stale_evidence_rejection_failure() -> None:
         source_paths = cache_paths("rybnik_35km", "power")
         metadata = json.loads(source_paths.metadata.read_text(encoding="utf-8"))
-        has_valid_query = "query_version" in metadata and metadata["query_version"] == "stale_query_v0"
-        assert has_valid_query, "Probe intentionally failed: stale or invalid query_version evidence must be rejected."
-
-
+        has_valid_query = (
+            "query_version" in metadata and metadata["query_version"] == "stale_query_v0"
+        )
+        assert has_valid_query, (
+            "Probe intentionally failed: stale or invalid query_version evidence must be rejected."
+        )

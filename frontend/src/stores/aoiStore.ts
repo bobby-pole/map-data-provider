@@ -1,6 +1,18 @@
-import { create } from "zustand";
 import type { Geometry } from "geojson";
+import { create } from "zustand";
 
+import {
+  administrativeSelectionZoom,
+  buildRuntimeRequest,
+  isPointRadiusValid,
+  MAX_CUSTOM_RADIUS_M,
+  parseCoordinate,
+  pointRadiusOutline,
+  pointRadiusZoom,
+  providerResponseMessage,
+  runtimeRequestError,
+} from "../aoiSettings";
+import type { ActivityEvent } from "../components/ActivityWindow";
 import type {
   AdministrativeBoundary,
   AdministrativeCatalog,
@@ -9,18 +21,6 @@ import type {
   RuntimeCategory,
   RuntimePreflight,
 } from "../types/api";
-import {
-  MAX_CUSTOM_RADIUS_M,
-  administrativeSelectionZoom,
-  buildRuntimeRequest,
-  isPointRadiusValid,
-  parseCoordinate,
-  pointRadiusOutline,
-  pointRadiusZoom,
-  providerResponseMessage,
-  runtimeRequestError,
-} from "../aoiSettings";
-import type { ActivityEvent } from "../components/ActivityWindow";
 
 export const ALL_RUNTIME_CATEGORIES: RuntimeCategory[] = [
   "power",
@@ -57,7 +57,9 @@ export type AoiState = {
   mapPoint: { longitude: number; latitude: number } | null;
 
   // Actions
-  loadCatalog: (onActivity: (event: Omit<ActivityEvent, "id" | "timestamp">) => void) => Promise<void>;
+  loadCatalog: (
+    onActivity: (event: Omit<ActivityEvent, "id" | "timestamp">) => void,
+  ) => Promise<void>;
   setMode: (mode: "point_radius" | "administrative_selection") => void;
   setLongitude: (longitude: string) => void;
   setLatitude: (latitude: string) => void;
@@ -66,7 +68,10 @@ export type AoiState = {
   toggleCategory: (category: RuntimeCategory, checked: boolean) => void;
   toggleAllCategories: () => void;
   setPickingAoi: (picking: boolean) => void;
-  pickPoint: (point: { longitude: number; latitude: number }, onActivity: (event: Omit<ActivityEvent, "id" | "timestamp">) => void) => void;
+  pickPoint: (
+    point: { longitude: number; latitude: number },
+    onActivity: (event: Omit<ActivityEvent, "id" | "timestamp">) => void,
+  ) => void;
   applyAoi: (
     onActivity: (event: Omit<ActivityEvent, "id" | "timestamp">) => void,
     onApplied: (result: ProviderRuntimeResponse) => void,
@@ -135,13 +140,23 @@ export const useAoiStore = create<AoiState>((set, get) => ({
   mapPoint: null,
 
   loadCatalog: async (onActivity) => {
-    if (get().catalog || get().catalogLoading) return;
+    if (get().catalog || get().catalogLoading) {
+      return;
+    }
     set({ catalogLoading: true });
-    onActivity({ phase: "validation", message: "Reading the local, versioned PRG administrative index." });
+    onActivity({
+      phase: "validation",
+      message: "Reading the local, versioned PRG administrative index.",
+    });
     try {
       const response = await fetch("/api/aoi/catalog");
       if (!response.ok) {
-        throw new Error(await providerResponseMessage(response, `Administrative catalogue could not be read (HTTP ${response.status}).`));
+        throw new Error(
+          await providerResponseMessage(
+            response,
+            `Administrative catalogue could not be read (HTTP ${response.status}).`,
+          ),
+        );
       }
       const catalog = (await response.json()) as AdministrativeCatalog;
       set({ catalog, catalogLoading: false });
@@ -211,7 +226,9 @@ export const useAoiStore = create<AoiState>((set, get) => ({
   toggleAllCategories: () => {
     set((state) => ({
       selectedCategories:
-        state.selectedCategories.length === ALL_RUNTIME_CATEGORIES.length ? [] : [...ALL_RUNTIME_CATEGORIES],
+        state.selectedCategories.length === ALL_RUNTIME_CATEGORIES.length
+          ? []
+          : [...ALL_RUNTIME_CATEGORIES],
     }));
   },
 
@@ -243,30 +260,46 @@ export const useAoiStore = create<AoiState>((set, get) => ({
 
   applyAoi: async (onActivity, onApplied) => {
     const { mode, longitude, latitude, radius, unitIds, selectedCategories, busy } = get();
-    if (busy) return;
+    if (busy) {
+      return;
+    }
     set({ busy: true, error: null, preflight: null, progress: null, result: null });
     try {
-      const runtimeRequest = buildRuntimeRequest(mode, { longitude, latitude, radius, unitIds }, selectedCategories);
-      onActivity({ phase: "validation", message: "Validating AOI geometry and provider limits before acquisition." });
+      const runtimeRequest = buildRuntimeRequest(
+        mode,
+        { longitude, latitude, radius, unitIds },
+        selectedCategories,
+      );
+      onActivity({
+        phase: "validation",
+        message: "Validating AOI geometry and provider limits before acquisition.",
+      });
       const preflightResponse = await fetch("/api/aoi/runtime-requests/preflight", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(runtimeRequest),
       });
-      if (!preflightResponse.ok) throw new Error(await runtimeRequestError(preflightResponse));
+      if (!preflightResponse.ok) {
+        throw new Error(await runtimeRequestError(preflightResponse));
+      }
       const nextPreflight = (await preflightResponse.json()) as RuntimePreflight;
       set({ preflight: nextPreflight, draftAoiOutline: nextPreflight.aoi.geometry });
       if (nextPreflight.status === "blocked") {
         onActivity({ phase: "error", message: nextPreflight.message });
         return;
       }
-      onActivity({ phase: "cache", message: "AOI passed preflight; queued a cache-first provider preparation job." });
+      onActivity({
+        phase: "cache",
+        message: "AOI passed preflight; queued a cache-first provider preparation job.",
+      });
       const response = await fetch("/api/aoi/runtime-jobs", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(runtimeRequest),
       });
-      if (!response.ok) throw new Error(await runtimeRequestError(response));
+      if (!response.ok) {
+        throw new Error(await runtimeRequestError(response));
+      }
       const initialJob = (await response.json()) as ProviderRuntimeJob;
       set({ progress: initialJob });
 
@@ -295,41 +328,55 @@ export const useAoiStore = create<AoiState>((set, get) => ({
   },
 }));
 
-async function triggerBoundaryFetch(
+function triggerBoundaryFetch(
   unitIds: string[],
   set: (partial: Partial<AoiState> | ((state: AoiState) => Partial<AoiState>)) => void,
   get: () => AoiState,
 ) {
-  if (boundaryDebounceTimer) clearTimeout(boundaryDebounceTimer);
-  if (boundaryAbortController) boundaryAbortController.abort();
+  if (boundaryDebounceTimer) {
+    clearTimeout(boundaryDebounceTimer);
+  }
+  if (boundaryAbortController) {
+    boundaryAbortController.abort();
+  }
 
   const controller = new AbortController();
   boundaryAbortController = controller;
 
-  boundaryDebounceTimer = setTimeout(async () => {
-    try {
-      const response = await fetch("/api/aoi/catalog/boundary", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ unit_ids: unitIds }),
-        signal: controller.signal,
-      });
-      if (!response.ok) throw new Error(await providerResponseMessage(response, "Selected PRG boundary could not be resolved."));
-      const boundary = (await response.json()) as AdministrativeBoundary;
-      if (!controller.signal.aborted) {
-        const catalogUnits = get().catalog?.units ?? [];
-        set({
-          draftAoiOutline: boundary.aoi.geometry,
-          aoiViewport: { geometry: boundary.aoi.geometry, zoom: administrativeSelectionZoom(unitIds, catalogUnits) },
-          boundaryMessage: boundary.message,
+  boundaryDebounceTimer = setTimeout(() => {
+    void (async () => {
+      try {
+        const response = await fetch("/api/aoi/catalog/boundary", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ unit_ids: unitIds }),
+          signal: controller.signal,
         });
+        if (!response.ok) {
+          throw new Error(
+            await providerResponseMessage(response, "Selected PRG boundary could not be resolved."),
+          );
+        }
+        const boundary = (await response.json()) as AdministrativeBoundary;
+        if (!controller.signal.aborted) {
+          const catalogUnits = get().catalog?.units ?? [];
+          set({
+            draftAoiOutline: boundary.aoi.geometry,
+            aoiViewport: {
+              geometry: boundary.aoi.geometry,
+              zoom: administrativeSelectionZoom(unitIds, catalogUnits),
+            },
+            boundaryMessage: boundary.message,
+          });
+        }
+      } catch (err: unknown) {
+        if (err instanceof DOMException && err.name === "AbortError") {
+          return;
+        }
+        console.warn("Could not fetch administrative boundary preview:", err);
       }
-    } catch (reason) {
-      if (!controller.signal.aborted) {
-        set({ error: reason instanceof Error ? reason.message : String(reason) });
-      }
-    }
-  }, 250);
+    })();
+  }, 350);
 }
 
 async function pollRuntimeJob(
@@ -342,7 +389,9 @@ async function pollRuntimeJob(
   while (job.state !== "succeeded" && job.state !== "failed") {
     await new Promise((resolve) => setTimeout(resolve, 650));
     const response = await fetch(`/api/aoi/runtime-jobs/${job.job_id}`);
-    if (!response.ok) throw new Error(await runtimeRequestError(response));
+    if (!response.ok) {
+      throw new Error(await runtimeRequestError(response));
+    }
     job = (await response.json()) as ProviderRuntimeJob;
     onProgress(job);
     const key = `${job.completed_domains}:${job.active_domain ?? ""}`;

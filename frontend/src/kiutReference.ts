@@ -1,4 +1,5 @@
-export const KIUT_WMS_URL = "https://integracja.gugik.gov.pl/cgi-bin/KrajowaIntegracjaUzbrojeniaTerenu";
+export const KIUT_WMS_URL =
+  "https://integracja.gugik.gov.pl/cgi-bin/KrajowaIntegracjaUzbrojeniaTerenu";
 
 export const kiutReferenceLayers = [
   { id: "power", label: "KIUT electricity", wmsLayer: "przewod_elektroenergetyczny" },

@@ -1,0 +1,586 @@
+/* AOI Settings Drawer, Coordinates, and Administrative Selection */
+.aoiSettings .aoiFields .secondaryButton {
+  grid-column: 1 / -1;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 9px 12px;
+  color: #f1f5f9;
+  font-weight: 500;
+}
+
+.aoiSettings .aoiFields .secondaryButton:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #fff;
+}
+
+.modeButtons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin: 10px 0;
+}
+
+.modeButtons button {
+  min-height: 42px;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.25;
+  white-space: normal;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #cbd5e1;
+}
+
+.modeButtons button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+.modeButtons button.active {
+  border-color: #38bdf8;
+  background: rgba(56, 189, 248, 0.18);
+  color: #fff;
+  font-weight: 600;
+}
+
+.aoiFields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.aoiFields label.radiusField,
+.aoiFields label:nth-of-type(3) {
+  grid-column: 1 / -1;
+}
+
+.aoiFields .secondaryButton {
+  grid-column: 1 / -1;
+}
+
+.contextDrawer .modeButtons,
+.contextDrawer .aoiFields {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.contextDrawer .categoryGrid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.contextDrawer .modeButtons > *,
+.contextDrawer .aoiFields > *,
+.contextDrawer .categoryGrid > * {
+  min-width: 0;
+}
+
+.contextDrawer .aoiFields input {
+  width: 100%;
+  min-width: 0;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  font-size: 12.5px;
+}
+
+.contextDrawer .aoiFields input:focus {
+  border-color: #38bdf8;
+  outline: none;
+}
+
+/* Default Quick AOI Card */
+.defaultAoiCard {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid rgba(56, 189, 248, 0.24);
+  border-radius: 10px;
+  background: rgba(56, 189, 248, 0.06);
+}
+
+.defaultAoiInfo strong {
+  display: block;
+  color: #f8fafc;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.defaultAoiInfo p {
+  margin: 4px 0 0;
+  color: #94a3b8;
+  font-size: 11.5px;
+  line-height: 1.4;
+}
+
+.defaultAoiActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.defaultAoiCard button {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #e2e8f0;
+}
+
+.defaultAoiCard button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
+/* AOI Rules Banner */
+.aoiRulesBanner {
+  background: rgba(56, 189, 248, 0.05);
+  border: 1px solid rgba(56, 189, 248, 0.18);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin: 10px 0 14px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.aoiRulesBanner > strong {
+  color: #38bdf8;
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.aoiRulesBanner ul {
+  margin: 0;
+  padding-left: 18px;
+  color: #cbd5e1;
+}
+
+.aoiRulesBanner li {
+  margin-top: 3px;
+}
+
+.aoiRulesBanner li strong {
+  color: #f1f5f9;
+  font-weight: 600;
+}
+
+/* Prepare AOI Action Button */
+.prepareAoiAnchor {
+  width: 100%;
+  margin: 14px 0 8px;
+}
+
+.prepareAoiButton,
+.aoiSettings .prepareAoiButton {
+  width: 100%;
+  padding: 11px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  background: #0284c7;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  color: #ffffff;
+  box-shadow:
+    0 2px 8px rgba(2, 132, 199, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.prepareAoiButton:hover:not(:disabled),
+.aoiSettings .prepareAoiButton:hover:not(:disabled) {
+  background: #0369a1;
+  border-color: #38bdf8;
+  color: #ffffff;
+}
+
+.prepareAoiButton:disabled,
+.aoiSettings .prepareAoiButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #64748b;
+  box-shadow: none;
+}
+
+/* Administrative Hierarchy Tree */
+.aoiUnits {
+  display: grid;
+  gap: 10px;
+}
+
+.aoiUnits fieldset {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  margin: 8px 0;
+  padding: 4px;
+}
+
+.aoiUnits legend {
+  color: #94a3b8;
+  font-size: 12px;
+  text-transform: capitalize;
+}
+
+.administrativeTree {
+  gap: 0;
+}
+
+.administrativeTree > .muted {
+  margin: 0 0 2px;
+}
+
+.administrativeBranch {
+  position: relative;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.administrativeBranch > summary {
+  display: grid;
+  grid-template-columns: 13px auto minmax(0, 1fr);
+  align-items: start;
+  gap: 7px;
+  padding: 5px 4px;
+  cursor: pointer;
+  list-style: none;
+  border-radius: 5px;
+}
+
+.administrativeBranch > summary::-webkit-details-marker {
+  display: none;
+}
+
+.administrativeBranch > summary::before {
+  content: "›";
+  display: grid;
+  width: 13px;
+  height: 16px;
+  place-items: center;
+  color: #64748b;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  transition: transform 0.14s ease;
+}
+
+.administrativeBranch[open] > summary::before {
+  transform: rotate(90deg);
+  color: #94a3b8;
+}
+
+.administrativeBranch strong {
+  display: block;
+  color: #f1f5f9;
+  font-weight: 500;
+  font-size: 12.5px;
+}
+
+.administrativeBranch small {
+  display: block;
+  margin-top: 2px;
+  color: #94a3b8;
+  font-size: 10.5px;
+}
+
+.treeChildren {
+  display: grid;
+  gap: 0;
+  margin: 0 0 1px 9px;
+  padding: 0 0 0 15px;
+  border-left: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.treeChildren > .administrativeBranch::before,
+.treeChildren > .treeLeaf::before {
+  content: "";
+  position: absolute;
+  top: 16px;
+  left: -16px;
+  width: 16px;
+  border-top: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.countyBranch {
+  background: transparent;
+}
+
+.gminaChildren {
+  max-height: 250px;
+  overflow: auto;
+}
+
+.treeLeaf {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 7px;
+  padding: 5px 4px;
+  color: #e2e8f0;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.treeLeaf strong {
+  display: block;
+  color: #f1f5f9;
+  font-weight: 500;
+  font-size: 12.5px;
+}
+
+.treeLeaf small {
+  display: block;
+  margin-top: 2px;
+  color: #94a3b8;
+  font-size: 10.5px;
+}
+
+.administrativeBranch > summary:hover,
+.administrativeBranch > summary:focus-visible,
+.treeLeaf:hover {
+  background: rgba(56, 189, 248, 0.12);
+  outline: none;
+}
+
+.treeCheck {
+  width: 14px;
+  height: 14px;
+  margin-top: 2px;
+  accent-color: #38bdf8;
+  cursor: pointer;
+}
+
+.treeCheck:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.boundaryMessage {
+  padding: 8px 12px;
+  border-left: 3px solid #38bdf8;
+  background: rgba(56, 189, 248, 0.08);
+  border-radius: 0 6px 6px 0;
+  color: #f1f5f9;
+  font-size: 12px;
+}
+
+/* Floating Toast & Contextual Preflight Bubbles */
+.floatingToast {
+  position: sticky;
+  top: 8px;
+  z-index: 100;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  margin: 10px 0;
+  background: rgba(127, 29, 29, 0.92);
+  border: 1px solid rgba(239, 68, 68, 0.7);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
+  color: #fef2f2;
+  font-size: 12px;
+  line-height: 1.4;
+  animation: toastSlideIn 0.25s ease-out;
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.floatingToastIcon {
+  font-size: 14px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.floatingToastText {
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+
+.floatingToastClose {
+  background: none;
+  border: none;
+  color: #fca5a5;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0 4px;
+  margin: -2px -4px 0 0;
+  line-height: 1;
+}
+
+.floatingToastClose:hover {
+  color: #ffffff;
+}
+
+.contextualAnchor {
+  position: relative;
+}
+
+.contextualBubble {
+  position: absolute;
+  bottom: calc(100% + 7px);
+  left: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: auto;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 6px 10px;
+  background: rgba(185, 28, 28, 0.96);
+  border: 1px solid rgba(248, 113, 113, 0.85);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+  color: #ffffff;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.35;
+  pointer-events: none;
+  animation: contextualBubblePop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.contextualBubble::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 16px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: rgba(185, 28, 28, 0.96) transparent transparent transparent;
+}
+
+@keyframes contextualBubblePop {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Runtime Worker Progress & Snapshot Feedback */
+.runtimeProgress {
+  display: grid;
+  gap: 7px;
+  padding: 10px;
+  color: #e2e8f0;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 8px;
+  background: rgba(56, 189, 248, 0.06);
+}
+
+.runtimeProgress > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.runtimeProgress > div:first-child strong {
+  color: #f8fafc;
+  font-weight: 600;
+}
+
+.runtimeProgress > div:first-child span,
+.runtimeProgress p {
+  color: #94a3b8;
+  font-variant-numeric: tabular-nums;
+}
+
+.runtimeProgressTrack {
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.runtimeProgressTrack i {
+  display: block;
+  height: 100%;
+  min-width: 3px;
+  border-radius: inherit;
+  background: #38bdf8;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+  transition: width 0.3s ease;
+}
+
+.runtimeProgress p {
+  margin: 0;
+  font-size: 11px;
+}
+
+.runtimeOutcomeSummary {
+  margin: 10px 0 0;
+  font-size: 12px;
+}
+
+.partialSnapshot {
+  display: grid;
+  gap: 7px;
+  padding: 10px;
+  color: #fecaca;
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  border-radius: 8px;
+  background: rgba(127, 29, 29, 0.5);
+}
+
+.partialSnapshot > strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+.partialSnapshot p {
+  margin: 0;
+  color: #fca5a5;
+  font-size: 11.5px;
+}
+
+.partialSnapshot ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.partialSnapshot li {
+  display: grid;
+  gap: 2px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(254, 205, 211, 0.2);
+  font-size: 11.5px;
+}
+
+.partialSnapshot li span {
+  color: #fecaca;
+  overflow-wrap: anywhere;
+}

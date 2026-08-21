@@ -28,7 +28,10 @@ def derive_readiness(
         source_type == "manual_seed"
         or quality_status == "warning"
         or issue_severity in {"low", "medium"}
-        or any(outcome in {"conflicting", "source_only", "ambiguous"} for outcome in comparison_outcomes)
+        or any(
+            outcome in {"conflicting", "source_only", "ambiguous"}
+            for outcome in comparison_outcomes
+        )
     ):
         return "usable_with_limitations"
     return "ready"

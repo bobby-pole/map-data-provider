@@ -132,7 +132,9 @@ def normalize_analytical_vector_layer(
 ) -> dict[str, Any]:
     """Create the v1 provider contract without exposing raw OSM as required API fields."""
     source_features = source_collection.get("features")
-    if source_collection.get("type") != "FeatureCollection" or not isinstance(source_features, list):
+    if source_collection.get("type") != "FeatureCollection" or not isinstance(
+        source_features, list
+    ):
         raise ValueError("source_collection must be a GeoJSON FeatureCollection")
 
     layer_metadata = deepcopy(metadata)
@@ -191,7 +193,12 @@ def _normalize_feature(feature: object, *, metadata: dict[str, Any]) -> dict[str
     if not isinstance(raw_properties, dict):
         raise ValueError("source feature properties must be an object")
 
-    asset_type = _as_string(raw_properties.get("provider_category") or raw_properties.get("ss_power_category") or raw_properties.get("power"), "unknown")
+    asset_type = _as_string(
+        raw_properties.get("provider_category")
+        or raw_properties.get("ss_power_category")
+        or raw_properties.get("power"),
+        "unknown",
+    )
     source_id = _source_id(raw_properties)
     raw_tags = {
         key: value
@@ -208,14 +215,23 @@ def _normalize_feature(feature: object, *, metadata: dict[str, Any]) -> dict[str
         "limitations": list(metadata["limitations"]),
         "eligible_for_analysis": metadata["eligible_for_analysis"],
     }
-    for field in ("source_geometry_type", "geometry_role", "source_response_sha256", "origin_artifact", "origin_source_id", "road_class"):
+    for field in (
+        "source_geometry_type",
+        "geometry_role",
+        "source_response_sha256",
+        "origin_artifact",
+        "origin_source_id",
+        "road_class",
+    ):
         if raw_properties.get(field) is not None:
             properties[field] = raw_properties[field]
     if raw_tags:
         # Preserve the established OSM/legacy contract unless a source is
         # explicitly identified as PRG.  PRG's attributes remain separate so a
         # client cannot mistake official representative evidence for OSM tags.
-        properties["source_attributes" if metadata.get("source_registry_id") == "prg_wfs" else "osm_tags"] = raw_tags
+        properties[
+            "source_attributes" if metadata.get("source_registry_id") == "prg_wfs" else "osm_tags"
+        ] = raw_tags
     return {
         "type": "Feature",
         "properties": properties,
@@ -232,13 +248,30 @@ def _source_id(properties: dict[str, Any]) -> str:
 
 
 def _missing_fields(properties: dict[str, Any], *, asset_type: str) -> list[str]:
-    required_by_asset = {"line": ("voltage",), "minor_line": ("voltage",), "cable": ("voltage",)}
-    return [field for field in required_by_asset.get(asset_type, ()) if properties.get(field) in (None, "")]
+    required_by_asset = {
+        "line": ("voltage",),
+        "minor_line": ("voltage",),
+        "cable": ("voltage",),
+    }
+    return [
+        field
+        for field in required_by_asset.get(asset_type, ())
+        if properties.get(field) in (None, "")
+    ]
 
 
 def _validate_metadata(metadata: dict[str, Any]) -> list[str]:
-    errors = [f"metadata.missing:{field}" for field in REQUIRED_METADATA_FIELDS if field not in metadata]
-    for field in ("contract_version", "aoi_id", "domain", "layer_id", "source", "snapshot_at"):
+    errors = [
+        f"metadata.missing:{field}" for field in REQUIRED_METADATA_FIELDS if field not in metadata
+    ]
+    for field in (
+        "contract_version",
+        "aoi_id",
+        "domain",
+        "layer_id",
+        "source",
+        "snapshot_at",
+    ):
         if field in metadata and not _is_non_empty_string(metadata[field]):
             errors.append(f"metadata.{field}")
     if metadata.get("contract_version") != CONTRACT_VERSION:
@@ -273,7 +306,11 @@ def _validate_feature(feature: object, *, index: int) -> list[str]:
     if not isinstance(properties, dict):
         return [f"{prefix}.properties"]
 
-    errors = [f"{prefix}.properties.missing:{field}" for field in REQUIRED_FEATURE_FIELDS if field not in properties]
+    errors = [
+        f"{prefix}.properties.missing:{field}"
+        for field in REQUIRED_FEATURE_FIELDS
+        if field not in properties
+    ]
     for field in ("source", "source_id", "domain", "asset_type"):
         if field in properties and not _is_non_empty_string(properties[field]):
             errors.append(f"{prefix}.properties.{field}")

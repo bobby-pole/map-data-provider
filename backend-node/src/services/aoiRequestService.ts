@@ -1,8 +1,8 @@
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 
-import { ProviderDataError, getCachedLayers } from "./providerDataService.js";
 import type { CachedMetadata } from "../types/provider.js";
+import { getCachedLayers, ProviderDataError } from "./providerDataService.js";
 
 const execFileAsync = promisify(execFile);
 export const CACHE_FRESHNESS_MS = 24 * 60 * 60 * 1000;
@@ -29,7 +29,10 @@ export async function requestAoi(
     throw new ProviderDataError("invalid_request", `Unknown AOI '${aoiId}'.`);
   }
   if (domain !== "power") {
-    throw new ProviderDataError("invalid_request", `Domain '${domain}' is not supported for '${aoiId}'.`);
+    throw new ProviderDataError(
+      "invalid_request",
+      `Domain '${domain}' is not supported for '${aoiId}'.`,
+    );
   }
   const deps: Dependencies = {
     readCachedLayers: getCachedLayers,
@@ -39,35 +42,75 @@ export async function requestAoi(
   };
   let metadata = await readDomain(deps.readCachedLayers, aoiId, domain);
   if (metadata && isFresh(metadata, deps.now())) {
-    return { aoi: RYBNIK_AOI, domain, cache_status: "fresh" as const, result: "cache" as const, metadata };
+    return {
+      aoi: RYBNIK_AOI,
+      domain,
+      cache_status: "fresh" as const,
+      result: "cache" as const,
+      metadata,
+    };
   }
   try {
     await deps.runWorker(aoiId, domain);
   } catch (error) {
-    throw new ProviderDataError("worker_failed", error instanceof Error ? error.message : "Worker execution failed.");
+    throw new ProviderDataError(
+      "worker_failed",
+      error instanceof Error ? error.message : "Worker execution failed.",
+    );
   }
   metadata = await readDomain(deps.readCachedLayers, aoiId, domain);
   if (!metadata) {
-    throw new ProviderDataError("worker_failed", "Worker completed without producing cache metadata.");
+    throw new ProviderDataError(
+      "worker_failed",
+      "Worker completed without producing cache metadata.",
+    );
   }
-  return { aoi: RYBNIK_AOI, domain, cache_status: "refreshed" as const, result: "refresh" as const, metadata };
+  return {
+    aoi: RYBNIK_AOI,
+    domain,
+    cache_status: "refreshed" as const,
+    result: "refresh" as const,
+    metadata,
+  };
 }
 
 export function isFresh(metadata: CachedMetadata, now: Date): boolean {
   return now.getTime() - new Date(metadata.snapshot_at).getTime() <= CACHE_FRESHNESS_MS;
 }
 
-async function readDomain(readCachedLayers: Dependencies["readCachedLayers"], aoiId: string, domain: string) {
+async function readDomain(
+  readCachedLayers: Dependencies["readCachedLayers"],
+  aoiId: string,
+  domain: string,
+) {
   try {
     return (await readCachedLayers(aoiId)).find((entry) => entry.domain === domain);
   } catch (error) {
-    if (error instanceof ProviderDataError && error.kind === "not_found") return undefined;
+    if (error instanceof ProviderDataError && error.kind === "not_found") {
+      return undefined;
+    }
     throw error;
   }
 }
 
 async function defaultWorkerRunner(aoiId: string, domain: string): Promise<void> {
-  await execFileAsync("uv", ["run", "--offline", "python", "-m", "geo_pipeline.worker", "--aoi", aoiId, "--domain", domain, "--input", "fixture"], {
-    cwd: new URL("../../../backend/", import.meta.url),
-  });
+  await execFileAsync(
+    "uv",
+    [
+      "run",
+      "--offline",
+      "python",
+      "-m",
+      "geo_pipeline.worker",
+      "--aoi",
+      aoiId,
+      "--domain",
+      domain,
+      "--input",
+      "fixture",
+    ],
+    {
+      cwd: new URL("../../../backend/", import.meta.url),
+    },
+  );
 }

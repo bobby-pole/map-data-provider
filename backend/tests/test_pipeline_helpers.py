@@ -5,8 +5,16 @@ import geopandas as gpd
 from shapely.geometry import LineString, Point, Polygon
 
 from geo_pipeline.config import AoiConfig
-from geo_pipeline.contracts import CONTRACT_VERSION, normalize_analytical_vector_layer, validate_provider_geojson
-from geo_pipeline.extract import filter_geometry_types, representative_points, sanitize_for_geojson
+from geo_pipeline.contracts import (
+    CONTRACT_VERSION,
+    normalize_analytical_vector_layer,
+    validate_provider_geojson,
+)
+from geo_pipeline.extract import (
+    filter_geometry_types,
+    representative_points,
+    sanitize_for_geojson,
+)
 from geo_pipeline.validate import validate_geojson
 
 
@@ -68,7 +76,10 @@ def test_validate_geojson_reports_missing_file_without_network(tmp_path: Path) -
 
 
 def test_contract_sample_matches_the_provider_geojson_schema() -> None:
-    sample_path = Path(__file__).resolve().parents[1] / "data/fixtures/rybnik_35km/power/contract-sample.geojson"
+    sample_path = (
+        Path(__file__).resolve().parents[1]
+        / "data/fixtures/rybnik_35km/power/contract-sample.geojson"
+    )
     sample = json.loads(sample_path.read_text(encoding="utf-8"))
 
     assert validate_provider_geojson(sample) == []
@@ -81,7 +92,13 @@ def test_contract_validator_reports_missing_metadata_and_feature_fields() -> Non
     invalid = {
         "type": "FeatureCollection",
         "metadata": {"contract_version": CONTRACT_VERSION, "feature_count": 1},
-        "features": [{"type": "Feature", "properties": {}, "geometry": {"type": "Point", "coordinates": [0, 0]}}],
+        "features": [
+            {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {"type": "Point", "coordinates": [0, 0]},
+            }
+        ],
     }
 
     errors = validate_provider_geojson(invalid)
@@ -91,7 +108,10 @@ def test_contract_validator_reports_missing_metadata_and_feature_fields() -> Non
 
 
 def test_contract_validator_rejects_invalid_timestamp_boolean_count_and_geometry() -> None:
-    sample_path = Path(__file__).resolve().parents[1] / "data/fixtures/rybnik_35km/power/contract-sample.geojson"
+    sample_path = (
+        Path(__file__).resolve().parents[1]
+        / "data/fixtures/rybnik_35km/power/contract-sample.geojson"
+    )
     invalid = json.loads(sample_path.read_text(encoding="utf-8"))
     invalid["metadata"]["snapshot_at"] = "not-a-timestamp"
     invalid["metadata"]["feature_count"] = True
@@ -120,7 +140,10 @@ def test_normalizer_makes_provider_fields_without_losing_useful_osm_tags() -> No
                     "circuits": "2",
                     "tower:type": "suspension",
                 },
-                "geometry": {"type": "LineString", "coordinates": [[18.3, 49.7], [18.4, 49.8]]},
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [[18.3, 49.7], [18.4, 49.8]],
+                },
             }
         ],
     }

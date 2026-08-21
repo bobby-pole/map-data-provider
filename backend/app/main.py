@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 
 from geo_pipeline.quality_rules import highest_issue_severity, triggered_issues
-from geo_pipeline.readiness import QUALITY_STATUSES, SOURCE_TYPES, derive_readiness
+from geo_pipeline.readiness import SOURCE_TYPES, derive_readiness
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
@@ -254,17 +254,26 @@ def data_quality_metrics() -> dict[str, Any]:
 
 @app.get("/api/geodata/power/lines")
 def get_power_lines() -> FileResponse:
-    return FileResponse(PROCESSED_DIR / "rybnik_35km_power_lines_clipped.geojson", media_type="application/geo+json")
+    return FileResponse(
+        PROCESSED_DIR / "rybnik_35km_power_lines_clipped.geojson",
+        media_type="application/geo+json",
+    )
 
 
 @app.get("/api/geodata/power/nodes")
 def get_power_nodes() -> FileResponse:
-    return FileResponse(PROCESSED_DIR / "rybnik_35km_power_node_points_display_clipped.geojson", media_type="application/geo+json")
+    return FileResponse(
+        PROCESSED_DIR / "rybnik_35km_power_node_points_display_clipped.geojson",
+        media_type="application/geo+json",
+    )
 
 
 @app.get("/api/geodata/power/manual-seeds")
 def get_manual_power_seeds() -> FileResponse:
-    return FileResponse(MANUAL_DIR / "rybnik_35km_power_seed_nodes.geojson", media_type="application/geo+json")
+    return FileResponse(
+        MANUAL_DIR / "rybnik_35km_power_seed_nodes.geojson",
+        media_type="application/geo+json",
+    )
 
 
 @app.get("/api/geodata/power/hexes/{level}")
@@ -272,4 +281,7 @@ def get_power_hexes(level: str) -> FileResponse:
     suffixes = {"regional": "", "urban": "_urban", "local": "_local"}
     if level not in suffixes:
         raise HTTPException(status_code=404, detail="Unknown hex level")
-    return FileResponse(PROCESSED_DIR / f"rybnik_35km_power_hexes{suffixes[level]}_clipped.geojson", media_type="application/geo+json")
+    return FileResponse(
+        PROCESSED_DIR / f"rybnik_35km_power_hexes{suffixes[level]}_clipped.geojson",
+        media_type="application/geo+json",
+    )

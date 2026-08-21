@@ -22,7 +22,8 @@ export function getSourceProblemInfo(source: SourceEntry): {
     return {
       isProblem: true,
       title: "Service Unavailable",
-      explanation: "Remote provider service is offline or unreachable. No features could be acquired.",
+      explanation:
+        "Remote provider service is offline or unreachable. No features could be acquired.",
       severity: "error",
     };
   }
@@ -31,7 +32,8 @@ export function getSourceProblemInfo(source: SourceEntry): {
     return {
       isProblem: true,
       title: "No Local Package in AOI",
-      explanation: "BDOT10k official vector data package is not loaded for this custom boundary. Analysis relies on active OSM and PRG data.",
+      explanation:
+        "BDOT10k official vector data package is not loaded for this custom boundary. Analysis relies on active OSM and PRG data.",
       severity: "warning",
     };
   }
@@ -58,7 +60,8 @@ export function getSourceProblemInfo(source: SourceEntry): {
     return {
       isProblem: true,
       title: "Actionable Source Gap",
-      explanation: source.evidence || "Source requires attention or missing infrastructure coverage.",
+      explanation:
+        source.evidence || "Source requires attention or missing infrastructure coverage.",
       severity: "warning",
     };
   }

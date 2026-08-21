@@ -17,6 +17,7 @@ describe("map object symbols", () => {
     expect(pointSymbolKind(layer("public.education"))).toBe("school");
     expect(pointSymbolKind(layer("telecom.towers"))).toBe("telecom-tower");
     expect(pointSymbolKind(layer("water.facilities"))).toBe("water-facility");
+    expect(pointSymbolKind(layer("industrial.military_context"))).toBe("military");
   });
 
   it("keeps the power-support icon expression specific to its delivered asset_type", () => {

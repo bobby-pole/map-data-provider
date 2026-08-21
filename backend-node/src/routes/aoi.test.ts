@@ -179,16 +179,28 @@ describe("read-only AOI provider routes", () => {
     expect(administrativeBoundaryResponseSchema.parse(boundary.body)).toMatchObject({ within_provider_area_limit: true, aoi: { input_type: "administrative_selection", boundary_provenance: { source_registry_id: "prg_wfs" } } });
   });
 
-  it("returns a typed administrative area-limit preflight before a worker can contact Overpass", async () => {
-    const response = await request(defaultApp).post("/api/aoi/runtime-requests/preflight").send({ aoi: { type: "administrative_selection", unit_ids: ["voivodeship_14"] }, profiles: ["power"] });
+  it("returns a typed administrative preflight before a worker can contact Overpass", async () => {
+    const response = await request(defaultApp).post("/api/aoi/runtime-requests/preflight").send({ aoi: { type: "administrative_selection", unit_ids: ["gmina_2473011"] }, profiles: ["power"] });
     expect(response.status).toBe(200);
-    expect(providerRuntimePreflightResponseSchema.parse(response.body)).toMatchObject({ status: "blocked", code: "aoi_area_limit", aoi: { input_type: "administrative_selection" } });
+    expect(providerRuntimePreflightResponseSchema.parse(response.body)).toMatchObject({ status: "ready", code: "bounded_provider_request", aoi: { input_type: "administrative_selection" } });
+  });
+
+  it("rejects selecting an entire voivodeship", async () => {
+    const response = await request(defaultApp).post("/api/aoi/catalog/boundary").send({ unit_ids: ["voivodeship_14"] });
+    expect(response.status).toBe(422);
+    expect(providerErrorSchema.parse(response.body)).toMatchObject({ error: "invalid_request", message: expect.stringContaining("entire voivodeship") });
   });
 
   it("rejects a PRG selection spanning more than one voivodeship", async () => {
-    const response = await request(defaultApp).post("/api/aoi/catalog/boundary").send({ unit_ids: ["voivodeship_14", "county_2473"] });
+    const response = await request(defaultApp).post("/api/aoi/catalog/boundary").send({ unit_ids: ["county_1465", "county_2473"] });
     expect(response.status).toBe(422);
     expect(providerErrorSchema.parse(response.body)).toMatchObject({ error: "invalid_request", message: expect.stringContaining("one voivodeship") });
+  });
+
+  it("rejects non-adjacent counties in the same voivodeship", async () => {
+    const response = await request(defaultApp).post("/api/aoi/catalog/boundary").send({ unit_ids: ["county_2473", "county_2464"] });
+    expect(response.status).toBe(422);
+    expect(providerErrorSchema.parse(response.body)).toMatchObject({ error: "invalid_request", message: expect.stringContaining("directly adjacent") });
   });
 
   it("returns the cached Rybnik power GeoJSON contract", async () => {
@@ -273,6 +285,16 @@ describe("read-only AOI provider routes", () => {
     expect(report.sources).toHaveLength(7);
     expect(report.sources.find((source) => source.source_id === "openstreetmap")).toMatchObject({ feature_state: "available", actionable_gap: false });
     expect(report.sources.find((source) => source.source_id === "prg_wfs")).toMatchObject({ feature_state: "available", actionable_gap: false });
+  });
+
+  it("serves a synthesized source availability report for dynamic runtime AOIs", async () => {
+    const response = await request(defaultApp).get("/api/aoi/custom_aoi_999/source-availability");
+    expect(response.status).toBe(200);
+    const report = sourceAvailabilityReportSchema.parse(response.body);
+    expect(report.aoi_id).toBe("custom_aoi_999");
+    expect(report.sources).toHaveLength(7);
+    expect(report.sources.find((source) => source.source_id === "openstreetmap")).toMatchObject({ availability: "available", actionable_gap: false });
+    expect(report.sources.find((source) => source.source_id === "bdot10k")).toMatchObject({ availability: "available", actionable_gap: true });
   });
 
   it("serves a v2 domain pack from the manifest without domain-specific route code", async () => {

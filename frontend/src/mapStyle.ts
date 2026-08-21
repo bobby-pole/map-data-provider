@@ -23,6 +23,15 @@ export function presentationColor(index: number): string {
   return ["#f59e0b", "#38bdf8", "#a78bfa", "#34d399"][index % 4] ?? "#38bdf8";
 }
 
+export const POWER_VOLTAGE_TIERS = [
+  { voltage_bucket: "high_400", color: "#a855f7", label: "400 kV Transmission line", description: "Extra High Voltage (400 kV)" },
+  { voltage_bucket: "high_220", color: "#d946ef", label: "220 kV Transmission line", description: "High Voltage (220 kV)" },
+  { voltage_bucket: "high_110", color: "#dc2626", label: "110 kV Distribution line", description: "High Voltage (110 kV)" },
+  { voltage_bucket: "medium", color: "#c8a600", label: "Medium Voltage line", description: "Medium Voltage (15–30 kV)" },
+  { voltage_bucket: "low", color: "#84cc16", label: "Low Voltage line", description: "Low Voltage (0.4 kV)" },
+  { voltage_bucket: "other", color: "#475569", label: "Unspecified voltage line", description: "Unspecified / other voltage" },
+] as const;
+
 export const voltageLineColor: ExpressionSpecification = [
   "match", ["get", "voltage_bucket"],
   "low", "#84cc16",

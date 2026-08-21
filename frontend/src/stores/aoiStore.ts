@@ -10,6 +10,7 @@ import type {
   RuntimePreflight,
 } from "../types/api";
 import {
+  MAX_CUSTOM_RADIUS_M,
   administrativeSelectionZoom,
   buildRuntimeRequest,
   isPointRadiusValid,
@@ -80,10 +81,22 @@ function updatePointRadiusDraft(
   get: () => AoiState,
 ) {
   const { longitude, latitude, radius } = get();
+  if (!radius.trim()) {
+    set({ draftAoiOutline: null, aoiViewport: null, mapPoint: null });
+    return;
+  }
+  const rad = parseCoordinate(radius);
+  if (Number.isFinite(rad) && rad > MAX_CUSTOM_RADIUS_M) {
+    set({
+      draftAoiOutline: null,
+      aoiViewport: null,
+      error: `Radius exceeds maximum allowed limit of 20,000 m (20 km). Please enter a value ≤ 20,000 m.`,
+    });
+    return;
+  }
   if (isPointRadiusValid(longitude, latitude, radius)) {
     const lon = parseCoordinate(longitude);
     const lat = parseCoordinate(latitude);
-    const rad = parseCoordinate(radius);
     const outline = pointRadiusOutline(lon, lat, rad);
     const zoom = pointRadiusZoom(rad);
     set({

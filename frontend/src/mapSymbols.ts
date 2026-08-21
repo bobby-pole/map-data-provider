@@ -8,7 +8,7 @@ export type MapSymbolKind =
   | "townhall" | "school" | "post-office" | "library"
   | "rail-station" | "aviation" | "crossing"
   | "water-facility" | "gas-facility" | "sewer-facility" | "telecom-tower" | "telecom-facility" | "heat-facility"
-  | "industrial" | "generic";
+  | "industrial" | "military" | "generic";
 
 export type SymbolLegendItem = { kind: MapSymbolKind; label: string };
 
@@ -19,7 +19,7 @@ const iconKinds: readonly MapSymbolKind[] = [
   "townhall", "school", "post-office", "library",
   "rail-station", "aviation", "crossing",
   "water-facility", "gas-facility", "sewer-facility", "telecom-tower", "telecom-facility", "heat-facility",
-  "industrial", "generic",
+  "industrial", "military", "generic",
 ];
 
 const symbolDefinitions: Record<MapSymbolKind, { color: string; path: string }> = {
@@ -49,6 +49,7 @@ const symbolDefinitions: Record<MapSymbolKind, { color: string; path: string }> 
   "telecom-facility": { color: "#8b5cf6", path: "M5 5h14v14H5Zm3 3h8m-8 4h8m-8 4h5" },
   "heat-facility": { color: "#ef4444", path: "M12 3c3 3 5 5 5 8 0 4-2 6-5 10-3-4-5-6-5-10 0-3 2-5 5-8Zm-2 8c1 1 3 1 4 0m-5 4c2 1 4 1 6 0" },
   industrial: { color: "#94a3b8", path: "M4 20V9l6 3V8l6 3V5l4 2v13H4Zm4-3h2m3 0h2m3 0h1" },
+  military: { color: "#65a30d", path: "M12 3 4 7v6c0 5 3.5 8 8 10 4.5-2 8-5 8-10V7l-8-4Zm0 4 1.5 3.5 3.5.5-2.5 2.5.5 3.5-3-1.8-3 1.8.5-3.5L7 11l3.5-.5L12 7Z" },
   generic: { color: "#38bdf8", path: "M12 5a7 7 0 1 1 0 14 7 7 0 0 1 0-14Zm0 4v6m-3-3h6" },
 };
 
@@ -85,6 +86,7 @@ export function pointSymbolKind(layer: PreviewLayer): MapSymbolKind {
   if (artifact === "telecom.towers") return "telecom-tower";
   if (artifact.startsWith("telecom.")) return "telecom-facility";
   if (artifact.startsWith("district_heating.")) return "heat-facility";
+  if (artifact.includes("military")) return "military";
   if (artifact.startsWith("industrial.")) return "industrial";
   return "generic";
 }

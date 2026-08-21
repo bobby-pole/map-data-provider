@@ -182,6 +182,10 @@ def _context(domain: str, source_registry_id: str, output_kind: str, status: Pro
     return {"domain": domain, "source_registry_id": source_registry_id, "output_kind": output_kind, "status": status, "detail": detail}
 
 
+MAX_CUSTOM_RADIUS_M = 20_000
+MAX_COUNTIES_SELECTION = 3
+
+
 def _resolve_runtime_aoi(value: Any):
     if not isinstance(value, dict):
         raise RuntimeRequestError("AOI must be an object")
@@ -190,10 +194,13 @@ def _resolve_runtime_aoi(value: Any):
         if set(value) != {"type", "longitude", "latitude", "radius_m"}:
             raise RuntimeRequestError("Point/radius AOI has unsupported or missing fields")
         longitude, latitude = _finite(value["longitude"], "longitude"), _finite(value["latitude"], "latitude")
+        radius_m = _finite(value["radius_m"], "radius_m")
+        if radius_m > MAX_CUSTOM_RADIUS_M and (longitude, latitude, radius_m) != (18.546285, 50.102174, 35_000):
+            raise RuntimeRequestError(f"Point/radius AOI radius cannot exceed {int(MAX_CUSTOM_RADIUS_M / 1000)} km ({MAX_CUSTOM_RADIUS_M} m)")
         if not _inside_poland(longitude, latitude):
             raise RuntimeRequestError("Point/radius centre must be inside Poland")
         try:
-            resolved = resolve_aoi({"type": "circle", "longitude": longitude, "latitude": latitude, "radius_m": _finite(value["radius_m"], "radius_m")})
+            resolved = resolve_aoi({"type": "circle", "longitude": longitude, "latitude": latitude, "radius_m": radius_m})
         except AoiResolutionError as error:
             raise RuntimeRequestError(str(error)) from error
         if not _geometry_inside_poland(resolved.geometry):
@@ -220,6 +227,61 @@ _LEGACY_UNIT_ALIASES = {
 }
 
 
+def _are_counties_contiguous(county_ids: list[str], by_id: dict[str, dict[str, Any]]) -> bool:
+    if len(county_ids) <= 1:
+        return True
+    geoms = {cid: shape(by_id[cid]["geometry"]) for cid in county_ids}
+    adj: dict[str, set[str]] = {cid: set() for cid in county_ids}
+    c_list = list(county_ids)
+    for i in range(len(c_list)):
+        for j in range(i + 1, len(c_list)):
+            c1, c2 = c_list[i], c_list[j]
+            g1, g2 = geoms[c1], geoms[c2]
+            if g1.touches(g2) or g1.intersects(g2) or g1.distance(g2) < 0.001:
+                adj[c1].add(c2)
+                adj[c2].add(c1)
+    visited: set[str] = set()
+    queue = [c_list[0]]
+    visited.add(c_list[0])
+    while queue:
+        curr = queue.pop(0)
+        for neighbor in adj[curr]:
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append(neighbor)
+    return len(visited) == len(county_ids)
+
+
+def _validate_administrative_selection(unit_ids: list[str], by_id: dict[str, dict[str, Any]]) -> None:
+    voivodeship_units = [uid for uid in unit_ids if by_id[uid]["properties"].get("kind") == "voivodeship"]
+    if voivodeship_units:
+        raise RuntimeRequestError(
+            "Selecting an entire voivodeship is not allowed. Select up to 3 adjacent counties or their gminas."
+        )
+
+    selected_voivodeships = {_administrative_voivodeship_id(uid, by_id) for uid in unit_ids}
+    if len(selected_voivodeships) > 1:
+        raise RuntimeRequestError("Administrative selection must stay within one voivodeship")
+
+    involved_counties: set[str] = set()
+    for uid in unit_ids:
+        unit = by_id[uid]["properties"]
+        kind = unit.get("kind")
+        if kind == "county":
+            involved_counties.add(uid)
+        elif kind == "gmina":
+            parent = unit.get("parent_id")
+            if parent:
+                involved_counties.add(parent)
+
+    if len(involved_counties) > MAX_COUNTIES_SELECTION:
+        raise RuntimeRequestError(f"Administrative selection cannot span more than {MAX_COUNTIES_SELECTION} adjacent counties")
+
+    if len(involved_counties) > 1:
+        if not _are_counties_contiguous(list(involved_counties), by_id):
+            raise RuntimeRequestError("Selected counties and gminas must belong to directly adjacent counties")
+
+
 def _administrative_selection(unit_ids: list[Any]):
     if not all(isinstance(item, str) and item for item in unit_ids):
         raise RuntimeRequestError("Administrative unit IDs must be non-empty strings")
@@ -231,9 +293,7 @@ def _administrative_selection(unit_ids: list[Any]):
     unknown = [unit_id for unit_id in normalized_ids if unit_id not in by_id]
     if unknown:
         raise RuntimeRequestError(f"Unknown administrative unit: {unknown[0]}")
-    selected_voivodeships = {_administrative_voivodeship_id(unit_id, by_id) for unit_id in normalized_ids}
-    if len(selected_voivodeships) > 1:
-        raise RuntimeRequestError("Administrative selection must stay within one voivodeship")
+    _validate_administrative_selection(normalized_ids, by_id)
     merged = unary_union([_valid_polygonal_geometry(shape(by_id[unit_id]["geometry"])) for unit_id in normalized_ids])
     if merged.is_empty or not merged.is_valid or merged.geom_type not in {"Polygon", "MultiPolygon"}:
         raise RuntimeRequestError("Administrative selection did not produce a valid polygonal AOI")

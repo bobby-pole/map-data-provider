@@ -41,31 +41,67 @@ def test_administrative_boundary_and_preflight_keep_actual_prg_geometry_before_a
     assert boundary["aoi"]["boundary_provenance"]["source_registry_id"] == "prg_wfs"
     assert boundary["within_provider_area_limit"] is True
 
-    blocked = preflight_runtime_request({"aoi": {"type": "administrative_selection", "unit_ids": ["voivodeship_14"]}, "profiles": ["power"]})
-    assert blocked["status"] == "blocked"
-    assert blocked["code"] == "aoi_area_limit"
-    assert blocked["aoi"]["geometry"]["type"] in {"Polygon", "MultiPolygon"}
+    preflight = preflight_runtime_request({"aoi": {"type": "administrative_selection", "unit_ids": ["gmina_2473011"]}, "profiles": ["power"]})
+    assert preflight["status"] == "ready"
+    assert preflight["code"] == "bounded_provider_request"
+    assert preflight["aoi"]["geometry"]["type"] in {"Polygon", "MultiPolygon"}
+
+
+def test_administrative_selection_rejects_entire_voivodeship() -> None:
+    with pytest.raises(RuntimeRequestError, match="entire voivodeship"):
+        administrative_boundary(["voivodeship_14"])
+    with pytest.raises(RuntimeRequestError, match="entire voivodeship"):
+        preflight_runtime_request({"aoi": {"type": "administrative_selection", "unit_ids": ["voivodeship_24"]}, "profiles": ["power"]})
 
 
 def test_administrative_selection_rejects_more_than_one_voivodeship() -> None:
+    # county_1465 (Warszawa in Mazowieckie) and county_2473 (Rybnik in Śląskie)
     with pytest.raises(RuntimeRequestError, match="one voivodeship"):
-        administrative_boundary(["voivodeship_14", "county_2473"])
+        administrative_boundary(["county_1465", "county_2473"])
     with pytest.raises(RuntimeRequestError, match="one voivodeship"):
-        preflight_runtime_request({"aoi": {"type": "administrative_selection", "unit_ids": ["voivodeship_14", "county_2473"]}, "profiles": ["power"]})
+        preflight_runtime_request({"aoi": {"type": "administrative_selection", "unit_ids": ["county_1465", "county_2473"]}, "profiles": ["power"]})
 
 
-def test_administrative_union_tolerates_generalised_prg_topology_when_excluding_a_county() -> None:
-    catalogue = administrative_catalog()["units"]
-    by_id = {unit["id"]: unit for unit in catalogue}
-    selected_gminas = [
-        unit["id"] for unit in catalogue
-        if unit["kind"] == "gmina"
-        and by_id[by_id[unit["parent_id"]]["parent_id"]]["id"] == "voivodeship_24"
-        and unit["parent_id"] != "county_2473"
-    ]
-    boundary = administrative_boundary(selected_gminas)
-    assert len(selected_gminas) > 100
+def test_administrative_selection_enforces_county_limit_and_adjacency() -> None:
+    # Up to 3 adjacent counties in Śląskie: Rybnik (2473) + Rybnicki (2412) + Wodzisławski (2415)
+    boundary = administrative_boundary(["county_2473", "county_2412", "county_2415"])
     assert boundary["aoi"]["geometry"]["type"] in {"Polygon", "MultiPolygon"}
+
+    # More than 3 counties: rejected
+    with pytest.raises(RuntimeRequestError, match="more than 3 adjacent counties"):
+        administrative_boundary(["county_2473", "county_2412", "county_2415", "county_2402"])
+
+    # Non-adjacent counties in Śląskie: Rybnik (2473) + Częstochowa (2464)
+    with pytest.raises(RuntimeRequestError, match="directly adjacent"):
+        administrative_boundary(["county_2473", "county_2464"])
+
+
+def test_administrative_selection_allows_gminas_across_adjacent_counties() -> None:
+    catalogue = administrative_catalog()["units"]
+    gminas_rybnicki = [u["id"] for u in catalogue if u["kind"] == "gmina" and u.get("parent_id") == "county_2412"]
+    assert len(gminas_rybnicki) >= 4
+
+    # Gminas across adjacent counties (Rybnik city + Rybnicki county gminas): allowed
+    boundary = administrative_boundary(["gmina_2473011", gminas_rybnicki[0]])
+    assert boundary["aoi"]["geometry"]["type"] in {"Polygon", "MultiPolygon"}
+
+    # Gminas across non-adjacent counties (Rybnik city + Częstochowa city): rejected
+    with pytest.raises(RuntimeRequestError, match="directly adjacent"):
+        administrative_boundary(["gmina_2473011", "gmina_2464011"])
+
+
+def test_point_radius_enforces_20km_limit_for_custom_aoi() -> None:
+    # Custom radius <= 20km: allowed
+    resolved = resolve_runtime_request({"aoi": {"type": "point_radius", "longitude": 19.0, "latitude": 50.0, "radius_m": 20_000}, "profiles": ["power"]})
+    assert resolved["aoi"]["geometry"]["type"] == "Polygon"
+
+    # Custom radius > 20km: rejected
+    with pytest.raises(RuntimeRequestError, match="cannot exceed 20 km"):
+        resolve_runtime_request({"aoi": {"type": "point_radius", "longitude": 19.0, "latitude": 50.0, "radius_m": 25_000}, "profiles": ["power"]})
+
+    # Default Rybnik 35km baseline: allowed
+    demo = resolve_runtime_request({"aoi": {"type": "point_radius", "longitude": 18.546285, "latitude": 50.102174, "radius_m": 35_000}, "profiles": ["power"]})
+    assert demo["aoi"]["geometry"]["type"] == "Polygon"
 
 
 def test_runtime_profiles_are_explicit_and_do_not_fabricate_non_fixture_data() -> None:

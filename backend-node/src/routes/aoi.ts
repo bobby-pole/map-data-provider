@@ -389,11 +389,12 @@ function respondWithProviderError(response: Response, error: unknown): void {
     );
     return;
   }
-  if (error instanceof ProviderDataError) {
-    response.status(error.kind === "invalid_request" ? 422 : error.kind === "not_found" ? 404 : error.kind === "conflict" ? 409 : 502).json(
+  if (error instanceof ProviderDataError || (typeof error === "object" && error !== null && "kind" in error && typeof (error as { kind: string }).kind === "string")) {
+    const providerError = error as ProviderDataError;
+    response.status(providerError.kind === "invalid_request" ? 422 : providerError.kind === "not_found" ? 404 : providerError.kind === "conflict" ? 409 : 502).json(
       providerErrorSchema.parse({
-        error: error.kind,
-        message: error.message,
+        error: providerError.kind,
+        message: providerError.message,
       }),
     );
     return;

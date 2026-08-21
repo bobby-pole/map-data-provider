@@ -22,6 +22,7 @@ from geo_pipeline.cache import cache_paths, read_cached_layer
 from geo_pipeline.config import CACHE_DIR, RUNTIME_CACHE_DIR
 from geo_pipeline.domain_pack import read_domain_pack
 from geo_pipeline.runtime_osm import refresh_runtime_osm_domain
+from geo_pipeline.source_availability import build_runtime_source_availability
 
 EXIT_INVALID_REQUEST = 2
 EXIT_WORKER_FAILURE = 3
@@ -113,6 +114,10 @@ def run_runtime_worker(
         else:
             outcomes = _report_existing_runtime_outcomes(outcomes, progress=progress)
         _validate_ready_runtime_artifacts(outcomes, cache_root)
+        aoi_id = resolved["aoi"]["aoi_id"]
+        source_avail_root = cache_root.parents[0] / "source-availability"
+        build_runtime_source_availability(aoi_id, out_path=source_avail_root / f"{aoi_id}.json")
+        build_runtime_source_availability(aoi_id, out_path=cache_root / aoi_id / "source_availability.json")
         response = {"status": "ok", **resolved, "outcomes": outcomes, "contexts": context_outcomes(request), "job_state": "ready", "request_result": "refresh", "cached_at": _utc_timestamp()}
         _write_runtime_state(state_path, response)
         return response

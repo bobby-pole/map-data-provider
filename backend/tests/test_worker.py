@@ -213,7 +213,7 @@ def test_refresh_live_runtime_outcomes_isolates_domain_refresh_failure(tmp_path:
 
 def test_partial_runtime_snapshot_retries_only_domains_that_failed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     request = {
-        "aoi": {"type": "point_radius", "longitude": 18.546285, "latitude": 50.102174, "radius_m": 60_000},
+        "aoi": {"type": "point_radius", "longitude": 18.546285, "latitude": 50.102174, "radius_m": 20_000},
         "profiles": ["power", "water"],
     }
     calls: list[list[str]] = []

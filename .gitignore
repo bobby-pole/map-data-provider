@@ -20,6 +20,7 @@ dist/
 /cache/
 backend/cache/
 backend/data/cache/aoi_*/
+backend/data/source-availability/aoi_*.json
 backend/data/previews/
 
 # OS/editor

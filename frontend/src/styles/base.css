@@ -1,4 +1,36 @@
 :root {
+  --color-bg: #050a12;
+  --color-surface: #0f172a;
+  --color-text: #e2e8f0;
+  --color-text-strong: #f8fafc;
+  --color-text-bright: #ffffff;
+  --color-text-soft: #cbd5e1;
+  --color-text-muted: #94a3b8;
+  --color-text-subtle: #64748b;
+  --color-accent: #38bdf8;
+  --color-accent-strong: #0284c7;
+  --color-accent-dark: #0369a1;
+  --color-danger: #ef4444;
+  --color-warning: #f59e0b;
+  --color-success: #22c55e;
+  --surface-control: rgba(255, 255, 255, 0.06);
+  --surface-control-hover: rgba(255, 255, 255, 0.12);
+  --surface-subtle: rgba(255, 255, 255, 0.04);
+  --surface-faint: rgba(255, 255, 255, 0.03);
+  --surface-glass: rgba(15, 23, 42, 0.72);
+  --surface-glass-strong: rgba(15, 23, 42, 0.85);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-default: rgba(255, 255, 255, 0.12);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 14px;
+  --radius-pill: 999px;
+  --shadow-panel: 0 16px 40px rgba(0, 0, 0, 0.35);
+  --shadow-floating: 0 16px 40px rgba(0, 0, 0, 0.45);
+  --blur-glass: blur(24px) saturate(180%);
+  --transition-fast: 0.15s ease;
   font-family:
     Inter,
     system-ui,
@@ -6,8 +38,8 @@
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
-  color: #e2e8f0;
-  background: #050a12;
+  color: var(--color-text);
+  background: var(--color-bg);
 }
 
 * {
@@ -26,39 +58,39 @@ input {
 }
 
 button {
-  background: rgba(255, 255, 255, 0.06);
-  color: #e2e8f0;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 8px;
+  color: var(--color-text);
+  background: var(--surface-control);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
   padding: 8px 14px;
   font-weight: 500;
   cursor: pointer;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   transition:
-    background-color 0.15s ease,
-    border-color 0.15s ease,
-    color 0.15s ease,
-    box-shadow 0.15s ease;
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 button:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--surface-control-hover);
   border-color: rgba(255, 255, 255, 0.22);
-  color: #ffffff;
+  color: var(--color-text-bright);
 }
 
 button:focus-visible {
   outline: none;
-  border-color: #38bdf8;
+  border-color: var(--color-accent);
   box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25);
 }
 
 button:disabled {
   cursor: not-allowed;
   opacity: 0.45;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--surface-faint);
   border-color: rgba(255, 255, 255, 0.06);
-  color: #64748b;
+  color: var(--color-text-subtle);
   box-shadow: none;
 }
 
@@ -66,27 +98,27 @@ select,
 textarea,
 input {
   background: rgba(0, 0, 0, 0.35);
-  color: #f1f5f9;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 8px;
+  color: var(--color-text-strong);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
   padding: 8px 10px;
   transition:
-    border-color 0.15s ease,
-    box-shadow 0.15s ease;
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 select:focus,
 textarea:focus,
 input:focus {
   outline: none;
-  border-color: #38bdf8;
+  border-color: var(--color-accent);
   box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
 }
 
 input.inputError,
 select.inputError,
 textarea.inputError {
-  border-color: #ef4444 !important;
+  border-color: var(--color-danger) !important;
   background: rgba(239, 68, 68, 0.14) !important;
   box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.25) !important;
 }
@@ -99,7 +131,7 @@ textarea {
 label {
   display: grid;
   gap: 5px;
-  color: #cbd5e1;
+  color: var(--color-text-soft);
   font-size: 12.5px;
   font-weight: 500;
 }
@@ -113,14 +145,14 @@ dl {
 }
 
 dt {
-  color: #94a3b8;
+  color: var(--color-text-muted);
   overflow-wrap: anywhere;
 }
 
 dd {
   margin: 0;
   text-align: right;
-  color: #f1f5f9;
+  color: var(--color-text-strong);
   font-weight: 500;
   overflow-wrap: anywhere;
 }
@@ -138,7 +170,7 @@ dd {
 }
 
 .muted {
-  color: #94a3b8;
+  color: var(--color-text-muted);
   font-size: 12px;
   line-height: 1.45;
 }
@@ -163,7 +195,7 @@ dd {
   background: transparent;
   border: 0;
   box-shadow: none;
-  color: #38bdf8;
+  color: var(--color-accent);
   text-decoration: underline;
   font-size: 12px;
   font-weight: 500;
@@ -185,12 +217,12 @@ dd {
   margin: 0;
   padding: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-md);
+  background: var(--surface-faint);
 }
 
 .categorySelector legend {
-  color: #94a3b8;
+  color: var(--color-text-muted);
   font-size: 12px;
   font-weight: 500;
 }

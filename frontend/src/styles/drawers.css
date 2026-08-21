@@ -9,15 +9,15 @@
   max-height: calc(100dvh - 142px);
   padding: 0 16px 16px;
   overflow-x: hidden;
-  color: #e2e8f0;
-  background: rgba(15, 23, 42, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 14px;
+  color: var(--color-text);
+  background: var(--surface-glass);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xl);
   box-shadow:
     0 16px 40px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: var(--blur-glass);
+  -webkit-backdrop-filter: var(--blur-glass);
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.2) rgba(0, 0, 0, 0.1);
 }
@@ -57,10 +57,10 @@
   height: 26px;
   padding: 0;
   place-items: center;
-  color: #cbd5e1;
+  color: var(--color-text-soft);
   background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 6px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
   font-size: 14px;
   font-weight: 500;
   line-height: 1;
@@ -72,7 +72,7 @@
 .closeButton:focus-visible {
   background: rgba(255, 255, 255, 0.16);
   border-color: rgba(255, 255, 255, 0.25);
-  color: #ffffff;
+  color: var(--color-text-bright);
   outline: none;
 }
 
@@ -82,7 +82,7 @@
 
 .drawerDivider {
   border: 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--border-subtle);
   margin: 6px 0;
 }
 
@@ -100,7 +100,7 @@
 .drawerSection > h2:first-child {
   display: flex;
   align-items: center;
-  color: #f8fafc;
+  color: var(--color-text-strong);
   font-size: 15px;
   font-weight: 600;
 }
@@ -110,7 +110,7 @@
 }
 
 .drawerSection > .sectionHeading:first-child h2 {
-  color: #f8fafc;
+  color: var(--color-text-strong);
   font-size: 15px;
   font-weight: 600;
 }
@@ -123,13 +123,13 @@
 
 .sectionHeading h2 {
   margin: 0;
-  color: #f8fafc;
+  color: var(--color-text-strong);
   font-size: 16px;
   font-weight: 600;
 }
 
 .sectionHeading span {
-  color: #94a3b8;
+  color: var(--color-text-muted);
   font-size: 12px;
 }
 
@@ -141,7 +141,7 @@
   margin: 0;
   font-size: 13.5px;
   font-weight: 600;
-  color: #f8fafc;
+  color: var(--color-text-strong);
 }
 
 .contextDrawer .muted {

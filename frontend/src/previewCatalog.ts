@@ -18,7 +18,7 @@ export type PopupDetails = {
 };
 
 export const transportRoadClasses = ["major", "secondary"] as const;
-export type TransportRoadClass = typeof transportRoadClasses[number];
+export type TransportRoadClass = (typeof transportRoadClasses)[number];
 
 /** Network and representative geometry must be intentionally enabled. */
 export function defaultLayerEnabled(layer: PreviewLayer): boolean {
@@ -33,16 +33,18 @@ export function transportRoadClassLabel(roadClass: TransportRoadClass): string {
 }
 
 export function configuredPreviewLayers(presentations: MapPresentation[]): PreviewLayer[] {
-  return presentations.flatMap((presentation) => presentation.layers
-    .filter((artifact) => !isInspectionPointArtifact(artifact.artifact_id))
-    .map((artifact) => ({
-    artifact,
-    domain: presentation.domain,
-    archiveUrl: presentation.archive_url,
-    archiveBounds: presentation.archive.bounds,
-    archiveMinZoom: presentation.archive.min_zoom,
-    archiveMaxZoom: presentation.archive.max_zoom,
-  })));
+  return presentations.flatMap((presentation) =>
+    presentation.layers
+      .filter((artifact) => !isInspectionPointArtifact(artifact.artifact_id))
+      .map((artifact) => ({
+        artifact,
+        domain: presentation.domain,
+        archiveUrl: presentation.archive_url,
+        archiveBounds: presentation.archive.bounds,
+        archiveMinZoom: presentation.archive.min_zoom,
+        archiveMaxZoom: presentation.archive.max_zoom,
+      })),
+  );
 }
 
 /** Inspection samples remain in the exported provider pack, not in the map preview. */
@@ -58,10 +60,11 @@ export function popupDetails(feature: ProviderFeature, layer: PreviewLayer): Pop
   const properties = feature.properties;
   const limitations = stringList(properties.limitations, layer.artifact.limitations);
   return {
-    title: stringValue(properties.asset_type)
-      ?? stringValue(properties.category)
-      ?? stringValue(properties.feature_type)
-      ?? layer.artifact.artifact_id,
+    title:
+      stringValue(properties.asset_type) ??
+      stringValue(properties.category) ??
+      stringValue(properties.feature_type) ??
+      layer.artifact.artifact_id,
     source: stringValue(properties.source) ?? layer.artifact.source,
     confidence: stringValue(properties.confidence) ?? layer.artifact.confidence,
     readiness: layer.artifact.readiness,
@@ -78,7 +81,14 @@ function stringValue(value: unknown): string | undefined {
 }
 
 function stringList(value: unknown, fallback: string[]): string[] {
-  if (Array.isArray(value) && value.every((item) => typeof item === "string")) return value;
-  if (typeof value === "string" && value.trim()) return value.split(";").map((item) => item.trim()).filter(Boolean);
+  if (Array.isArray(value) && value.every((item) => typeof item === "string")) {
+    return value;
+  }
+  if (typeof value === "string" && value.trim()) {
+    return value
+      .split(";")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
   return fallback;
 }

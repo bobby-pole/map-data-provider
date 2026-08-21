@@ -20,15 +20,29 @@ def clip_geojson_to_aoi(
     mode: ClipMode = "keep-intersecting",
 ) -> dict[str, Any]:
     gdf = gpd.read_file(input_path)
-    input_count = int(len(gdf))
+    input_count = len(gdf)
 
     if gdf.empty:
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_text(
-            json.dumps({"type": "FeatureCollection", "features": []}, ensure_ascii=False, indent=2),
+            json.dumps(
+                {"type": "FeatureCollection", "features": []},
+                ensure_ascii=False,
+                indent=2,
+            ),
             encoding="utf-8",
         )
-        return _report(input_path, output_path, aoi, mode, input_count, 0, 0, "warn", ["empty_input"])
+        return _report(
+            input_path,
+            output_path,
+            aoi,
+            mode,
+            input_count,
+            0,
+            0,
+            "warn",
+            ["empty_input"],
+        )
 
     if gdf.crs is None:
         gdf = gdf.set_crs("EPSG:4326")
@@ -36,10 +50,14 @@ def clip_geojson_to_aoi(
         gdf = gdf.to_crs("EPSG:4326")
 
     metric = gdf.to_crs("EPSG:2180")
-    center = gpd.GeoSeries(
-        [Point(aoi.center_lon, aoi.center_lat)],
-        crs="EPSG:4326",
-    ).to_crs("EPSG:2180").iloc[0]
+    center = (
+        gpd.GeoSeries(
+            [Point(aoi.center_lon, aoi.center_lat)],
+            crs="EPSG:4326",
+        )
+        .to_crs("EPSG:2180")
+        .iloc[0]
+    )
     aoi_buffer = center.buffer(aoi.radius_m)
 
     intersects = metric.geometry.intersects(aoi_buffer)
@@ -57,7 +75,7 @@ def clip_geojson_to_aoi(
     output_path.parent.mkdir(parents=True, exist_ok=True)
     processed.to_file(output_path, driver="GeoJSON")
 
-    output_count = int(len(processed))
+    output_count = len(processed)
     removed_count = input_count - output_count
     warnings = []
     if output_count == 0:
@@ -116,10 +134,14 @@ def _report(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Clip a GeoJSON layer to the Map Data Quality Lab AOI.")
+    parser = argparse.ArgumentParser(
+        description="Clip a GeoJSON layer to the Map Data Quality Lab AOI."
+    )
     parser.add_argument("--input", required=True, type=Path, help="Input GeoJSON path.")
     parser.add_argument("--output", type=Path, help="Output GeoJSON path.")
-    parser.add_argument("--mode", choices=["clip", "keep-intersecting"], default="keep-intersecting")
+    parser.add_argument(
+        "--mode", choices=["clip", "keep-intersecting"], default="keep-intersecting"
+    )
     parser.add_argument("--report", type=Path, help="Optional report JSON path.")
     args = parser.parse_args()
 
@@ -134,7 +156,16 @@ def main() -> None:
         report_path = REPORTS_DIR / f"{output.stem}_clip_report.json"
     write_clip_report(report_path, report)
 
-    print(json.dumps({"status": report["status"], "output": str(output), "report": str(report_path)}, ensure_ascii=False))
+    print(
+        json.dumps(
+            {
+                "status": report["status"],
+                "output": str(output),
+                "report": str(report_path),
+            },
+            ensure_ascii=False,
+        )
+    )
 
 
 if __name__ == "__main__":

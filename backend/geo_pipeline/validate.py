@@ -1,6 +1,6 @@
+import argparse
 import json
 import math
-import argparse
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any
@@ -8,7 +8,7 @@ from typing import Any
 import geopandas as gpd
 from shapely.geometry import Point
 
-from .config import AoiConfig, GEOJSON_DIR, REPORTS_DIR, RYBNIK_AOI
+from .config import GEOJSON_DIR, REPORTS_DIR, RYBNIK_AOI, AoiConfig
 
 
 def validate_geojson(
@@ -45,7 +45,7 @@ def validate_geojson(
         return base
 
     base["readable"] = True
-    base["feature_count"] = int(len(gdf))
+    base["feature_count"] = len(gdf)
     base["crs"] = str(gdf.crs) if gdf.crs is not None else None
 
     if gdf.empty:
@@ -145,7 +145,12 @@ def validate_power_outputs(
         "has_power_nodes": layers["power_nodes"]["feature_count"] > 0,
         "has_distribution_candidates": any(
             layers.get(layer_name, {}).get("feature_count", 0) > 0
-            for layer_name in ("power_minor_lines", "power_cables", "power_transformers", "power_supports")
+            for layer_name in (
+                "power_minor_lines",
+                "power_cables",
+                "power_transformers",
+                "power_supports",
+            )
         ),
         "likely_missing_distribution_grid": True,
         "category_counts": aggregate_categories,
@@ -174,7 +179,12 @@ def validate_power_outputs(
 
 def _category_counts(layers: dict[str, dict[str, Any]]) -> dict[str, int]:
     grouped = {
-        "lines": ["power_major_lines", "power_minor_lines", "power_cables", "power_busbars"],
+        "lines": [
+            "power_major_lines",
+            "power_minor_lines",
+            "power_cables",
+            "power_busbars",
+        ],
         "nodes": [
             "power_substations_points",
             "power_transformers_points",
@@ -186,7 +196,9 @@ def _category_counts(layers: dict[str, dict[str, Any]]) -> dict[str, int]:
     }
     counts: dict[str, int] = {}
     for group_name, layer_names in grouped.items():
-        counts[group_name] = sum(int(layers.get(layer_name, {}).get("feature_count", 0)) for layer_name in layer_names)
+        counts[group_name] = sum(
+            int(layers.get(layer_name, {}).get("feature_count", 0)) for layer_name in layer_names
+        )
     return counts
 
 
@@ -196,20 +208,35 @@ def write_validation_report(path: Path, report: dict[str, Any]) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Validate generated Map Data Quality Lab GeoJSON layers.")
-    parser.add_argument("--layer", choices=["power"], default="power", help="Layer group to validate.")
+    parser = argparse.ArgumentParser(
+        description="Validate generated Map Data Quality Lab GeoJSON layers."
+    )
+    parser.add_argument(
+        "--layer", choices=["power"], default="power", help="Layer group to validate."
+    )
     args = parser.parse_args()
 
     if args.layer == "power":
         report = validate_power_outputs(
             aoi=RYBNIK_AOI,
-            lines_path=GEOJSON_DIR.parent / "processed" / f"{RYBNIK_AOI.name}_power_lines_clipped.geojson",
-            nodes_path=GEOJSON_DIR.parent / "processed" / f"{RYBNIK_AOI.name}_power_nodes_clipped.geojson",
-            node_points_path=GEOJSON_DIR.parent / "processed" / f"{RYBNIK_AOI.name}_power_node_points_clipped.geojson",
+            lines_path=GEOJSON_DIR.parent
+            / "processed"
+            / f"{RYBNIK_AOI.name}_power_lines_clipped.geojson",
+            nodes_path=GEOJSON_DIR.parent
+            / "processed"
+            / f"{RYBNIK_AOI.name}_power_nodes_clipped.geojson",
+            node_points_path=GEOJSON_DIR.parent
+            / "processed"
+            / f"{RYBNIK_AOI.name}_power_node_points_clipped.geojson",
         )
         output_path = REPORTS_DIR / f"{RYBNIK_AOI.name}_power_validation_clipped.json"
         write_validation_report(output_path, report)
-        print(json.dumps({"status": report["status"], "report": str(output_path)}, ensure_ascii=False))
+        print(
+            json.dumps(
+                {"status": report["status"], "report": str(output_path)},
+                ensure_ascii=False,
+            )
+        )
 
 
 if __name__ == "__main__":

@@ -1,5 +1,16 @@
 import { describe, expect, it } from "vitest";
-import { baseMapRasterPaint, isLinePresentationLayer, openStreetMapBasemap, POWER_VOLTAGE_TIERS, presentationColor, referenceRasterInsertionPoint, supportStyle, visualBasemapOptions, voltageLineColor } from "./mapStyle";
+
+import {
+  baseMapRasterPaint,
+  isLinePresentationLayer,
+  openStreetMapBasemap,
+  POWER_VOLTAGE_TIERS,
+  presentationColor,
+  referenceRasterInsertionPoint,
+  supportStyle,
+  visualBasemapOptions,
+  voltageLineColor,
+} from "./mapStyle";
 
 describe("MapLibre presentation style policy", () => {
   it("renders line source layers as lines and asset layers as inspectable points", () => {
@@ -18,18 +29,28 @@ describe("MapLibre presentation style policy", () => {
   });
 
   it("uses the standard OSM raster endpoint only as an attributed online basemap", () => {
-    expect(openStreetMapBasemap.tileUrlTemplate).toBe("https://tile.openstreetmap.org/{z}/{x}/{y}.png");
+    expect(openStreetMapBasemap.tileUrlTemplate).toBe(
+      "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    );
     expect(openStreetMapBasemap.attribution).toContain("OpenStreetMap contributors");
   });
 
   it("keeps dark mode as a local visual treatment rather than a second tile provider", () => {
     expect(visualBasemapOptions.map((option) => option.id)).toEqual(["standard", "dark", "none"]);
-    expect(baseMapRasterPaint("dark")).toMatchObject({ "raster-brightness-max": 0.38, "raster-saturation": -0.78 });
-    expect(baseMapRasterPaint("standard")).toMatchObject({ "raster-brightness-max": 1, "raster-saturation": 0 });
+    expect(baseMapRasterPaint("dark")).toMatchObject({
+      "raster-brightness-max": 0.38,
+      "raster-saturation": -0.78,
+    });
+    expect(baseMapRasterPaint("standard")).toMatchObject({
+      "raster-brightness-max": 1,
+      "raster-saturation": 0,
+    });
   });
 
   it("keeps voltage buckets, road classes and source support classes visually distinct", () => {
-    expect(voltageLineColor).toEqual(expect.arrayContaining(["high_110", "#dc2626", "high_220", "#d946ef", "high_400", "#a855f7"]));
+    expect(voltageLineColor).toEqual(
+      expect.arrayContaining(["high_110", "#dc2626", "high_220", "#d946ef", "high_400", "#a855f7"]),
+    );
     expect(POWER_VOLTAGE_TIERS).toHaveLength(6);
     expect(POWER_VOLTAGE_TIERS.find((t) => t.voltage_bucket === "high_400")?.color).toBe("#a855f7");
     expect(supportStyle("tower")).toEqual({ color: "#f97316", radius: 5 });
@@ -37,7 +58,14 @@ describe("MapLibre presentation style policy", () => {
   });
 
   it("inserts reference rasters below analytical provider vectors", () => {
-    expect(referenceRasterInsertionPoint(["background", "basemap:openstreetmap", "provider:power-lines", "provider:power-assets"])).toBe("provider:power-lines");
+    expect(
+      referenceRasterInsertionPoint([
+        "background",
+        "basemap:openstreetmap",
+        "provider:power-lines",
+        "provider:power-assets",
+      ]),
+    ).toBe("provider:power-lines");
     expect(referenceRasterInsertionPoint(["background", "basemap:openstreetmap"])).toBeUndefined();
   });
 });

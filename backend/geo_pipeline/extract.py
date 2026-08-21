@@ -8,11 +8,10 @@ from typing import Any
 
 import geopandas as gpd
 import osmnx as ox
-import pandas as pd
 import requests
-from shapely.geometry import Point, LineString, Polygon, shape
-from shapely.geometry.base import BaseGeometry
 import urllib3.util.connection as urllib3_cn
+from shapely.geometry import LineString, Point, Polygon, shape
+from shapely.geometry.base import BaseGeometry
 
 from .config import AoiConfig
 from .source_registry import guard_source_access
@@ -41,7 +40,9 @@ def configure_osmnx() -> None:
     ox.settings.log_console = False
     ox.settings.requests_timeout = 300
     ox.settings.overpass_rate_limit = False
-    ox.settings.user_agent = "MapDataQualityLab/1.0 (https://github.com/bobby-pole/map-data-quality-lab)"
+    ox.settings.user_agent = (
+        "MapDataQualityLab/1.0 (https://github.com/bobby-pole/map-data-quality-lab)"
+    )
 
 
 def query_overpass_ql_direct(ql_statements: str, timeout_sec: int = 120) -> dict[str, Any]:
@@ -61,20 +62,38 @@ def query_overpass_ql_direct(ql_statements: str, timeout_sec: int = 120) -> dict
         for attempt in range(2):
             try:
                 t0 = time.perf_counter()
-                resp = requests.post(server, data={"data": full_query}, headers=HEADERS, timeout=timeout_sec + 20)
+                resp = requests.post(
+                    server,
+                    data={"data": full_query},
+                    headers=HEADERS,
+                    timeout=timeout_sec + 20,
+                )
                 duration = time.perf_counter() - t0
                 if resp.status_code == 200:
                     data = resp.json()
                     elements = data.get("elements", [])
-                    logger.info("  [%s] Overpass QL succeeded in %.2fs (%s elements)", server_host, duration, len(elements))
+                    logger.info(
+                        "  [%s] Overpass QL succeeded in %.2fs (%s elements)",
+                        server_host,
+                        duration,
+                        len(elements),
+                    )
                     time.sleep(2)
                     return data
                 elif resp.status_code == 429:
-                    logger.warning("  [%s] Rate limited (HTTP 429). Waiting 5s before retry...", server_host)
+                    logger.warning(
+                        "  [%s] Rate limited (HTTP 429). Waiting 5s before retry...",
+                        server_host,
+                    )
                     time.sleep(5)
                     continue
                 else:
-                    logger.warning("  [%s] HTTP %s: %s", server_host, resp.status_code, resp.text[:120])
+                    logger.warning(
+                        "  [%s] HTTP %s: %s",
+                        server_host,
+                        resp.status_code,
+                        resp.text[:120],
+                    )
                     break
             except Exception as err:
                 last_err = err
@@ -120,8 +139,23 @@ def elements_to_gdf(elements: list[dict[str, Any]]) -> gpd.GeoDataFrame:
                     coords.append((n["lon"], n["lat"]))
 
             if len(coords) >= 2:
-                is_area = len(coords) >= 4 and coords[0] == coords[-1] and any(
-                    k in tags for k in ("building", "landuse", "amenity", "emergency", "healthcare", "industrial", "leisure", "natural", "water")
+                is_area = (
+                    len(coords) >= 4
+                    and coords[0] == coords[-1]
+                    and any(
+                        k in tags
+                        for k in (
+                            "building",
+                            "landuse",
+                            "amenity",
+                            "emergency",
+                            "healthcare",
+                            "industrial",
+                            "leisure",
+                            "natural",
+                            "water",
+                        )
+                    )
                 )
                 if is_area:
                     try:
@@ -146,12 +180,20 @@ def elements_to_gdf(elements: list[dict[str, Any]]) -> gpd.GeoDataFrame:
 
 
 def fetch_osm_features(aoi: AoiConfig, tags: dict[str, list[str]]) -> gpd.GeoDataFrame:
-    return guard_source_access("openstreetmap", "acquisition", lambda: _fetch_osm_features(aoi, tags))
+    return guard_source_access(
+        "openstreetmap", "acquisition", lambda: _fetch_osm_features(aoi, tags)
+    )
 
 
-def fetch_osm_features_geometry(geometry: dict[str, Any], tags: dict[str, list[str]]) -> gpd.GeoDataFrame:
+def fetch_osm_features_geometry(
+    geometry: dict[str, Any], tags: dict[str, list[str]]
+) -> gpd.GeoDataFrame:
     """Fetch a bounded Polygon/MultiPolygon AOI without reducing it to its bbox."""
-    return guard_source_access("openstreetmap", "acquisition", lambda: _fetch_osm_features_geometry(geometry, tags))
+    return guard_source_access(
+        "openstreetmap",
+        "acquisition",
+        lambda: _fetch_osm_features_geometry(geometry, tags),
+    )
 
 
 def _fetch_osm_features(aoi: AoiConfig, tags: dict[str, list[str]]) -> gpd.GeoDataFrame:
@@ -169,9 +211,13 @@ def _fetch_osm_features(aoi: AoiConfig, tags: dict[str, list[str]]) -> gpd.GeoDa
             values = [values]
         for val in values:
             if val == "*" or not val:
-                statements.append(f'nwr["{key}"](around:{aoi.radius_m},{aoi.center_lat},{aoi.center_lon});')
+                statements.append(
+                    f'nwr["{key}"](around:{aoi.radius_m},{aoi.center_lat},{aoi.center_lon});'
+                )
             else:
-                statements.append(f'nwr["{key}"="{val}"](around:{aoi.radius_m},{aoi.center_lat},{aoi.center_lon});')
+                statements.append(
+                    f'nwr["{key}"="{val}"](around:{aoi.radius_m},{aoi.center_lat},{aoi.center_lon});'
+                )
 
     if not statements:
         return gpd.GeoDataFrame(geometry=[], crs="EPSG:4326")
@@ -182,7 +228,9 @@ def _fetch_osm_features(aoi: AoiConfig, tags: dict[str, list[str]]) -> gpd.GeoDa
     return elements_to_gdf(elements)
 
 
-def _fetch_osm_features_geometry(geometry: dict[str, Any], tags: dict[str, list[str]]) -> gpd.GeoDataFrame:
+def _fetch_osm_features_geometry(
+    geometry: dict[str, Any], tags: dict[str, list[str]]
+) -> gpd.GeoDataFrame:
     polygonal = shape(geometry)
     if polygonal.geom_type not in {"Polygon", "MultiPolygon"} or polygonal.is_empty:
         raise ValueError("OSM acquisition requires a non-empty polygonal AOI")

@@ -7,9 +7,30 @@ from geo_pipeline.cache import cache_paths
 
 
 def test_equivalent_circle_inputs_resolve_to_one_deterministic_identity() -> None:
-    first = resolve_aoi({"type": "circle", "longitude": 18.546285, "latitude": 50.102174, "radius_m": 60_000})
-    equivalent = resolve_aoi({"type": "circle", "longitude": 18.5462850, "latitude": 50.1021740, "radius_m": 60000.0})
-    changed = resolve_aoi({"type": "circle", "longitude": 18.546285, "latitude": 50.102174, "radius_m": 59_999})
+    first = resolve_aoi(
+        {
+            "type": "circle",
+            "longitude": 18.546285,
+            "latitude": 50.102174,
+            "radius_m": 60_000,
+        }
+    )
+    equivalent = resolve_aoi(
+        {
+            "type": "circle",
+            "longitude": 18.5462850,
+            "latitude": 50.1021740,
+            "radius_m": 60000.0,
+        }
+    )
+    changed = resolve_aoi(
+        {
+            "type": "circle",
+            "longitude": 18.546285,
+            "latitude": 50.102174,
+            "radius_m": 59_999,
+        }
+    )
 
     assert first.aoi_id == equivalent.aoi_id
     assert first.aoi_id != changed.aoi_id
@@ -20,12 +41,21 @@ def test_equivalent_circle_inputs_resolve_to_one_deterministic_identity() -> Non
 
 def test_rybnik_alias_preserves_v1_cache_key_but_has_geometry_identity() -> None:
     alias = resolve_aoi("rybnik_35km")
-    direct = resolve_aoi({"type": "circle", "longitude": 18.546285, "latitude": 50.102174, "radius_m": 35_000})
+    direct = resolve_aoi(
+        {
+            "type": "circle",
+            "longitude": 18.546285,
+            "latitude": 50.102174,
+            "radius_m": 35_000,
+        }
+    )
 
     assert alias.aoi_id == direct.aoi_id
     assert alias.cache_key == "rybnik_35km"
     assert alias.aliases == ("rybnik_35km",)
-    assert cache_paths(alias.cache_key, "power", root=Path("/tmp/cache")).root == Path("/tmp/cache/rybnik_35km/power")
+    assert cache_paths(alias.cache_key, "power", root=Path("/tmp/cache")).root == Path(
+        "/tmp/cache/rybnik_35km/power"
+    )
 
 
 def test_approved_prg_reference_keeps_fixture_provenance_without_live_access() -> None:
@@ -34,7 +64,10 @@ def test_approved_prg_reference_keeps_fixture_provenance_without_live_access() -
     assert resolved.input_type == "administrative_reference"
     assert resolved.source_crs == "EPSG:4326"
     assert resolved.boundary_provenance["source_registry_id"] == "prg_wfs"
-    assert resolved.boundary_provenance["fixture"] == "backend/data/fixtures/aoi/prg_gmina_rybnik.geojson"
+    assert (
+        resolved.boundary_provenance["fixture"]
+        == "backend/data/fixtures/aoi/prg_gmina_rybnik.geojson"
+    )
     assert resolved.geometry["type"] == "Polygon"
 
 
@@ -43,12 +76,20 @@ def test_approved_prg_reference_keeps_fixture_provenance_without_live_access() -
     [
         {"type": "circle", "longitude": 181, "latitude": 50, "radius_m": 1_000},
         {"type": "circle", "longitude": 18, "latitude": 50, "radius_m": 99},
-        {"type": "circle", "longitude": 18, "latitude": 50, "radius_m": 1_000, "cache_key": "escape"},
+        {
+            "type": "circle",
+            "longitude": 18,
+            "latitude": 50,
+            "radius_m": 1_000,
+            "cache_key": "escape",
+        },
         {"type": "administrative_reference", "reference_id": "unknown"},
         {"type": "geometry", "geometry": {"type": "Polygon"}},
     ],
 )
-def test_invalid_aoi_inputs_are_rejected_deterministically(value: dict[str, object]) -> None:
+def test_invalid_aoi_inputs_are_rejected_deterministically(
+    value: dict[str, object],
+) -> None:
     with pytest.raises(AoiResolutionError):
         resolve_aoi(value)
 

@@ -11,7 +11,14 @@ from geo_pipeline.contracts import normalize_analytical_vector_layer
 from geo_pipeline.query_catalog import DISTRICT_HEATING_OSM_QUERY
 from geo_pipeline.source_registry import guard_source_access
 
-DISTRICT_HEATING_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_35km" / "district_heating" / "osm-district-heating.geojson"
+DISTRICT_HEATING_FIXTURE = (
+    Path(__file__).resolve().parents[1]
+    / "data"
+    / "fixtures"
+    / "rybnik_35km"
+    / "district_heating"
+    / "osm-district-heating.geojson"
+)
 DISTRICT_HEATING_SNAPSHOT_AT = "2026-08-10T12:00:00Z"
 DISTRICT_HEATING_LIMITATIONS = [
     "OSM district-heating infrastructure completeness varies significantly by area and operator.",
@@ -26,7 +33,11 @@ HEAT_OUTPUT_VALUES = {"yes", "true", "1", "heat"}
 
 
 def load_osm_district_heating_fixture() -> dict[str, Any]:
-    return guard_source_access("openstreetmap", "local_import", lambda: json.loads(DISTRICT_HEATING_FIXTURE.read_text(encoding="utf-8")))
+    return guard_source_access(
+        "openstreetmap",
+        "local_import",
+        lambda: json.loads(DISTRICT_HEATING_FIXTURE.read_text(encoding="utf-8")),
+    )
 
 
 def category_for_osm_feature(properties: dict[str, Any]) -> str | None:
@@ -62,11 +73,20 @@ def categorized_osm_features() -> dict[str, list[dict[str, Any]]]:
             raise ValueError("District-heating OSM fixture feature requires properties")
         category = category_for_osm_feature(properties)
         if category is None:
-            raise ValueError("District-heating fixture contains a feature without an allow-listed heating mapping")
-        categorized[category].append({**deepcopy(feature), "properties": {**deepcopy(properties), "provider_category": category}})
+            raise ValueError(
+                "District-heating fixture contains a feature without an allow-listed heating mapping"
+            )
+        categorized[category].append(
+            {
+                **deepcopy(feature),
+                "properties": {**deepcopy(properties), "provider_category": category},
+            }
+        )
     missing = [category for category in ("plants", "facilities") if not categorized[category]]
     if missing:
-        raise ValueError(f"District-heating fixture is missing required categories: {', '.join(missing)}")
+        raise ValueError(
+            f"District-heating fixture is missing required categories: {', '.join(missing)}"
+        )
     return categorized
 
 

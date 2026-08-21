@@ -1,17 +1,17 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 
+import { isLinePresentationLayer } from "../mapStyle";
+import { pointSymbolKind } from "../mapSymbols";
+import { layerPresentationSemantic } from "../presentationSemantics";
 import {
   defaultLayerEnabled,
+  type PreviewLayer,
   previewLayerKey,
   sourceAttribution,
-  transportRoadClassLabel,
-  transportRoadClasses,
-  type PreviewLayer,
   type TransportRoadClass,
+  transportRoadClasses,
+  transportRoadClassLabel,
 } from "../previewCatalog";
-import { pointSymbolKind } from "../mapSymbols";
-import { isLinePresentationLayer } from "../mapStyle";
-import { layerPresentationSemantic } from "../presentationSemantics";
 import { MapSymbolIcon } from "./LegendPanel";
 
 type LayerGroup = { provider: string; domains: Map<string, PreviewLayer[]> };
@@ -32,12 +32,19 @@ export function LayerCatalog({
   const groups = useMemo(() => {
     const byProvider = new Map<string, LayerGroup>();
     layers.forEach((layer) => {
-      const provider = layer.artifact.source_provenance.map((item) => item.source_id).join(" + ") || layer.artifact.source;
-      const group = byProvider.get(provider) ?? { provider, domains: new Map<string, PreviewLayer[]>() };
+      const provider =
+        layer.artifact.source_provenance.map((item) => item.source_id).join(" + ") ||
+        layer.artifact.source;
+      const group = byProvider.get(provider) ?? {
+        provider,
+        domains: new Map<string, PreviewLayer[]>(),
+      };
       group.domains.set(layer.domain, [...(group.domains.get(layer.domain) ?? []), layer]);
       byProvider.set(provider, group);
     });
-    return [...byProvider.values()].sort((left, right) => left.provider.localeCompare(right.provider));
+    return [...byProvider.values()].sort((left, right) =>
+      left.provider.localeCompare(right.provider),
+    );
   }, [layers]);
 
   const allProviderKeys = useMemo(() => groups.map((g) => g.provider), [groups]);
@@ -49,8 +56,10 @@ export function LayerCatalog({
   const [openProviders, setOpenProviders] = useState<string[]>(() => allProviderKeys);
   const [openDomains, setOpenDomains] = useState<string[]>(() => allDomainKeys);
 
-  const isEnabled = (layer: PreviewLayer) => enabledLayers[previewLayerKey(layer)] ?? defaultLayerEnabled(layer);
-  const setAll = (items: PreviewLayer[], enabled: boolean) => items.forEach((layer) => onToggle(previewLayerKey(layer), enabled));
+  const isEnabled = (layer: PreviewLayer) =>
+    enabledLayers[previewLayerKey(layer)] ?? defaultLayerEnabled(layer);
+  const setAll = (items: PreviewLayer[], enabled: boolean) =>
+    items.forEach((layer) => onToggle(previewLayerKey(layer), enabled));
 
   const expandAll = () => {
     setOpenProviders(allProviderKeys);
@@ -63,11 +72,15 @@ export function LayerCatalog({
   };
 
   const toggleProvider = (provider: string, isOpen: boolean) => {
-    setOpenProviders((prev) => (isOpen ? [...new Set([...prev, provider])] : prev.filter((p) => p !== provider)));
+    setOpenProviders((prev) =>
+      isOpen ? [...new Set([...prev, provider])] : prev.filter((p) => p !== provider),
+    );
   };
 
   const toggleDomain = (key: string, isOpen: boolean) => {
-    setOpenDomains((prev) => (isOpen ? [...new Set([...prev, key])] : prev.filter((d) => d !== key)));
+    setOpenDomains((prev) =>
+      isOpen ? [...new Set([...prev, key])] : prev.filter((d) => d !== key),
+    );
   };
 
   return (
@@ -76,13 +89,20 @@ export function LayerCatalog({
         <h2>Layers</h2>
         <span>{layers.length}</span>
       </div>
-      <p className="muted">Analytical provider artifacts are grouped by source and domain. Group toggles preserve each artifact’s provenance and readiness.</p>
+      <p className="muted">
+        Analytical provider artifacts are grouped by source and domain. Group toggles preserve each
+        artifact’s provenance and readiness.
+      </p>
       {groups.length ? (
         <div className="layerTree">
           <div className="layerTreeActions">
-            <button type="button" className="textButton" onClick={expandAll}>Expand all</button>
+            <button type="button" className="textButton" onClick={expandAll}>
+              Expand all
+            </button>
             <span className="muted">·</span>
-            <button type="button" className="textButton" onClick={collapseAll}>Collapse all</button>
+            <button type="button" className="textButton" onClick={collapseAll}>
+              Collapse all
+            </button>
           </div>
           {groups.map((group) => {
             const providerLayers = [...group.domains.values()].flat();
@@ -91,7 +111,7 @@ export function LayerCatalog({
               <details
                 key={group.provider}
                 open={isProviderOpen}
-                onToggle={(event) => toggleProvider(group.provider, (event.currentTarget as HTMLDetailsElement).open)}
+                onToggle={(event) => toggleProvider(group.provider, event.currentTarget.open)}
               >
                 <summary>
                   <TriStateToggle
@@ -116,7 +136,7 @@ export function LayerCatalog({
                           key={domain}
                           className="domainBranch"
                           open={isDomainOpen}
-                          onToggle={(event) => toggleDomain(domainKey, (event.currentTarget as HTMLDetailsElement).open)}
+                          onToggle={(event) => toggleDomain(domainKey, event.currentTarget.open)}
                         >
                           <summary>
                             <TriStateToggle
@@ -127,7 +147,9 @@ export function LayerCatalog({
                             />
                             <span>
                               <strong>{domain}</strong>
-                              <small>{domainLayers.length} artifact{domainLayers.length === 1 ? "" : "s"}</small>
+                              <small>
+                                {domainLayers.length} artifact{domainLayers.length === 1 ? "" : "s"}
+                              </small>
                             </span>
                           </summary>
                           {isDomainOpen && (
@@ -136,8 +158,14 @@ export function LayerCatalog({
                                 const key = previewLayerKey(layer);
                                 const semantic = layerPresentationSemantic(layer, index);
                                 const enabled = isEnabled(layer);
-                                const marker = isLinePresentationLayer(layer.artifact.source_layer) ? (
-                                  <i className={`semanticMark ${semantic.geometry}`} style={{ "--semantic-color": semantic.color } as CSSProperties} aria-hidden="true" />
+                                const marker = isLinePresentationLayer(
+                                  layer.artifact.source_layer,
+                                ) ? (
+                                  <i
+                                    className={`semanticMark ${semantic.geometry}`}
+                                    style={{ "--semantic-color": semantic.color } as CSSProperties}
+                                    aria-hidden="true"
+                                  />
                                 ) : (
                                   <MapSymbolIcon kind={pointSymbolKind(layer)} />
                                 );
@@ -155,25 +183,35 @@ export function LayerCatalog({
                                           {semantic.label}
                                         </strong>
                                         <small>
-                                          {semantic.symbol} · {layer.artifact.feature_count} features · {layer.artifact.readiness}
+                                          {semantic.symbol} · {layer.artifact.feature_count}{" "}
+                                          features · {layer.artifact.readiness}
                                         </small>
                                         <small>{sourceAttribution(layer)}</small>
                                       </span>
                                     </label>
-                                    {layer.artifact.artifact_id === "transport.roads" && enabled && (
-                                      <div className="roadClassControls" aria-label="Transport road classes">
-                                        {transportRoadClasses.map((roadClass) => (
-                                          <label className="roadClassToggle" key={roadClass}>
-                                            <input
-                                              type="checkbox"
-                                              checked={enabledTransportRoadClasses[roadClass]}
-                                              onChange={(event) => onTransportRoadClassToggle(roadClass, event.target.checked)}
-                                            />
-                                            <span>{transportRoadClassLabel(roadClass)}</span>
-                                          </label>
-                                        ))}
-                                      </div>
-                                    )}
+                                    {layer.artifact.artifact_id === "transport.roads" &&
+                                      enabled && (
+                                        <div
+                                          className="roadClassControls"
+                                          aria-label="Transport road classes"
+                                        >
+                                          {transportRoadClasses.map((roadClass) => (
+                                            <label className="roadClassToggle" key={roadClass}>
+                                              <input
+                                                type="checkbox"
+                                                checked={enabledTransportRoadClasses[roadClass]}
+                                                onChange={(event) =>
+                                                  onTransportRoadClassToggle(
+                                                    roadClass,
+                                                    event.target.checked,
+                                                  )
+                                                }
+                                              />
+                                              <span>{transportRoadClassLabel(roadClass)}</span>
+                                            </label>
+                                          ))}
+                                        </div>
+                                      )}
                                   </li>
                                 );
                               })}
@@ -209,7 +247,9 @@ function TriStateToggle({
   const checked = enabledCount === items.length && items.length > 0;
   const mixed = enabledCount > 0 && !checked;
   useEffect(() => {
-    if (inputRef.current) inputRef.current.indeterminate = mixed;
+    if (inputRef.current) {
+      inputRef.current.indeterminate = mixed;
+    }
   }, [mixed]);
   return (
     <input

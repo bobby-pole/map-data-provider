@@ -25,15 +25,24 @@ import urllib3.util.connection as urllib3_cn
 urllib3_cn.allowed_gai_family = lambda: socket.AF_INET
 
 import geopandas as gpd
-from shapely.geometry import Point, LineString, Polygon, shape
 from pyproj import Transformer
+from shapely.geometry import Point
 
-from geo_pipeline.config import CACHE_DIR
 from geo_pipeline.adapters import (
-    POWER_ADAPTER, EMERGENCY_ADAPTER, PUBLIC_ADAPTER, TRANSPORT_ADAPTER,
-    BRIDGES_ADAPTER, WATER_ADAPTER, GAS_ADAPTER, SEWER_ADAPTER,
-    INDUSTRIAL_ADAPTER, TELECOM_ADAPTER, DISTRICT_HEATING_ADAPTER,
+    BRIDGES_ADAPTER,
+    DISTRICT_HEATING_ADAPTER,
+    EMERGENCY_ADAPTER,
+    GAS_ADAPTER,
+    INDUSTRIAL_ADAPTER,
+    POWER_ADAPTER,
+    PUBLIC_ADAPTER,
+    SEWER_ADAPTER,
+    TELECOM_ADAPTER,
+    TRANSPORT_ADAPTER,
+    WATER_ADAPTER,
 )
+from geo_pipeline.config import CACHE_DIR
+
 try:
     from geo_pipeline.water import category_for_osm_feature as water_category
 except ImportError:
@@ -47,10 +56,14 @@ except ImportError:
 try:
     from geo_pipeline.telecom import category_for_osm_feature as telecom_category
 except ImportError:
-    from geo_pipeline.telecom_network import category_for_osm_feature as telecom_category
+    from geo_pipeline.telecom_network import (
+        category_for_osm_feature as telecom_category,
+    )
 
 try:
-    from geo_pipeline.district_heating import category_for_osm_feature as heating_category
+    from geo_pipeline.district_heating import (
+        category_for_osm_feature as heating_category,
+    )
 except ImportError:
     from geo_pipeline.heating import category_for_osm_feature as heating_category
 
@@ -62,17 +75,23 @@ except ImportError:
 try:
     from geo_pipeline.bridges import category_for_osm_feature as bridges_category
 except ImportError:
-    from geo_pipeline.bridges_network import category_for_osm_feature as bridges_category
+    from geo_pipeline.bridges_network import (
+        category_for_osm_feature as bridges_category,
+    )
 
 try:
     from geo_pipeline.transport import category_for_osm_feature as transport_category
 except ImportError:
-    from geo_pipeline.transport_network import category_for_osm_feature as transport_category
+    from geo_pipeline.transport_network import (
+        category_for_osm_feature as transport_category,
+    )
 
 try:
     from geo_pipeline.emergency import category_for_osm_feature as emergency_category
 except ImportError:
-    from geo_pipeline.emergency_facilities import category_for_osm_feature as emergency_category
+    from geo_pipeline.emergency_facilities import (
+        category_for_osm_feature as emergency_category,
+    )
 
 try:
     from geo_pipeline.public import category_for_osm_feature as public_category
@@ -82,7 +101,9 @@ except ImportError:
 try:
     from geo_pipeline.industrial import category_for_osm_feature as industrial_category
 except ImportError:
-    from geo_pipeline.industrial_facilities import category_for_osm_feature as industrial_category
+    from geo_pipeline.industrial_facilities import (
+        category_for_osm_feature as industrial_category,
+    )
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
@@ -126,20 +147,38 @@ def query_overpass_direct(ql_statements: str, timeout_sec: int = 90) -> dict[str
         for attempt in range(2):
             try:
                 t0 = time.perf_counter()
-                resp = requests.post(server, data={"data": full_query}, headers=HEADERS, timeout=timeout_sec + 15)
+                resp = requests.post(
+                    server,
+                    data={"data": full_query},
+                    headers=HEADERS,
+                    timeout=timeout_sec + 15,
+                )
                 duration = time.perf_counter() - t0
                 if resp.status_code == 200:
                     data = resp.json()
                     elements = data.get("elements", [])
-                    logger.info("  [%s] Query succeeded in %.2fs (%s elements)", server_host, duration, len(elements))
+                    logger.info(
+                        "  [%s] Query succeeded in %.2fs (%s elements)",
+                        server_host,
+                        duration,
+                        len(elements),
+                    )
                     time.sleep(3)  # Polite pause so Overpass releases our IP concurrency slot
                     return data
                 elif resp.status_code == 429:
-                    logger.warning("  [%s] Rate limited (HTTP 429). Waiting 10s before retry...", server_host)
+                    logger.warning(
+                        "  [%s] Rate limited (HTTP 429). Waiting 10s before retry...",
+                        server_host,
+                    )
                     time.sleep(10)
                     continue
                 else:
-                    logger.warning("  [%s] HTTP %s: %s", server_host, resp.status_code, resp.text[:120])
+                    logger.warning(
+                        "  [%s] HTTP %s: %s",
+                        server_host,
+                        resp.status_code,
+                        resp.text[:120],
+                    )
                     break
             except Exception as err:
                 last_err = err
@@ -151,7 +190,9 @@ def query_overpass_direct(ql_statements: str, timeout_sec: int = 90) -> dict[str
     raise RuntimeError("No Overpass servers available")
 
 
-def elements_to_geojson_features(elements: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def elements_to_geojson_features(
+    elements: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
     """Convert raw Overpass elements (nodes, ways, relations) to GeoJSON features."""
     nodes = {item["id"]: item for item in elements if item.get("type") == "node"}
     features = []
@@ -184,8 +225,21 @@ def elements_to_geojson_features(elements: list[dict[str, Any]]) -> list[dict[st
                     coords.append([n["lon"], n["lat"]])
 
             if len(coords) >= 2:
-                is_area = len(coords) >= 4 and coords[0] == coords[-1] and any(
-                    k in tags for k in ("building", "landuse", "amenity", "emergency", "healthcare", "industrial", "leisure")
+                is_area = (
+                    len(coords) >= 4
+                    and coords[0] == coords[-1]
+                    and any(
+                        k in tags
+                        for k in (
+                            "building",
+                            "landuse",
+                            "amenity",
+                            "emergency",
+                            "healthcare",
+                            "industrial",
+                            "leisure",
+                        )
+                    )
                 )
                 if is_area:
                     geom = {"type": "Polygon", "coordinates": [coords]}
@@ -216,12 +270,12 @@ def clip_features_geometric(features: list[dict[str, Any]]) -> list[dict[str, An
         if item_id is not None:
             try:
                 item_id = int(item_id)
-            except (ValueError, TypeError):
+            except ValueError, TypeError:
                 pass
         else:
             try:
                 item_id = int(f.get("id", 1))
-            except (ValueError, TypeError):
+            except ValueError, TypeError:
                 item_id = 1
         props["id"] = item_id
         f["id"] = item_id
@@ -370,7 +424,9 @@ def sanitize_existing_fixture(domain_name: str, spec: dict[str, Any]) -> None:
                     item_id = idx
                 idx += 1
 
-                elem = props.get("element") or ("node" if f.get("geometry", {}).get("type") == "Point" else "way")
+                elem = props.get("element") or (
+                    "node" if f.get("geometry", {}).get("type") == "Point" else "way"
+                )
                 props["id"] = item_id
                 props["element"] = elem
                 props["source_id"] = f"{elem}/{item_id}"
@@ -380,75 +436,85 @@ def sanitize_existing_fixture(domain_name: str, spec: dict[str, Any]) -> None:
         if domain_name == "telecom":
             cats = {classifier(f["properties"]) for f in valid_features}
             if "facilities" not in cats:
-                valid_features.append({
-                    "type": "Feature",
-                    "id": 98000001,
-                    "properties": {
+                valid_features.append(
+                    {
+                        "type": "Feature",
                         "id": 98000001,
-                        "element": "node",
-                        "telecom": "exchange",
-                        "name": "Centrala Telekomunikacyjna Orange Rybnik",
-                        "operator": "Orange Polska",
-                    },
-                    "geometry": {
-                        "type": "Point",
-                        "coordinates": [18.5432, 50.0971],
-                    },
-                })
+                        "properties": {
+                            "id": 98000001,
+                            "element": "node",
+                            "telecom": "exchange",
+                            "name": "Centrala Telekomunikacyjna Orange Rybnik",
+                            "operator": "Orange Polska",
+                        },
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": [18.5432, 50.0971],
+                        },
+                    }
+                )
             if "towers" not in cats:
-                valid_features.append({
-                    "type": "Feature",
-                    "id": 98000002,
-                    "properties": {
+                valid_features.append(
+                    {
+                        "type": "Feature",
                         "id": 98000002,
-                        "element": "node",
-                        "man_made": "mast",
-                        "tower:type": "communication",
-                        "name": "Maszt Telekomunikacyjny Rybnik",
-                    },
-                    "geometry": {
-                        "type": "Point",
-                        "coordinates": [18.5411, 50.0955],
-                    },
-                })
+                        "properties": {
+                            "id": 98000002,
+                            "element": "node",
+                            "man_made": "mast",
+                            "tower:type": "communication",
+                            "name": "Maszt Telekomunikacyjny Rybnik",
+                        },
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": [18.5411, 50.0955],
+                        },
+                    }
+                )
 
         if domain_name == "district_heating":
             cats = {classifier(f["properties"]) for f in valid_features}
             if "facilities" not in cats:
-                valid_features.append({
-                    "type": "Feature",
-                    "id": 99000001,
-                    "properties": {
+                valid_features.append(
+                    {
+                        "type": "Feature",
                         "id": 99000001,
-                        "element": "node",
-                        "man_made": "heat_exchanger",
-                        "name": "Główny Węzeł Ciepłowniczy Rybnik Śródmieście",
-                    },
-                    "geometry": {
-                        "type": "Point",
-                        "coordinates": [18.5401, 50.0982],
-                    },
-                })
+                        "properties": {
+                            "id": 99000001,
+                            "element": "node",
+                            "man_made": "heat_exchanger",
+                            "name": "Główny Węzeł Ciepłowniczy Rybnik Śródmieście",
+                        },
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": [18.5401, 50.0982],
+                        },
+                    }
+                )
             if "plants" not in cats:
-                valid_features.append({
-                    "type": "Feature",
-                    "id": 99000002,
-                    "properties": {
+                valid_features.append(
+                    {
+                        "type": "Feature",
                         "id": 99000002,
-                        "element": "node",
-                        "industrial": "heating_station",
-                        "name": "Elektrociepłownia Rybnik (PGE Energia Ciepła)",
-                        "plant:output:heat": "yes",
-                    },
-                    "geometry": {
-                        "type": "Point",
-                        "coordinates": [18.5284, 50.1347],
-                    },
-                })
+                        "properties": {
+                            "id": 99000002,
+                            "element": "node",
+                            "industrial": "heating_station",
+                            "name": "Elektrociepłownia Rybnik (PGE Energia Ciepła)",
+                            "plant:output:heat": "yes",
+                        },
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": [18.5284, 50.1347],
+                        },
+                    }
+                )
 
         if valid_features:
             data["features"] = valid_features
-            fixture_path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+            fixture_path.write_text(
+                json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
             logger.info("  Auto-sanitized %s features for %s", len(valid_features), domain_name)
     except Exception as err:
         logger.warning("  Failed to sanitize existing fixture %s: %s", domain_name, err)
@@ -473,7 +539,11 @@ def main() -> None:
                 feats = data.get("features", [])
                 if len(feats) > 10:
                     already_populated = True
-                    logger.info("  Domain %s already populated & sanitized (%s features). Skipping fetch.", domain_name, len(feats))
+                    logger.info(
+                        "  Domain %s already populated & sanitized (%s features). Skipping fetch.",
+                        domain_name,
+                        len(feats),
+                    )
             except Exception:
                 pass
 
@@ -490,18 +560,32 @@ def main() -> None:
                     if cat is not None:
                         valid_features.append(feat)
 
-                logger.info("  Parsed %s valid domain features (from %s raw)", len(valid_features), len(raw_features))
+                logger.info(
+                    "  Parsed %s valid domain features (from %s raw)",
+                    len(valid_features),
+                    len(raw_features),
+                )
 
                 clipped_features = clip_features_geometric(valid_features)
                 fc = {"type": "FeatureCollection", "features": clipped_features}
 
                 fixture_path.parent.mkdir(parents=True, exist_ok=True)
-                fixture_path.write_text(json.dumps(fc, ensure_ascii=False, indent=2), encoding="utf-8")
+                fixture_path.write_text(
+                    json.dumps(fc, ensure_ascii=False, indent=2), encoding="utf-8"
+                )
                 sanitize_existing_fixture(domain_name, spec)
-                logger.info("  Saved %s clipped features to %s", len(clipped_features), fixture_path.name)
+                logger.info(
+                    "  Saved %s clipped features to %s",
+                    len(clipped_features),
+                    fixture_path.name,
+                )
 
             except Exception as err:
-                logger.error("  Failed to acquire %s: %s (preserving existing fixture)", domain_name, err)
+                logger.error(
+                    "  Failed to acquire %s: %s (preserving existing fixture)",
+                    domain_name,
+                    err,
+                )
                 sanitize_existing_fixture(domain_name, spec)
 
         # Build cache & domain pack
@@ -518,9 +602,12 @@ def main() -> None:
     POWER_ADAPTER.build_domain_pack(CACHE_DIR)
 
     total_time = time.perf_counter() - t_global_start
-    logger.info("\n=== All domains processed in %.2f seconds (%.2f minutes)! ===", total_time, total_time / 60)
+    logger.info(
+        "\n=== All domains processed in %.2f seconds (%.2f minutes)! ===",
+        total_time,
+        total_time / 60,
+    )
 
 
 if __name__ == "__main__":
     main()
-

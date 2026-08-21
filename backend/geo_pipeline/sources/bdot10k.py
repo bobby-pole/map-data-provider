@@ -21,18 +21,48 @@ BDOT10K_ADAPTER_VERSION = "bdot10k_adapter/v1"
 BDOT10K_SOURCE_CRS = "EPSG:2180"
 BDOT10K_INTERCHANGE_CRS = "EPSG:4326"
 BDOT10K_DOWNLOAD_ROOT = "https://opendata.geoportal.gov.pl/bdot10k/schemat2021/"
-BDOT10K_PACKAGE_DISCOVERY_WMS = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT/WMS/PobieranieBDOT10k"
+BDOT10K_PACKAGE_DISCOVERY_WMS = (
+    "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT/WMS/PobieranieBDOT10k"
+)
 
 # Each entry is a verified 2021-schema class download. The point industrial
 # representation exercises every geometry family without a generic upload route.
 BDOT10K_CLASS_MAPPING: dict[str, dict[str, str]] = {
-    "OT_SKDR_L": {"source_role": "transport", "geometry_family": "line", "label": "road"},
-    "OT_BUIN_L": {"source_role": "bridge_context", "geometry_family": "line", "label": "engineering_structure"},
-    "OT_SWRS_L": {"source_role": "water_context", "geometry_family": "line", "label": "river_or_stream"},
-    "OT_BUBD_A": {"source_role": "building_context", "geometry_family": "polygon", "label": "building"},
-    "OT_KUPG_A": {"source_role": "industrial_context", "geometry_family": "polygon", "label": "industrial_economic_complex"},
-    "OT_KUPG_P": {"source_role": "industrial_context", "geometry_family": "point", "label": "industrial_economic_complex"},
-    "OT_PTKM_A": {"source_role": "military_context", "geometry_family": "polygon", "label": "military_complex"},
+    "OT_SKDR_L": {
+        "source_role": "transport",
+        "geometry_family": "line",
+        "label": "road",
+    },
+    "OT_BUIN_L": {
+        "source_role": "bridge_context",
+        "geometry_family": "line",
+        "label": "engineering_structure",
+    },
+    "OT_SWRS_L": {
+        "source_role": "water_context",
+        "geometry_family": "line",
+        "label": "river_or_stream",
+    },
+    "OT_BUBD_A": {
+        "source_role": "building_context",
+        "geometry_family": "polygon",
+        "label": "building",
+    },
+    "OT_KUPG_A": {
+        "source_role": "industrial_context",
+        "geometry_family": "polygon",
+        "label": "industrial_economic_complex",
+    },
+    "OT_KUPG_P": {
+        "source_role": "industrial_context",
+        "geometry_family": "point",
+        "label": "industrial_economic_complex",
+    },
+    "OT_PTKM_A": {
+        "source_role": "military_context",
+        "geometry_family": "polygon",
+        "label": "military_complex",
+    },
 }
 BDOT10K_REQUIRED_FIELDS = frozenset({"idIIP"})
 BDOT10K_SELECTED_FIELDS = ("idIIP", "x_kod", "nazwa", "geometry")
@@ -75,9 +105,16 @@ def load_fixture_manifest(path: Path) -> dict[str, Any]:
     if not isinstance(artifacts, list) or not artifacts:
         raise Bdot10kAdapterError("BDOT10k fixture manifest is missing artifacts")
     for artifact in artifacts:
-        if not isinstance(artifact, dict) or set(artifact) != {"file", "format", "sha256", "source_classes"}:
+        if not isinstance(artifact, dict) or set(artifact) != {
+            "file",
+            "format",
+            "sha256",
+            "source_classes",
+        }:
             raise Bdot10kAdapterError("BDOT10k fixture manifest artifact shape is invalid")
-        if artifact["format"] not in {"gpkg", "geoparquet"} or not isinstance(artifact["source_classes"], list):
+        if artifact["format"] not in {"gpkg", "geoparquet"} or not isinstance(
+            artifact["source_classes"], list
+        ):
             raise Bdot10kAdapterError("BDOT10k fixture manifest artifact format is invalid")
         for source_class in artifact["source_classes"]:
             class_definition(source_class)
@@ -85,7 +122,11 @@ def load_fixture_manifest(path: Path) -> dict[str, Any]:
 
 
 def read_fixture_class(
-    *, manifest_path: Path, source_class: str, artifact_format: str, aoi_geometry: dict[str, Any]
+    *,
+    manifest_path: Path,
+    source_class: str,
+    artifact_format: str,
+    aoi_geometry: dict[str, Any],
 ) -> dict[str, Any]:
     """Read one fixture artifact after checksum and mapping validation."""
     manifest = load_fixture_manifest(manifest_path)
@@ -231,7 +272,9 @@ def _read_and_normalize(
     }
 
 
-def _artifact_for(manifest: dict[str, Any], source_class: str, artifact_format: str) -> dict[str, Any]:
+def _artifact_for(
+    manifest: dict[str, Any], source_class: str, artifact_format: str
+) -> dict[str, Any]:
     for artifact in manifest["artifacts"]:
         if artifact["format"] == artifact_format and source_class in artifact["source_classes"]:
             return artifact
@@ -241,17 +284,31 @@ def _artifact_for(manifest: dict[str, Any], source_class: str, artifact_format: 
 def _validate_frame(frame: gpd.GeoDataFrame, source_class: str, definition: dict[str, str]) -> None:
     missing = BDOT10K_REQUIRED_FIELDS - set(frame.columns)
     if missing:
-        raise Bdot10kAdapterError(f"BDOT10k schema drift for {source_class}: missing {', '.join(sorted(missing))}")
+        raise Bdot10kAdapterError(
+            f"BDOT10k schema drift for {source_class}: missing {', '.join(sorted(missing))}"
+        )
     if frame.crs is None or frame.crs.to_string().upper() != BDOT10K_SOURCE_CRS:
         found = "missing" if frame.crs is None else frame.crs.to_string()
-        raise Bdot10kAdapterError(f"BDOT10k schema drift for {source_class}: expected {BDOT10K_SOURCE_CRS}, got {found}")
+        raise Bdot10kAdapterError(
+            f"BDOT10k schema drift for {source_class}: expected {BDOT10K_SOURCE_CRS}, got {found}"
+        )
     for geometry in frame.geometry:
         if geometry is not None and not geometry.is_empty:
-            _validate_geometry_family(geometry.geom_type, definition["geometry_family"], source_class)
+            _validate_geometry_family(
+                geometry.geom_type, definition["geometry_family"], source_class
+            )
 
 
 def _validate_geometry_family(geometry_type: str, expected: str, source_class: str) -> None:
-    family = "point" if geometry_type == "Point" else "line" if geometry_type in {"LineString", "MultiLineString"} else "polygon" if geometry_type in {"Polygon", "MultiPolygon"} else "other"
+    family = (
+        "point"
+        if geometry_type == "Point"
+        else "line"
+        if geometry_type in {"LineString", "MultiLineString"}
+        else "polygon"
+        if geometry_type in {"Polygon", "MultiPolygon"}
+        else "other"
+    )
     if family != expected:
         raise Bdot10kAdapterError(
             f"BDOT10k schema drift for {source_class}: expected {expected} geometry, got {geometry_type}"
@@ -259,7 +316,9 @@ def _validate_geometry_family(geometry_type: str, expected: str, source_class: s
 
 
 def _aoi_bounds_in_source_crs(aoi: Any) -> tuple[float, float, float, float]:
-    aoi_frame = gpd.GeoDataFrame(geometry=[aoi], crs=BDOT10K_INTERCHANGE_CRS).to_crs(BDOT10K_SOURCE_CRS)
+    aoi_frame = gpd.GeoDataFrame(geometry=[aoi], crs=BDOT10K_INTERCHANGE_CRS).to_crs(
+        BDOT10K_SOURCE_CRS
+    )
     return tuple(aoi_frame.total_bounds)
 
 

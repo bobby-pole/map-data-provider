@@ -11,7 +11,14 @@ from geo_pipeline.contracts import normalize_analytical_vector_layer
 from geo_pipeline.query_catalog import TELECOM_OSM_QUERY
 from geo_pipeline.source_registry import guard_source_access
 
-TELECOM_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_35km" / "telecom" / "osm-telecom.geojson"
+TELECOM_FIXTURE = (
+    Path(__file__).resolve().parents[1]
+    / "data"
+    / "fixtures"
+    / "rybnik_35km"
+    / "telecom"
+    / "osm-telecom.geojson"
+)
 TELECOM_SNAPSHOT_AT = "2026-08-10T10:00:00Z"
 TELECOM_LIMITATIONS = [
     "OSM telecom infrastructure and communication-network completeness varies significantly by area and operator.",
@@ -23,15 +30,29 @@ TELECOM_LIMITATIONS = [
 
 TELECOM_CATEGORIES = ("towers", "facilities", "lines")
 TELECOM_FACILITY_VALUES = {
-    "antenna", "exchange", "distribution_point", "service_point", "street_cabinet", "data_center", "cable_landing_station",
+    "antenna",
+    "exchange",
+    "distribution_point",
+    "service_point",
+    "street_cabinet",
+    "data_center",
+    "cable_landing_station",
 }
 COMMUNICATION_SERVICE_KEYS = {
-    "communication:mobile_phone", "communication:radio", "communication:television", "communication:microwave", "communication:bos",
+    "communication:mobile_phone",
+    "communication:radio",
+    "communication:television",
+    "communication:microwave",
+    "communication:bos",
 }
 
 
 def load_osm_telecom_fixture() -> dict[str, Any]:
-    return guard_source_access("openstreetmap", "local_import", lambda: json.loads(TELECOM_FIXTURE.read_text(encoding="utf-8")))
+    return guard_source_access(
+        "openstreetmap",
+        "local_import",
+        lambda: json.loads(TELECOM_FIXTURE.read_text(encoding="utf-8")),
+    )
 
 
 def _has_communication_service(properties: dict[str, Any]) -> bool:
@@ -73,12 +94,16 @@ def categorized_osm_features() -> dict[str, list[dict[str, Any]]]:
             raise ValueError("Telecom OSM fixture feature requires properties")
         category = category_for_osm_feature(properties)
         if category is None:
-            raise ValueError("Telecom OSM fixture contains a feature without an allow-listed telecom mapping")
+            raise ValueError(
+                "Telecom OSM fixture contains a feature without an allow-listed telecom mapping"
+            )
         props = {**deepcopy(properties), "provider_category": category}
         categorized[category].append({**deepcopy(feature), "properties": props})
     missing = [category for category in ("towers", "facilities") if not categorized[category]]
     if missing:
-        raise ValueError(f"Telecom OSM fixture is missing required categories: {', '.join(missing)}")
+        raise ValueError(
+            f"Telecom OSM fixture is missing required categories: {', '.join(missing)}"
+        )
     return categorized
 
 
@@ -120,7 +145,11 @@ def build_osm_telecom_layers(*, readiness: str) -> dict[str, dict[str, Any]]:
 
 
 def build_osm_telecom_cache_layer(*, readiness: str) -> dict[str, Any]:
-    features = [feature for category_features in categorized_osm_features().values() for feature in category_features]
+    features = [
+        feature
+        for category_features in categorized_osm_features().values()
+        for feature in category_features
+    ]
     return normalize_analytical_vector_layer(
         {"type": "FeatureCollection", "features": features},
         metadata=telecom_osm_metadata(layer_id="telecom.osm_features", readiness=readiness),

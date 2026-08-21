@@ -6,7 +6,7 @@ from unittest.mock import patch
 import geopandas as gpd
 import pytest
 from pyproj import Transformer
-from shapely.geometry import LineString, Polygon
+from shapely.geometry import LineString
 
 from geo_pipeline.sources.bdot10k import (
     BDOT10K_ADAPTER_VERSION,
@@ -19,12 +19,17 @@ from geo_pipeline.sources.bdot10k import (
     read_fixture_class,
 )
 
-
 FIXTURE_ROOT = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "bdot10k"
 MANIFEST = FIXTURE_ROOT / "fixture_manifest.json"
 
 
-def _aoi_4326(*, min_x: float = 499990, min_y: float = 249990, max_x: float = 500160, max_y: float = 250140) -> dict:
+def _aoi_4326(
+    *,
+    min_x: float = 499990,
+    min_y: float = 249990,
+    max_x: float = 500160,
+    max_y: float = 250140,
+) -> dict:
     transformer = Transformer.from_crs("EPSG:2180", "EPSG:4326", always_xy=True)
     corners = [
         transformer.transform(min_x, min_y),
@@ -41,7 +46,10 @@ def test_manifest_is_versioned_and_has_digests_for_bounded_native_artifacts() ->
 
     assert manifest["adapter_version"] == BDOT10K_ADAPTER_VERSION
     assert manifest["snapshot_at"] == "2026-08-02T11:54:10Z"
-    assert {artifact["format"] for artifact in manifest["artifacts"]} == {"gpkg", "geoparquet"}
+    assert {artifact["format"] for artifact in manifest["artifacts"]} == {
+        "gpkg",
+        "geoparquet",
+    }
     assert all(len(artifact["sha256"]) == 64 for artifact in manifest["artifacts"])
 
 
@@ -102,16 +110,29 @@ def test_readers_receive_selected_fields_and_a_bounded_aoi() -> None:
     parquet = FIXTURE_ROOT / "OT_KUPG_P.parquet"
     with patch("geo_pipeline.sources.bdot10k.gpd.read_file", wraps=gpd.read_file) as read_file:
         read_bdot10k_class(
-            source_class="OT_SKDR_L", artifact_path=gpkg, aoi_geometry=_aoi_4326(), snapshot_at="fixture"
+            source_class="OT_SKDR_L",
+            artifact_path=gpkg,
+            aoi_geometry=_aoi_4326(),
+            snapshot_at="fixture",
         )
     assert read_file.call_args.kwargs["columns"] == ["idIIP", "x_kod", "nazwa"]
     assert len(read_file.call_args.kwargs["bbox"]) == 4
 
-    with patch("geo_pipeline.sources.bdot10k.gpd.read_parquet", wraps=gpd.read_parquet) as read_parquet:
+    with patch(
+        "geo_pipeline.sources.bdot10k.gpd.read_parquet", wraps=gpd.read_parquet
+    ) as read_parquet:
         read_bdot10k_class(
-            source_class="OT_KUPG_P", artifact_path=parquet, aoi_geometry=_aoi_4326(), snapshot_at="fixture"
+            source_class="OT_KUPG_P",
+            artifact_path=parquet,
+            aoi_geometry=_aoi_4326(),
+            snapshot_at="fixture",
         )
-    assert read_parquet.call_args.kwargs["columns"] == ["idIIP", "x_kod", "nazwa", "geometry"]
+    assert read_parquet.call_args.kwargs["columns"] == [
+        "idIIP",
+        "x_kod",
+        "nazwa",
+        "geometry",
+    ]
     assert len(read_parquet.call_args.kwargs["bbox"]) == 4
 
 
@@ -136,16 +157,27 @@ def test_unknown_class_checksum_and_schema_drift_fail_clearly(tmp_path: Path) ->
     ).to_file(broken, layer="OT_SKDR_L", driver="GPKG", engine="pyogrio")
     with pytest.raises(Bdot10kAdapterError, match="missing idIIP"):
         read_bdot10k_class(
-            source_class="OT_SKDR_L", artifact_path=broken, aoi_geometry=_aoi_4326(), snapshot_at="fixture"
+            source_class="OT_SKDR_L",
+            artifact_path=broken,
+            aoi_geometry=_aoi_4326(),
+            snapshot_at="fixture",
         )
 
 
 def test_mapping_is_narrow_and_uses_only_supported_geometry_families() -> None:
     assert set(BDOT10K_CLASS_MAPPING) == {
-        "OT_SKDR_L", "OT_BUIN_L", "OT_SWRS_L", "OT_BUBD_A", "OT_KUPG_A", "OT_KUPG_P", "OT_PTKM_A"
+        "OT_SKDR_L",
+        "OT_BUIN_L",
+        "OT_SWRS_L",
+        "OT_BUBD_A",
+        "OT_KUPG_A",
+        "OT_KUPG_P",
+        "OT_PTKM_A",
     }
     assert {definition["geometry_family"] for definition in BDOT10K_CLASS_MAPPING.values()} == {
-        "line", "point", "polygon"
+        "line",
+        "point",
+        "polygon",
     }
 
 

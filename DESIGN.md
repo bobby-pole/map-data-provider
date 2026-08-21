@@ -45,15 +45,15 @@ provider's delivered evidence.
 
 ## Workspace anatomy
 
-| Area | Responsibility | Interaction rule |
-| --- | --- | --- |
-| Header | Product identity and prepared-AOI summary | Persistent, low-density context only. |
-| Map canvas | Delivered PMTiles layers and bounded reference overlays | Primary interaction surface. |
-| Left context drawer | AOI, layers, providers, legend, source inspection | Open only on demand and be dismissible. |
-| Right icon rail | Entry points to drawers and activity log | Active tool must have a visible active state. |
-| Bottom status | AOI, visible-feature count, basemap, zoom and close-zoom guidance | Read-only, concise, never obscures a key map control. |
-| Activity window | Preparation and validation events | Floating, draggable, resizable, and visually consistent with drawers. |
-| Selected-line edge inspector | Persistent detail for a chosen verified power line | Anchored at the map edge, not to a geographical coordinate. |
+| Area                         | Responsibility                                                    | Interaction rule                                                      |
+| ---------------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Header                       | Product identity and prepared-AOI summary                         | Persistent, low-density context only.                                 |
+| Map canvas                   | Delivered PMTiles layers and bounded reference overlays           | Primary interaction surface.                                          |
+| Left context drawer          | AOI, layers, providers, legend, source inspection                 | Open only on demand and be dismissible.                               |
+| Right icon rail              | Entry points to drawers and activity log                          | Active tool must have a visible active state.                         |
+| Bottom status                | AOI, visible-feature count, basemap, zoom and close-zoom guidance | Read-only, concise, never obscures a key map control.                 |
+| Activity window              | Preparation and validation events                                 | Floating, draggable, resizable, and visually consistent with drawers. |
+| Selected-line edge inspector | Persistent detail for a chosen verified power line                | Anchored at the map edge, not to a geographical coordinate.           |
 
 At desktop widths, drawers sit on the left and the icon rail on the right.
 At narrower widths, preserve a usable map canvas first; drawers and inspectors

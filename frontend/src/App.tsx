@@ -1,35 +1,60 @@
-import { lazy, Suspense, useCallback, useMemo, useState } from "react";
-
-import { CloseButton } from "./components/CloseButton";
-import { DrawerSkeleton } from "./components/DrawerSkeleton";
-import { MapView } from "./components/MapView";
-import { useProviderPreview } from "./hooks/useApi";
-import { useAoiStore } from "./stores/aoiStore";
-import { configuredPreviewLayers, defaultLayerEnabled, previewLayerKey, type TransportRoadClass } from "./previewCatalog";
-import { PreviewHeader } from "./components/PreviewHeader";
-import { IconRail, type PreviewPanel } from "./components/IconRail";
-import type { ActivityEvent } from "./components/ActivityWindow";
-import type { SelectedProviderFeature } from "./inspection";
-import { kiutReferenceLayers } from "./kiutReference";
-import { orthophotoReference } from "./orthophotoReference";
-import { type VisualBasemapMode, visualBasemapOptions } from "./mapStyle";
-import { DEFAULT_AOI_OUTLINE, displayedAoiOutlines } from "./aoiSettings";
-import type { MapCircuit, MapCircuitMember, MapFeatureDetail, ProviderRuntimeResponse } from "./types/api";
-import { SourceAvailabilitySection } from "./components/SourceAvailabilitySection";
 import "./index.css";
 
-const FeatureDetails = lazy(() => import("./components/FeatureDetails").then((m) => ({ default: m.FeatureDetails })));
-const IssueReviewDrawer = lazy(() => import("./components/IssueReviewDrawer").then((m) => ({ default: m.IssueReviewDrawer })));
-const LayerCatalog = lazy(() => import("./components/LayerCatalog").then((m) => ({ default: m.LayerCatalog })));
-const AoiSettings = lazy(() => import("./components/AoiSettings").then((m) => ({ default: m.AoiSettings })));
-const ActivityWindow = lazy(() => import("./components/ActivityWindow").then((m) => ({ default: m.ActivityWindow })));
-const LegendPanel = lazy(() => import("./components/LegendPanel").then((m) => ({ default: m.LegendPanel })));
+import { lazy, Suspense, useCallback, useMemo, useState } from "react";
+
+import { DEFAULT_AOI_OUTLINE, displayedAoiOutlines } from "./aoiSettings";
+import type { ActivityEvent } from "./components/ActivityWindow";
+import { CloseButton } from "./components/CloseButton";
+import { DrawerSkeleton } from "./components/DrawerSkeleton";
+import { IconRail, type PreviewPanel } from "./components/IconRail";
+import { MapView } from "./components/MapView";
+import { PreviewHeader } from "./components/PreviewHeader";
+import { SourceAvailabilitySection } from "./components/SourceAvailabilitySection";
+import { useProviderPreview } from "./hooks/useApi";
+import type { SelectedProviderFeature } from "./inspection";
+import { kiutReferenceLayers } from "./kiutReference";
+import { type VisualBasemapMode, visualBasemapOptions } from "./mapStyle";
+import { orthophotoReference } from "./orthophotoReference";
+import {
+  configuredPreviewLayers,
+  defaultLayerEnabled,
+  previewLayerKey,
+  type TransportRoadClass,
+} from "./previewCatalog";
+import { useAoiStore } from "./stores/aoiStore";
+import type {
+  MapCircuit,
+  MapCircuitMember,
+  MapFeatureDetail,
+  ProviderRuntimeResponse,
+} from "./types/api";
+
+const FeatureDetails = lazy(() =>
+  import("./components/FeatureDetails").then((m) => ({ default: m.FeatureDetails })),
+);
+const IssueReviewDrawer = lazy(() =>
+  import("./components/IssueReviewDrawer").then((m) => ({ default: m.IssueReviewDrawer })),
+);
+const LayerCatalog = lazy(() =>
+  import("./components/LayerCatalog").then((m) => ({ default: m.LayerCatalog })),
+);
+const AoiSettings = lazy(() =>
+  import("./components/AoiSettings").then((m) => ({ default: m.AoiSettings })),
+);
+const ActivityWindow = lazy(() =>
+  import("./components/ActivityWindow").then((m) => ({ default: m.ActivityWindow })),
+);
+const LegendPanel = lazy(() =>
+  import("./components/LegendPanel").then((m) => ({ default: m.LegendPanel })),
+);
 
 const DEFAULT_AOI_ID = "rybnik_35km";
 
 export default function App() {
   const [enabledLayers, setEnabledLayers] = useState<Record<string, boolean>>({});
-  const [enabledTransportRoadClasses, setEnabledTransportRoadClasses] = useState<Record<TransportRoadClass, boolean>>({ major: true, secondary: true });
+  const [enabledTransportRoadClasses, setEnabledTransportRoadClasses] = useState<
+    Record<TransportRoadClass, boolean>
+  >({ major: true, secondary: true });
   const [selectedFeature, setSelectedFeature] = useState<SelectedProviderFeature | null>(null);
   const [selectedDetail, setSelectedDetail] = useState<MapFeatureDetail | null>(null);
   const [selectedCircuit, setSelectedCircuit] = useState<MapCircuit | null>(null);
@@ -50,21 +75,42 @@ export default function App() {
   const setPickingAoi = useAoiStore((s) => s.setPickingAoi);
   const pickPoint = useAoiStore((s) => s.pickPoint);
 
-  const isDefaultAoiActive = !runtimeResult || (runtimeResult.outcomes.every((o) => o.status !== "ready") && DEFAULT_AOI_ID === "rybnik_35km");
+  const isDefaultAoiActive =
+    !runtimeResult ||
+    (runtimeResult.outcomes.every((o) => o.status !== "ready") && DEFAULT_AOI_ID === "rybnik_35km");
   const shouldHideDefaultObjects = isDefaultAoiActive && defaultAoiHidden;
 
-  const preparedAoiId = runtimeResult?.outcomes.some((outcome) => outcome.status === "ready") ? runtimeResult.aoi.aoi_id : DEFAULT_AOI_ID;
-  const { aoiId, presentations, issues, sourceAvailability, updateReview, error } = useProviderPreview(preparedAoiId);
+  const preparedAoiId = runtimeResult?.outcomes.some((outcome) => outcome.status === "ready")
+    ? runtimeResult.aoi.aoi_id
+    : DEFAULT_AOI_ID;
+  const { aoiId, presentations, issues, sourceAvailability, updateReview, error } =
+    useProviderPreview(preparedAoiId);
   const catalog = useMemo(() => configuredPreviewLayers(presentations), [presentations]);
   const visibleLayers = useMemo(
-    () => (shouldHideDefaultObjects ? [] : catalog.filter((layer) => enabledLayers[previewLayerKey(layer)] ?? defaultLayerEnabled(layer))),
+    () =>
+      shouldHideDefaultObjects
+        ? []
+        : catalog.filter(
+            (layer) => enabledLayers[previewLayerKey(layer)] ?? defaultLayerEnabled(layer),
+          ),
     [catalog, enabledLayers, shouldHideDefaultObjects],
   );
-  const featureCount = useMemo(() => visibleLayers.reduce((total, layer) => total + layer.artifact.feature_count, 0), [visibleLayers]);
-  const visibleReferences = useMemo(() => kiutReferenceLayers.filter((reference) => enabledReferences[reference.id] ?? false), [enabledReferences]);
+  const featureCount = useMemo(
+    () => visibleLayers.reduce((total, layer) => total + layer.artifact.feature_count, 0),
+    [visibleLayers],
+  );
+  const visibleReferences = useMemo(
+    () => kiutReferenceLayers.filter((reference) => enabledReferences[reference.id] ?? false),
+    [enabledReferences],
+  );
 
   const addActivity = useCallback((event: Omit<ActivityEvent, "id" | "timestamp">) => {
-    setActivityEvents((current) => [...current, { ...event, id: `${Date.now()}-${current.length}`, timestamp: new Date().toISOString() }].slice(-40));
+    setActivityEvents((current) =>
+      [
+        ...current,
+        { ...event, id: `${Date.now()}-${current.length}`, timestamp: new Date().toISOString() },
+      ].slice(-40),
+    );
   }, []);
 
   const selectFeature = useCallback((selection: SelectedProviderFeature) => {
@@ -72,44 +118,66 @@ export default function App() {
     setSelectedDetail(null);
     setSelectedCircuit(null);
     setSelectedCircuitMember(null);
-    setActivePanel((current) => selection.layer.domain === "power" ? (current === "layers" ? null : current) : "layers");
+    setActivePanel((current) =>
+      selection.layer.domain === "power" ? (current === "layers" ? null : current) : "layers",
+    );
   }, []);
 
-  const toggleLayer = useCallback((key: string, enabled: boolean) => {
-    setEnabledLayers((current) => ({ ...current, [key]: enabled }));
-    if (!enabled && selectedFeature && previewLayerKey(selectedFeature.layer) === key) {
+  const toggleLayer = useCallback(
+    (key: string, enabled: boolean) => {
+      setEnabledLayers((current) => ({ ...current, [key]: enabled }));
+      if (!enabled && selectedFeature && previewLayerKey(selectedFeature.layer) === key) {
+        setSelectedFeature(null);
+        setSelectedDetail(null);
+        setSelectedCircuit(null);
+        setSelectedCircuitMember(null);
+      }
+    },
+    [selectedFeature],
+  );
+
+  const toggleTransportRoadClass = useCallback(
+    (roadClass: TransportRoadClass, enabled: boolean) => {
+      setEnabledTransportRoadClasses((current) => ({ ...current, [roadClass]: enabled }));
+    },
+    [],
+  );
+
+  const selectPanel = useCallback(
+    (panel: PreviewPanel) => {
+      setActivePanel((current) => (current === panel ? null : panel));
+      setPickingAoi(false);
+    },
+    [setPickingAoi],
+  );
+
+  const applyResult = useCallback(
+    (result: ProviderRuntimeResponse) => {
+      setRuntimeResult(result);
+      setDefaultAoiHidden(false);
+      useAoiStore.setState({ draftAoiOutline: null, aoiViewport: null });
       setSelectedFeature(null);
       setSelectedDetail(null);
       setSelectedCircuit(null);
       setSelectedCircuitMember(null);
-    }
-  }, [selectedFeature]);
-
-  const toggleTransportRoadClass = useCallback((roadClass: TransportRoadClass, enabled: boolean) => {
-    setEnabledTransportRoadClasses((current) => ({ ...current, [roadClass]: enabled }));
-  }, []);
-
-  const selectPanel = useCallback((panel: PreviewPanel) => {
-    setActivePanel((current) => (current === panel ? null : panel));
-    setPickingAoi(false);
-  }, [setPickingAoi]);
-
-  const applyResult = useCallback((result: ProviderRuntimeResponse) => {
-    setRuntimeResult(result);
-    setDefaultAoiHidden(false);
-    useAoiStore.setState({ draftAoiOutline: null, aoiViewport: null });
-    setSelectedFeature(null);
-    setSelectedDetail(null);
-    setSelectedCircuit(null);
-    setSelectedCircuitMember(null);
-    setPickingAoi(false);
-    setActivePanel(result.outcomes.some((outcome) => outcome.status === "failed") ? "settings" : "layers");
-  }, [setPickingAoi]);
+      setPickingAoi(false);
+      setActivePanel(
+        result.outcomes.some((outcome) => outcome.status === "failed") ? "settings" : "layers",
+      );
+    },
+    [setPickingAoi],
+  );
 
   const resetToDefault = useCallback(() => {
     setRuntimeResult(null);
     setDefaultAoiHidden(false);
-    useAoiStore.setState({ draftAoiOutline: null, aoiViewport: null, result: null, preflight: null, error: null });
+    useAoiStore.setState({
+      draftAoiOutline: null,
+      aoiViewport: null,
+      result: null,
+      preflight: null,
+      error: null,
+    });
     setSelectedFeature(null);
     setSelectedDetail(null);
     setSelectedCircuit(null);
@@ -119,18 +187,26 @@ export default function App() {
 
   const preparedGeometry = shouldHideDefaultObjects
     ? null
-    : (runtimeResult?.aoi.geometry ?? (preparedAoiId === DEFAULT_AOI_ID ? DEFAULT_AOI_OUTLINE : null));
+    : (runtimeResult?.aoi.geometry ??
+      (preparedAoiId === DEFAULT_AOI_ID ? DEFAULT_AOI_OUTLINE : null));
   const aoiOutlines = displayedAoiOutlines(draftAoiOutline, preparedGeometry);
-  const currentMapLabel = visualBasemapOptions.find((option) => option.id === basemapMode)?.label ?? basemapMode;
-  const transportInspectionNeedsZoom = visibleLayers.some((layer) => layer.artifact.artifact_id === "transport.roads" || layer.artifact.artifact_id === "transport.railways") && (mapZoom ?? 0) < 11;
+  const currentMapLabel =
+    visualBasemapOptions.find((option) => option.id === basemapMode)?.label ?? basemapMode;
+  const transportInspectionNeedsZoom =
+    visibleLayers.some(
+      (layer) =>
+        layer.artifact.artifact_id === "transport.roads" ||
+        layer.artifact.artifact_id === "transport.railways",
+    ) && (mapZoom ?? 0) < 11;
 
-  const panelTitle = activePanel === "settings"
-    ? "AOI & cache"
-    : activePanel === "layers"
-      ? "Layers"
-      : activePanel === "providers"
-        ? "Providers"
-        : "Legend";
+  const panelTitle =
+    activePanel === "settings"
+      ? "AOI & cache"
+      : activePanel === "layers"
+        ? "Layers"
+        : activePanel === "providers"
+          ? "Providers"
+          : "Legend";
 
   return (
     <main className="previewLayout" data-basemap={basemapMode}>
@@ -171,8 +247,16 @@ export default function App() {
           />
         </div>
         {activePanel && (
-          <aside className={`contextDrawer ${runtimeResult ? "" : "welcomeDrawer"}`} aria-label={`${activePanel} panel`}>
-            <CloseButton className="drawerClose" onClick={() => setActivePanel(null)} ariaLabel="Close panel" title="Close panel" />
+          <aside
+            className={`contextDrawer ${runtimeResult ? "" : "welcomeDrawer"}`}
+            aria-label={`${activePanel} panel`}
+          >
+            <CloseButton
+              className="drawerClose"
+              onClick={() => setActivePanel(null)}
+              ariaLabel="Close panel"
+              title="Close panel"
+            />
             <Suspense fallback={<DrawerSkeleton title={panelTitle} />}>
               {activePanel === "settings" && (
                 <AoiSettings
@@ -186,7 +270,13 @@ export default function App() {
               )}
               {activePanel === "layers" && (
                 <>
-                  {aoiId && <FeatureDetails aoiId={aoiId} selected={selectedFeature} onDetailChange={setSelectedDetail} />}
+                  {aoiId && (
+                    <FeatureDetails
+                      aoiId={aoiId}
+                      selected={selectedFeature}
+                      onDetailChange={setSelectedDetail}
+                    />
+                  )}
                   <LayerCatalog
                     layers={catalog}
                     enabledLayers={enabledLayers}
@@ -202,7 +292,9 @@ export default function App() {
                   onBasemapMode={setBasemapMode}
                   visibleReferences={visibleReferences.length}
                   enabledReferences={enabledReferences}
-                  onReferenceToggle={(id, enabled) => setEnabledReferences((current) => ({ ...current, [id]: enabled }))}
+                  onReferenceToggle={(id, enabled) =>
+                    setEnabledReferences((current) => ({ ...current, [id]: enabled }))
+                  }
                   orthophotoEnabled={orthophotoEnabled}
                   onOrthophotoEnabled={setOrthophotoEnabled}
                   sourceAvailability={sourceAvailability}
@@ -213,22 +305,32 @@ export default function App() {
               {activePanel === "legend" && (
                 <LegendPanel
                   layers={catalog}
-                  referenceOverlayAvailable={kiutReferenceLayers.length > 0 || Boolean(orthophotoReference)}
+                  referenceOverlayAvailable={
+                    kiutReferenceLayers.length > 0 || Boolean(orthophotoReference)
+                  }
                 />
               )}
             </Suspense>
           </aside>
         )}
         <output className="mapStatus" aria-live="polite">
-          <span>AOI: <strong>{runtimeResult?.aoi.aoi_id ?? "not prepared"}</strong></span>
+          <span>
+            AOI: <strong>{runtimeResult?.aoi.aoi_id ?? "not prepared"}</strong>
+          </span>
           <i />
-          <span>Visible: <strong>{featureCount}</strong></span>
+          <span>
+            Visible: <strong>{featureCount}</strong>
+          </span>
           <i />
-          <span>Base: <strong>{currentMapLabel}</strong></span>
+          <span>
+            Base: <strong>{currentMapLabel}</strong>
+          </span>
           {mapZoom !== null && (
             <>
               <i />
-              <span>Zoom: <strong>{mapZoom.toFixed(1)}</strong></span>
+              <span>
+                Zoom: <strong>{mapZoom.toFixed(1)}</strong>
+              </span>
             </>
           )}
           {transportInspectionNeedsZoom && (
@@ -274,7 +376,10 @@ function ProviderPanel({
   return (
     <section className="drawerSection">
       <h2>Providers</h2>
-      <p className="muted">Analytical artifacts are listed in Layers. These controls keep visual base maps and reference-only overlays explicitly separate.</p>
+      <p className="muted">
+        Analytical artifacts are listed in Layers. These controls keep visual base maps and
+        reference-only overlays explicitly separate.
+      </p>
       <section className="providerGroup">
         <h3>Visual base map</h3>
         <div className="basemapSelector" role="radiogroup" aria-label="Visual base map">
@@ -292,11 +397,18 @@ function ProviderPanel({
             </button>
           ))}
         </div>
-        <p className="muted">Dark OSM uses the same OSM tiles with local raster styling; it is not CARTO or provider data.</p>
+        <p className="muted">
+          Dark OSM uses the same OSM tiles with local raster styling; it is not CARTO or provider
+          data.
+        </p>
       </section>
       <section className="providerGroup">
-        <h3>Reference overlays <span>{visibleReferences}</span></h3>
-        <p className="muted">KIUT and orthophoto stay rendered reference context; they never become analytical vectors.</p>
+        <h3>
+          Reference overlays <span>{visibleReferences}</span>
+        </h3>
+        <p className="muted">
+          KIUT and orthophoto stay rendered reference context; they never become analytical vectors.
+        </p>
         {kiutReferenceLayers.map((reference) => (
           <label className="layerToggle" key={reference.id}>
             <input
@@ -304,7 +416,10 @@ function ProviderPanel({
               checked={enabledReferences[reference.id] ?? false}
               onChange={(event) => onReferenceToggle(reference.id, event.target.checked)}
             />
-            <span><strong>{reference.label}</strong><small>KIUT/GESUT WMS · possible coverage only</small></span>
+            <span>
+              <strong>{reference.label}</strong>
+              <small>KIUT/GESUT WMS · possible coverage only</small>
+            </span>
           </label>
         ))}
         <label className="layerToggle">
@@ -313,7 +428,10 @@ function ProviderPanel({
             checked={orthophotoEnabled}
             onChange={(event) => onOrthophotoEnabled(event.target.checked)}
           />
-          <span><strong>{orthophotoReference.label}</strong><small>{orthophotoReference.limitation}</small></span>
+          <span>
+            <strong>{orthophotoReference.label}</strong>
+            <small>{orthophotoReference.limitation}</small>
+          </span>
         </label>
       </section>
       <SourceAvailabilitySection sourceAvailability={sourceAvailability} />

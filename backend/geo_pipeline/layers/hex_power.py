@@ -2,7 +2,7 @@ import argparse
 import json
 import logging
 import math
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import cast
 
@@ -53,12 +53,15 @@ def build_power_hex_analytics(levels: list[str] | None = None) -> None:
             raise ValueError(f"Unknown hex level: {level}. Available: {', '.join(HEX_LEVELS)}")
         _build_level(level, lines, nodes, lines_path, nodes_path)
 
+
 def _read_power_layers_2180() -> tuple[gpd.GeoDataFrame, gpd.GeoDataFrame, Path, Path]:
     global _POWER_LAYER_CACHE
     if _POWER_LAYER_CACHE is None:
         lines_path = PROCESSED_DIR / f"{RYBNIK_AOI.name}_power_lines_clipped.geojson"
         nodes_path = PROCESSED_DIR / f"{RYBNIK_AOI.name}_power_node_points_clipped.geojson"
-        lines = _read_layer(lines_path, geometry_types={"LineString", "MultiLineString"}).to_crs(TARGET_CRS)
+        lines = _read_layer(lines_path, geometry_types={"LineString", "MultiLineString"}).to_crs(
+            TARGET_CRS
+        )
         nodes = _read_layer(nodes_path, geometry_types={"Point", "MultiPoint"}).to_crs(TARGET_CRS)
         _POWER_LAYER_CACHE = (lines, nodes, lines_path, nodes_path)
     return _POWER_LAYER_CACHE
@@ -91,7 +94,7 @@ def _build_level(
     output.to_file(output_path, driver="GeoJSON")
 
     report = {
-        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "generated_at": datetime.now(UTC).isoformat(),
         "aoi": {
             "name": RYBNIK_AOI.name,
             "center_lat": RYBNIK_AOI.center_lat,
@@ -109,12 +112,17 @@ def _build_level(
         "scope_radius_m": scope_radius_m,
         "min_zoom": config["min_zoom"],
         "max_zoom": config["max_zoom"],
-        "feature_count": int(len(output)),
+        "feature_count": len(output),
         "active_feature_count": int(output["has_infrastructure"].sum()),
         "confidence_counts": output["confidence_label"].value_counts().to_dict(),
     }
     report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
-    logging.info("Power hex analytics %s complete: %s hexes -> %s", level, len(output), output_path)
+    logging.info(
+        "Power hex analytics %s complete: %s hexes -> %s",
+        level,
+        len(output),
+        output_path,
+    )
 
 
 def _read_layer(path: Path, geometry_types: set[str]) -> gpd.GeoDataFrame:
@@ -155,7 +163,11 @@ def _make_hex_grid(aoi_circle, edge_m: int, level: str) -> gpd.GeoDataFrame:
         row += 1
 
     ids = [f"{level}-{index:04d}" for index in range(len(hexes))]
-    return gpd.GeoDataFrame({"hex_id": ids, "hex_level": level, "hex_edge_m": edge_m}, geometry=hexes, crs=TARGET_CRS)
+    return gpd.GeoDataFrame(
+        {"hex_id": ids, "hex_level": level, "hex_edge_m": edge_m},
+        geometry=hexes,
+        crs=TARGET_CRS,
+    )
 
 
 def _hex_polygon(x: float, y: float, edge_m: int) -> Polygon:
@@ -279,7 +291,9 @@ def _attach_nearest_metrics(hexes: gpd.GeoDataFrame, nodes: gpd.GeoDataFrame) ->
         return enriched
 
     node_union = _power_node_union(nodes)
-    enriched["nearest_power_node_m"] = cast(pd.Series, enriched.geometry.centroid.distance(node_union)).round(1)
+    enriched["nearest_power_node_m"] = cast(
+        pd.Series, enriched.geometry.centroid.distance(node_union)
+    ).round(1)
     return enriched
 
 
@@ -299,11 +313,14 @@ def _attach_neighbors(hexes: gpd.GeoDataFrame, edge_m: int) -> gpd.GeoDataFrame:
     neighbor_map: dict[str, list[str]] = {}
 
     for index, centroid in enumerate(centroids):
-        candidate_indexes = spatial_index.query(centroid.buffer(neighbor_distance_m), predicate="intersects")
+        candidate_indexes = spatial_index.query(
+            centroid.buffer(neighbor_distance_m), predicate="intersects"
+        )
         neighbor_ids = [
             ids[candidate_index]
             for candidate_index in candidate_indexes
-            if candidate_index != index and centroid.distance(centroids.iloc[candidate_index]) <= neighbor_distance_m
+            if candidate_index != index
+            and centroid.distance(centroids.iloc[candidate_index]) <= neighbor_distance_m
         ]
         neighbor_map[ids[index]] = sorted(neighbor_ids)
 
@@ -332,14 +349,28 @@ def _attach_quality_metrics(hexes: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     enriched["connected_hex_count"] = enriched["connected_hex_ids"].map(len)
 
     def confidence(row: pd.Series) -> tuple[float, str, str]:
-        critical_nodes = row.substation_count + row.transformer_count + row.generator_count + row.plant_count
+        critical_nodes = (
+            row.substation_count + row.transformer_count + row.generator_count + row.plant_count
+        )
         if row.line_length_m >= 500 and critical_nodes > 0:
             return 0.85, "high", "OSM vector lines and power nodes in hex."
         if row.line_length_m > 0 or critical_nodes > 0:
             return 0.62, "medium", "OSM vector feature present; topology is inferred."
-        if row.node_count > 0 or row.nearest_power_node_m is not None and row.nearest_power_node_m <= float(row.hex_edge_m) * 1.5:
-            return 0.35, "low", "Nearby OSM feature only; KIUT may be used as visual reference."
-        return 0.0, "unknown", "No analytical vector evidence in public OSM for this hex."
+        if (
+            row.node_count > 0
+            or row.nearest_power_node_m is not None
+            and row.nearest_power_node_m <= float(row.hex_edge_m) * 1.5
+        ):
+            return (
+                0.35,
+                "low",
+                "Nearby OSM feature only; KIUT may be used as visual reference.",
+            )
+        return (
+            0.0,
+            "unknown",
+            "No analytical vector evidence in public OSM for this hex.",
+        )
 
     quality = enriched.apply(confidence, axis=1, result_type="expand")
     enriched["confidence_score"] = quality[0]
@@ -378,7 +409,9 @@ def _hex_report_path(level: str) -> Path:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Build confidence-aware hex analytics for Rybnik power OSM layers.")
+    parser = argparse.ArgumentParser(
+        description="Build confidence-aware hex analytics for Rybnik power OSM layers."
+    )
     parser.add_argument(
         "--level",
         choices=list(HEX_LEVELS),

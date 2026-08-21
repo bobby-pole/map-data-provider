@@ -1,0 +1,137 @@
+/* Legend Panel, Collapsible Domains & Swatches */
+.legendDomains {
+  display: grid;
+  gap: 8px;
+  margin: 4px 0 16px;
+}
+
+.legendDomainDetails {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.legendDomainDetails[open] {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.legendDomainSummary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+}
+
+.legendDomainSummary::-webkit-details-marker {
+  display: none;
+}
+
+.legendDomainSummary::before {
+  content: "›";
+  display: inline-grid;
+  width: 14px;
+  height: 14px;
+  place-items: center;
+  color: #94a3b8;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  transition: transform 0.14s ease;
+  margin-right: 2px;
+}
+
+.legendDomainDetails[open] > .legendDomainSummary::before {
+  transform: rotate(90deg);
+  color: #f8fafc;
+}
+
+.legendDomainTitle {
+  color: #f8fafc;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.legendDomainCount {
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.legendDomainDetails .legendList {
+  padding: 4px 8px 8px;
+}
+
+.legendList {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.legendList li {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  gap: 8px;
+  align-items: start;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+}
+
+.legendList .mapSymbolIcon {
+  width: 25px;
+  height: 25px;
+  margin: 1px 0 0;
+}
+
+.legendList strong {
+  display: block;
+  color: #f1f5f9;
+  font-weight: 500;
+  font-size: 12.5px;
+}
+
+.legendList small {
+  display: block;
+  color: #94a3b8;
+  font-weight: 400;
+  font-size: 11px;
+  margin-top: 3px;
+}
+
+.legendSwatch {
+  display: block;
+  margin-top: 7px;
+  background: var(--legend-color);
+}
+
+.legendSwatch.line {
+  height: 4px;
+  border-radius: 3px;
+}
+
+.legendSwatch.point_or_area {
+  width: 13px;
+  height: 13px;
+  margin-left: 5px;
+  border-radius: 50%;
+  border: 1px solid #e5edf7;
+}
+
+.legendSwatch.referenceSwatch {
+  background: #7c8ea6;
+  border-radius: 2px;
+  opacity: 0.82;
+}

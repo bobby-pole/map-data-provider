@@ -1,0 +1,290 @@
+/* Universal Glass Context Drawers */
+.contextDrawer {
+  position: absolute;
+  top: 68px;
+  right: auto;
+  left: 20px;
+  z-index: 70;
+  width: min(340px, calc(100vw - 88px));
+  max-height: calc(100dvh - 142px);
+  padding: 0 16px 16px;
+  overflow-x: hidden;
+  color: #e2e8f0;
+  background: rgba(15, 23, 42, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) rgba(0, 0, 0, 0.1);
+}
+
+.welcomeDrawer {
+  width: min(340px, calc(100vw - 88px));
+}
+
+.contextDrawer::-webkit-scrollbar {
+  width: 6px;
+}
+
+.contextDrawer::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.contextDrawer::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.contextDrawer::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.drawerClose {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  z-index: 10;
+}
+
+.closeButton {
+  display: grid;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  place-items: center;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.closeButton:hover,
+.closeButton:focus-visible {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  outline: none;
+}
+
+.closeButton:active {
+  transform: scale(0.95);
+}
+
+.drawerDivider {
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 6px 0;
+}
+
+.drawerSection {
+  gap: 11px;
+}
+
+.drawerSection > :is(.sectionHeading, h2):first-child {
+  min-height: 51px;
+  margin: 0 -16px 1px;
+  padding: 0 48px 0 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.drawerSection > h2:first-child {
+  display: flex;
+  align-items: center;
+  color: #f8fafc;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.drawerSection > .sectionHeading:first-child {
+  align-items: center;
+}
+
+.drawerSection > .sectionHeading:first-child h2 {
+  color: #f8fafc;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.sectionHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sectionHeading h2 {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.sectionHeading span {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.contextDrawer .sectionHeading span {
+  display: none;
+}
+
+.sectionSubheading h3 {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #f8fafc;
+}
+
+.contextDrawer .muted {
+  color: #94a3b8;
+}
+
+.contextDrawer label {
+  color: #cbd5e1;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+/* Custom Styled Drawer Checkboxes */
+.contextDrawer input[type="checkbox"] {
+  appearance: none;
+  width: 1.15em;
+  height: 1.15em;
+  margin: 0;
+  padding: 0;
+  color: currentColor;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 0.25em;
+  background: rgba(255, 255, 255, 0.05);
+  display: grid;
+  place-content: center;
+  transition:
+    background-color 0.2s ease-in-out,
+    border-color 0.2s ease-in-out;
+}
+
+.contextDrawer input[type="checkbox"]::before {
+  content: "";
+  width: 0.65em;
+  height: 0.65em;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+  background: #fff;
+  transform: scale(0);
+  transform-origin: center;
+  transition: transform 120ms ease-in-out;
+}
+
+.contextDrawer input[type="checkbox"]:checked,
+.contextDrawer input[type="checkbox"]:indeterminate {
+  border-color: #38bdf8;
+  background: #0284c7;
+}
+
+.contextDrawer input[type="checkbox"]:checked::before,
+.contextDrawer input[type="checkbox"]:indeterminate::before {
+  transform: scale(1);
+}
+
+.contextDrawer input[type="checkbox"]:indeterminate::before {
+  clip-path: inset(38% 0 38% 0);
+}
+
+/* Skeleton loader for lazy drawer panels to eliminate layout shift */
+.drawerSkeleton {
+  min-height: 360px;
+  animation: skeletonFade 0.15s ease-out;
+}
+
+@keyframes skeletonFade {
+  from {
+    opacity: 0.4;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.skeletonBody {
+  display: grid;
+  gap: 12px;
+  padding: 10px 0 0;
+}
+
+.skeletonLine,
+.skeletonCard,
+.skeletonBox,
+.skeletonText {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+}
+
+.skeletonLine::after,
+.skeletonCard::after,
+.skeletonBox::after,
+.skeletonText::after {
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+  animation: skeletonShimmer 1.4s infinite;
+  content: "";
+}
+
+@keyframes skeletonShimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.skeletonLine {
+  height: 14px;
+  width: 100%;
+}
+
+.skeletonLine.short {
+  width: 65%;
+}
+
+.skeletonCard {
+  height: 68px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.skeletonRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.skeletonBox {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border-radius: 4px;
+}
+
+.skeletonText {
+  height: 16px;
+  flex: 1;
+}
+
+/* Responsive Drawer Adjustments */
+@media (max-width: 900px) {
+  .contextDrawer {
+    top: 62px;
+    left: 10px;
+    width: min(320px, calc(100vw - 74px));
+    max-height: calc(100dvh - 132px);
+  }
+}

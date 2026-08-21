@@ -1,6 +1,7 @@
 import { useState } from "react";
-import type { SourceAvailabilityReport } from "../types/api";
+
 import { getSourceProblemInfo, SOURCE_FRIENDLY_NAMES } from "../sourceAvailability";
+import type { SourceAvailabilityReport } from "../types/api";
 
 export function SourceAvailabilitySection({
   sourceAvailability,
@@ -38,17 +39,13 @@ export function SourceAvailabilitySection({
     <section className="providerGroup">
       <details className="sourceAvailabilityDrawer">
         <summary className="sourceAvailabilitySummary">
-          <span className="sourceAvailabilityTitle">
-            Source availability
-          </span>
+          <span className="sourceAvailabilityTitle">Source availability</span>
           {problemSources.length > 0 ? (
             <span className="sourceBadge warningBadge">
               {problemSources.length} {problemSources.length === 1 ? "source gap" : "source gaps"}
             </span>
           ) : (
-            <span className="sourceBadge successBadge">
-              All sources healthy
-            </span>
+            <span className="sourceBadge successBadge">All sources healthy</span>
           )}
         </summary>
 
@@ -59,7 +56,8 @@ export function SourceAvailabilitySection({
               <div>
                 <strong>All registered data sources are healthy.</strong>
                 <p className="muted">
-                  OpenStreetMap, PRG, KIUT, Orthophoto, and Terrain contexts are available and covered for this AOI.
+                  OpenStreetMap, PRG, KIUT, Orthophoto, and Terrain contexts are available and
+                  covered for this AOI.
                 </p>
               </div>
             </div>
@@ -71,12 +69,13 @@ export function SourceAvailabilitySection({
                   : `Showing ${problemSources.length} sources with gaps or limitations:`}
               </p>
               {displayedSources.map(({ source, problem, displayName }) => (
-                <div key={source.source_id} className={`sourceProblemCard ${problem.isProblem ? `severity-${problem.severity}` : "severity-healthy"}`}>
+                <div
+                  key={source.source_id}
+                  className={`sourceProblemCard ${problem.isProblem ? `severity-${problem.severity}` : "severity-healthy"}`}
+                >
                   <div className="sourceCardHeader">
                     <strong>{displayName}</strong>
-                    <span className={`sourceCardTag tag-${problem.severity}`}>
-                      {problem.title}
-                    </span>
+                    <span className={`sourceCardTag tag-${problem.severity}`}>{problem.title}</span>
                   </div>
                   <p className="sourceCardExplanation">{problem.explanation}</p>
                   <div className="sourceCardFooter">
@@ -96,7 +95,9 @@ export function SourceAvailabilitySection({
               className="textButton"
               onClick={() => setShowAll((current) => !current)}
             >
-              {showAll ? "Show only gaps & issues" : `Show all ${evaluatedSources.length} registered sources`}
+              {showAll
+                ? "Show only gaps & issues"
+                : `Show all ${evaluatedSources.length} registered sources`}
             </button>
           </div>
         </div>

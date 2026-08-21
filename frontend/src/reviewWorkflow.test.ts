@@ -33,7 +33,9 @@ describe("issue review preview workflow", () => {
 
   it("filters issues by the selected review state", () => {
     const issues = [issue("DQ-OPEN", "open"), issue("DQ-ACK", "acknowledged")];
-    expect(filterIssuesByReviewState(issues, "acknowledged").map((item) => item.id)).toEqual(["DQ-ACK"]);
+    expect(filterIssuesByReviewState(issues, "acknowledged").map((item) => item.id)).toEqual([
+      "DQ-ACK",
+    ]);
     expect(filterIssuesByReviewState(issues, "all")).toHaveLength(2);
   });
 });

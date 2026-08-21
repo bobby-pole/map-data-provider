@@ -10,8 +10,22 @@ from typing import Any
 from geo_pipeline.contracts import normalize_analytical_vector_layer
 from geo_pipeline.source_registry import guard_source_access
 
-EMERGENCY_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_35km" / "emergency" / "osm-emergency-facilities.geojson"
-PRG_EMERGENCY_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_35km" / "emergency" / "prg-police-fire-representative-points.geojson"
+EMERGENCY_FIXTURE = (
+    Path(__file__).resolve().parents[1]
+    / "data"
+    / "fixtures"
+    / "rybnik_35km"
+    / "emergency"
+    / "osm-emergency-facilities.geojson"
+)
+PRG_EMERGENCY_FIXTURE = (
+    Path(__file__).resolve().parents[1]
+    / "data"
+    / "fixtures"
+    / "rybnik_35km"
+    / "emergency"
+    / "prg-police-fire-representative-points.geojson"
+)
 EMERGENCY_SNAPSHOT_AT = "2026-08-03T10:14:06Z"
 EMERGENCY_SOURCE_QUERY = (
     "Overpass bounded snapshot: explicit amenity=hospital|fire_station|police|ambulance_station, "
@@ -32,12 +46,21 @@ FACILITY_MAPPINGS: dict[str, tuple[tuple[str, str], ...]] = {
     "hospital": (("amenity", "hospital"), ("healthcare", "hospital")),
     "fire_service": (("amenity", "fire_station"),),
     "police": (("amenity", "police"),),
-    "ambulance_rescue": (("amenity", "ambulance_station"), ("emergency", "ambulance_station"), ("emergency", "mountain_rescue"), ("emergency", "lifeguard_base")),
+    "ambulance_rescue": (
+        ("amenity", "ambulance_station"),
+        ("emergency", "ambulance_station"),
+        ("emergency", "mountain_rescue"),
+        ("emergency", "lifeguard_base"),
+    ),
 }
 
 
 def load_osm_emergency_fixture() -> dict[str, Any]:
-    return guard_source_access("openstreetmap", "local_import", lambda: json.loads(EMERGENCY_FIXTURE.read_text(encoding="utf-8")))
+    return guard_source_access(
+        "openstreetmap",
+        "local_import",
+        lambda: json.loads(EMERGENCY_FIXTURE.read_text(encoding="utf-8")),
+    )
 
 
 def category_for_osm_feature(properties: dict[str, Any]) -> str | None:
@@ -58,11 +81,20 @@ def categorized_osm_features() -> dict[str, list[dict[str, Any]]]:
             raise ValueError("Emergency OSM fixture feature requires properties")
         category = category_for_osm_feature(properties)
         if category is None:
-            raise ValueError("Emergency OSM fixture contains a feature without an allow-listed facility mapping")
-        categorized[category].append({**deepcopy(feature), "properties": {**deepcopy(properties), "provider_category": category}})
+            raise ValueError(
+                "Emergency OSM fixture contains a feature without an allow-listed facility mapping"
+            )
+        categorized[category].append(
+            {
+                **deepcopy(feature),
+                "properties": {**deepcopy(properties), "provider_category": category},
+            }
+        )
     if any(not features for features in categorized.values()):
         missing = sorted(category for category, features in categorized.items() if not features)
-        raise ValueError(f"Emergency OSM fixture is missing required categories: {', '.join(missing)}")
+        raise ValueError(
+            f"Emergency OSM fixture is missing required categories: {', '.join(missing)}"
+        )
     return categorized
 
 
@@ -70,12 +102,18 @@ def build_osm_emergency_layers(*, readiness: str) -> dict[str, dict[str, Any]]:
     layers: dict[str, dict[str, Any]] = {}
     for category, features in categorized_osm_features().items():
         metadata = emergency_osm_metadata(layer_id=f"emergency.{category}", readiness=readiness)
-        layers[category] = normalize_analytical_vector_layer({"type": "FeatureCollection", "features": features}, metadata=metadata)
+        layers[category] = normalize_analytical_vector_layer(
+            {"type": "FeatureCollection", "features": features}, metadata=metadata
+        )
     return layers
 
 
 def load_prg_emergency_fixture() -> dict[str, Any]:
-    return guard_source_access("prg_wfs", "local_import", lambda: json.loads(PRG_EMERGENCY_FIXTURE.read_text(encoding="utf-8")))
+    return guard_source_access(
+        "prg_wfs",
+        "local_import",
+        lambda: json.loads(PRG_EMERGENCY_FIXTURE.read_text(encoding="utf-8")),
+    )
 
 
 def build_prg_emergency_layers(*, readiness: str) -> dict[str, dict[str, Any]]:
@@ -97,14 +135,20 @@ def build_prg_emergency_layers(*, readiness: str) -> dict[str, dict[str, Any]]:
     return {
         category: normalize_analytical_vector_layer(
             {"type": "FeatureCollection", "features": category_features},
-            metadata=prg_emergency_metadata(layer_id=f"emergency.official_{category}", readiness=readiness),
+            metadata=prg_emergency_metadata(
+                layer_id=f"emergency.official_{category}", readiness=readiness
+            ),
         )
         for category, category_features in categorized.items()
     }
 
 
 def build_osm_emergency_cache_layer(*, readiness: str) -> dict[str, Any]:
-    features = [feature for category_features in categorized_osm_features().values() for feature in category_features]
+    features = [
+        feature
+        for category_features in categorized_osm_features().values()
+        for feature in category_features
+    ]
     return normalize_analytical_vector_layer(
         {"type": "FeatureCollection", "features": features},
         metadata=emergency_osm_metadata(layer_id="emergency.osm_facilities", readiness=readiness),

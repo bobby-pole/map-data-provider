@@ -17,7 +17,10 @@ from pmtiles.writer import Writer
 from shapely import STRtree, box, clip_by_rect
 from shapely.geometry import mapping, shape
 
-from geo_pipeline.source_registry import load_source_registry, validate_ordered_provenance
+from geo_pipeline.source_registry import (
+    load_source_registry,
+    validate_ordered_provenance,
+)
 
 MAP_PRESENTATION_VERSION = "provider_map_presentation/v1"
 PRESENTATION_DIRNAME = "presentation"
@@ -52,9 +55,13 @@ def build_map_presentation(*, pack_root: Path, manifest: dict[str, Any]) -> dict
     private records a route into the derived archive.
     """
 
-    public_artifacts = [artifact for artifact in manifest["artifacts"] if _is_public_vector_artifact(artifact)]
+    public_artifacts = [
+        artifact for artifact in manifest["artifacts"] if _is_public_vector_artifact(artifact)
+    ]
     if not public_artifacts:
-        raise ValueError("Map presentation requires at least one public analytical GeoJSON artifact")
+        raise ValueError(
+            "Map presentation requires at least one public analytical GeoJSON artifact"
+        )
 
     registry = load_source_registry()
     source_layers: list[dict[str, Any]] = []
@@ -64,22 +71,38 @@ def build_map_presentation(*, pack_root: Path, manifest: dict[str, Any]) -> dict
         artifact_path = _safe_file(pack_root, artifact["path"])
         payload = artifact_path.read_bytes()
         if _digest(payload) != artifact["sha256"]:
-            raise ValueError(f"Presentation input '{artifact['id']}' checksum does not match the domain manifest")
+            raise ValueError(
+                f"Presentation input '{artifact['id']}' checksum does not match the domain manifest"
+            )
         layer = json.loads(payload)
         if layer.get("type") != "FeatureCollection" or not isinstance(layer.get("features"), list):
-            raise ValueError(f"Presentation input '{artifact['id']}' is not a GeoJSON FeatureCollection")
+            raise ValueError(
+                f"Presentation input '{artifact['id']}' is not a GeoJSON FeatureCollection"
+            )
         metadata = layer.get("metadata")
-        if not isinstance(metadata, dict) or metadata.get("aoi_id") != manifest["aoi_id"] or metadata.get("domain") != manifest["domain"]:
-            raise ValueError(f"Presentation input '{artifact['id']}' identity does not match the domain manifest")
-        if metadata.get("layer_id") != artifact["id"] or metadata.get("feature_count") != artifact.get("feature_count"):
-            raise ValueError(f"Presentation input '{artifact['id']}' metadata does not match the domain manifest")
-        source_layers.append({
-            "artifact": artifact,
-            "source_layer": _source_layer_name(artifact["id"]),
-            "metadata": metadata,
-            "features": layer["features"],
-            "source_bytes": len(payload),
-        })
+        if (
+            not isinstance(metadata, dict)
+            or metadata.get("aoi_id") != manifest["aoi_id"]
+            or metadata.get("domain") != manifest["domain"]
+        ):
+            raise ValueError(
+                f"Presentation input '{artifact['id']}' identity does not match the domain manifest"
+            )
+        if metadata.get("layer_id") != artifact["id"] or metadata.get(
+            "feature_count"
+        ) != artifact.get("feature_count"):
+            raise ValueError(
+                f"Presentation input '{artifact['id']}' metadata does not match the domain manifest"
+            )
+        source_layers.append(
+            {
+                "artifact": artifact,
+                "source_layer": _source_layer_name(artifact["id"]),
+                "metadata": metadata,
+                "features": layer["features"],
+                "source_bytes": len(payload),
+            }
+        )
 
     staging = pack_root / f".{PRESENTATION_DIRNAME}-staging-{uuid.uuid4().hex}"
     target = pack_root / PRESENTATION_DIRNAME
@@ -124,7 +147,9 @@ def build_map_presentation(*, pack_root: Path, manifest: dict[str, Any]) -> dict
                 "bounds": bounds,
             },
             "layers": presentation_layers,
-            "attribution": "; ".join(sorted({descriptor["attribution"] for descriptor in presentation_layers})),
+            "attribution": "; ".join(
+                sorted({descriptor["attribution"] for descriptor in presentation_layers})
+            ),
             "benchmark": benchmark,
         }
         (staging / "manifest.json").write_bytes(_canonical_json(presentation_manifest))
@@ -145,7 +170,9 @@ def read_map_presentation(*, pack_root: Path, manifest: dict[str, Any]) -> dict[
 
 
 def _write_pmtiles(archive_path: Path, source_layers: list[dict[str, Any]]) -> dict[str, int]:
-    tile_features: dict[tuple[int, int, int], dict[str, list[dict[str, Any]]]] = defaultdict(lambda: defaultdict(list))
+    tile_features: dict[tuple[int, int, int], dict[str, list[dict[str, Any]]]] = defaultdict(
+        lambda: defaultdict(list)
+    )
     for source_layer in source_layers:
         features_data: list[tuple[Any, dict[str, str], int]] = []
         geometries: list[Any] = []
@@ -157,7 +184,9 @@ def _write_pmtiles(archive_path: Path, source_layers: list[dict[str, Any]]) -> d
             geometry = shape(geometry_data)
             if geometry.is_empty:
                 continue
-            properties = _presentation_properties(feature.get("properties"), source_layer["metadata"])
+            properties = _presentation_properties(
+                feature.get("properties"), source_layer["metadata"]
+            )
             min_z = _feature_min_zoom(properties)
             features_data.append((geometry, properties, min_z))
             geometries.append(geometry)
@@ -193,10 +222,12 @@ def _write_pmtiles(archive_path: Path, source_layers: list[dict[str, Any]]) -> d
                     simplified = _simplify_for_zoom(clipped, z)
                     if simplified.is_empty or simplified.geom_type == "GeometryCollection":
                         continue
-                tile_features[(z, x, y)][source_layer["source_layer"]].append({
-                    "geometry": mapping(simplified),
-                    "properties": properties,
-                })
+                tile_features[(z, x, y)][source_layer["source_layer"]].append(
+                    {
+                        "geometry": mapping(simplified),
+                        "properties": properties,
+                    }
+                )
 
     bounds = _combined_bounds(source_layers)
     metadata = {
@@ -206,11 +237,21 @@ def _write_pmtiles(archive_path: Path, source_layers: list[dict[str, Any]]) -> d
         "type": "overlay",
         "version": "1",
         "bounds": ",".join(str(value) for value in bounds),
-        "center": ",".join(str(value) for value in [round((bounds[0] + bounds[2]) / 2, 6), round((bounds[1] + bounds[3]) / 2, 6), MIN_ZOOM]),
+        "center": ",".join(
+            str(value)
+            for value in [
+                round((bounds[0] + bounds[2]) / 2, 6),
+                round((bounds[1] + bounds[3]) / 2, 6),
+                MIN_ZOOM,
+            ]
+        ),
         "minzoom": str(MIN_ZOOM),
         "maxzoom": str(MAX_ZOOM),
         "vector_layers": [
-            {"id": layer["source_layer"], "fields": {name: "String" for name in PRESENTATION_PROPERTY_NAMES}}
+            {
+                "id": layer["source_layer"],
+                "fields": {name: "String" for name in PRESENTATION_PROPERTY_NAMES},
+            }
             for layer in source_layers
         ],
     }
@@ -247,7 +288,13 @@ def _write_pmtiles(archive_path: Path, source_layers: list[dict[str, Any]]) -> d
             ]
             writer.write_tile(
                 zxy_to_tileid(z, x, y),
-                mapbox_vector_tile.encode(layers, default_options={"quantize_bounds": _tile_bounds(z, x, y), "extents": 4096}),
+                mapbox_vector_tile.encode(
+                    layers,
+                    default_options={
+                        "quantize_bounds": _tile_bounds(z, x, y),
+                        "extents": 4096,
+                    },
+                ),
             )
         if not tile_features:
             raise ValueError("Map presentation has no rendered tile features")
@@ -262,19 +309,31 @@ def _validate_presentation_files(presentation_root: Path, manifest: dict[str, An
     presentation = json.loads(manifest_path.read_text(encoding="utf-8"))
     if presentation.get("presentation_version") != MAP_PRESENTATION_VERSION:
         raise ValueError("Unsupported map presentation version")
-    if presentation.get("aoi_id") != manifest.get("aoi_id") or presentation.get("domain") != manifest.get("domain"):
+    if presentation.get("aoi_id") != manifest.get("aoi_id") or presentation.get(
+        "domain"
+    ) != manifest.get("domain"):
         raise ValueError("Map presentation identity does not match the domain manifest")
     expected_parent_sha = _digest(_canonical_json(manifest))
     if presentation.get("parent_domain_pack", {}).get("sha256") != expected_parent_sha:
         raise ValueError("Map presentation is stale for the domain manifest")
     archive = presentation.get("archive")
-    if not isinstance(archive, dict) or archive.get("format") != "pmtiles" or not isinstance(archive.get("path"), str):
+    if (
+        not isinstance(archive, dict)
+        or archive.get("format") != "pmtiles"
+        or not isinstance(archive.get("path"), str)
+    ):
         raise ValueError("Map presentation requires a PMTiles archive")
     archive_path = _safe_file(presentation_root, archive["path"])
     archive_bytes = archive_path.read_bytes()
-    if archive.get("sha256") != _digest(archive_bytes) or archive.get("size_bytes") != len(archive_bytes):
+    if archive.get("sha256") != _digest(archive_bytes) or archive.get("size_bytes") != len(
+        archive_bytes
+    ):
         raise ValueError("Map presentation archive checksum does not match")
-    public_by_id = {artifact["id"]: artifact for artifact in manifest["artifacts"] if _is_public_vector_artifact(artifact)}
+    public_by_id = {
+        artifact["id"]: artifact
+        for artifact in manifest["artifacts"]
+        if _is_public_vector_artifact(artifact)
+    }
     layers = presentation.get("layers")
     if not isinstance(layers, list) or not layers:
         raise ValueError("Map presentation requires public vector layer descriptors")
@@ -314,9 +373,13 @@ def _presentation_properties(raw_properties: Any, metadata: dict[str, Any]) -> d
         value = properties.get(name)
         if name == "limitations":
             values = value if isinstance(value, list) else metadata.get("limitations", [])
-            selected[name] = "; ".join(str(item) for item in values) if isinstance(values, list) else str(values)
+            selected[name] = (
+                "; ".join(str(item) for item in values) if isinstance(values, list) else str(values)
+            )
         elif name == "missing_fields":
-            selected[name] = ", ".join(str(item) for item in value) if isinstance(value, list) else ""
+            selected[name] = (
+                ", ".join(str(item) for item in value) if isinstance(value, list) else ""
+            )
         elif value is not None:
             selected[name] = str(value)
     selected.setdefault("source", str(metadata["source"]))
@@ -328,7 +391,8 @@ def _presentation_properties(raw_properties: Any, metadata: dict[str, Any]) -> d
     tags = properties.get("osm_tags") if isinstance(properties.get("osm_tags"), dict) else {}
     selected["voltage_label"] = _voltage_label(tags.get("voltage"))
     for name in ("name", "ref", "operator"):
-        if tags.get(name) is not None: selected[name] = str(tags[name])
+        if tags.get(name) is not None:
+            selected[name] = str(tags[name])
     return selected
 
 
@@ -370,7 +434,13 @@ def _lon_lat_to_tile(lon: float, lat: float, zoom: int) -> tuple[int, int]:
     size = 1 << zoom
     limited_lat = max(min(lat, 85.05112878), -85.05112878)
     x = min(size - 1, max(0, int((lon + 180.0) / 360.0 * size)))
-    y = min(size - 1, max(0, int((1 - math.asinh(math.tan(math.radians(limited_lat))) / math.pi) / 2 * size)))
+    y = min(
+        size - 1,
+        max(
+            0,
+            int((1 - math.asinh(math.tan(math.radians(limited_lat))) / math.pi) / 2 * size),
+        ),
+    )
     return x, y
 
 
@@ -428,7 +498,12 @@ def _voltage_label(raw_value: Any) -> str:
 
 
 def _combined_bounds(source_layers: list[dict[str, Any]]) -> list[float]:
-    geometries = [shape(feature["geometry"]) for layer in source_layers for feature in layer["features"] if isinstance(feature.get("geometry"), dict)]
+    geometries = [
+        shape(feature["geometry"])
+        for layer in source_layers
+        for feature in layer["features"]
+        if isinstance(feature.get("geometry"), dict)
+    ]
     if not geometries:
         raise ValueError("Map presentation has no geometries")
     min_x = min(geometry.bounds[0] for geometry in geometries)
@@ -439,7 +514,9 @@ def _combined_bounds(source_layers: list[dict[str, Any]]) -> list[float]:
 
 
 def _canonical_json(value: Any) -> bytes:
-    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode(
+        "utf-8"
+    )
 
 
 def _digest(payload: bytes) -> str:

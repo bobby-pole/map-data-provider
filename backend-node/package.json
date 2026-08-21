@@ -20,6 +20,8 @@
     "@types/node": "^22.18.12",
     "@types/supertest": "^6.0.3",
     "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-simple-import-sort": "^14.0.0",
     "globals": "^16.5.0",
     "supertest": "^7.1.4",
     "tsx": "^4.20.6",

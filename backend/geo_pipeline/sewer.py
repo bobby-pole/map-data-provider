@@ -11,7 +11,14 @@ from geo_pipeline.contracts import normalize_analytical_vector_layer
 from geo_pipeline.query_catalog import SEWER_OSM_QUERY
 from geo_pipeline.source_registry import guard_source_access
 
-SEWER_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_35km" / "sewer" / "osm-sewer.geojson"
+SEWER_FIXTURE = (
+    Path(__file__).resolve().parents[1]
+    / "data"
+    / "fixtures"
+    / "rybnik_35km"
+    / "sewer"
+    / "osm-sewer.geojson"
+)
 SEWER_SNAPSHOT_AT = "2026-08-07T15:30:00Z"
 SEWER_LIMITATIONS = [
     "OSM sewer infrastructure and wastewater collection network mapping completeness varies significantly by area.",
@@ -29,22 +36,33 @@ NON_SEWER_SEMANTICS = {"water", "gas", "stormwater", "drain", "drainage"}
 
 
 def load_osm_sewer_fixture() -> dict[str, Any]:
-    return guard_source_access("openstreetmap", "local_import", lambda: json.loads(SEWER_FIXTURE.read_text(encoding="utf-8")))
+    return guard_source_access(
+        "openstreetmap",
+        "local_import",
+        lambda: json.loads(SEWER_FIXTURE.read_text(encoding="utf-8")),
+    )
 
 
 def category_for_osm_feature(properties: dict[str, Any]) -> str | None:
     """Classify only features whose tags explicitly establish sewer/wastewater semantics."""
-    if any(properties.get(key) in NON_SEWER_SEMANTICS for key in ("pipeline", "pumping", "substance", "utility", "sewer")):
+    if any(
+        properties.get(key) in NON_SEWER_SEMANTICS
+        for key in ("pipeline", "pumping", "substance", "utility", "sewer")
+    ):
         return None
     if properties.get("man_made") in {"wastewater_plant", "septic_tank"}:
         return "facilities"
     if properties.get("man_made") == "pumping_station" and (
-        properties.get("pumping") in {"sewer", "wastewater"} or properties.get("substance") in SEWER_SUBSTANCES
+        properties.get("pumping") in {"sewer", "wastewater"}
+        or properties.get("substance") in SEWER_SUBSTANCES
     ):
         return "facilities"
     if properties.get("man_made") == "manhole" and properties.get("utility") == "sewer":
         return "facilities"
-    if properties.get("pipeline") == "sewer" and properties.get("substance") in {None, *SEWER_SUBSTANCES}:
+    if properties.get("pipeline") == "sewer" and properties.get("substance") in {
+        None,
+        *SEWER_SUBSTANCES,
+    }:
         return "pipelines"
     if properties.get("man_made") == "pipeline" and properties.get("substance") in SEWER_SUBSTANCES:
         return "pipelines"
@@ -63,11 +81,15 @@ def categorized_osm_features() -> dict[str, list[dict[str, Any]]]:
             raise ValueError("Sewer OSM fixture feature requires properties")
         category = category_for_osm_feature(properties)
         if category is None:
-            raise ValueError("Sewer OSM fixture contains a feature without an allow-listed sewer mapping")
+            raise ValueError(
+                "Sewer OSM fixture contains a feature without an allow-listed sewer mapping"
+            )
         props = {**deepcopy(properties), "provider_category": category}
         categorized[category].append({**deepcopy(feature), "properties": props})
     if any(not category_features for category_features in categorized.values()):
-        missing = sorted(category for category, category_features in categorized.items() if not category_features)
+        missing = sorted(
+            category for category, category_features in categorized.items() if not category_features
+        )
         raise ValueError(f"Sewer OSM fixture is missing required categories: {', '.join(missing)}")
     return categorized
 
@@ -107,7 +129,11 @@ def build_osm_sewer_layers(*, readiness: str) -> dict[str, dict[str, Any]]:
 
 
 def build_osm_sewer_cache_layer(*, readiness: str) -> dict[str, Any]:
-    features = [feature for category_features in categorized_osm_features().values() for feature in category_features]
+    features = [
+        feature
+        for category_features in categorized_osm_features().values()
+        for feature in category_features
+    ]
     return normalize_analytical_vector_layer(
         {"type": "FeatureCollection", "features": features},
         metadata=sewer_osm_metadata(layer_id="sewer.osm_facilities", readiness=readiness),

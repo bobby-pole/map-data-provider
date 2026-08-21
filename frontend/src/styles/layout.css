@@ -1,0 +1,142 @@
+/* Full-screen universal glass map workspace layout */
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  min-width: 320px;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #050a12;
+}
+
+.previewLayout {
+  position: relative;
+  width: 100%;
+  height: 100dvh;
+  min-height: 100dvh;
+  padding: 0;
+  overflow: hidden;
+  background: #050a12;
+}
+
+.mapWorkspace {
+  position: relative;
+  width: 100%;
+  height: 100dvh;
+}
+
+.mapWorkspace .mapPanel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  background: #050a12;
+}
+
+.mapWorkspace .map,
+.map {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+/* Header bar */
+.previewHeader {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  min-height: 52px;
+  margin: 0;
+  padding: 9px 20px;
+  color: #f8fafc;
+  background: rgba(15, 23, 42, 0.72);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+}
+
+.brandLockup {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.brandMark {
+  width: 22px;
+  height: 22px;
+  color: #38bdf8;
+  filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.4));
+}
+
+.brandLockup h1 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: #ffffff;
+}
+
+.brandLockup p {
+  display: none;
+}
+
+.previewActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.settingsButton {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  white-space: nowrap;
+}
+
+.previewContext {
+  padding: 5px 12px;
+  color: #cbd5e1;
+  font-size: 11.5px;
+  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.previewContext strong {
+  color: #f1f5f9;
+}
+
+.previewError {
+  position: absolute;
+  top: 64px;
+  left: 20px;
+  z-index: 95;
+  max-width: min(520px, calc(100vw - 100px));
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.35);
+}
+
+/* Responsive layout adjustments */
+@media (max-width: 900px) {
+  .previewHeader {
+    padding: 8px 12px;
+  }
+  .brandLockup p,
+  .previewActions {
+    display: none;
+  }
+}

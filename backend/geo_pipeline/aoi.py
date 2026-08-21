@@ -68,15 +68,26 @@ def resolve_aoi(value: str | dict[str, Any]) -> ResolvedAoi:
 
 def validate_cache_key(cache_key: str) -> str:
     if not isinstance(cache_key, str) or not cache_key or set(cache_key) - _IDENTIFIER:
-        raise AoiResolutionError("AOI cache key must use lowercase letters, digits and underscores only")
+        raise AoiResolutionError(
+            "AOI cache key must use lowercase letters, digits and underscores only"
+        )
     return cache_key
 
 
 def _resolve_alias(alias: str) -> ResolvedAoi:
     if alias != "rybnik_35km":
         raise AoiResolutionError(f"Unsupported AOI alias '{alias}'")
-    resolved = _resolve_circle({"type": "circle", "longitude": 18.546285, "latitude": 50.102174, "radius_m": 35_000})
-    return ResolvedAoi(**{**resolved.__dict__, "cache_key": "rybnik_35km", "aliases": ("rybnik_35km",)})
+    resolved = _resolve_circle(
+        {
+            "type": "circle",
+            "longitude": 18.546285,
+            "latitude": 50.102174,
+            "radius_m": 35_000,
+        }
+    )
+    return ResolvedAoi(
+        **{**resolved.__dict__, "cache_key": "rybnik_35km", "aliases": ("rybnik_35km",)}
+    )
 
 
 def _resolve_circle(value: dict[str, Any]) -> ResolvedAoi:
@@ -89,7 +100,11 @@ def _resolve_circle(value: dict[str, Any]) -> ResolvedAoi:
     if not MIN_RADIUS_M <= radius_m <= MAX_RADIUS_M or math.pi * radius_m**2 > MAX_AREA_SQ_M:
         raise AoiResolutionError("Circle radius exceeds provider AOI limits")
     geometry = _circle_geometry(longitude, latitude, radius_m)
-    provenance = {"kind": "request_circle", "source": "caller", "metric_crs": POLAND_METRIC_CRS}
+    provenance = {
+        "kind": "request_circle",
+        "source": "caller",
+        "metric_crs": POLAND_METRIC_CRS,
+    }
     return _resolved(geometry, "circle", WGS84, provenance, radius_m=radius_m)
 
 
@@ -98,7 +113,13 @@ def _resolve_administrative_reference(value: dict[str, Any]) -> ResolvedAoi:
     reference_id = value.get("reference_id")
     if reference_id != "prg_gmina_rybnik":
         raise AoiResolutionError("Unsupported administrative AOI reference")
-    fixture = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "aoi" / "prg_gmina_rybnik.geojson"
+    fixture = (
+        Path(__file__).resolve().parents[1]
+        / "data"
+        / "fixtures"
+        / "aoi"
+        / "prg_gmina_rybnik.geojson"
+    )
     payload = json.loads(fixture.read_text(encoding="utf-8"))
     if payload.get("type") != "Feature" or not isinstance(payload.get("geometry"), dict):
         raise AoiResolutionError("Approved PRG AOI fixture has invalid geometry")
@@ -111,17 +132,38 @@ def _resolve_administrative_reference(value: dict[str, Any]) -> ResolvedAoi:
         "snapshot_id": properties.get("snapshot_id"),
         "fixture": "backend/data/fixtures/aoi/prg_gmina_rybnik.geojson",
     }
-    return _resolved(geometry, "administrative_reference", str(properties.get("source_crs", WGS84)), provenance, radius_m=None)
+    return _resolved(
+        geometry,
+        "administrative_reference",
+        str(properties.get("source_crs", WGS84)),
+        provenance,
+        radius_m=None,
+    )
 
 
 def _resolved(
-    geometry: dict[str, Any], input_type: str, source_crs: str, provenance: dict[str, Any], *, radius_m: float | None
+    geometry: dict[str, Any],
+    input_type: str,
+    source_crs: str,
+    provenance: dict[str, Any],
+    *,
+    radius_m: float | None,
 ) -> ResolvedAoi:
-    constraints = {"max_area_sq_m": MAX_AREA_SQ_M, "min_radius_m": MIN_RADIUS_M, "max_radius_m": MAX_RADIUS_M}
+    constraints = {
+        "max_area_sq_m": MAX_AREA_SQ_M,
+        "min_radius_m": MIN_RADIUS_M,
+        "max_radius_m": MAX_RADIUS_M,
+    }
     if radius_m is not None:
         constraints["radius_m"] = radius_m
-    identity = {"aoi_contract_version": AOI_CONTRACT_VERSION, "geometry": geometry, "boundary_provenance": provenance}
-    digest = hashlib.sha256(json.dumps(identity, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()[:16]
+    identity = {
+        "aoi_contract_version": AOI_CONTRACT_VERSION,
+        "geometry": geometry,
+        "boundary_provenance": provenance,
+    }
+    digest = hashlib.sha256(
+        json.dumps(identity, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()[:16]
     return ResolvedAoi(
         aoi_id=f"aoi_{digest}",
         cache_key=f"aoi_{digest}",
@@ -138,13 +180,19 @@ def _circle_geometry(longitude: float, latitude: float, radius_m: float) -> dict
     coordinates = []
     for step in range(33):
         angle = 2 * math.pi * step / 32
-        lon, lat = _TO_WGS84.transform(center_x + radius_m * math.cos(angle), center_y + radius_m * math.sin(angle))
+        lon, lat = _TO_WGS84.transform(
+            center_x + radius_m * math.cos(angle), center_y + radius_m * math.sin(angle)
+        )
         coordinates.append([round(lon, 7), round(lat, 7)])
     return {"type": "Polygon", "coordinates": [coordinates]}
 
 
 def _normalize_polygon(geometry: dict[str, Any]) -> dict[str, Any]:
-    if geometry.get("type") != "Polygon" or not isinstance(geometry.get("coordinates"), list) or not geometry["coordinates"]:
+    if (
+        geometry.get("type") != "Polygon"
+        or not isinstance(geometry.get("coordinates"), list)
+        or not geometry["coordinates"]
+    ):
         raise AoiResolutionError("Administrative AOI geometry must be a Polygon")
     rings: list[list[list[float]]] = []
     for ring in geometry["coordinates"]:

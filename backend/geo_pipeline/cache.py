@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from geo_pipeline.aoi import resolve_aoi, validate_cache_key
+from geo_pipeline.bridges import bridges_osm_metadata, build_osm_bridges_cache_layer
 from geo_pipeline.config import CACHE_DIR, RYBNIK_AOI
 from geo_pipeline.contracts import (
     CONTRACT_VERSION,
@@ -15,28 +16,51 @@ from geo_pipeline.contracts import (
     normalize_analytical_vector_layer,
     validate_provider_geojson,
 )
-from geo_pipeline.bridges import build_osm_bridges_cache_layer, bridges_osm_metadata
-from geo_pipeline.emergency import build_osm_emergency_cache_layer, emergency_osm_metadata
+from geo_pipeline.district_heating import (
+    build_osm_district_heating_cache_layer,
+    district_heating_osm_metadata,
+)
+from geo_pipeline.emergency import (
+    build_osm_emergency_cache_layer,
+    emergency_osm_metadata,
+)
 from geo_pipeline.gas import build_osm_gas_cache_layer, gas_osm_metadata
-from geo_pipeline.sewer import build_osm_sewer_cache_layer, sewer_osm_metadata
-from geo_pipeline.industrial import build_osm_industrial_cache_layer, industrial_osm_metadata
-from geo_pipeline.telecom import build_osm_telecom_cache_layer, telecom_osm_metadata
-from geo_pipeline.district_heating import build_osm_district_heating_cache_layer, district_heating_osm_metadata
-from geo_pipeline.public_services import build_osm_public_services_cache_layer, public_services_osm_metadata
-from geo_pipeline.transport import build_osm_transport_cache_layer, transport_osm_metadata
-from geo_pipeline.water import build_osm_water_cache_layer, water_osm_metadata
+from geo_pipeline.industrial import (
+    build_osm_industrial_cache_layer,
+    industrial_osm_metadata,
+)
+from geo_pipeline.public_services import (
+    build_osm_public_services_cache_layer,
+    public_services_osm_metadata,
+)
 from geo_pipeline.quality_rules import highest_issue_severity, triggered_issues
 from geo_pipeline.readiness import derive_readiness
-from geo_pipeline.source_registry import guard_source_access, validate_analytical_cache_provenance
+from geo_pipeline.sewer import build_osm_sewer_cache_layer, sewer_osm_metadata
+from geo_pipeline.source_registry import (
+    guard_source_access,
+    validate_analytical_cache_provenance,
+)
+from geo_pipeline.telecom import build_osm_telecom_cache_layer, telecom_osm_metadata
+from geo_pipeline.transport import (
+    build_osm_transport_cache_layer,
+    transport_osm_metadata,
+)
+from geo_pipeline.water import build_osm_water_cache_layer, water_osm_metadata
 
 CACHE_LAYOUT_VERSION = "provider_cache/v1"
-POWER_LINES_SOURCE = Path(__file__).resolve().parents[1] / "data/processed/rybnik_35km_power_lines_clipped.geojson"
-POWER_VALIDATION_REPORT = Path(__file__).resolve().parents[1] / "data/reports/rybnik_35km_power_validation_clipped.json"
+POWER_LINES_SOURCE = (
+    Path(__file__).resolve().parents[1] / "data/processed/rybnik_35km_power_lines_clipped.geojson"
+)
+POWER_VALIDATION_REPORT = (
+    Path(__file__).resolve().parents[1] / "data/reports/rybnik_35km_power_validation_clipped.json"
+)
 POWER_LIMITATIONS = [
     "OSM completeness varies by area and asset type.",
     "Passed validation does not prove complete real-world infrastructure coverage.",
 ]
-POWER_SOURCE_QUERY = "OSMnx features_from_point: power and man_made=utility_pole tags for Rybnik 35 km AOI."
+POWER_SOURCE_QUERY = (
+    "OSMnx features_from_point: power and man_made=utility_pole tags for Rybnik 35 km AOI."
+)
 POWER_SOURCE_URL = "https://overpass-api.de/api/interpreter"
 POWER_PIPELINE_VERSION = "geo_pipeline/cache/v1"
 POWER_QUERY_VERSION = "power-osmnx/v1"
@@ -63,8 +87,12 @@ def cache_paths(aoi_id: str, domain: str, *, root: Path | None = None) -> CacheP
 
 def build_rybnik_power_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
     """Build the committed Rybnik power-lines cache from local artifacts only."""
-    source = guard_source_access("openstreetmap", "local_import", lambda: _read_json(POWER_LINES_SOURCE))
-    validation_report = guard_source_access("openstreetmap", "local_import", lambda: _read_json(POWER_VALIDATION_REPORT))
+    source = guard_source_access(
+        "openstreetmap", "local_import", lambda: _read_json(POWER_LINES_SOURCE)
+    )
+    validation_report = guard_source_access(
+        "openstreetmap", "local_import", lambda: _read_json(POWER_VALIDATION_REPORT)
+    )
     quality_status = _normalize_validation_status(validation_report.get("status"))
     metadata = {
         "cache_layout_version": CACHE_LAYOUT_VERSION,
@@ -95,7 +123,11 @@ def build_rybnik_power_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
         "feature_count": layer["metadata"]["feature_count"],
         "not_authoritative": False,
         "missing_required_attributes": sorted(
-            {field for feature in layer["features"] for field in feature["properties"]["missing_fields"]}
+            {
+                field
+                for feature in layer["features"]
+                for field in feature["properties"]["missing_fields"]
+            }
         ),
         "invalid_geometry_count": 0,
         "duplicate_count": 0,
@@ -136,7 +168,9 @@ def build_rybnik_emergency_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
     """Build the v1-compatible emergency cache from committed OSM fixture evidence."""
     layer = build_osm_emergency_cache_layer(readiness="usable_with_limitations")
     metadata = {
-        **emergency_osm_metadata(layer_id="emergency.osm_facilities", readiness="usable_with_limitations"),
+        **emergency_osm_metadata(
+            layer_id="emergency.osm_facilities", readiness="usable_with_limitations"
+        ),
         "feature_count": layer["metadata"]["feature_count"],
     }
     readiness = {
@@ -158,11 +192,22 @@ def build_rybnik_emergency_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
 def build_rybnik_public_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
     """Build a v1-compatible public-services cache from committed OSM evidence."""
     layer = build_osm_public_services_cache_layer(readiness="usable_with_limitations")
-    metadata = {**public_services_osm_metadata(layer_id="public.osm_facilities", readiness="usable_with_limitations"), "feature_count": layer["metadata"]["feature_count"]}
+    metadata = {
+        **public_services_osm_metadata(
+            layer_id="public.osm_facilities", readiness="usable_with_limitations"
+        ),
+        "feature_count": layer["metadata"]["feature_count"],
+    }
     readiness = {
-        "cache_layout_version": CACHE_LAYOUT_VERSION, "aoi_id": "rybnik_35km", "domain": "public",
-        "layer_id": "public.osm_facilities", "readiness": "usable_with_limitations", "quality_status": "warning",
-        "highest_issue_severity": "medium", "feature_count": metadata["feature_count"], "evaluated_at": metadata["snapshot_at"],
+        "cache_layout_version": CACHE_LAYOUT_VERSION,
+        "aoi_id": "rybnik_35km",
+        "domain": "public",
+        "layer_id": "public.osm_facilities",
+        "readiness": "usable_with_limitations",
+        "quality_status": "warning",
+        "highest_issue_severity": "medium",
+        "feature_count": metadata["feature_count"],
+        "evaluated_at": metadata["snapshot_at"],
     }
     paths = cache_paths("rybnik_35km", "public", root=root)
     _write_cache(paths, layer=layer, metadata=metadata, readiness=readiness)
@@ -172,11 +217,22 @@ def build_rybnik_public_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
 def build_rybnik_transport_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
     """Build a v1-compatible transport cache from committed OSM evidence."""
     layer = build_osm_transport_cache_layer(readiness="usable_with_limitations")
-    metadata = {**transport_osm_metadata(layer_id="transport.osm_facilities", readiness="usable_with_limitations"), "feature_count": layer["metadata"]["feature_count"]}
+    metadata = {
+        **transport_osm_metadata(
+            layer_id="transport.osm_facilities", readiness="usable_with_limitations"
+        ),
+        "feature_count": layer["metadata"]["feature_count"],
+    }
     readiness = {
-        "cache_layout_version": CACHE_LAYOUT_VERSION, "aoi_id": "rybnik_35km", "domain": "transport",
-        "layer_id": "transport.osm_facilities", "readiness": "usable_with_limitations", "quality_status": "warning",
-        "highest_issue_severity": "medium", "feature_count": metadata["feature_count"], "evaluated_at": metadata["snapshot_at"],
+        "cache_layout_version": CACHE_LAYOUT_VERSION,
+        "aoi_id": "rybnik_35km",
+        "domain": "transport",
+        "layer_id": "transport.osm_facilities",
+        "readiness": "usable_with_limitations",
+        "quality_status": "warning",
+        "highest_issue_severity": "medium",
+        "feature_count": metadata["feature_count"],
+        "evaluated_at": metadata["snapshot_at"],
     }
     paths = cache_paths("rybnik_35km", "transport", root=root)
     _write_cache(paths, layer=layer, metadata=metadata, readiness=readiness)
@@ -186,11 +242,22 @@ def build_rybnik_transport_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
 def build_rybnik_bridges_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
     """Build a v1-compatible bridges cache from committed OSM evidence."""
     layer = build_osm_bridges_cache_layer(readiness="usable_with_limitations")
-    metadata = {**bridges_osm_metadata(layer_id="bridges.osm_structures", readiness="usable_with_limitations"), "feature_count": layer["metadata"]["feature_count"]}
+    metadata = {
+        **bridges_osm_metadata(
+            layer_id="bridges.osm_structures", readiness="usable_with_limitations"
+        ),
+        "feature_count": layer["metadata"]["feature_count"],
+    }
     readiness = {
-        "cache_layout_version": CACHE_LAYOUT_VERSION, "aoi_id": "rybnik_35km", "domain": "bridges",
-        "layer_id": "bridges.osm_structures", "readiness": "usable_with_limitations", "quality_status": "warning",
-        "highest_issue_severity": "medium", "feature_count": metadata["feature_count"], "evaluated_at": metadata["snapshot_at"],
+        "cache_layout_version": CACHE_LAYOUT_VERSION,
+        "aoi_id": "rybnik_35km",
+        "domain": "bridges",
+        "layer_id": "bridges.osm_structures",
+        "readiness": "usable_with_limitations",
+        "quality_status": "warning",
+        "highest_issue_severity": "medium",
+        "feature_count": metadata["feature_count"],
+        "evaluated_at": metadata["snapshot_at"],
     }
     paths = cache_paths("rybnik_35km", "bridges", root=root)
     _write_cache(paths, layer=layer, metadata=metadata, readiness=readiness)
@@ -200,11 +267,20 @@ def build_rybnik_bridges_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
 def build_rybnik_water_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
     """Build a v1-compatible water cache from committed OSM evidence."""
     layer = build_osm_water_cache_layer(readiness="usable_with_limitations")
-    metadata = {**water_osm_metadata(layer_id="water.osm_facilities", readiness="usable_with_limitations"), "feature_count": layer["metadata"]["feature_count"]}
+    metadata = {
+        **water_osm_metadata(layer_id="water.osm_facilities", readiness="usable_with_limitations"),
+        "feature_count": layer["metadata"]["feature_count"],
+    }
     readiness = {
-        "cache_layout_version": CACHE_LAYOUT_VERSION, "aoi_id": "rybnik_35km", "domain": "water",
-        "layer_id": "water.osm_facilities", "readiness": "usable_with_limitations", "quality_status": "warning",
-        "highest_issue_severity": "medium", "feature_count": metadata["feature_count"], "evaluated_at": metadata["snapshot_at"],
+        "cache_layout_version": CACHE_LAYOUT_VERSION,
+        "aoi_id": "rybnik_35km",
+        "domain": "water",
+        "layer_id": "water.osm_facilities",
+        "readiness": "usable_with_limitations",
+        "quality_status": "warning",
+        "highest_issue_severity": "medium",
+        "feature_count": metadata["feature_count"],
+        "evaluated_at": metadata["snapshot_at"],
     }
     paths = cache_paths("rybnik_35km", "water", root=root)
     _write_cache(paths, layer=layer, metadata=metadata, readiness=readiness)
@@ -214,11 +290,20 @@ def build_rybnik_water_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
 def build_rybnik_gas_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
     """Build a v1-compatible gas cache from committed OSM evidence."""
     layer = build_osm_gas_cache_layer(readiness="usable_with_limitations")
-    metadata = {**gas_osm_metadata(layer_id="gas.osm_facilities", readiness="usable_with_limitations"), "feature_count": layer["metadata"]["feature_count"]}
+    metadata = {
+        **gas_osm_metadata(layer_id="gas.osm_facilities", readiness="usable_with_limitations"),
+        "feature_count": layer["metadata"]["feature_count"],
+    }
     readiness = {
-        "cache_layout_version": CACHE_LAYOUT_VERSION, "aoi_id": "rybnik_35km", "domain": "gas",
-        "layer_id": "gas.osm_facilities", "readiness": "usable_with_limitations", "quality_status": "warning",
-        "highest_issue_severity": "medium", "feature_count": metadata["feature_count"], "evaluated_at": metadata["snapshot_at"],
+        "cache_layout_version": CACHE_LAYOUT_VERSION,
+        "aoi_id": "rybnik_35km",
+        "domain": "gas",
+        "layer_id": "gas.osm_facilities",
+        "readiness": "usable_with_limitations",
+        "quality_status": "warning",
+        "highest_issue_severity": "medium",
+        "feature_count": metadata["feature_count"],
+        "evaluated_at": metadata["snapshot_at"],
     }
     paths = cache_paths("rybnik_35km", "gas", root=root)
     _write_cache(paths, layer=layer, metadata=metadata, readiness=readiness)
@@ -228,11 +313,20 @@ def build_rybnik_gas_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
 def build_rybnik_sewer_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
     """Build a v1-compatible sewer cache from committed OSM evidence."""
     layer = build_osm_sewer_cache_layer(readiness="usable_with_limitations")
-    metadata = {**sewer_osm_metadata(layer_id="sewer.osm_facilities", readiness="usable_with_limitations"), "feature_count": layer["metadata"]["feature_count"]}
+    metadata = {
+        **sewer_osm_metadata(layer_id="sewer.osm_facilities", readiness="usable_with_limitations"),
+        "feature_count": layer["metadata"]["feature_count"],
+    }
     readiness = {
-        "cache_layout_version": CACHE_LAYOUT_VERSION, "aoi_id": "rybnik_35km", "domain": "sewer",
-        "layer_id": "sewer.osm_facilities", "readiness": "usable_with_limitations", "quality_status": "warning",
-        "highest_issue_severity": "medium", "feature_count": metadata["feature_count"], "evaluated_at": metadata["snapshot_at"],
+        "cache_layout_version": CACHE_LAYOUT_VERSION,
+        "aoi_id": "rybnik_35km",
+        "domain": "sewer",
+        "layer_id": "sewer.osm_facilities",
+        "readiness": "usable_with_limitations",
+        "quality_status": "warning",
+        "highest_issue_severity": "medium",
+        "feature_count": metadata["feature_count"],
+        "evaluated_at": metadata["snapshot_at"],
     }
     paths = cache_paths("rybnik_35km", "sewer", root=root)
     _write_cache(paths, layer=layer, metadata=metadata, readiness=readiness)
@@ -242,11 +336,22 @@ def build_rybnik_sewer_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
 def build_rybnik_industrial_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
     """Build a v1-compatible industrial cache from committed OSM evidence."""
     layer = build_osm_industrial_cache_layer(readiness="usable_with_limitations")
-    metadata = {**industrial_osm_metadata(layer_id="industrial.osm_facilities", readiness="usable_with_limitations"), "feature_count": layer["metadata"]["feature_count"]}
+    metadata = {
+        **industrial_osm_metadata(
+            layer_id="industrial.osm_facilities", readiness="usable_with_limitations"
+        ),
+        "feature_count": layer["metadata"]["feature_count"],
+    }
     readiness = {
-        "cache_layout_version": CACHE_LAYOUT_VERSION, "aoi_id": "rybnik_35km", "domain": "industrial",
-        "layer_id": "industrial.osm_facilities", "readiness": "usable_with_limitations", "quality_status": "warning",
-        "highest_issue_severity": "medium", "feature_count": metadata["feature_count"], "evaluated_at": metadata["snapshot_at"],
+        "cache_layout_version": CACHE_LAYOUT_VERSION,
+        "aoi_id": "rybnik_35km",
+        "domain": "industrial",
+        "layer_id": "industrial.osm_facilities",
+        "readiness": "usable_with_limitations",
+        "quality_status": "warning",
+        "highest_issue_severity": "medium",
+        "feature_count": metadata["feature_count"],
+        "evaluated_at": metadata["snapshot_at"],
     }
     paths = cache_paths("rybnik_35km", "industrial", root=root)
     _write_cache(paths, layer=layer, metadata=metadata, readiness=readiness)
@@ -256,11 +361,22 @@ def build_rybnik_industrial_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
 def build_rybnik_telecom_cache(*, root: Path = CACHE_DIR) -> dict[str, Any]:
     """Build a v1-compatible telecom cache while retaining source-gap layers in v2."""
     layer = build_osm_telecom_cache_layer(readiness="usable_with_limitations")
-    metadata = {**telecom_osm_metadata(layer_id="telecom.osm_features", readiness="usable_with_limitations"), "feature_count": layer["metadata"]["feature_count"]}
+    metadata = {
+        **telecom_osm_metadata(
+            layer_id="telecom.osm_features", readiness="usable_with_limitations"
+        ),
+        "feature_count": layer["metadata"]["feature_count"],
+    }
     readiness = {
-        "cache_layout_version": CACHE_LAYOUT_VERSION, "aoi_id": "rybnik_35km", "domain": "telecom",
-        "layer_id": "telecom.osm_features", "readiness": "usable_with_limitations", "quality_status": "warning",
-        "highest_issue_severity": "medium", "feature_count": metadata["feature_count"], "evaluated_at": metadata["snapshot_at"],
+        "cache_layout_version": CACHE_LAYOUT_VERSION,
+        "aoi_id": "rybnik_35km",
+        "domain": "telecom",
+        "layer_id": "telecom.osm_features",
+        "readiness": "usable_with_limitations",
+        "quality_status": "warning",
+        "highest_issue_severity": "medium",
+        "feature_count": metadata["feature_count"],
+        "evaluated_at": metadata["snapshot_at"],
     }
     paths = cache_paths("rybnik_35km", "telecom", root=root)
     _write_cache(paths, layer=layer, metadata=metadata, readiness=readiness)
@@ -295,7 +411,9 @@ def build_rybnik_district_heating_cache(*, root: Path = CACHE_DIR) -> dict[str, 
 
 def read_cached_layer(paths: CachePaths) -> dict[str, Any]:
     """Read and validate a complete cache layout without extraction or refresh work."""
-    missing = [path.name for path in (paths.layer, paths.metadata, paths.readiness) if not path.exists()]
+    missing = [
+        path.name for path in (paths.layer, paths.metadata, paths.readiness) if not path.exists()
+    ]
     if missing:
         raise FileNotFoundError(f"Incomplete provider cache: missing {', '.join(missing)}")
     layer = _read_json(paths.layer)
@@ -308,13 +426,25 @@ def read_cached_layer(paths: CachePaths) -> dict[str, Any]:
     return {"layer": layer, "metadata": metadata, "readiness": readiness}
 
 
-def _write_cache(paths: CachePaths, *, layer: dict[str, Any], metadata: dict[str, Any], readiness: dict[str, Any]) -> None:
+def _write_cache(
+    paths: CachePaths,
+    *,
+    layer: dict[str, Any],
+    metadata: dict[str, Any],
+    readiness: dict[str, Any],
+) -> None:
     paths.root.mkdir(parents=True, exist_ok=True)
-    for path, payload in ((paths.layer, layer), (paths.metadata, metadata), (paths.readiness, readiness)):
+    for path, payload in (
+        (paths.layer, layer),
+        (paths.metadata, metadata),
+        (paths.readiness, readiness),
+    ):
         path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
-def _validate_cache_records(*, layer: dict[str, Any], metadata: dict[str, Any], readiness: dict[str, Any]) -> None:
+def _validate_cache_records(
+    *, layer: dict[str, Any], metadata: dict[str, Any], readiness: dict[str, Any]
+) -> None:
     required_metadata = {
         "cache_layout_version",
         "geojson_contract_version",
@@ -361,7 +491,10 @@ def _validate_cache_records(*, layer: dict[str, Any], metadata: dict[str, Any], 
         raise ValueError("Cached readiness has an unsupported value")
     if readiness["feature_count"] != metadata["feature_count"]:
         raise ValueError("Cached readiness feature count does not match metadata")
-    if metadata["readiness"] != readiness["readiness"] or layer["metadata"]["readiness"] != readiness["readiness"]:
+    if (
+        metadata["readiness"] != readiness["readiness"]
+        or layer["metadata"]["readiness"] != readiness["readiness"]
+    ):
         raise ValueError("Cached readiness values do not match")
     if layer["metadata"]["feature_count"] != metadata["feature_count"]:
         raise ValueError("Cached GeoJSON feature count does not match metadata")

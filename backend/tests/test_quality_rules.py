@@ -1,4 +1,8 @@
-from geo_pipeline.quality_rules import evaluate_data_quality_rules, highest_issue_severity, triggered_issues
+from geo_pipeline.quality_rules import (
+    evaluate_data_quality_rules,
+    highest_issue_severity,
+    triggered_issues,
+)
 
 
 def _layer(source_type: str = "analytical_vector", **overrides: object) -> dict[str, object]:

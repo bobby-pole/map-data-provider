@@ -3,8 +3,16 @@ import logging
 
 import geopandas as gpd
 
-from geo_pipeline.config import GEOJSON_DIR, PREVIEWS_DIR, PROCESSED_DIR, RAW_DIR, REPORTS_DIR, RYBNIK_AOI, ensure_data_dirs
 from geo_pipeline.clip import clip_geojson_to_aoi, write_clip_report
+from geo_pipeline.config import (
+    GEOJSON_DIR,
+    PREVIEWS_DIR,
+    PROCESSED_DIR,
+    RAW_DIR,
+    REPORTS_DIR,
+    RYBNIK_AOI,
+    ensure_data_dirs,
+)
 from geo_pipeline.extract import (
     configure_osmnx,
     fetch_osm_features,
@@ -37,7 +45,15 @@ NODE_LAYER_CATEGORIES = {
     "power_supports": ["tower", "pole", "portal", "utility_pole"],
     "power_switchgear": ["switch", "terminal", "converter", "compensator"],
 }
-DISPLAY_NODE_CATEGORIES = ["substation", "transformer", "plant", "switch", "terminal", "converter", "compensator"]
+DISPLAY_NODE_CATEGORIES = [
+    "substation",
+    "transformer",
+    "plant",
+    "switch",
+    "terminal",
+    "converter",
+    "compensator",
+]
 
 POWER_PROPERTY_COLUMNS = [
     "element",
@@ -106,7 +122,9 @@ def extract_power_grid(write_preview: bool = True) -> None:
     nodes = _combine_layers(node_layers.values())
     node_points = representative_points(nodes)
     display_node_points = _filter_category(node_points, DISPLAY_NODE_CATEGORIES)
-    node_point_layers = {layer_name: representative_points(gdf) for layer_name, gdf in node_layers.items()}
+    node_point_layers = {
+        layer_name: representative_points(gdf) for layer_name, gdf in node_layers.items()
+    }
 
     lines_path = _geojson_path("power_lines")
     nodes_path = _geojson_path("power_nodes")
@@ -130,8 +148,12 @@ def extract_power_grid(write_preview: bool = True) -> None:
         write_geojson(gdf, _geojson_path(f"{layer_name}_points"))
 
     clip_reports = {
-        "power_lines": clip_geojson_to_aoi(lines_path, clipped_lines_path, aoi=RYBNIK_AOI, mode="clip"),
-        "power_nodes": clip_geojson_to_aoi(nodes_path, clipped_nodes_path, aoi=RYBNIK_AOI, mode="keep-intersecting"),
+        "power_lines": clip_geojson_to_aoi(
+            lines_path, clipped_lines_path, aoi=RYBNIK_AOI, mode="clip"
+        ),
+        "power_nodes": clip_geojson_to_aoi(
+            nodes_path, clipped_nodes_path, aoi=RYBNIK_AOI, mode="keep-intersecting"
+        ),
         "power_node_points": clip_geojson_to_aoi(
             node_points_path,
             clipped_node_points_path,
@@ -187,7 +209,10 @@ def extract_power_grid(write_preview: bool = True) -> None:
             if not gdf.empty
         },
         **{
-            f"{layer_name}_points": (_processed_path(f"{layer_name}_points"), POINT_TYPES)
+            f"{layer_name}_points": (
+                _processed_path(f"{layer_name}_points"),
+                POINT_TYPES,
+            )
             for layer_name, gdf in node_point_layers.items()
             if not gdf.empty
         },
@@ -217,32 +242,62 @@ def extract_power_grid(write_preview: bool = True) -> None:
             "power_lines": str(lines_path.relative_to(GEOJSON_DIR.parents[0])),
             "power_nodes": str(nodes_path.relative_to(GEOJSON_DIR.parents[0])),
             "power_node_points": str(node_points_path.relative_to(GEOJSON_DIR.parents[0])),
-            "power_node_points_display": str(display_node_points_path.relative_to(GEOJSON_DIR.parents[0])),
+            "power_node_points_display": str(
+                display_node_points_path.relative_to(GEOJSON_DIR.parents[0])
+            ),
             "power_lines_clipped": str(clipped_lines_path.relative_to(GEOJSON_DIR.parents[0])),
             "power_nodes_clipped": str(clipped_nodes_path.relative_to(GEOJSON_DIR.parents[0])),
-            "power_node_points_clipped": str(clipped_node_points_path.relative_to(GEOJSON_DIR.parents[0])),
-            "power_node_points_display_clipped": str(clipped_display_node_points_path.relative_to(GEOJSON_DIR.parents[0])),
-            "power_major_lines_clipped": str(_processed_path("power_major_lines").relative_to(GEOJSON_DIR.parents[0])),
-            "power_minor_lines_clipped": str(_processed_path("power_minor_lines").relative_to(GEOJSON_DIR.parents[0])),
-            "power_cables_clipped": str(_processed_path("power_cables").relative_to(GEOJSON_DIR.parents[0])),
-            "power_busbars_clipped": str(_processed_path("power_busbars").relative_to(GEOJSON_DIR.parents[0])),
-            "power_substations_clipped": str(_processed_path("power_substations").relative_to(GEOJSON_DIR.parents[0])),
-            "power_transformers_clipped": str(_processed_path("power_transformers").relative_to(GEOJSON_DIR.parents[0])),
-            "power_plants_clipped": str(_processed_path("power_plants").relative_to(GEOJSON_DIR.parents[0])),
-            "power_generators_clipped": str(_processed_path("power_generators").relative_to(GEOJSON_DIR.parents[0])),
-            "power_supports_clipped": str(_processed_path("power_supports").relative_to(GEOJSON_DIR.parents[0])),
-            "power_switchgear_clipped": str(_processed_path("power_switchgear").relative_to(GEOJSON_DIR.parents[0])),
+            "power_node_points_clipped": str(
+                clipped_node_points_path.relative_to(GEOJSON_DIR.parents[0])
+            ),
+            "power_node_points_display_clipped": str(
+                clipped_display_node_points_path.relative_to(GEOJSON_DIR.parents[0])
+            ),
+            "power_major_lines_clipped": str(
+                _processed_path("power_major_lines").relative_to(GEOJSON_DIR.parents[0])
+            ),
+            "power_minor_lines_clipped": str(
+                _processed_path("power_minor_lines").relative_to(GEOJSON_DIR.parents[0])
+            ),
+            "power_cables_clipped": str(
+                _processed_path("power_cables").relative_to(GEOJSON_DIR.parents[0])
+            ),
+            "power_busbars_clipped": str(
+                _processed_path("power_busbars").relative_to(GEOJSON_DIR.parents[0])
+            ),
+            "power_substations_clipped": str(
+                _processed_path("power_substations").relative_to(GEOJSON_DIR.parents[0])
+            ),
+            "power_transformers_clipped": str(
+                _processed_path("power_transformers").relative_to(GEOJSON_DIR.parents[0])
+            ),
+            "power_plants_clipped": str(
+                _processed_path("power_plants").relative_to(GEOJSON_DIR.parents[0])
+            ),
+            "power_generators_clipped": str(
+                _processed_path("power_generators").relative_to(GEOJSON_DIR.parents[0])
+            ),
+            "power_supports_clipped": str(
+                _processed_path("power_supports").relative_to(GEOJSON_DIR.parents[0])
+            ),
+            "power_switchgear_clipped": str(
+                _processed_path("power_switchgear").relative_to(GEOJSON_DIR.parents[0])
+            ),
             "power_substations_points_clipped": str(
                 _processed_path("power_substations_points").relative_to(GEOJSON_DIR.parents[0])
             ),
             "power_transformers_points_clipped": str(
                 _processed_path("power_transformers_points").relative_to(GEOJSON_DIR.parents[0])
             ),
-            "power_plants_points_clipped": str(_processed_path("power_plants_points").relative_to(GEOJSON_DIR.parents[0])),
+            "power_plants_points_clipped": str(
+                _processed_path("power_plants_points").relative_to(GEOJSON_DIR.parents[0])
+            ),
             "power_generators_points_clipped": str(
                 _processed_path("power_generators_points").relative_to(GEOJSON_DIR.parents[0])
             ),
-            "power_supports_points_clipped": str(_processed_path("power_supports_points").relative_to(GEOJSON_DIR.parents[0])),
+            "power_supports_points_clipped": str(
+                _processed_path("power_supports_points").relative_to(GEOJSON_DIR.parents[0])
+            ),
             "power_switchgear_points_clipped": str(
                 _processed_path("power_switchgear_points").relative_to(GEOJSON_DIR.parents[0])
             ),
@@ -250,24 +305,24 @@ def extract_power_grid(write_preview: bool = True) -> None:
             "validation": str(validation_path.relative_to(REPORTS_DIR.parents[0])),
         },
         "feature_count": {
-            "raw": int(len(raw)),
-            "power_lines": int(len(lines)),
-            "power_nodes": int(len(nodes)),
-            "power_node_points": int(len(node_points)),
-            "power_node_points_display": int(len(display_node_points)),
-            **{layer_name: int(len(gdf)) for layer_name, gdf in line_layers.items()},
-            "power_substations": int(len(node_layers["power_substations"])),
-            "power_transformers": int(len(node_layers["power_transformers"])),
-            "power_plants": int(len(node_layers["power_plants"])),
-            "power_generators": int(len(node_layers["power_generators"])),
-            "power_supports": int(len(node_layers["power_supports"])),
-            "power_switchgear": int(len(node_layers["power_switchgear"])),
-            "power_substations_points": int(len(node_point_layers["power_substations"])),
-            "power_transformers_points": int(len(node_point_layers["power_transformers"])),
-            "power_plants_points": int(len(node_point_layers["power_plants"])),
-            "power_generators_points": int(len(node_point_layers["power_generators"])),
-            "power_supports_points": int(len(node_point_layers["power_supports"])),
-            "power_switchgear_points": int(len(node_point_layers["power_switchgear"])),
+            "raw": len(raw),
+            "power_lines": len(lines),
+            "power_nodes": len(nodes),
+            "power_node_points": len(node_points),
+            "power_node_points_display": len(display_node_points),
+            **{layer_name: len(gdf) for layer_name, gdf in line_layers.items()},
+            "power_substations": len(node_layers["power_substations"]),
+            "power_transformers": len(node_layers["power_transformers"]),
+            "power_plants": len(node_layers["power_plants"]),
+            "power_generators": len(node_layers["power_generators"]),
+            "power_supports": len(node_layers["power_supports"]),
+            "power_switchgear": len(node_layers["power_switchgear"]),
+            "power_substations_points": len(node_point_layers["power_substations"]),
+            "power_transformers_points": len(node_point_layers["power_transformers"]),
+            "power_plants_points": len(node_point_layers["power_plants"]),
+            "power_generators_points": len(node_point_layers["power_generators"]),
+            "power_supports_points": len(node_point_layers["power_supports"]),
+            "power_switchgear_points": len(node_point_layers["power_switchgear"]),
         },
         "quality_notes": [
             "OSM power=line is usually useful for high-voltage and visible transmission infrastructure.",
@@ -301,7 +356,9 @@ def _add_power_categories(gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
         return gdf
     enriched = gdf.copy()
     enriched["ss_power_category"] = enriched.apply(_classify_power_row, axis=1)
-    enriched["ss_power_label"] = enriched["ss_power_category"].map(_POWER_LABELS).fillna("Other power feature")
+    enriched["ss_power_label"] = (
+        enriched["ss_power_category"].map(_POWER_LABELS).fillna("Other power feature")
+    )
     return enriched
 
 
@@ -375,7 +432,9 @@ def _processed_path(layer_name: str):
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Extract OSM power infrastructure for Rybnik + 60 km.")
+    parser = argparse.ArgumentParser(
+        description="Extract OSM power infrastructure for Rybnik + 60 km."
+    )
     parser.add_argument("--no-preview", action="store_true", help="Skip PNG preview generation.")
     args = parser.parse_args()
 

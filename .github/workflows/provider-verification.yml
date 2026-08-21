@@ -14,12 +14,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  verify:
-    name: unit-tests
+  backend-python:
+    name: verify-backend-python
     runs-on: ubuntu-latest
-    # The repository-owned verification gate includes PMTiles/domain-pack
-    # generation; hosted runners can exceed ten minutes without a failure.
-    timeout-minutes: 20
+    timeout-minutes: 10
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
@@ -31,6 +29,38 @@ jobs:
 
       - name: Set up uv
         uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install Python dependencies
+        working-directory: backend
+        run: uv sync
+
+      - name: Run ruff, pytest (parallel) and smoke check
+        working-directory: backend
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
+          uv run pytest -q -W error -n auto
+          uv run python tests/smoke_check.py
+
+  failure-probes:
+    name: verify-failure-probes
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version-file: backend/.python-version
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
 
       - name: Install Python dependencies
         working-directory: backend
@@ -49,5 +79,75 @@ jobs:
       - name: Install JavaScript dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run repository-owned verification gate
-        run: ./scripts/verify_provider.sh
+      - name: Run parallel failure probes
+        run: ./scripts/verify_contract_failure_probe.sh
+
+  backend-node:
+    name: verify-backend-node
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version-file: backend/.python-version
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install Python dependencies
+        working-directory: backend
+        run: uv sync
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.0.9
+
+      - name: Install JavaScript dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run backend-node verification
+        run: pnpm run verify:node
+
+  frontend:
+    name: verify-frontend
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.0.9
+
+      - name: Install JavaScript dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run frontend verification
+        run: pnpm run verify:frontend
+
+  verify-gate:
+    name: unit-tests
+    needs: [backend-python, failure-probes, backend-node, frontend]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verification complete
+        run: echo "All parallel verification gates passed successfully."

@@ -20,7 +20,12 @@ def test_emergency_is_registered_through_an_explicit_osm_query_catalog() -> None
     assert adapter in registered_adapters()
     assert adapter.query.source_registry_id == "openstreetmap"
     assert adapter.query.query_version == "emergency-osm/v1"
-    assert adapter.query.tags["amenity"] == ["hospital", "fire_station", "police", "ambulance_station"]
+    assert adapter.query.tags["amenity"] == [
+        "hospital",
+        "fire_station",
+        "police",
+        "ambulance_station",
+    ]
 
 
 def test_public_services_are_registered_through_an_explicit_osm_query_catalog() -> None:
@@ -62,7 +67,9 @@ def test_district_heating_is_registered_with_explicit_heat_candidates() -> None:
     assert adapter.query.tags["plant:output:heat"] == ["yes", "true", "1", "heat"]
 
 
-def test_unsupported_targets_fail_before_any_cache_path_is_published(tmp_path: Path) -> None:
+def test_unsupported_targets_fail_before_any_cache_path_is_published(
+    tmp_path: Path,
+) -> None:
     with pytest.raises(AdapterError, match="Unsupported registered AOI/domain target"):
         resolve_adapter("unknown", "power")
     assert not list(tmp_path.iterdir())

@@ -2,11 +2,20 @@ from pathlib import Path
 
 import pytest
 
-from geo_pipeline.sources.orthophoto import OrthophotoAdapterError, build_getmap_url, parse_capabilities, reference_descriptor
+from geo_pipeline.sources.orthophoto import (
+    OrthophotoAdapterError,
+    build_getmap_url,
+    parse_capabilities,
+    reference_descriptor,
+)
 
-
-CAPABILITIES = (Path(__file__).resolve().parents[1] / "data" / "fixtures" / "orthophoto" / "capabilities.xml").read_bytes()
-AOI = {"type": "Polygon", "coordinates": [[[18.5, 50.0], [18.6, 50.0], [18.6, 50.1], [18.5, 50.1], [18.5, 50.0]]]}
+CAPABILITIES = (
+    Path(__file__).resolve().parents[1] / "data" / "fixtures" / "orthophoto" / "capabilities.xml"
+).read_bytes()
+AOI = {
+    "type": "Polygon",
+    "coordinates": [[[18.5, 50.0], [18.6, 50.0], [18.6, 50.1], [18.5, 50.1], [18.5, 50.0]]],
+}
 
 
 def test_parses_verified_raster_layer_and_coverage() -> None:
@@ -26,8 +35,14 @@ def test_reference_descriptor_is_non_analytical_and_discloses_missing_image_meta
 
 
 def test_reports_uncovered_and_unavailable_without_image_or_vector_fallback() -> None:
-    far_aoi = {"type": "Polygon", "coordinates": [[[0, 0], [1, 0], [1, 1], [0, 1], [0, 0]]]}
-    assert reference_descriptor(aoi_geometry=far_aoi, capabilities=CAPABILITIES)["status"] == "uncovered"
+    far_aoi = {
+        "type": "Polygon",
+        "coordinates": [[[0, 0], [1, 0], [1, 1], [0, 1], [0, 0]]],
+    }
+    assert (
+        reference_descriptor(aoi_geometry=far_aoi, capabilities=CAPABILITIES)["status"]
+        == "uncovered"
+    )
     unavailable = reference_descriptor(aoi_geometry=AOI, capabilities=None)
     assert unavailable["status"] == "service_unavailable"
     assert unavailable["get_map"] is None

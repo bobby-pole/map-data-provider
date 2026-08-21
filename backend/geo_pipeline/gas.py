@@ -10,7 +10,14 @@ from typing import Any
 from geo_pipeline.contracts import normalize_analytical_vector_layer
 from geo_pipeline.source_registry import guard_source_access
 
-GAS_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_35km" / "gas" / "osm-gas.geojson"
+GAS_FIXTURE = (
+    Path(__file__).resolve().parents[1]
+    / "data"
+    / "fixtures"
+    / "rybnik_35km"
+    / "gas"
+    / "osm-gas.geojson"
+)
 GAS_SNAPSHOT_AT = "2026-08-06T19:00:00Z"
 GAS_LIMITATIONS = [
     "OSM gas infrastructure and distribution network mapping completeness varies significantly by area.",
@@ -20,13 +27,21 @@ GAS_LIMITATIONS = [
 ]
 
 FACILITY_MAPPINGS: dict[str, tuple[tuple[str, str], ...]] = {
-    "facilities": (("man_made", "gasometer"), ("man_made", "gas_station"), ("pipeline", "valve")),
+    "facilities": (
+        ("man_made", "gasometer"),
+        ("man_made", "gas_station"),
+        ("pipeline", "valve"),
+    ),
     "pipelines": (("pipeline", "gas"), ("man_made", "pipeline")),
 }
 
 
 def load_osm_gas_fixture() -> dict[str, Any]:
-    return guard_source_access("openstreetmap", "local_import", lambda: json.loads(GAS_FIXTURE.read_text(encoding="utf-8")))
+    return guard_source_access(
+        "openstreetmap",
+        "local_import",
+        lambda: json.loads(GAS_FIXTURE.read_text(encoding="utf-8")),
+    )
 
 
 def category_for_osm_feature(properties: dict[str, Any]) -> str | None:
@@ -60,11 +75,15 @@ def categorized_osm_features() -> dict[str, list[dict[str, Any]]]:
             raise ValueError("Gas OSM fixture feature requires properties")
         category = category_for_osm_feature(properties)
         if category is None:
-            raise ValueError("Gas OSM fixture contains a feature without an allow-listed gas mapping")
+            raise ValueError(
+                "Gas OSM fixture contains a feature without an allow-listed gas mapping"
+            )
         props = {**deepcopy(properties), "provider_category": category}
         categorized[category].append({**deepcopy(feature), "properties": props})
     if any(not category_features for category_features in categorized.values()):
-        missing = sorted(category for category, category_features in categorized.items() if not category_features)
+        missing = sorted(
+            category for category, category_features in categorized.items() if not category_features
+        )
         raise ValueError(f"Gas OSM fixture is missing required categories: {', '.join(missing)}")
     return categorized
 
@@ -104,7 +123,11 @@ def build_osm_gas_layers(*, readiness: str) -> dict[str, dict[str, Any]]:
 
 
 def build_osm_gas_cache_layer(*, readiness: str) -> dict[str, Any]:
-    features = [feature for category_features in categorized_osm_features().values() for feature in category_features]
+    features = [
+        feature
+        for category_features in categorized_osm_features().values()
+        for feature in category_features
+    ]
     return normalize_analytical_vector_layer(
         {"type": "FeatureCollection", "features": features},
         metadata=gas_osm_metadata(layer_id="gas.osm_facilities", readiness=readiness),

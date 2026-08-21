@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
-from typing import Any, Callable, Mapping
+from typing import Any
 
 RULE_VERSION = "1.0"
 SOURCE_TYPES = frozenset({"analytical_vector", "manual_seed", "reference_overlay"})
@@ -56,12 +57,18 @@ def evaluate_data_quality_rules(layer: Mapping[str, Any]) -> list[RuleEvaluation
 
 def triggered_issues(layer: Mapping[str, Any]) -> list[dict[str, Any]]:
     """Return API-ready issues only for triggered outcomes."""
-    return [evaluation.issue for evaluation in evaluate_data_quality_rules(layer) if evaluation.issue is not None]
+    return [
+        evaluation.issue
+        for evaluation in evaluate_data_quality_rules(layer)
+        if evaluation.issue is not None
+    ]
 
 
 def highest_issue_severity(issues: list[Mapping[str, Any]]) -> str | None:
     """Return the worst structured severity without reading human-facing text."""
-    severities = [str(issue.get("severity")) for issue in issues if issue.get("severity") in SEVERITY_RANK]
+    severities = [
+        str(issue.get("severity")) for issue in issues if issue.get("severity") in SEVERITY_RANK
+    ]
     return max(severities, key=SEVERITY_RANK.__getitem__) if severities else None
 
 
@@ -110,7 +117,9 @@ def _string_list(value: object) -> list[str]:
     return value if isinstance(value, list) and all(isinstance(item, str) for item in value) else []
 
 
-def _issue_from_rule(context: Mapping[str, Any], *, rule: RuleDefinition, evidence: str) -> dict[str, Any]:
+def _issue_from_rule(
+    context: Mapping[str, Any], *, rule: RuleDefinition, evidence: str
+) -> dict[str, Any]:
     layer_id = context["layer_id"]
     return {
         "id": _issue_id(layer_id, rule.rule_id),
@@ -122,7 +131,9 @@ def _issue_from_rule(context: Mapping[str, Any], *, rule: RuleDefinition, eviden
         "layer_id": layer_id,
         "affected_object": {"type": "layer", "id": layer_id},
         "category": rule.category,
-        "title": rule.title.format(label=context["label"], quality_status=context["quality_status"]),
+        "title": rule.title.format(
+            label=context["label"], quality_status=context["quality_status"]
+        ),
         "evidence": evidence,
         "recommendation": rule.recommendation,
         "status": "open",
@@ -131,7 +142,10 @@ def _issue_from_rule(context: Mapping[str, Any], *, rule: RuleDefinition, eviden
 
 def _issue_id(layer_id: str, rule_id: str) -> str:
     legacy_ids = {
-        ("manual.power.seeds", "manual.non_authoritative"): "DQ-MANUAL-SEEDS-NON-AUTHORITATIVE",
+        (
+            "manual.power.seeds",
+            "manual.non_authoritative",
+        ): "DQ-MANUAL-SEEDS-NON-AUTHORITATIVE",
         ("external.kiut_wms", "reference.overlay"): "DQ-KIUT-WMS-REFERENCE-ONLY",
     }
     if (layer_id, rule_id) in legacy_ids:
@@ -178,7 +192,11 @@ def _unsupported_geometry(context: Mapping[str, Any]) -> str | None:
 
 
 def _inconsistent_source(context: Mapping[str, Any]) -> str | None:
-    return None if context["source_metadata_valid"] else "Source metadata does not match the provider source contract."
+    return (
+        None
+        if context["source_metadata_valid"]
+        else "Source metadata does not match the provider source contract."
+    )
 
 
 def _validation_status(context: Mapping[str, Any]) -> str | None:

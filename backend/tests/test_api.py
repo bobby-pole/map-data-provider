@@ -3,7 +3,6 @@ from fastapi.testclient import TestClient
 
 from app.main import app, derive_readiness, normalize_validation_status
 
-
 client = TestClient(app)
 
 
@@ -39,7 +38,9 @@ def test_catalog_uses_committed_local_artifacts() -> None:
         (None, "unknown"),
     ],
 )
-def test_validation_statuses_are_normalized(raw_status: object | None, normalized_status: str) -> None:
+def test_validation_statuses_are_normalized(
+    raw_status: object | None, normalized_status: str
+) -> None:
     assert normalize_validation_status(raw_status) == normalized_status
 
 
@@ -74,7 +75,11 @@ def test_readiness_is_derived_conservatively(
     quality_status: str, feature_count: int, source_type: str, expected: str
 ) -> None:
     assert (
-        derive_readiness(quality_status=quality_status, feature_count=feature_count, source_type=source_type)
+        derive_readiness(
+            quality_status=quality_status,
+            feature_count=feature_count,
+            source_type=source_type,
+        )
         == expected
     )
 
@@ -116,7 +121,12 @@ def test_catalog_exposes_required_source_metadata_contract() -> None:
     assert all(required_fields <= set(layer) for layer in catalog.values())
     assert {
         key: catalog["power.lines"][key]
-        for key in ("source_type", "confidence", "not_authoritative", "eligible_for_analysis")
+        for key in (
+            "source_type",
+            "confidence",
+            "not_authoritative",
+            "eligible_for_analysis",
+        )
     } == {
         "source_type": "analytical_vector",
         "confidence": "medium",

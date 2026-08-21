@@ -1,0 +1,311 @@
+/* Map canvas and MapLibre styling */
+.mapPanel {
+  position: relative;
+}
+
+.maplibregl-map {
+  background: #050a12;
+}
+
+.maplibregl-ctrl-attrib {
+  background: rgba(15, 23, 42, 0.75) !important;
+  color: #94a3b8 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 6px !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  font-size: 10px !important;
+}
+
+.maplibregl-ctrl-attrib a {
+  color: #38bdf8;
+}
+
+/* Feature & Map Popups */
+.maplibregl-popup-content {
+  max-height: min(66vh, 620px);
+  overflow: auto;
+  color: #f1f5f9;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.maplibregl-popup-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.maplibregl-popup-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+}
+
+.maplibregl-popup-tip {
+  border-top-color: rgba(15, 23, 42, 0.85) !important;
+  border-bottom-color: rgba(15, 23, 42, 0.85) !important;
+}
+
+.maplibregl-popup-close-button {
+  top: 8px !important;
+  right: 8px !important;
+  width: 24px !important;
+  height: 24px !important;
+  display: grid !important;
+  place-items: center !important;
+  padding: 0 !important;
+  border-radius: 6px !important;
+  color: #cbd5e1 !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  font-size: 14px !important;
+  line-height: 1 !important;
+  transition: all 0.15s ease !important;
+}
+
+.maplibregl-popup-close-button:hover {
+  color: #fff !important;
+  background: rgba(255, 255, 255, 0.16) !important;
+}
+
+.mapFeaturePopup {
+  display: grid;
+  gap: 4px;
+  min-width: 180px;
+  max-width: 320px;
+}
+
+.mapFeaturePopup > strong:first-child {
+  color: #f8fafc;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+  padding-right: 28px;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.mapFeaturePopup span,
+.mapFeaturePopup small {
+  color: #94a3b8;
+  font-size: 11.5px;
+}
+
+.mapFeaturePopup dl {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+  margin-top: 4px;
+}
+
+.mapFeaturePopup dd {
+  text-align: right;
+}
+
+.popupLinks {
+  display: block;
+  line-height: 1.5;
+}
+
+.popupLinks a {
+  color: #38bdf8;
+}
+
+/* Circuit Connections in Map Popup */
+.popupCircuitConnections {
+  display: grid;
+  gap: 6px;
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.popupCircuitConnections > strong {
+  color: #94a3b8;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.popupCircuitList {
+  display: grid;
+  gap: 5px;
+  max-height: 168px;
+  overflow: auto;
+}
+
+.popupCircuitButton {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  padding: 7px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: #f1f5f9;
+  text-align: left;
+  border-radius: 6px;
+}
+
+.popupCircuitButton:hover,
+.popupCircuitButton:focus-visible {
+  background: rgba(250, 204, 21, 0.15);
+  border-color: rgba(250, 204, 21, 0.6);
+  outline: none;
+}
+
+.popupCircuitButton strong {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.popupCircuitButton small {
+  color: #94a3b8;
+  font-size: 11px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+/* Circuit Edge Detail Floating Card */
+.circuitEdgePopup {
+  position: absolute;
+  right: 68px;
+  bottom: 24px;
+  z-index: 78;
+  display: grid;
+  gap: 6px;
+  width: min(320px, calc(100% - 96px));
+  max-height: min(68vh, 600px);
+  padding: 12px;
+  overflow: auto;
+  color: #f1f5f9;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(250, 204, 21, 0.5);
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+}
+
+.circuitEdgePopup::-webkit-scrollbar {
+  width: 6px;
+}
+
+.circuitEdgePopup::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+}
+
+.circuitEdgePopup > strong {
+  padding-right: 32px;
+  color: #f8fafc;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.circuitEdgePopup > span {
+  color: #94a3b8;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+.circuitEdgePopup dl {
+  font-size: 12px;
+}
+
+.circuitEdgeClose {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+}
+
+.circuitPopupZoom {
+  justify-self: start;
+  margin-top: 4px;
+  padding: 6px 9px;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.5);
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 6px;
+  color: #7dd3fc;
+}
+
+.circuitPopupZoom:hover {
+  background: rgba(56, 189, 248, 0.28);
+  color: #fff;
+}
+
+/* Floating Status and Instruction Badges */
+.mapInstruction {
+  top: 68px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  padding: 8px 18px;
+  color: #f1f5f9;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.mapStatus {
+  position: absolute;
+  z-index: 75;
+  bottom: 20px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: calc(100vw - 110px);
+  padding: 8px 18px;
+  overflow: hidden;
+  color: #94a3b8;
+  font-size: 11.5px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transform: translateX(-50%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.72);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+}
+
+.mapStatus strong {
+  color: #f8fafc;
+  font-weight: 600;
+}
+
+.mapStatusGuidance {
+  color: #38bdf8;
+  font-weight: 500;
+}
+
+/* Responsive Map Overlays */
+@media (max-width: 900px) {
+  .mapStatus {
+    bottom: 14px;
+    max-width: calc(100vw - 86px);
+    padding: 7px 9px;
+  }
+  .mapInstruction {
+    top: 62px;
+    width: max-content;
+    max-width: calc(100vw - 88px);
+  }
+}

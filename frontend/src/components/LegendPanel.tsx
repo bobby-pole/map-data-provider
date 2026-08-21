@@ -1,6 +1,7 @@
-import { useState, type CSSProperties } from "react";
-import { legendItemsForLayer, mapSymbolDataUrl, type MapSymbolKind } from "../mapSymbols";
+import { type CSSProperties, useState } from "react";
+
 import { isLinePresentationLayer, POWER_VOLTAGE_TIERS } from "../mapStyle";
+import { legendItemsForLayer, mapSymbolDataUrl, type MapSymbolKind } from "../mapSymbols";
 import { layerPresentationSemantic } from "../presentationSemantics";
 import type { PreviewLayer } from "../previewCatalog";
 
@@ -17,7 +18,13 @@ type LegendEntry = {
   source: string;
 };
 
-export function LegendPanel({ layers, referenceOverlayAvailable }: { layers: PreviewLayer[]; referenceOverlayAvailable: boolean }) {
+export function LegendPanel({
+  layers,
+  referenceOverlayAvailable,
+}: {
+  layers: PreviewLayer[];
+  referenceOverlayAvailable: boolean;
+}) {
   const entries: LegendEntry[] = layers.flatMap<LegendEntry>((layer, index) => {
     const semantic = layerPresentationSemantic(layer, index);
     const base = {
@@ -105,7 +112,8 @@ export function LegendPanel({ layers, referenceOverlayAvailable }: { layers: Pre
     <section className="drawerSection">
       <h2>Legend</h2>
       <p className="muted">
-        Distinct icons identify delivered point and area object types; colour supports, never replaces, the symbol.
+        Distinct icons identify delivered point and area object types; colour supports, never
+        replaces, the symbol.
       </p>
 
       {entries.length ? (
@@ -130,8 +138,10 @@ export function LegendPanel({ layers, referenceOverlayAvailable }: { layers: Pre
                   key={domain}
                   open={isOpen}
                   onToggle={(event) => {
-                    const targetOpen = (event.currentTarget as HTMLDetailsElement).open;
-                    if (targetOpen !== isOpen) toggleDomain(domain);
+                    const targetOpen = event.currentTarget.open;
+                    if (targetOpen !== isOpen) {
+                      toggleDomain(domain);
+                    }
                   }}
                 >
                   <summary className="legendDomainSummary">
@@ -140,7 +150,17 @@ export function LegendPanel({ layers, referenceOverlayAvailable }: { layers: Pre
                   </summary>
                   <ul className="legendList">
                     {domainEntries.map(
-                      ({ key, kind, label, color, geometry, symbolText, descriptionText, readiness, source }) => (
+                      ({
+                        key,
+                        kind,
+                        label,
+                        color,
+                        geometry,
+                        symbolText,
+                        descriptionText,
+                        readiness,
+                        source,
+                      }) => (
                         <li key={key}>
                           {kind ? (
                             <MapSymbolIcon kind={kind} />
@@ -180,7 +200,9 @@ export function LegendPanel({ layers, referenceOverlayAvailable }: { layers: Pre
           <span>
             <strong>Reference context</strong>
             <small>KIUT / orthophoto · raster-only context, never analytical evidence</small>
-            <small>{referenceOverlayAvailable ? "available on this map" : "not currently available"}</small>
+            <small>
+              {referenceOverlayAvailable ? "available on this map" : "not currently available"}
+            </small>
           </span>
         </li>
       </ul>
@@ -191,4 +213,3 @@ export function LegendPanel({ layers, referenceOverlayAvailable }: { layers: Pre
 export function MapSymbolIcon({ kind }: { kind: MapSymbolKind }) {
   return <img className="mapSymbolIcon" src={mapSymbolDataUrl(kind)} alt="" aria-hidden="true" />;
 }
-

@@ -36,5 +36,13 @@ RUNTIME_CACHE_DIR = BACKEND_DIR / "cache"
 
 
 def ensure_data_dirs() -> None:
-    for path in (RAW_DIR, MANUAL_DIR, PROCESSED_DIR, GEOJSON_DIR, PREVIEWS_DIR, REPORTS_DIR, CACHE_DIR):
+    for path in (
+        RAW_DIR,
+        MANUAL_DIR,
+        PROCESSED_DIR,
+        GEOJSON_DIR,
+        PREVIEWS_DIR,
+        REPORTS_DIR,
+        CACHE_DIR,
+    ):
         path.mkdir(parents=True, exist_ok=True)

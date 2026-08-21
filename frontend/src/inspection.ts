@@ -1,4 +1,4 @@
-import { popupDetails, sourceAttribution, type PreviewLayer } from "./previewCatalog";
+import { popupDetails, type PreviewLayer, sourceAttribution } from "./previewCatalog";
 import type { ProviderFeature } from "./types/api";
 
 export type SelectedProviderFeature = {
@@ -30,8 +30,14 @@ export function featureInspection(selected: SelectedProviderFeature): FeatureIns
 }
 
 function displayValue(value: unknown): string {
-  if (typeof value === "string") return value;
-  if (typeof value === "number" || typeof value === "boolean") return String(value);
-  if (value === null || value === undefined) return "not provided";
+  if (typeof value === "string") {
+    return value;
+  }
+  if (typeof value === "number" || typeof value === "boolean") {
+    return String(value);
+  }
+  if (value === null || value === undefined) {
+    return "not provided";
+  }
   return JSON.stringify(value);
 }

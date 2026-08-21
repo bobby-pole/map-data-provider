@@ -1,0 +1,194 @@
+/* Layer Catalog, Domain Branches, Road Class Filtering & Basemaps */
+.layerTree {
+  display: grid;
+  gap: 8px;
+}
+
+.layerTreeActions {
+  display: flex;
+  gap: 10px;
+  margin: 2px 0 8px;
+  align-items: center;
+}
+
+.layerTree details {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.layerTree summary {
+  display: flex;
+  align-items: start;
+  gap: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.layerTree summary::-webkit-details-marker {
+  display: none;
+}
+
+.layerTree summary::before {
+  content: "›";
+  display: inline-grid;
+  width: 14px;
+  height: 16px;
+  place-items: center;
+  color: #64748b;
+  font-size: 15px;
+  font-weight: 700;
+  transition: transform 0.14s ease;
+  margin-right: -2px;
+  flex-shrink: 0;
+}
+
+.layerTree details[open] > summary::before {
+  transform: rotate(90deg);
+  color: #94a3b8;
+}
+
+.layerTree summary input {
+  accent-color: #38bdf8;
+  margin-top: 3px;
+}
+
+.layerTree summary strong {
+  display: block;
+  color: #f1f5f9;
+  font-weight: 500;
+  font-size: 12.5px;
+}
+
+.layerTree summary small {
+  display: block;
+  color: #94a3b8;
+  font-weight: 400;
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+.domainBranch {
+  margin: 0 8px 8px;
+}
+
+.layerList {
+  display: grid;
+  gap: 4px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.layerToggle {
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.layerToggle:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.layerToggle input {
+  accent-color: #38bdf8;
+  margin-top: 3px;
+}
+
+.layerToggle strong,
+.layerToggle small {
+  display: block;
+}
+
+.layerToggle strong {
+  color: #f1f5f9;
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.layerToggle small {
+  color: #94a3b8;
+  margin-top: 2px;
+  line-height: 1.3;
+  font-size: 11.5px;
+}
+
+/* Road Class Sub-Filters for Transport Domain */
+.roadClassControls {
+  display: grid;
+  gap: 3px;
+  margin: 0 8px 8px 34px;
+}
+
+.roadClassToggle {
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.roadClassToggle input {
+  accent-color: #38bdf8;
+}
+
+/* Semantic and Symbology Markers */
+.semanticMark {
+  display: inline-block;
+  width: 13px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.semanticMark.line {
+  height: 3px;
+  border-radius: 3px;
+  background: var(--semantic-color);
+}
+
+.semanticMark.point_or_area {
+  height: 10px;
+  border-radius: 50%;
+  background: var(--semantic-color);
+  border: 1px solid #e5edf7;
+}
+
+.mapSymbolIcon {
+  width: 22px;
+  height: 22px;
+  margin-right: 6px;
+  vertical-align: middle;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.38));
+}
+
+/* Basemap Style Selector */
+.basemapSelector {
+  display: grid;
+  gap: 6px;
+}
+
+.basemapSelector button {
+  display: grid;
+  gap: 2px;
+  padding: 8px 10px;
+  text-align: left;
+  color: #e2e8f0;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+}
+
+.basemapSelector button:hover,
+.basemapSelector button.active {
+  border-color: #38bdf8;
+  background: rgba(56, 189, 248, 0.15);
+  color: #fff;
+}
+
+.basemapSelector small {
+  color: #94a3b8;
+  font-size: 11px;
+  line-height: 1.3;
+}

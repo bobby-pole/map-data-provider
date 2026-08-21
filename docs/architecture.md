@@ -75,7 +75,7 @@ The primary provider output is a GeoJSON `FeatureCollection` with provider-owned
     "feature_count": 16505,
     "readiness": "usable_with_limitations",
     "confidence": "medium",
-    "limitations": ["OSM completeness varies by area and asset type."],
+    "limitations": ["OSM completeness varies by area and asset type."]
   },
   "features": []
 }
@@ -91,11 +91,9 @@ Each feature exposes these required provider-owned fields in `properties`:
   "asset_type": "line",
   "confidence": "medium",
   "missing_fields": ["voltage"],
-  "limitations": ["OSM completeness varies by area"],
+  "limitations": ["OSM completeness varies by area"]
 }
 ```
-
-
 
 `osm_tags` is optional. It preserves useful source values such as `power`, `voltage`, `operator` or an original OSM `source` tag for inspection, but consumers must not require it. A representative offline fixture lives at `backend/data/fixtures/rybnik_35km/power/contract-sample.geojson`; it is a contract sample, not the complete cache layout. `MDQ-004` introduces the canonical cache artifacts and metadata/readiness files.
 
@@ -109,7 +107,7 @@ Every catalog entry makes its source and analytical eligibility explicit:
   "source_type": "analytical_vector",
   "confidence": "medium",
   "limitations": ["OSM completeness varies by area and asset type."],
-  "not_authoritative": false,
+  "not_authoritative": false
 }
 ```
 
@@ -128,17 +126,17 @@ Provider validation statuses are normalized to `passed`, `warning`, `failed` or 
 
 Provider rules use version `1.0` and return one of `passed`, `triggered` or `not_applicable`. Applicability is explicit: analytical vectors are evaluated for empty output, invalid or unsupported geometry, missing required attributes, suspicious duplicates, source metadata and validation status; manual seeds receive geometry, empty-layer, source-metadata and manual-review rules; reference overlays receive only source-metadata and reference-only rules. A WMS/reference overlay is therefore never reported as an empty or invalid analytical GeoJSON layer.
 
-| Rule ID | Applies to | Severity when triggered | Trigger |
-| --- | --- | --- | --- |
-| `layer.empty` | analytical vector, manual seed | high | Feature count is zero. |
-| `geometry.invalid` | analytical vector, manual seed | high | Validation reports invalid geometries. |
-| `attributes.missing_required` | analytical vector | medium | Required normalized attributes are missing. |
-| `features.duplicates` | analytical vector | medium | Validation reports suspicious duplicate features. |
-| `geometry.unsupported` | analytical vector, manual seed | medium | Unsupported geometry types are present. |
-| `source.inconsistent` | every source type | high | Provider source metadata is invalid or inconsistent. |
-| `validation.status` | analytical vector, manual seed | medium | Normalized validation status is not `passed`. |
-| `manual.non_authoritative` | manual seed | medium | Non-empty manual review input is present. |
-| `reference.overlay` | reference overlay | medium | Raster/reference-only overlay is present. |
+| Rule ID                       | Applies to                     | Severity when triggered | Trigger                                              |
+| ----------------------------- | ------------------------------ | ----------------------- | ---------------------------------------------------- |
+| `layer.empty`                 | analytical vector, manual seed | high                    | Feature count is zero.                               |
+| `geometry.invalid`            | analytical vector, manual seed | high                    | Validation reports invalid geometries.               |
+| `attributes.missing_required` | analytical vector              | medium                  | Required normalized attributes are missing.          |
+| `features.duplicates`         | analytical vector              | medium                  | Validation reports suspicious duplicate features.    |
+| `geometry.unsupported`        | analytical vector, manual seed | medium                  | Unsupported geometry types are present.              |
+| `source.inconsistent`         | every source type              | high                    | Provider source metadata is invalid or inconsistent. |
+| `validation.status`           | analytical vector, manual seed | medium                  | Normalized validation status is not `passed`.        |
+| `manual.non_authoritative`    | manual seed                    | medium                  | Non-empty manual review input is present.            |
+| `reference.overlay`           | reference overlay              | medium                  | Raster/reference-only overlay is present.            |
 
 Every triggered rule produces a source-aware issue:
 
@@ -151,7 +149,7 @@ Every triggered rule produces a source-aware issue:
   "source_type": "analytical_vector",
   "domain": "power",
   "layer_id": "power.hexes.regional",
-  "affected_object": {"type": "layer", "id": "power.hexes.regional"},
+  "affected_object": { "type": "layer", "id": "power.hexes.regional" },
   "evidence": "Validation report status: missing (normalized: unknown).",
   "recommendation": "Inspect validation evidence and document limitations before analytical use.",
   "status": "open"
@@ -209,15 +207,15 @@ backend/data/cache/{aoi_id}/{domain}/
 
 `backend/data/sources/registry.json` is the portable `source_registry/v2` contract shared by Python, Node and later exports. Each record keeps independent `data_kind`, `format`, `authority`, `access_method`, `usage_role`, `qualification` and `distribution` fields, plus endpoint/reference, attribution, licence, availability caveats and limitations. This prevents an official source, a vector format and public access from being mistaken for the same property.
 
-| Registered family | Data and format | Current role and public-export decision |
-| --- | --- | --- |
-| OpenStreetMap | vector / `osm_query` | Qualified free analytical evidence; public export is allowed with ODbL attribution. |
-| Local manual seed | vector / `geojson` | Non-authoritative review input; excluded from analytical export. |
-| PRG | vector / `wfs_gml` | Qualified free official boundary/address vector; WFS/GML is distinct from its viewing WMS. |
-| BDOT10k | vector / `gpkg_geoparquet` | Qualified free official package download; WMS GetFeatureInfo discovers packages and is not a direct feature API. |
-| KIUT/GESUT | rendered imagery / `wms` | Official reference-only overlay; rendered imagery is excluded from analytical GeoJSON and public export. |
-| Geoportal orthophoto | rendered imagery / `wms` | Qualified free visual reference; imagery remains excluded from object-vector export. |
-| NMT/NMPT | raster / `geotiff_ascii_grid` | Qualified free raster input for later bounded derived products; it cannot be served by vector-only endpoints. |
+| Registered family    | Data and format               | Current role and public-export decision                                                                          |
+| -------------------- | ----------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| OpenStreetMap        | vector / `osm_query`          | Qualified free analytical evidence; public export is allowed with ODbL attribution.                              |
+| Local manual seed    | vector / `geojson`            | Non-authoritative review input; excluded from analytical export.                                                 |
+| PRG                  | vector / `wfs_gml`            | Qualified free official boundary/address vector; WFS/GML is distinct from its viewing WMS.                       |
+| BDOT10k              | vector / `gpkg_geoparquet`    | Qualified free official package download; WMS GetFeatureInfo discovers packages and is not a direct feature API. |
+| KIUT/GESUT           | rendered imagery / `wms`      | Official reference-only overlay; rendered imagery is excluded from analytical GeoJSON and public export.         |
+| Geoportal orthophoto | rendered imagery / `wms`      | Qualified free visual reference; imagery remains excluded from object-vector export.                             |
+| NMT/NMPT             | raster / `geotiff_ascii_grid` | Qualified free raster input for later bounded derived products; it cannot be served by vector-only endpoints.    |
 
 Every analytical cache record references its registry ID and retains `source_url`, `source_query`, `snapshot_at`, `pipeline_version` and `query_version`. The existing `rybnik_35km/power` cache keeps its v1 provenance shape and resolves it through the v2 OpenStreetMap record. Before a source is acquired, locally imported, processed analytically or exported, the provider evaluates that requested use against the registry. Only qualified free sources pass acquisition/import; analytical processing also requires an analytical, analysis-eligible non-rendered source; public export additionally requires explicit distribution permission. Free registration is not a rejection by itself. Reference-only records are allowed for reference use, reported as not comparable for analytical comparison, and rejected for analytical processing or public export. A later domain pack may retain ordered source-provenance records without merging source identities.
 
@@ -247,13 +245,11 @@ The Node/Express/TypeScript provider now serves typed, read-only local artifacts
 
 `GET /api/aoi/catalog` returns the bounded offline PRG administrative selection catalogue. `POST /api/aoi/runtime-requests` validates `provider_aoi_request/v2`, then calls the local runtime worker only after validation. A cache miss for any required profile or optional `telecom` makes a bounded live OSM/Overpass request, then publishes a validated local domain pack and PMTiles presentation; it makes no WMS or raster request. Telecom accepts only explicit OSM communication semantics and preserves an empty line layer as `needs_source`. Other profiles remain typed source gaps until their separately governed adapters are complete.
 
-
 `GET /api/aoi/:aoiId/domain-packs` and `GET /api/aoi/:aoiId/domain-packs/:domain` provide read-only `provider_domain_pack_read/v2` responses from registered manifests. Node validates request and manifest identity, pack-relative paths, source provenance, SHA-256 checksums, feature counts and provider GeoJSON metadata before returning any layer. The response exposes only explicitly public processed, derived or representative-point GeoJSON vectors. Native artifacts, rasters, remote services and reference-only records remain inside the cache as provenance evidence and cannot enter an analytical endpoint.
 
 `GET /api/aoi/:aoiId/export` provides a consolidated multi-domain export payload conforming to `provider_multi_domain_export/v2`. The route accepts a mandatory `domains` parameter (e.g., `GET /api/aoi/:aoiId/export?domains=power,emergency,public,transport,bridges,water,gas,sewer,industrial`), validates requested domains against an allow-list of profiles, rejects empty domain segments with HTTP 422 `invalid_request`, deduplicates requested profiles, and attaches explicit per-domain outcomes (`ready` vs `needs_source`), public GeoJSON domain packs, and relevant reviewed issues filtered by requested domains.
 
 `GET /api/aoi/:aoiId/presentations` and `GET /api/aoi/:aoiId/presentations/:domain` provide compact `provider_map_presentation_read/v1` metadata without reading or serializing analytical GeoJSON collections. `GET /api/aoi/:aoiId/presentations/:domain/features/:sourceId` returns one validated source-detail feature and its allow-listed attributes; it validates an OSM `node`, `way` or `relation` ID and never returns an entire layer. `GET /api/aoi/:aoiId/presentations/:domain/archive` requires one satisfiable HTTP byte range and responds with checked PMTiles bytes, an ETag and `Content-Range`. Node validates presentation identity, parent-manifest digest, public-source provenance, archive size and SHA-256 before serving it. These routes are read-only and never invoke Python, Overpass, WMS or a tile generator.
-
 
 Implemented Node/Express provider endpoints:
 

@@ -1,10 +1,20 @@
 import type { IssueReviewStatus, ProviderIssue } from "./types/api";
 
-export const reviewStatuses: IssueReviewStatus[] = ["open", "acknowledged", "resolved", "accepted", "ignored"];
+export const reviewStatuses: IssueReviewStatus[] = [
+  "open",
+  "acknowledged",
+  "resolved",
+  "accepted",
+  "ignored",
+];
 
 export function nextReviewStates(status: IssueReviewStatus): Exclude<IssueReviewStatus, "open">[] {
-  if (status === "open") return ["acknowledged", "resolved", "accepted", "ignored"];
-  if (status === "acknowledged") return ["resolved", "accepted", "ignored"];
+  if (status === "open") {
+    return ["acknowledged", "resolved", "accepted", "ignored"];
+  }
+  if (status === "acknowledged") {
+    return ["resolved", "accepted", "ignored"];
+  }
   return [];
 }
 

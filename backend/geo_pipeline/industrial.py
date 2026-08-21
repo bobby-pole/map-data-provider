@@ -15,16 +15,29 @@ from geo_pipeline.contracts import (
 
 INDUSTRIAL_LIMITATIONS = "OSM industrial facilities might lack complete boundary semantics. Fixture is bounded to Rybnik 35km."
 
-INDUSTRIAL_FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "rybnik_35km" / "industrial" / "osm-industrial.geojson"
+INDUSTRIAL_FIXTURE = (
+    Path(__file__).resolve().parents[1]
+    / "data"
+    / "fixtures"
+    / "rybnik_35km"
+    / "industrial"
+    / "osm-industrial.geojson"
+)
 
-IndustrialCategory = Literal["land_use", "facilities", "works", "building_context", "military_context"]
+IndustrialCategory = Literal[
+    "land_use", "facilities", "works", "building_context", "military_context"
+]
 
 INDUSTRIAL_FACILITY_MAPPINGS: dict[IndustrialCategory, list[tuple[str, str]]] = {
     "land_use": [("landuse", "industrial")],
     "facilities": [("industrial", "factory"), ("industrial", "works")],
     "works": [("man_made", "works")],
     "building_context": [("building", "industrial")],
-    "military_context": [("landuse", "military"), ("military", "danger_area"), ("military", "base")],
+    "military_context": [
+        ("landuse", "military"),
+        ("military", "danger_area"),
+        ("military", "base"),
+    ],
 }
 
 
@@ -53,6 +66,7 @@ def _layer_template(category: IndustrialCategory, readiness: str) -> dict[str, A
 
 def industrial_osm_metadata(*, layer_id: str, readiness: str) -> dict[str, Any]:
     from geo_pipeline.query_catalog import INDUSTRIAL_OSM_QUERY
+
     return {
         "cache_layout_version": "provider_cache/v1",
         "geojson_contract_version": "provider_geojson/v1",
@@ -91,7 +105,7 @@ def build_osm_industrial_layers(*, readiness: str) -> dict[str, dict[str, Any]]:
         category = category_for_osm_feature(feature.get("properties", {}))
         if category is None:
             continue
-        
+
         properties = {
             **deepcopy(feature.get("properties", {})),
             "source_id": feature.get("properties", {}).get("source_id", "osm/unknown"),
@@ -103,12 +117,14 @@ def build_osm_industrial_layers(*, readiness: str) -> dict[str, dict[str, Any]]:
             "eligible_for_analysis": True,
             "missing_fields": [],
         }
-        layers[category]["features"].append({
-            "type": "Feature",
-            "properties": properties,
-            "geometry": feature["geometry"],
-        })
-    
+        layers[category]["features"].append(
+            {
+                "type": "Feature",
+                "properties": properties,
+                "geometry": feature["geometry"],
+            }
+        )
+
     for category in layers:
         meta = layers[category].pop("metadata")
         meta["feature_count"] = len(layers[category]["features"])
@@ -116,8 +132,10 @@ def build_osm_industrial_layers(*, readiness: str) -> dict[str, dict[str, Any]]:
         layers[category] = normalize_analytical_vector_layer(layers[category], metadata=meta)
         errors = validate_provider_geojson(layers[category])
         if errors:
-            raise ValueError(f"Provider contract violated for industrial {category}: {', '.join(errors)}")
-    
+            raise ValueError(
+                f"Provider contract violated for industrial {category}: {', '.join(errors)}"
+            )
+
     return layers
 
 
@@ -125,12 +143,12 @@ def build_osm_industrial_cache_layer(*, readiness: str) -> dict[str, Any]:
     """Legacy v1 single-layer cache builder for industrial facilities."""
     raw_collection = json.loads(INDUSTRIAL_FIXTURE.read_text(encoding="utf-8"))
     features = []
-    
+
     for feature in raw_collection.get("features", []):
         category = category_for_osm_feature(feature.get("properties", {}))
         if category is None:
             continue
-        
+
         properties = {
             **deepcopy(feature.get("properties", {})),
             "source_id": feature.get("properties", {}).get("source_id", "osm/unknown"),
@@ -142,22 +160,24 @@ def build_osm_industrial_cache_layer(*, readiness: str) -> dict[str, Any]:
             "eligible_for_analysis": True,
             "missing_fields": [],
         }
-        features.append({
-            "type": "Feature",
-            "properties": properties,
-            "geometry": feature["geometry"],
-        })
+        features.append(
+            {
+                "type": "Feature",
+                "properties": properties,
+                "geometry": feature["geometry"],
+            }
+        )
 
     legacy = {
         "type": "FeatureCollection",
         "features": features,
     }
-    
+
     meta = industrial_osm_metadata(layer_id="industrial.osm_facilities", readiness=readiness)
     meta["feature_count"] = len(features)
-    
+
     legacy = normalize_analytical_vector_layer(legacy, metadata=meta)
-    
+
     errors = validate_provider_geojson(legacy)
     if errors:
         raise ValueError(f"Legacy industrial cache violates provider contract: {', '.join(errors)}")

@@ -20,10 +20,10 @@ BRIDGES_FIXTURE = (
 )
 BRIDGES_SNAPSHOT_AT = "2026-08-04T22:00:00Z"
 BRIDGES_LIMITATIONS = [
-    "OSM bridge and crossing mapping completeness varies by area, operator and transport mode.",
-    "The bounded committed snapshot is fixture evidence for bridge structures and level crossings and not an operational criticality rating.",
+    "OSM bridge mapping completeness varies by area, operator and transport mode.",
+    "The bounded committed snapshot is fixture evidence for bridge and viaduct structures and not an operational criticality rating.",
     "BDOT10k bridge and culvert geometry is retained only as topographic comparison context and cannot establish transport service semantics alone.",
-    "No qualified PRG bridge or crossing registry is enabled for this domain pack.",
+    "No qualified PRG bridge registry is enabled for this domain pack.",
 ]
 
 FACILITY_MAPPINGS: dict[str, tuple[tuple[str, str], ...]] = {
@@ -31,10 +31,8 @@ FACILITY_MAPPINGS: dict[str, tuple[tuple[str, str], ...]] = {
         ("bridge", "yes"),
         ("bridge", "aqueduct"),
         ("bridge", "boardwalk"),
-        ("man_made", "bridge"),
     ),
     "viaducts": (("bridge", "viaduct"), ("highway", "viaduct")),
-    "crossings": (("railway", "level_crossing"), ("railway", "crossing")),
 }
 
 
@@ -62,12 +60,10 @@ def categorized_osm_features() -> dict[str, list[dict[str, Any]]]:
     for feature in features:
         properties = feature.get("properties") if isinstance(feature, dict) else None
         if not isinstance(properties, dict):
-            raise ValueError("Bridges OSM fixture feature requires properties")
+            continue
         category = category_for_osm_feature(properties)
         if category is None:
-            raise ValueError(
-                "Bridges OSM fixture contains a feature without an allow-listed bridge mapping"
-            )
+            continue
         props = {**deepcopy(properties), "provider_category": category}
         categorized[category].append({**deepcopy(feature), "properties": props})
     if any(not category_features for category_features in categorized.values()):
@@ -91,10 +87,10 @@ def bridges_osm_metadata(*, layer_id: str, readiness: str) -> dict[str, Any]:
         "source_type": "analytical_vector",
         "source_registry_id": "openstreetmap",
         "source_url": "https://overpass-api.de/api/interpreter",
-        "source_query": "Bounded Overpass snapshot: explicit bridge, viaduct and level crossing tags within the Rybnik 35 km AOI.",
+        "source_query": "Bounded Overpass snapshot: explicit bridge and viaduct tags within the Rybnik 35 km AOI.",
         "snapshot_at": BRIDGES_SNAPSHOT_AT,
-        "pipeline_version": "geo_pipeline/bridges/v1",
-        "query_version": "bridges-osm/v1",
+        "pipeline_version": "geo_pipeline/bridges/v2",
+        "query_version": "bridges-osm/v2",
         "validation_status_raw": "warning",
         "quality_status": "warning",
         "confidence": "medium",

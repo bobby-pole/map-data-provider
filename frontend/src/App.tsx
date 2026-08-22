@@ -91,8 +91,8 @@ export default function App() {
       shouldHideDefaultObjects
         ? []
         : catalog.filter(
-            (layer) => enabledLayers[previewLayerKey(layer)] ?? defaultLayerEnabled(layer),
-          ),
+          (layer) => enabledLayers[previewLayerKey(layer)] ?? defaultLayerEnabled(layer),
+        ),
     [catalog, enabledLayers, shouldHideDefaultObjects],
   );
   const featureCount = useMemo(
@@ -113,14 +113,16 @@ export default function App() {
     );
   }, []);
 
-  const selectFeature = useCallback((selection: SelectedProviderFeature) => {
+  const selectFeature = useCallback((selection: SelectedProviderFeature | null) => {
     setSelectedFeature(selection);
     setSelectedDetail(null);
     setSelectedCircuit(null);
     setSelectedCircuitMember(null);
-    setActivePanel((current) =>
-      selection.layer.domain === "power" ? (current === "layers" ? null : current) : "layers",
-    );
+    if (selection) {
+      setActivePanel((current) =>
+        selection.layer.domain === "power" ? (current === "layers" ? null : current) : "layers",
+      );
+    }
   }, []);
 
   const toggleLayer = useCallback(

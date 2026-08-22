@@ -8,20 +8,20 @@
   "source_type": "analytical_vector",
   "source_registry_id": "openstreetmap",
   "source_url": "https://overpass-api.de/api/interpreter",
-  "source_query": "Bounded Overpass snapshot: explicit bridge, viaduct and level crossing tags within the Rybnik 35 km AOI.",
+  "source_query": "Bounded Overpass snapshot: explicit bridge and viaduct tags within the Rybnik 35 km AOI.",
   "snapshot_at": "2026-08-04T22:00:00Z",
-  "pipeline_version": "geo_pipeline/bridges/v1",
-  "query_version": "bridges-osm/v1",
+  "pipeline_version": "geo_pipeline/bridges/v2",
+  "query_version": "bridges-osm/v2",
   "validation_status_raw": "warning",
   "quality_status": "warning",
   "confidence": "medium",
   "limitations": [
-    "OSM bridge and crossing mapping completeness varies by area, operator and transport mode.",
-    "The bounded committed snapshot is fixture evidence for bridge structures and level crossings and not an operational criticality rating.",
+    "OSM bridge mapping completeness varies by area, operator and transport mode.",
+    "The bounded committed snapshot is fixture evidence for bridge and viaduct structures and not an operational criticality rating.",
     "BDOT10k bridge and culvert geometry is retained only as topographic comparison context and cannot establish transport service semantics alone.",
-    "No qualified PRG bridge or crossing registry is enabled for this domain pack."
+    "No qualified PRG bridge registry is enabled for this domain pack."
   ],
   "eligible_for_analysis": true,
   "readiness": "usable_with_limitations",
-  "feature_count": 7291
+  "feature_count": 4575
 }

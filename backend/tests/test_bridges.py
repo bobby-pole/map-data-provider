@@ -8,12 +8,12 @@ from geo_pipeline.domain_pack import build_rybnik_bridges_domain_pack, read_doma
 
 def test_category_for_osm_feature_normalizes_bridge_tags_and_rejects_unmapped() -> None:
     assert category_for_osm_feature({"bridge": "yes", "name": "Castle Bridge"}) == "bridges"
-    assert category_for_osm_feature({"man_made": "bridge"}) == "bridges"
     assert category_for_osm_feature({"bridge": "aqueduct"}) == "bridges"
     assert category_for_osm_feature({"bridge": "viaduct"}) == "viaducts"
     assert category_for_osm_feature({"highway": "viaduct"}) == "viaducts"
-    assert category_for_osm_feature({"railway": "level_crossing"}) == "crossings"
-    assert category_for_osm_feature({"railway": "crossing"}) == "crossings"
+    assert category_for_osm_feature({"man_made": "bridge"}) is None
+    assert category_for_osm_feature({"railway": "level_crossing"}) is None
+    assert category_for_osm_feature({"railway": "crossing"}) is None
     assert category_for_osm_feature({"building": "yes", "name": "Generic Building"}) is None
     assert category_for_osm_feature({"highway": "footway"}) is None
 
@@ -32,9 +32,6 @@ def test_bridges_domain_pack_builds_independent_categories_and_inspection_points
     viaducts = json.loads(
         (pack_root / artifacts["bridges.viaducts"]["path"]).read_text(encoding="utf-8")
     )
-    crossings = json.loads(
-        (pack_root / artifacts["bridges.crossings"]["path"]).read_text(encoding="utf-8")
-    )
     inspection = json.loads(
         (pack_root / artifacts["bridges.inspection_points"]["path"]).read_text(encoding="utf-8")
     )
@@ -47,7 +44,6 @@ def test_bridges_domain_pack_builds_independent_categories_and_inspection_points
     assert pack["domain_pack_version"] == "provider_domain_pack/v2"
     assert bridges["features"][0]["properties"]["asset_type"] == "bridges"
     assert viaducts["features"][0]["properties"]["asset_type"] == "viaducts"
-    assert crossings["features"][0]["properties"]["asset_type"] == "crossings"
 
     assert inspection["features"][0]["properties"]["origin_artifact"].startswith("bridges.")
     assert context["bdot10k"]["status"] == "context_only"
@@ -59,6 +55,5 @@ def test_bridges_domain_pack_builds_independent_categories_and_inspection_points
     assert {artifact["id"] for artifact in public} == {
         "bridges.bridges",
         "bridges.viaducts",
-        "bridges.crossings",
         "bridges.inspection_points",
     }

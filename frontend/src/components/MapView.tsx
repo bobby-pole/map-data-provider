@@ -309,7 +309,7 @@ export function MapView({
   selectedCircuit: MapCircuit | null;
   selectedCircuitMember: MapCircuitMember | null;
   pickingAoi: boolean;
-  onSelectFeature: (selected: SelectedProviderFeature) => void;
+  onSelectFeature: (selected: SelectedProviderFeature | null) => void;
   onCircuitChange: (circuit: MapCircuit | null) => void;
   onCircuitMemberChange: (member: MapCircuitMember | null) => void;
   onPickAoiPoint: (point: { longitude: number; latitude: number }) => void;
@@ -325,7 +325,6 @@ export function MapView({
   const onZoomChangeRef = useRef(onZoomChange);
   const pickingAoiRef = useRef(pickingAoi);
   const fittedArchiveRef = useRef<string | null>(null);
-  const popupRef = useRef<maplibregl.Popup | null>(null);
   const [mapReady, setMapReady] = useState(false);
   const [powerPopup, setPowerPopup] = useState<PowerPopupState | null>(null);
   const [selectedLineDetail, setSelectedLineDetail] = useState<MapFeatureDetail | null>(null);
@@ -402,17 +401,6 @@ export function MapView({
       }
       const feature = asProviderFeature(rendered);
       onSelectFeatureRef.current({ layer, feature });
-      popupRef.current?.remove();
-      const popup = new maplibregl.Popup({ closeButton: true, offset: 10 })
-        .setLngLat(event.lngLat)
-        .setDOMContent(featurePopupContent(feature, layer, null, () => undefined))
-        .addTo(map);
-      popup.on("close", () => {
-        if (popupRef.current === popup) {
-          popupRef.current = null;
-        }
-      });
-      popupRef.current = popup.addTo(map);
     });
     map.on("mousemove", (event) => {
       const visibleIds = layersRef.current
@@ -424,7 +412,6 @@ export function MapView({
           : "";
     });
     return () => {
-      popupRef.current?.remove();
       map.remove();
       mapRef.current = null;
     };
@@ -488,7 +475,9 @@ export function MapView({
         );
         if (directlySelectedLine) {
           onCircuitChangeRef.current(directlySelectedLine.circuit);
-          onCircuitMemberChangeRef.current(directlySelectedLine.member);
+          // Don't auto-select individual member – show full circuit highlight
+          // so all member ways are highlighted at once (like OpenInfraMap).
+          // The user can still drill into a single member via the popup buttons.
         }
       })
       .catch(() => {
@@ -909,11 +898,11 @@ export function MapView({
         } else {
           const minzoom =
             layer.domain === "emergency" ||
-            layer.domain === "gas" ||
-            layer.domain === "sewer" ||
-            layer.domain === "industrial" ||
-            layer.domain === "telecom" ||
-            layer.domain === "district_heating"
+              layer.domain === "gas" ||
+              layer.domain === "sewer" ||
+              layer.domain === "industrial" ||
+              layer.domain === "telecom" ||
+              layer.domain === "district_heating"
               ? 9
               : 12;
           const areaColor = color;
@@ -1297,127 +1286,150 @@ export function MapView({
     });
   }, [mapReady, selected, selectedDetail, selectedCircuitMember, layers]);
 
-  useEffect(() => {
-    if (!popupRef.current || !selected) {
-      return;
-    }
-    const detail =
-      selectedDetail?.source_id === selected.feature.properties.source_id ? selectedDetail : null;
-    const feature = detail ? detail.feature : selected.feature;
-    const relevantPowerPopup =
-      powerPopup?.sourceId === selected.feature.properties.source_id ? powerPopup : null;
-    popupRef.current.setDOMContent(
-      featurePopupContent(feature, selected.layer, relevantPowerPopup, (line) => {
-        onCircuitChangeRef.current(line.circuit);
-        onCircuitMemberChangeRef.current(line.member);
-      }),
-    );
-  }, [selected, selectedDetail, powerPopup]);
-
-  const zoomToSelectedLine = () => {
+  const zoomToSelected = () => {
     const map = mapRef.current;
-    const bounds = selectedCircuitMember?.geometry
-      ? geometryBounds(selectedCircuitMember.geometry)
-      : null;
-    if (!map || !bounds) {
+    if (!map) {
       return;
     }
-    map.fitBounds(
-      [
-        [bounds[0], bounds[1]],
-        [bounds[2], bounds[3]],
-      ],
-      {
-        padding: { top: 96, right: 360, bottom: 96, left: 84 },
-        maxZoom: 14,
-        duration: 500,
-        essential: true,
-      },
-    );
+
+    if (selectedCircuitMember?.geometry) {
+      const bounds = geometryBounds(selectedCircuitMember.geometry);
+      if (bounds) {
+        map.fitBounds(
+          [
+            [bounds[0], bounds[1]],
+            [bounds[2], bounds[3]],
+          ],
+          {
+            padding: { top: 96, right: 380, bottom: 96, left: 84 },
+            maxZoom: 15,
+            duration: 500,
+            essential: true,
+          },
+        );
+        return;
+      }
+    }
+
+    if (selectedCircuit?.members) {
+      const memberGeoms = selectedCircuit.members
+        .filter((m) => m.geometry)
+        .map((m) => m.geometry!);
+      if (memberGeoms.length > 0) {
+        const collection: Geometry = {
+          type: "GeometryCollection",
+          geometries: memberGeoms,
+        };
+        const bounds = geometryBounds(collection);
+        if (bounds) {
+          map.fitBounds(
+            [
+              [bounds[0], bounds[1]],
+              [bounds[2], bounds[3]],
+            ],
+            {
+              padding: { top: 96, right: 380, bottom: 96, left: 84 },
+              maxZoom: 14,
+              duration: 500,
+              essential: true,
+            },
+          );
+          return;
+        }
+      }
+    }
+
+    const detail =
+      selectedDetail?.source_id === selected?.feature.properties.source_id ? selectedDetail : null;
+    const feature = detail ? detail.feature : selected?.feature;
+    if (feature?.geometry) {
+      const bounds = geometryBounds(feature.geometry);
+      if (bounds) {
+        if (bounds[0] === bounds[2] && bounds[1] === bounds[3]) {
+          map.easeTo({
+            center: [bounds[0], bounds[1]],
+            zoom: Math.max(map.getZoom(), 15),
+            duration: 500,
+            essential: true,
+          });
+        } else {
+          map.fitBounds(
+            [
+              [bounds[0], bounds[1]],
+              [bounds[2], bounds[3]],
+            ],
+            {
+              padding: { top: 96, right: 380, bottom: 96, left: 84 },
+              maxZoom: 15,
+              duration: 500,
+              essential: true,
+            },
+          );
+        }
+      }
+    }
   };
-  const clearCircuitSelection = () => {
+
+  const clearSelection = () => {
+    onSelectFeature(null);
     onCircuitChange(null);
     onCircuitMemberChange(null);
   };
-  const directLineDetail =
-    selectedDetail?.source_id === selectedCircuitMember?.source_id ? selectedDetail : null;
-  const inspectedLineDetail =
-    directLineDetail ??
-    (selectedLineDetail?.source_id === selectedCircuitMember?.source_id
-      ? selectedLineDetail
-      : null);
-  const lineAttributes = inspectedLineDetail
-    ? popupAttributeEntries(inspectedLineDetail.feature.properties)
-    : [];
-  const lineOperator =
-    selectedCircuit?.tags.operator ??
-    attributeValue(inspectedLineDetail?.feature.properties, "operator") ??
-    "unknown";
 
   return (
     <div className="mapPanel">
-      {selectedCircuitMember?.geometry && (
-        <section className="circuitEdgePopup" aria-label="Selected verified power line">
-          <CloseButton
-            className="circuitEdgeClose"
-            ariaLabel="Close selected line"
-            title="Close selected line"
-            onClick={clearCircuitSelection}
-          />
-          <strong>{String(selectedCircuit?.tags.name ?? "Verified power line")}</strong>
-          <span>{selectedCircuitMember.source_id}</span>
-          <dl>
-            <dt>circuit</dt>
-            <dd>
-              {String(selectedCircuit?.tags.name ?? selectedCircuit?.relation_id ?? "not linked")}
-            </dd>
-            <dt>voltage</dt>
-            <dd>
-              {formatVoltage(
-                selectedCircuit?.tags.voltage ??
-                  attributeValue(inspectedLineDetail?.feature.properties, "voltage"),
-              )}
-            </dd>
-            <dt>operator</dt>
-            <dd>{lineOperator}</dd>
-            <dt>evidence</dt>
-            <dd>
-              {selectedCircuitMember.endpoint_evidence
-                ? `${selectedCircuitMember.endpoint_evidence.start} → ${selectedCircuitMember.endpoint_evidence.end}`
-                : "source line geometry"}
-            </dd>
-            {lineAttributes
-              .filter(([name]) => !["voltage", "operator"].includes(name))
-              .map(([name, value]) => (
-                <Fragment key={name}>
-                  <dt>{name}</dt>
-                  <dd>{value}</dd>
-                </Fragment>
-              ))}
-          </dl>
-          {!inspectedLineDetail && (
-            <small>
-              {unavailableLineDetailForSourceId === selectedCircuitMember.source_id
-                ? "Full source attributes are unavailable for this cached line."
-                : "Loading source attributes…"}
-            </small>
-          )}
-          <button type="button" className="circuitPopupZoom" onClick={zoomToSelectedLine}>
-            Zoom to line
-          </button>
-        </section>
+      {selected && (
+        <FeaturePopupPanel
+          selected={selected}
+          selectedDetail={selectedDetail}
+          selectedCircuit={selectedCircuit}
+          selectedCircuitMember={selectedCircuitMember}
+          selectedLineDetail={selectedLineDetail}
+          unavailableLineDetailForSourceId={unavailableLineDetailForSourceId}
+          powerPopup={powerPopup}
+          onClose={clearSelection}
+          onSelectCircuitLine={(line) => {
+            onCircuitChange(line.circuit);
+            onCircuitMemberChange(line.member);
+          }}
+          onDeselectCircuitMember={() => onCircuitMemberChange(null)}
+          onZoom={zoomToSelected}
+        />
       )}
       <div className="map" ref={containerRef} />
     </div>
   );
 }
 
-function featurePopupContent(
-  feature: ProviderFeature,
-  layer: PreviewLayer,
-  powerPopup: PowerPopupState | null,
-  onSelectLine: (line: RelatedLine) => void,
-): HTMLElement {
+function FeaturePopupPanel({
+  selected,
+  selectedDetail,
+  selectedCircuit,
+  selectedCircuitMember,
+  selectedLineDetail,
+  unavailableLineDetailForSourceId,
+  powerPopup,
+  onClose,
+  onSelectCircuitLine,
+  onDeselectCircuitMember,
+  onZoom,
+}: {
+  selected: SelectedProviderFeature;
+  selectedDetail: MapFeatureDetail | null;
+  selectedCircuit: MapCircuit | null;
+  selectedCircuitMember: MapCircuitMember | null;
+  selectedLineDetail: MapFeatureDetail | null;
+  unavailableLineDetailForSourceId: string | null;
+  powerPopup: PowerPopupState | null;
+  onClose: () => void;
+  onSelectCircuitLine: (line: RelatedLine) => void;
+  onDeselectCircuitMember: () => void;
+  onZoom: () => void;
+}) {
+  const { layer } = selected;
+  const detail =
+    selectedDetail?.source_id === selected.feature.properties.source_id ? selectedDetail : null;
+  const feature = detail ? detail.feature : selected.feature;
   const details = popupDetails(feature, layer);
   const properties = feature.properties;
   const tags = {
@@ -1428,34 +1440,18 @@ function featurePopupContent(
   const sourceLink = /^((node|way|relation)\/\d+)$/.test(sourceId)
     ? `https://www.openstreetmap.org/${sourceId}`
     : null;
-  const links = [
-    sourceLink
-      ? `<a href="${sourceLink}" target="_blank" rel="noreferrer">OpenStreetMap object</a>`
-      : "",
-    externalLink(tags.website, "website"),
-    wikipediaLink(tags.wikipedia),
-    wikidataLink(tags.wikidata),
-    externalLink(tags.image, "source image"),
-  ]
-    .filter(Boolean)
-    .join(" · ");
-  const fields = popupAttributeEntries(properties)
-    .map(([name, value]) => `<dt>${escapeHtml(name)}</dt><dd>${escapeHtml(value)}</dd>`)
-    .join("");
-  const content = document.createElement("div");
-  content.className = "mapFeaturePopup";
+
   const roadClass =
     typeof properties.road_class === "string"
       ? properties.road_class
       : typeof tags.highway === "string"
         ? tags.highway
         : undefined;
+  const rawVoltage = properties.voltage_label ?? tags.voltage;
   const voltageLabel =
-    typeof properties.voltage_label === "string" || typeof properties.voltage_label === "number"
-      ? String(properties.voltage_label)
-      : typeof tags.voltage === "string" || typeof tags.voltage === "number"
-        ? String(tags.voltage)
-        : "voltage unknown";
+    typeof rawVoltage === "string" || typeof rawVoltage === "number"
+      ? formatVoltage(String(rawVoltage))
+      : "voltage unknown";
   const assetType = typeof properties.asset_type === "string" ? properties.asset_type : "feature";
   const featureName =
     typeof properties.name === "string"
@@ -1471,44 +1467,159 @@ function featurePopupContent(
       : properties.domain === "transport" && roadClass
         ? `road (${roadClass})`
         : assetType.replaceAll("_", " ");
-  content.innerHTML = `<strong>${escapeHtml(featureName)}</strong><span>${escapeHtml(classification)} · ${escapeHtml(operatorOrSource)}</span>${fields ? `<dl>${fields}</dl>` : ""}<small>${escapeHtml(sourceId)}</small>${links ? `<small class="popupLinks">${links}</small>` : ""}`;
-  if (layer.domain === "power") {
-    const connections = document.createElement("section");
-    connections.className = "popupCircuitConnections";
-    const heading = document.createElement("strong");
-    heading.textContent = "Verified circuit lines";
-    connections.append(heading);
-    if (!powerPopup || powerPopup.state === "loading") {
-      const status = document.createElement("small");
-      status.textContent = "Loading committed circuit evidence…";
-      connections.append(status);
-    } else if (powerPopup.state === "available") {
-      const list = document.createElement("div");
-      list.className = "popupCircuitList";
-      powerPopup.lines.forEach((line) => {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "popupCircuitButton";
-        const title = document.createElement("strong");
-        title.textContent = `Line ${line.member.source_id}`;
-        const description = document.createElement("small");
-        description.textContent = `${String(line.circuit.tags.name ?? line.circuit.relation_id)}${line.member.endpoint_evidence ? ` · ${line.member.endpoint_evidence.start} → ${line.member.endpoint_evidence.end}` : " · source geometry verified"}`;
-        button.append(title, description);
-        button.addEventListener("click", () => onSelectLine(line));
-        list.append(button);
-      });
-      connections.append(list);
-    } else {
-      const status = document.createElement("small");
-      status.textContent =
-        powerPopup.state === "empty"
-          ? "No committed circuit line is available for this feature."
-          : (powerPopup.detail ?? "Circuit evidence is unavailable for this cached snapshot.");
-      connections.append(status);
-    }
-    content.append(connections);
-  }
-  return content;
+
+  const directLineDetail =
+    selectedDetail?.source_id === selectedCircuitMember?.source_id ? selectedDetail : null;
+  const inspectedLineDetail =
+    directLineDetail ??
+    (selectedLineDetail?.source_id === selectedCircuitMember?.source_id
+      ? selectedLineDetail
+      : null);
+
+  const displayProperties = inspectedLineDetail
+    ? inspectedLineDetail.feature.properties
+    : properties;
+  const attributeEntries = popupAttributeEntries(displayProperties);
+
+  const isPower = layer.domain === "power";
+  const relevantPowerPopup =
+    powerPopup?.sourceId === selected.feature.properties.source_id ? powerPopup : null;
+
+  const extLinks = [
+    sourceLink && { href: sourceLink, label: "OpenStreetMap" },
+    tags.website && isValidHttpUrl(tags.website) && { href: tags.website, label: "Website" },
+    tags.wikipedia && parseWikipediaUrl(tags.wikipedia) && {
+      href: parseWikipediaUrl(tags.wikipedia)!,
+      label: "Wikipedia",
+    },
+    tags.wikidata && /^Q\d+$/.test(tags.wikidata) && {
+      href: `https://www.wikidata.org/wiki/${tags.wikidata}`,
+      label: "Wikidata",
+    },
+    tags.image && isValidHttpUrl(tags.image) && { href: tags.image, label: "Source image" },
+  ].filter(Boolean) as Array<{ href: string; label: string }>;
+
+  return (
+    <section
+      className={`mapFeaturePanel ${isPower ? "isPower" : ""}`}
+      aria-label="Selected feature details"
+    >
+      <CloseButton
+        className="mapFeaturePanelClose"
+        ariaLabel="Close feature details"
+        title="Close feature details"
+        onClick={onClose}
+      />
+
+      <header className="mapFeaturePanelHeader">
+        <strong>{featureName}</strong>
+        <span className="mapFeaturePanelSubtitle">
+          {classification} · {operatorOrSource}
+        </span>
+      </header>
+
+      <div className="mapFeaturePanelMeta">
+        {sourceLink ? (
+          <span className="mapFeaturePanelSourceId">
+            <a href={sourceLink} target="_blank" rel="noreferrer">
+              {sourceId}
+            </a>
+          </span>
+        ) : (
+          sourceId && <span className="mapFeaturePanelSourceId">{sourceId}</span>
+        )}
+
+        {extLinks.length > 0 && (
+          <div className="mapFeaturePanelLinks">
+            {extLinks.map((link, idx) => (
+              <Fragment key={link.label}>
+                {idx > 0 && <span>·</span>}
+                <a href={link.href} target="_blank" rel="noreferrer">
+                  {link.label}
+                </a>
+              </Fragment>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {selectedCircuitMember && (
+        <div className="circuitMemberBadge">
+          <span>
+            Selected line: <strong>{selectedCircuitMember.source_id}</strong>
+          </span>
+          <button type="button" onClick={onDeselectCircuitMember}>
+            Show full circuit
+          </button>
+        </div>
+      )}
+
+      {attributeEntries.length > 0 && (
+        <section className="mapFeaturePanelSection">
+          <span className="mapFeaturePanelSectionTitle">Attributes</span>
+          <dl className="mapFeaturePanelDl">
+            {attributeEntries.map(([name, value]) => (
+              <Fragment key={name}>
+                <dt>{name}</dt>
+                <dd>{name === "voltage" ? formatVoltage(value) : value}</dd>
+              </Fragment>
+            ))}
+          </dl>
+          {selectedCircuitMember && !inspectedLineDetail && (
+            <small className="muted">
+              {unavailableLineDetailForSourceId === selectedCircuitMember.source_id
+                ? "Full source attributes are unavailable for this cached line."
+                : "Loading source attributes…"}
+            </small>
+          )}
+        </section>
+      )}
+
+      {isPower && (
+        <section className="mapFeaturePanelSection">
+          <span className="mapFeaturePanelSectionTitle">Verified circuit lines</span>
+          {!relevantPowerPopup || relevantPowerPopup.state === "loading" ? (
+            <small className="muted">Loading committed circuit evidence…</small>
+          ) : relevantPowerPopup.state === "available" ? (
+            <div className="popupCircuitList">
+              {relevantPowerPopup.lines.map((line) => {
+                const isMemberSelected = selectedCircuitMember?.source_id === line.member.source_id;
+                return (
+                  <button
+                    key={line.member.source_id}
+                    type="button"
+                    className={`popupCircuitButton ${isMemberSelected ? "active" : ""}`}
+                    onClick={() => onSelectCircuitLine(line)}
+                  >
+                    <strong>Line {line.member.source_id}</strong>
+                    <small>
+                      {String(line.circuit.tags.name ?? line.circuit.relation_id)}
+                      {line.member.endpoint_evidence
+                        ? ` · ${line.member.endpoint_evidence.start} → ${line.member.endpoint_evidence.end}`
+                        : " · source geometry verified"}
+                    </small>
+                  </button>
+                );
+              })}
+            </div>
+          ) : (
+            <small className="muted">
+              {relevantPowerPopup.state === "empty"
+                ? "No committed circuit line is available for this feature."
+                : (relevantPowerPopup.detail ??
+                  "Circuit evidence is unavailable for this cached snapshot.")}
+            </small>
+          )}
+        </section>
+      )}
+
+      <div className="mapFeaturePanelActions">
+        <button type="button" className="mapFeaturePanelZoomBtn" onClick={onZoom}>
+          Zoom to {selectedCircuitMember ? "line" : selectedCircuit ? "circuit" : "feature"}
+        </button>
+      </div>
+    </section>
+  );
 }
 
 function popupAttributeEntries(properties: ProviderFeature["properties"]): Array<[string, string]> {
@@ -1521,21 +1632,6 @@ function popupAttributeEntries(properties: ProviderFeature["properties"]): Array
   ).map((name) => [name, String(tags[name] ?? properties[name] ?? "")] as [string, string]);
 }
 
-function attributeValue(
-  properties: ProviderFeature["properties"] | undefined,
-  name: string,
-): string | undefined {
-  if (!properties) {
-    return undefined;
-  }
-  const tags = {
-    ...asStringRecord(properties.osm_tags),
-    ...asStringRecord(properties.source_attributes),
-  };
-  const value = tags[name] ?? properties[name];
-  return typeof value === "string" ? value : undefined;
-}
-
 function formatVoltage(value: string | undefined): string {
   if (!value) {
     return "unknown";
@@ -1546,50 +1642,38 @@ function formatVoltage(value: string | undefined): string {
     .filter(Number.isFinite);
   return values.length ? `${values.map((volts) => volts / 1000).join("/")} kV` : value;
 }
-function escapeHtml(value: string): string {
-  return value.replace(
-    /[&<>"']/g,
-    (character) =>
-      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] ??
-      character,
-  );
-}
+
 function asStringRecord(value: unknown): Record<string, string> {
   return value && typeof value === "object"
     ? Object.fromEntries(
-        Object.entries(value).filter(
-          (entry): entry is [string, string] => typeof entry[1] === "string",
-        ),
-      )
+      Object.entries(value).filter(
+        (entry): entry is [string, string] => typeof entry[1] === "string",
+      ),
+    )
     : {};
 }
-function externalLink(value: string | undefined, label: string): string {
+
+function isValidHttpUrl(value: string | undefined): boolean {
   if (!value) {
-    return "";
+    return false;
   }
   try {
     const url = new URL(value);
-    return url.protocol === "https:" || url.protocol === "http:"
-      ? `<a href="${escapeHtml(url.toString())}" target="_blank" rel="noreferrer">${label}</a>`
-      : "";
+    return url.protocol === "http:" || url.protocol === "https:";
   } catch {
-    return "";
+    return false;
   }
 }
-function wikipediaLink(value: string | undefined): string {
+
+function parseWikipediaUrl(value: string | undefined): string | null {
   if (!value) {
-    return "";
+    return null;
   }
   const [language, ...title] = value.split(":");
   if (!/^[a-z-]{2,12}$/i.test(language) || !title.join(":")) {
-    return "";
+    return null;
   }
-  return `<a href="https://${language}.wikipedia.org/wiki/${encodeURIComponent(title.join(":"))}" target="_blank" rel="noreferrer">Wikipedia</a>`;
-}
-function wikidataLink(value: string | undefined): string {
-  return value && /^Q\d+$/.test(value)
-    ? `<a href="https://www.wikidata.org/wiki/${value}" target="_blank" rel="noreferrer">Wikidata</a>`
-    : "";
+  return `https://${language}.wikipedia.org/wiki/${encodeURIComponent(title.join(":"))}`;
 }
 
 function asProviderFeature(feature: MapGeoJSONFeature): ProviderFeature {

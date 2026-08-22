@@ -91,8 +91,8 @@ export default function App() {
       shouldHideDefaultObjects
         ? []
         : catalog.filter(
-          (layer) => enabledLayers[previewLayerKey(layer)] ?? defaultLayerEnabled(layer),
-        ),
+            (layer) => enabledLayers[previewLayerKey(layer)] ?? defaultLayerEnabled(layer),
+          ),
     [catalog, enabledLayers, shouldHideDefaultObjects],
   );
   const featureCount = useMemo(

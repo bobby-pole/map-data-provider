@@ -96,7 +96,7 @@
   max-width: 320px;
 }
 
-.mapFeaturePopup>strong:first-child {
+.mapFeaturePopup > strong:first-child {
   color: #f8fafc;
   font-size: 13px;
   font-weight: 600;
@@ -139,7 +139,7 @@
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.popupCircuitConnections>strong {
+.popupCircuitConnections > strong {
   color: var(--color-text-muted);
   font-size: 10px;
   letter-spacing: 0.06em;

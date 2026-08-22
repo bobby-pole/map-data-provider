@@ -898,11 +898,11 @@ export function MapView({
         } else {
           const minzoom =
             layer.domain === "emergency" ||
-              layer.domain === "gas" ||
-              layer.domain === "sewer" ||
-              layer.domain === "industrial" ||
-              layer.domain === "telecom" ||
-              layer.domain === "district_heating"
+            layer.domain === "gas" ||
+            layer.domain === "sewer" ||
+            layer.domain === "industrial" ||
+            layer.domain === "telecom" ||
+            layer.domain === "district_heating"
               ? 9
               : 12;
           const areaColor = color;
@@ -1312,9 +1312,7 @@ export function MapView({
     }
 
     if (selectedCircuit?.members) {
-      const memberGeoms = selectedCircuit.members
-        .filter((m) => m.geometry)
-        .map((m) => m.geometry!);
+      const memberGeoms = selectedCircuit.members.filter((m) => m.geometry).map((m) => m.geometry!);
       if (memberGeoms.length > 0) {
         const collection: Geometry = {
           type: "GeometryCollection",
@@ -1488,14 +1486,16 @@ function FeaturePopupPanel({
   const extLinks = [
     sourceLink && { href: sourceLink, label: "OpenStreetMap" },
     tags.website && isValidHttpUrl(tags.website) && { href: tags.website, label: "Website" },
-    tags.wikipedia && parseWikipediaUrl(tags.wikipedia) && {
-      href: parseWikipediaUrl(tags.wikipedia)!,
-      label: "Wikipedia",
-    },
-    tags.wikidata && /^Q\d+$/.test(tags.wikidata) && {
-      href: `https://www.wikidata.org/wiki/${tags.wikidata}`,
-      label: "Wikidata",
-    },
+    tags.wikipedia &&
+      parseWikipediaUrl(tags.wikipedia) && {
+        href: parseWikipediaUrl(tags.wikipedia)!,
+        label: "Wikipedia",
+      },
+    tags.wikidata &&
+      /^Q\d+$/.test(tags.wikidata) && {
+        href: `https://www.wikidata.org/wiki/${tags.wikidata}`,
+        label: "Wikidata",
+      },
     tags.image && isValidHttpUrl(tags.image) && { href: tags.image, label: "Source image" },
   ].filter(Boolean) as Array<{ href: string; label: string }>;
 
@@ -1646,10 +1646,10 @@ function formatVoltage(value: string | undefined): string {
 function asStringRecord(value: unknown): Record<string, string> {
   return value && typeof value === "object"
     ? Object.fromEntries(
-      Object.entries(value).filter(
-        (entry): entry is [string, string] => typeof entry[1] === "string",
-      ),
-    )
+        Object.entries(value).filter(
+          (entry): entry is [string, string] => typeof entry[1] === "string",
+        ),
+      )
     : {};
 }
 

@@ -12,6 +12,9 @@ use is permitted, while redistribution, modification, and commercial use are
 not. The [Portfolio Evaluation Exception](./PORTFOLIO_EVALUATION_EXCEPTION.md)
 additionally permits prospective employers and recruiters to inspect, clone,
 and run the project locally solely to evaluate Robert Lacheta's candidacy.
+This licence applies to the project's original code, documentation and
+project-authored review fixtures. Third-party data retains its own terms; see
+[Data licensing and attribution](./DATA_LICENSES.md).
 
 ## What this project is
 
@@ -250,7 +253,7 @@ The key product value is portability. A GIS consumer can be pointed at a new AOI
 
 ## Data attribution and reference overlays
 
-Distributed OSM-derived layers must retain the attribution **© OpenStreetMap contributors** and follow the [Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/1-0/) obligations recorded in the provider source registry. Every analytical cache snapshot records its OSM query endpoint, query version, pipeline version and snapshot timestamp alongside the layer.
+Distributed OSM-derived layers retain [© OpenStreetMap contributors](https://www.openstreetmap.org/copyright) and the [Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/1-0/) notice. Every public OSM-derived domain pack carries the notice in `licenses/openstreetmap-odbl.md`, records it in its manifest, and preserves its OSM query endpoint, query version, pipeline version and snapshot timestamp alongside the layer. See [Data licensing and attribution](./DATA_LICENSES.md) for the repository-wide boundary.
 
 KIUT/GESUT is kept as an OGC WMS visual reference overlay. WMS imagery is not converted to GeoJSON or used as analytical input by default. If a future product displays or redistributes the overlay, it must retain GUGiK/KIUT attribution and verify the current service metadata and distribution terms first.
 
@@ -260,7 +263,7 @@ Full `provider_geojson/v1` artifacts remain the canonical cache, validation and 
 
 The presentation has separate power-line, power-asset and bounded power-support layers. Power-line colours use deterministic voltage buckets. The support layer carries OSM `tower`, `pole`, `portal` and `utility_pole` classes where present in the delivered source snapshot; towers, portals and utility poles are generated from zoom 12, while ordinary poles are generated from zoom 14. These rules constrain tile generation rather than only hiding client-side features. The bounded support fixture is evidence for this preview behaviour, not a claim of complete support coverage across the AOI.
 
-The emergency presentation uses four explicit OSM categories—hospital, fire service, police and ambulance/rescue—plus separately attributed PRG representative points for police/fire unit areas. OSM polygons remain in their original geometry and have a companion inspection-point layer. PRG points state that they derive from official unit-area geometry and never claim an exact facility footprint. No official hospital or ambulance/rescue registry is enabled; this remains a visible source gap rather than a reason to hide the delivered OSM evidence.
+The emergency presentation uses four explicit OSM categories—hospital, fire service, police and ambulance/rescue. OSM polygons remain in their original geometry and have a companion inspection-point layer. PRG representative points stay private source evidence until product-specific redistribution terms are recorded; no official hospital or ambulance/rescue registry is enabled. These remain visible source gaps rather than a reason to invent or hide the delivered OSM evidence.
 
 The public presentation has separate administration, education, post and community/social OSM layers, plus linked inspection points for original non-point geometry. A generic building, address or proximity is never promoted to a facility. The pack records BDOT10k as topographic context and the lack of a qualified PRG facility class as explicit source evidence; no source is silently selected or merged when comparison is ambiguous.
 

@@ -64,6 +64,7 @@ type PresentationLayer = {
   readiness: "ready" | "usable_with_limitations" | "needs_source" | "not_usable";
   limitations: string[];
   attribution: string;
+  attribution_html: string;
   source_provenance: Array<{
     source_id: string;
     contribution_role: "primary" | "supplementary" | "validation_reference" | "derived_context";
@@ -94,6 +95,11 @@ export async function seedCompactRybnikCache(cacheRoot: string): Promise<void> {
     await mkdir(path.join(packRoot, "readiness"), { recursive: true });
     await mkdir(path.join(packRoot, "presentation"), { recursive: true });
     await mkdir(path.join(packRoot, "native"), { recursive: true });
+    await mkdir(path.join(packRoot, "licenses"), { recursive: true });
+    await writeFile(
+      path.join(packRoot, "licenses", "openstreetmap-odbl.md"),
+      "https://www.openstreetmap.org/copyright\nhttps://opendatacommons.org/licenses/odbl/1-0/\n",
+    );
 
     let queryVersion = `${domain}-osm/v1`;
     let limitations = ["OSM completeness varies by area."];
@@ -228,7 +234,6 @@ export async function seedCompactRybnikCache(cacheRoot: string): Promise<void> {
         },
       ];
     } else if (domain === "emergency") {
-      packSourceProvenance.push({ source_id: "prg_wfs", contribution_role: "primary" });
       artifactSpecs = [
         {
           id: "emergency.hospital",
@@ -258,27 +263,6 @@ export async function seedCompactRybnikCache(cacheRoot: string): Promise<void> {
                   ],
                 ],
               },
-            },
-          ],
-        },
-        {
-          id: "emergency.official_police",
-          source_layer: "emergency_police",
-          geometry_kind: "point",
-          public_export: true,
-          source_provenance: [{ source_id: "prg_wfs", contribution_role: "primary" }],
-          features: [
-            {
-              type: "Feature",
-              properties: {
-                source_id: "prg_k02/1350186",
-                source: "PRG (official unit-area evidence)",
-                source_geometry_type: "MultiSurface",
-                source_attributes: { official_type: "K02_Komenda_powiatowa_policji" },
-                confidence: "high",
-                limitations,
-              },
-              geometry: { type: "Point", coordinates: [18.52, 50.11] },
             },
           ],
         },
@@ -541,17 +525,13 @@ export async function seedCompactRybnikCache(cacheRoot: string): Promise<void> {
         source_layer: spec.source_layer,
         feature_count:
           domain === "power" && spec.id === "power.lines" ? 6796 : spec.features.length,
-        source:
-          spec.id === "emergency.official_police"
-            ? "PRG (official unit-area evidence)"
-            : "OpenStreetMap",
-        confidence: spec.id === "emergency.official_police" ? "high" : "medium",
+        source: "OpenStreetMap",
+        confidence: "medium",
         readiness: "usable_with_limitations",
-        limitations: spec.id === "emergency.official_police" ? [] : limitations,
-        attribution:
-          spec.id === "emergency.official_police"
-            ? "© GUGiK (PRG)"
-            : "© OpenStreetMap contributors",
+        limitations,
+        attribution: "© OpenStreetMap contributors",
+        attribution_html:
+          '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> · <a href="https://opendatacommons.org/licenses/odbl/1-0/">ODbL 1.0</a>',
         source_provenance: prov,
       });
     }
@@ -617,6 +597,16 @@ export async function seedCompactRybnikCache(cacheRoot: string): Promise<void> {
       domain,
       source_provenance: packSourceProvenance,
       artifacts: packArtifacts,
+      data_license_notices: [
+        {
+          source_id: "openstreetmap",
+          license: "ODbL-1.0",
+          license_url: "https://opendatacommons.org/licenses/odbl/1-0/",
+          attribution: "© OpenStreetMap contributors",
+          attribution_url: "https://www.openstreetmap.org/copyright",
+          notice_path: "licenses/openstreetmap-odbl.md",
+        },
+      ],
       validation: { path: "validation/metadata.json" },
       readiness: { path: "readiness/readiness.json" },
     };

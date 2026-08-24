@@ -575,7 +575,8 @@ export function MapView({
       map.addSource(sourceId, {
         type: "vector",
         url: `pmtiles://${new URL(archiveUrl, window.location.origin).toString()}`,
-        attribution: archiveLayers[0]?.artifact.attribution,
+        attribution:
+          archiveLayers[0]?.artifact.attribution_html ?? archiveLayers[0]?.artifact.attribution,
         minzoom: archiveLayers[0]?.archiveMinZoom ?? 0,
         maxzoom: archiveLayers[0]?.archiveMaxZoom ?? 22,
       });

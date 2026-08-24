@@ -92,3 +92,5 @@ const manifest = {
 fs.writeFileSync(path.join(outputDir, "demo_bundle_manifest.json"), `${JSON.stringify(manifest, null, 2)}\n`);
 console.log(`Demo bundle ${bundleId} prepared at ${outputDir} (${Object.keys(fileEntries).length} files).`);
 ' "${SOURCE_DIR}" "${OUTPUT_DIR}" "${BUNDLE_ID}"
+
+node "$(cd "$(dirname "$0")" && pwd)/verify_demo_bundle.mjs" "${OUTPUT_DIR}"

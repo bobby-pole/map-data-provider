@@ -65,6 +65,21 @@ def test_power_domain_pack_v2_preserves_v1_cache_compatibility(tmp_path: Path) -
     presentation = json.loads((pack_root / "presentation" / "manifest.json").read_text())
     assert presentation["presentation_version"] == "provider_map_presentation/v1"
     assert presentation["archive"]["format"] == "pmtiles"
+    assert pack["data_license_notices"] == [
+        {
+            "source_id": "openstreetmap",
+            "license": "ODbL-1.0",
+            "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
+            "attribution": "© OpenStreetMap contributors",
+            "attribution_url": "https://www.openstreetmap.org/copyright",
+            "notice_path": "licenses/openstreetmap-odbl.md",
+        }
+    ]
+    assert "Open Database License (ODbL) 1.0" in (
+        pack_root / "licenses" / "openstreetmap-odbl.md"
+    ).read_text(encoding="utf-8")
+    assert "openstreetmap.org/copyright" in presentation["layers"][0]["attribution_html"]
+    assert "opendatacommons.org/licenses/odbl/1-0" in presentation["layers"][0]["attribution_html"]
     assert {layer["artifact_id"] for layer in presentation["layers"]} == {
         "power.lines",
         "power.assets",
@@ -181,7 +196,7 @@ def test_domain_pack_keeps_native_raster_private_and_rejects_reference_public_ex
         validate_domain_pack(manifest, pack_root=pack_root)
 
 
-def test_emergency_pack_retains_original_osm_geometry_and_distinct_prg_representative_points(
+def test_emergency_pack_keeps_prg_representative_points_private_until_redistribution_terms_are_recorded(
     tmp_path: Path,
 ) -> None:
     build_rybnik_emergency_cache(root=tmp_path)
@@ -228,6 +243,7 @@ def test_emergency_pack_retains_original_osm_geometry_and_distinct_prg_represent
         },
     }
     assert official_police["features"][0]["geometry"]["type"] == "Point"
+    assert artifacts["emergency.official_police"]["public_export"] is False
     assert (
         read_domain_pack("rybnik_35km", "emergency", root=tmp_path, public_export=True)[
             "artifacts"

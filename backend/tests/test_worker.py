@@ -74,6 +74,7 @@ def test_emergency_fixture_worker_keeps_official_and_community_evidence_separate
     assert artifacts["emergency.official_police"]["source_provenance"] == [
         {"source_id": "prg_wfs", "contribution_role": "supplementary"}
     ]
+    assert artifacts["emergency.official_police"]["public_export"] is False
     assert artifacts["emergency.prg_police_fire_source_evidence"]["public_export"] is False
 
 

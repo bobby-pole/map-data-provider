@@ -92,6 +92,7 @@ export type MapPresentationLayer = {
   readiness: LayerReadiness;
   limitations: string[];
   attribution: string;
+  attribution_html?: string;
   source_provenance: SourceProvenance[];
 };
 

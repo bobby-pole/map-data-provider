@@ -320,6 +320,7 @@ export async function getDomainPack(
     throw new ProviderDataError("not_found", "Domain-pack identity does not match the request.");
   }
   assertSafePackPaths(packRoot, manifest);
+  await assertDataLicenseNoticeFiles(packRoot, manifest);
   const registry = sourceRegistryV2Schema.parse(
     await readJson(registryPathFor(dataPaths), "source registry"),
   );
@@ -779,6 +780,7 @@ async function validatedMapPresentation(
     throw notFound("Domain-pack identity does not match the request.");
   }
   assertSafePackPaths(packRoot, manifest);
+  await assertDataLicenseNoticeFiles(packRoot, manifest);
   const registry = sourceRegistryV2Schema.parse(
     await readJson(registryPathFor(dataPaths), "source registry"),
   );
@@ -910,9 +912,31 @@ function isAnalyticalGeoJsonArtifact(
 function assertSafePackPaths(packRoot: string, manifest: z.infer<typeof domainPackV2Schema>): void {
   resolvePackPath(packRoot, manifest.validation.path);
   resolvePackPath(packRoot, manifest.readiness.path);
+  for (const notice of manifest.data_license_notices ?? []) {
+    resolvePackPath(packRoot, notice.notice_path);
+  }
   for (const artifact of manifest.artifacts) {
     if (artifact.path) {
       resolvePackPath(packRoot, artifact.path);
+    }
+  }
+}
+
+async function assertDataLicenseNoticeFiles(
+  packRoot: string,
+  manifest: z.infer<typeof domainPackV2Schema>,
+): Promise<void> {
+  for (const notice of manifest.data_license_notices ?? []) {
+    const payload = await readBytes(
+      resolvePackPath(packRoot, notice.notice_path),
+      `data licence notice '${notice.source_id}'`,
+    );
+    const content = payload.toString("utf8");
+    if (!content.includes(notice.license_url) || !content.includes(notice.attribution_url)) {
+      throw new ProviderDataError(
+        "not_found",
+        `Data licence notice '${notice.source_id}' does not retain its required links.`,
+      );
     }
   }
 }

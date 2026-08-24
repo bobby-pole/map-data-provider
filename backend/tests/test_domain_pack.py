@@ -1,5 +1,4 @@
 import json
-import shutil
 from pathlib import Path
 
 import pytest
@@ -8,10 +7,10 @@ from geo_pipeline.cache import (
     build_rybnik_emergency_cache,
     build_rybnik_gas_cache,
     build_rybnik_industrial_cache,
+    build_rybnik_power_cache,
     build_rybnik_public_cache,
     build_rybnik_sewer_cache,
     build_rybnik_transport_cache,
-    cache_paths,
 )
 from geo_pipeline.domain_pack import (
     build_rybnik_emergency_domain_pack,
@@ -28,15 +27,7 @@ from geo_pipeline.public_services import category_for_osm_feature
 
 
 def _legacy_power(root: Path) -> None:
-    source = cache_paths("rybnik_35km", "power")
-    target = cache_paths("rybnik_35km", "power", root=root)
-    target.root.mkdir(parents=True)
-    for old, new in (
-        (source.layer, target.layer),
-        (source.metadata, target.metadata),
-        (source.readiness, target.readiness),
-    ):
-        shutil.copyfile(old, new)
+    build_rybnik_power_cache(root=root)
 
 
 def test_power_domain_pack_v2_preserves_v1_cache_compatibility(tmp_path: Path) -> None:

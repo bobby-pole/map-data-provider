@@ -3,7 +3,12 @@ from pathlib import Path
 
 import pytest
 
-from geo_pipeline.cache import CACHE_LAYOUT_VERSION, cache_paths, read_cached_layer
+from geo_pipeline.cache import (
+    CACHE_LAYOUT_VERSION,
+    build_rybnik_power_cache,
+    cache_paths,
+    read_cached_layer,
+)
 from geo_pipeline.contracts import CONTRACT_VERSION, normalize_analytical_vector_layer
 
 
@@ -133,8 +138,9 @@ def test_cache_reader_rejects_mismatched_readiness_records(tmp_path: Path) -> No
         read_cached_layer(cache_paths("fixture_aoi", "power", root=tmp_path))
 
 
-def test_committed_rybnik_power_cache_is_complete_and_source_aware() -> None:
-    cache = read_cached_layer(cache_paths("rybnik_35km", "power"))
+def test_committed_rybnik_power_cache_is_complete_and_source_aware(tmp_path: Path) -> None:
+    build_rybnik_power_cache(root=tmp_path)
+    cache = read_cached_layer(cache_paths("rybnik_35km", "power", root=tmp_path))
 
     assert cache["metadata"]["source"] == "OpenStreetMap"
     assert cache["metadata"]["source_type"] == "analytical_vector"

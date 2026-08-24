@@ -19,9 +19,16 @@ dist/
 # Generated/cache data
 /cache/
 backend/cache/
-backend/data/cache/aoi_*/
+backend/data/cache/
+backend/data/processed/
+backend/data/reports/
+backend/data/manual/
+backend/data/runtime/
+backend/data/reviews/
 backend/data/source-availability/aoi_*.json
 backend/data/previews/
+.mdq-demo-bundle/
+.local-demo-bundle/
 
 # OS/editor
 .DS_Store

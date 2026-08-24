@@ -10,7 +10,6 @@ import pytest
 from geo_pipeline import worker
 from geo_pipeline.adapters import resolve_adapter
 from geo_pipeline.cache import cache_paths, read_cached_layer
-from geo_pipeline.config import CACHE_DIR
 from geo_pipeline.domain_pack import read_domain_pack
 from geo_pipeline.worker import EXIT_INVALID_REQUEST, EXIT_WORKER_FAILURE, run_worker
 
@@ -300,6 +299,14 @@ def test_partial_runtime_snapshot_retries_only_domains_that_failed(
         "profiles": ["power", "water"],
     }
     calls: list[list[str]] = []
+    cache_root = tmp_path / "cache"
+    for domain in ("power", "water"):
+        run_worker(
+            aoi="rybnik_35km",
+            domain=domain,
+            input_mode="fixture",
+            cache_root=cache_root,
+        )
 
     def refresh(_resolved, outcomes, _cache_root, *, progress=None, **_kwargs):
         calls.append([outcome["domain"] for outcome in outcomes])
@@ -338,10 +345,10 @@ def test_partial_runtime_snapshot_retries_only_domains_that_failed(
     monkeypatch.setattr(worker, "_refresh_live_runtime_outcomes", refresh)
 
     first = worker.run_runtime_worker(
-        request=request, input_mode="live", cache_root=CACHE_DIR, runtime_root=tmp_path
+        request=request, input_mode="live", cache_root=cache_root, runtime_root=tmp_path
     )
     second = worker.run_runtime_worker(
-        request=request, input_mode="live", cache_root=CACHE_DIR, runtime_root=tmp_path
+        request=request, input_mode="live", cache_root=cache_root, runtime_root=tmp_path
     )
 
     assert first["request_result"] == "refresh"
@@ -352,6 +359,20 @@ def test_partial_runtime_snapshot_retries_only_domains_that_failed(
     assert second["request_result"] == "refresh"
     assert all(outcome["status"] == "ready" for outcome in second["outcomes"])
     assert calls == [["power", "water"], ["water"]]
+
+
+def test_runtime_validation_rejects_a_corrupt_pack_without_rebuilding_it(tmp_path: Path) -> None:
+    run_worker(aoi="rybnik_35km", domain="power", input_mode="fixture", cache_root=tmp_path)
+    manifest_path = tmp_path / "rybnik_35km" / "power" / "domain-pack-v2" / "manifest.json"
+    manifest_path.write_text("{}", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="missing required fields"):
+        worker._validate_ready_runtime_artifacts(
+            [{"status": "ready", "domain": "power", "artifact_aoi_id": "rybnik_35km"}],
+            tmp_path,
+        )
+
+    assert manifest_path.read_text(encoding="utf-8") == "{}"
 
 
 def test_domain_timeout_scales_with_disconnected_administrative_aoi_parts() -> None:

@@ -31,7 +31,7 @@ OVERPASS_ENDPOINTS = [
 ]
 
 HEADERS = {
-    "User-Agent": "MapDataQualityLab-FastDirectOverpass/1.0 (https://github.com/bobby-pole/map-data-quality-lab)",
+    "User-Agent": "MapDataProvider-FastDirectOverpass/1.0 (https://github.com/bobby-pole/map-data-provider)",
 }
 
 
@@ -40,9 +40,7 @@ def configure_osmnx() -> None:
     ox.settings.log_console = False
     ox.settings.requests_timeout = 300
     ox.settings.overpass_rate_limit = False
-    ox.settings.user_agent = (
-        "MapDataQualityLab/1.0 (https://github.com/bobby-pole/map-data-quality-lab)"
-    )
+    ox.settings.user_agent = "MapDataProvider/1.0 (https://github.com/bobby-pole/map-data-provider)"
 
 
 def query_overpass_ql_direct(ql_statements: str, timeout_sec: int = 120) -> dict[str, Any]:

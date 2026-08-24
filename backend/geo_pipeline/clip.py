@@ -135,7 +135,7 @@ def _report(
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Clip a GeoJSON layer to the Map Data Quality Lab AOI."
+        description="Clip a GeoJSON layer to the Map Data Provider AOI."
     )
     parser.add_argument("--input", required=True, type=Path, help="Input GeoJSON path.")
     parser.add_argument("--output", type=Path, help="Output GeoJSON path.")

@@ -39,8 +39,16 @@ import {
 } from "../types/provider.js";
 
 const projectRoot = path.resolve(fileURLToPath(new URL("../../../", import.meta.url)));
-const defaultCacheRoot = path.join(projectRoot, "backend", "data", "cache");
-const defaultRegistryPath = path.join(projectRoot, "backend", "data", "sources", "registry.json");
+const defaultCacheRoot =
+  process.env.MDQ_PREPARED_ROOT ??
+  process.env.MDQ_CACHE_ROOT ??
+  path.join(projectRoot, "backend", "data", "cache");
+const defaultRegistryPath =
+  process.env.MDQ_REGISTRY_PATH ??
+  path.join(projectRoot, "backend", "data", "sources", "registry.json");
+const defaultSourceAvailabilityRoot =
+  process.env.MDQ_SOURCE_AVAILABILITY_ROOT ??
+  path.join(projectRoot, "backend", "data", "source-availability");
 const packDirectoryName = "domain-pack-v2";
 const verifiedMapArchives = new Map<string, { size: number; modifiedAt: number; sha256: string }>();
 const execFileAsync = promisify(execFile);
@@ -62,7 +70,8 @@ export type MapPresentationArchiveRange = {
 
 export class ProviderDataError extends Error {
   constructor(
-    readonly kind: "invalid_request" | "not_found" | "conflict" | "worker_failed",
+    readonly kind:
+      "invalid_request" | "not_found" | "conflict" | "worker_failed" | "runtime_disabled",
     message: string,
   ) {
     super(message);
@@ -219,9 +228,7 @@ function buildDefaultSourceAvailabilityReport(aoiId: string) {
 
 export async function getSourceAvailability(aoiId: string, dataPaths?: ProviderDataPaths) {
   validateIdentifier(aoiId, "AOI");
-  const root =
-    dataPaths?.sourceAvailabilityRoot ??
-    path.join(projectRoot, "backend", "data", "source-availability");
+  const root = dataPaths?.sourceAvailabilityRoot ?? defaultSourceAvailabilityRoot;
   const primaryPath = path.join(root, `${aoiId}.json`);
   const cachePath = path.join(cacheRootFor(dataPaths), aoiId, "source_availability.json");
 
@@ -679,7 +686,7 @@ async function recoverPowerCircuitEvidence(
       "uv",
       ["run", "--offline", "python", "-c", script, JSON.stringify(aoi), sourceId, defaultCacheRoot],
       {
-        cwd: path.join(projectRoot, "backend"),
+        cwd: process.env.MDQ_BACKEND_DIR ?? path.join(projectRoot, "backend"),
         timeout: 90_000,
         maxBuffer: 4 * 1024 * 1024,
       },
@@ -690,7 +697,8 @@ async function recoverPowerCircuitEvidence(
 }
 
 async function runtimeAoiForId(aoiId: string): Promise<unknown> {
-  const stateRoot = path.join(projectRoot, "backend", "cache", "provider-runtime-v1");
+  const runtimeRoot = process.env.MDQ_RUNTIME_ROOT ?? path.join(projectRoot, "backend", "cache");
+  const stateRoot = path.join(runtimeRoot, "provider-runtime-v1");
   const entries = await readdir(stateRoot, { withFileTypes: true });
   for (const entry of entries) {
     if (!entry.isFile() || !entry.name.endsWith(".json")) {

@@ -252,7 +252,7 @@ export const resolvedAoiSchema = z.object({
 });
 
 export const providerErrorSchema = z.object({
-  error: z.enum(["invalid_request", "not_found", "conflict", "worker_failed"]),
+  error: z.enum(["invalid_request", "not_found", "conflict", "worker_failed", "runtime_disabled"]),
   message: z.string(),
 });
 

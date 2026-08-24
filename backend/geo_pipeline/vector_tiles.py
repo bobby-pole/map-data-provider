@@ -231,7 +231,7 @@ def _write_pmtiles(archive_path: Path, source_layers: list[dict[str, Any]]) -> d
 
     bounds = _combined_bounds(source_layers)
     metadata = {
-        "name": "Map Data Quality Lab provider presentation",
+        "name": "Map Data Provider presentation",
         "description": "Derived public analytical vectors for offline map inspection.",
         "format": "pbf",
         "type": "overlay",

@@ -1,5 +1,5 @@
 {
-  "name": "map-data-quality-lab",
+  "name": "map-data-provider",
   "private": true,
   "packageManager": "pnpm@11.0.9",
   "pnpm": {
@@ -12,6 +12,7 @@
     "setup:git-hooks": "./scripts/setup_git_hooks.sh",
     "verify:pre-push": "./scripts/verify_pre_push.sh",
     "verify:provider": "./scripts/verify_provider.sh",
+    "demo:local": "./scripts/run_local_demo.sh",
     "verify:node": "pnpm --dir backend-node run build && pnpm --dir backend-node test && pnpm --dir backend-node run lint",
     "verify:frontend": "pnpm --dir frontend test && pnpm --dir frontend run build && pnpm --dir frontend run lint",
     "format": "prettier --write .",

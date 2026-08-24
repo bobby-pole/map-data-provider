@@ -5,6 +5,7 @@ import {
   isLinePresentationLayer,
   openStreetMapBasemap,
   POWER_VOLTAGE_TIERS,
+  powerVoltageLabelMinZoom,
   presentationColor,
   referenceRasterInsertionPoint,
   supportStyle,
@@ -55,6 +56,10 @@ describe("MapLibre presentation style policy", () => {
     expect(POWER_VOLTAGE_TIERS.find((t) => t.voltage_bucket === "high_400")?.color).toBe("#a855f7");
     expect(supportStyle("tower")).toEqual({ color: "#f97316", radius: 5 });
     expect(supportStyle("pole")).toEqual({ color: "#cbd5e1", radius: 3 });
+  });
+
+  it("keeps voltage labels readable without omitting delivered voltage tiers", () => {
+    expect(powerVoltageLabelMinZoom).toEqual({ transmission: 12, medium: 13, low: 15 });
   });
 
   it("inserts reference rasters below analytical provider vectors", () => {

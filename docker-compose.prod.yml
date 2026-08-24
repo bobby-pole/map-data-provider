@@ -1,0 +1,44 @@
+services:
+  app:
+    container_name: map-data-provider-prod
+    image: ghcr.io/bobby-pole/map-data-provider:${MDQ_IMAGE_TAG:-latest}
+    ports:
+      - "127.0.0.1:3001:3001"
+    networks:
+      - app_network
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - STATIC_DIR=/app/static
+      - MDQ_DEMO_MODE=readonly
+      - MDQ_RUNTIME_ACQUISITION_ENABLED=false
+      - MDQ_PREPARED_ROOT=/app/data/prepared
+      - MDQ_REVIEW_ROOT=/app/data/reviews
+      - MDQ_RUNTIME_ROOT=/app/data/runtime
+      - MDQ_BUNDLE_SOURCE=/app/data/bundle/rybnik_35km
+      - MDQ_REQUIRE_DEMO_BUNDLE=true
+      - MDQ_DEMO_BUNDLE_ID=${MDQ_DEMO_BUNDLE_ID:?MDQ_DEMO_BUNDLE_ID must identify the provisioned demo bundle}
+    volumes:
+      - ./data/prepared:/app/data/prepared
+      - ./data/reviews:/app/data/reviews
+      - ./data/runtime:/app/data/runtime
+      - ./data/bundle/rybnik_35km:/app/data/bundle/rybnik_35km:ro
+    restart: unless-stopped
+    mem_limit: 2g
+    mem_reservation: 512m
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://127.0.0.1:3001/api/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+        reservations:
+          memory: 512M
+
+networks:
+  app_network:
+    external: true

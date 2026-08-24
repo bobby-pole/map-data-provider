@@ -35,7 +35,7 @@ This document records the baseline and post-change performance measurements acro
 
 ### 2.2 Byte-Range Request & Cache Hit Characteristics
 
-- **Protocol:** HTTP/1.1 and HTTP/2 `Range: bytes=start-end` via Express static / Caddy reverse proxy.
+- **Protocol:** HTTP/1.1 and HTTP/2 `Range: bytes=start-end` via Express static / Nginx Proxy Manager reverse proxy.
 - **Status Codes:** `206 Partial Content` on first-time tile access; `304 Not Modified` / browser disk-cache hit on revisited tiles.
 - **Initial PMTiles Header Request:** 16,384 bytes (header + root directory read).
 - **Subsequent Leaf/Tile Requests:** 2 KB – 64 KB per addressed tile index.

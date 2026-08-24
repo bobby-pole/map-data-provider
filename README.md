@@ -178,12 +178,12 @@ The Node runtime path accepts a `provider_aoi_request/v2` point/radius or admini
 
 ## Production deployment and live demo
 
-Map Data Quality Lab is deployed as a single multi-stage container behind a host Caddy reverse proxy at **`maplab.robertlacheta.pl`**.
+Map Data Quality Lab is deployed as a single multi-stage container behind the VPS Nginx Proxy Manager instance at **`maplab.robertlacheta.pl`**.
 
 - **Read-Only Demo Mode**: Public mutations/refreshes (`POST /api/aoi/requests`, `POST /api/aoi/runtime-requests`, `POST /api/aoi/runtime-jobs`) are blocked with typed `runtime_disabled` responses.
 - **Provider API**: Node.js 22 Express provider serves all REST routes, PMTiles range reads, and SPA frontend assets.
 - **Geospatial Engine**: Python 3.14 + `uv` CLI worker handles offline data preparation and startup bootstrap.
-- **Deployment Guide**: See [docs/deployment.md](docs/deployment.md) for Caddy, directory setup, and rollback instructions.
+- **Deployment Guide**: See [docs/deployment.md](docs/deployment.md) for Nginx Proxy Manager/Cloudflare, directory setup, and rollback instructions.
 
 ## Verification
 

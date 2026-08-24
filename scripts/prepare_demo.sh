@@ -19,6 +19,7 @@ fi
 
 OUTPUT_DIR="${OUTPUT_ROOT}/rybnik_35km"
 SOURCE_ABS="$(cd "${SOURCE_DIR}" && pwd)"
+mkdir -p "$(dirname "${OUTPUT_DIR}")"
 OUTPUT_PARENT="$(cd "$(dirname "${OUTPUT_DIR}")" && pwd)"
 OUTPUT_ABS="${OUTPUT_PARENT}/$(basename "${OUTPUT_DIR}")"
 case "${OUTPUT_ABS}" in

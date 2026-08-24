@@ -76,18 +76,21 @@ jobs:
     name: Deploy to VPS
     needs: build-and-push
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Copy config files to VPS
+      - name: Copy Docker Compose configuration to VPS
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          source: "docker-compose.prod.yml,Caddyfile"
+          source: "docker-compose.prod.yml"
           target: "/home/deploy/map-data-quality-lab/"
 
       - name: Deploy via SSH
@@ -96,12 +99,11 @@ jobs:
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_SHA: ${{ github.sha }}
           DEMO_BUNDLE_ID: ${{ secrets.VPS_DEMO_BUNDLE_ID }}
-          CADDY_CONFIG_PATH: ${{ secrets.VPS_CADDY_CONFIG_PATH }}
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          envs: GHCR_TOKEN,GITHUB_SHA,DEMO_BUNDLE_ID,CADDY_CONFIG_PATH
+          envs: GHCR_TOKEN,GITHUB_SHA,DEMO_BUNDLE_ID
           script: |
             set -e
 
@@ -110,12 +112,13 @@ jobs:
 
             cd /home/deploy/map-data-quality-lab
 
-            # Prepare data directories
+            # Prepare only mutable state directories. The externally uploaded
+            # bundle is intentionally not chowned or chmodded during deploy.
+            mkdir -p data/prepared data/reviews data/runtime data/bundle/rybnik_35km
+            chown -R 1001:1001 /home/deploy/map-data-quality-lab/data/prepared /home/deploy/map-data-quality-lab/data/reviews /home/deploy/map-data-quality-lab/data/runtime
+            chmod -R u=rwX,g=rX,o= /home/deploy/map-data-quality-lab/data/prepared /home/deploy/map-data-quality-lab/data/reviews /home/deploy/map-data-quality-lab/data/runtime
             test -n "$DEMO_BUNDLE_ID"
             test -f data/bundle/rybnik_35km/demo_bundle_manifest.json
-            mkdir -p data/prepared data/reviews data/runtime data/bundle/rybnik_35km
-            chmod -R 750 data
-            sudo chown -R 1001:1001 data 2>/dev/null || true
 
             # Set immutable image tag
             echo "MDQ_IMAGE_TAG=${GITHUB_SHA}" > .env
@@ -124,12 +127,6 @@ jobs:
             # Pull and restart container
             docker compose -f docker-compose.prod.yml pull
             docker compose -f docker-compose.prod.yml up -d
-
-            if [ -n "$CADDY_CONFIG_PATH" ]; then
-              sudo install -D -m 0644 Caddyfile "$CADDY_CONFIG_PATH"
-              sudo caddy validate --config /etc/caddy/Caddyfile
-              sudo systemctl reload caddy
-            fi
 
             # Health check with retry (up to 60s)
             for i in $(seq 1 12); do

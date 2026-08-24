@@ -4,6 +4,8 @@ services:
     image: ghcr.io/bobby-pole/map-data-quality-lab:${MDQ_IMAGE_TAG:-latest}
     ports:
       - "127.0.0.1:3001:3001"
+    networks:
+      - app_network
     environment:
       - NODE_ENV=production
       - PORT=3001
@@ -36,3 +38,7 @@ services:
           memory: 2048M
         reservations:
           memory: 512M
+
+networks:
+  app_network:
+    external: true

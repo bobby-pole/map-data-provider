@@ -1,12 +1,12 @@
 # Map Data Quality Lab - VPS Deployment Guide
 
-This guide documents the production deployment architecture, host reverse proxy configuration (Caddy), operations workflow, data lifecycle, backups, retention, and maintenance for Map Data Quality Lab hosted at **`maplab.robertlacheta.pl`**.
+This guide documents the production deployment architecture, Nginx Proxy Manager and Cloudflare configuration, operations workflow, data lifecycle, backups, retention, and maintenance for Map Data Quality Lab hosted at **`maplab.robertlacheta.pl`**.
 
 ---
 
 ## 1. Architecture Overview
 
-- **Host Reverse Proxy**: Caddy (running on the VPS host with automatic HTTPS) proxies public traffic from `maplab.robertlacheta.pl` to `127.0.0.1:3001`.
+- **Public Reverse Proxy**: The existing Dockerized Nginx Proxy Manager (NPM) owns VPS ports 80/443 and proxies `maplab.robertlacheta.pl` over the external Docker network `app_network` to `map-data-quality-lab-prod:3001`. Cloudflare terminates visitor TLS and NPM uses a Cloudflare Origin Certificate for the encrypted origin connection.
 - **Application Container**: Single production Docker container (`map-data-quality-lab-prod`) running as non-root user `appuser` (UID:GID `1001:1001`).
   - **Node.js 22 Express Provider**: Serves public REST API (`/api/*`), PMTiles archive streaming, in-memory rate limiting / concurrency protection, and static SPA frontend.
   - **Python 3.14 + uv**: Geospatial processing CLI engine used during bootstrap and offline data preparation.
@@ -23,65 +23,64 @@ This guide documents the production deployment architecture, host reverse proxy 
 
 ### Step 1: Prepare directory structure
 
-On the VPS as user `deploy`:
+On the VPS as `root` (the GitHub deployment identity):
 
 ```bash
 mkdir -p /home/deploy/map-data-quality-lab/data/{bundle/rybnik_35km,prepared,reviews,runtime}
-sudo chown -R 1001:1001 /home/deploy/map-data-quality-lab/data
-chmod -R 750 /home/deploy/map-data-quality-lab/data
+chown -R 1001:1001 /home/deploy/map-data-quality-lab/data/{prepared,reviews,runtime}
+chmod -R u=rwX,g=rX,o= /home/deploy/map-data-quality-lab/data/{prepared,reviews,runtime}
 
 # Copy a prepared bundle, including demo_bundle_manifest.json, into
 # data/bundle/rybnik_35km. Its bundle_id must match MDQ_DEMO_BUNDLE_ID.
+chown -R 1001:1001 /home/deploy/map-data-quality-lab/data/bundle/rybnik_35km
 chmod -R a-w /home/deploy/map-data-quality-lab/data/bundle/rybnik_35km
 ```
 
-### Step 2: Configure Caddy
-
-The repository includes a production `Caddyfile`. The host configuration should
-import the drop-in directory:
-
-```caddy
-import /etc/caddy/conf.d/*.caddy
-```
-
-The deployment workflow installs the repository file automatically when
-`VPS_CADDY_CONFIG_PATH=/etc/caddy/conf.d/map-data-quality-lab.caddy` is set.
-Otherwise, copy it manually into the imported directory:
-
-```caddy
-maplab.robertlacheta.pl {
-    encode zstd gzip
-
-    header {
-        X-Content-Type-Options "nosniff"
-        X-Frame-Options "DENY"
-        Referrer-Policy "strict-origin-when-cross-origin"
-    }
-
-    reverse_proxy 127.0.0.1:3001 {
-        header_up Host {host}
-        header_up X-Real-IP {remote}
-        header_up X-Forwarded-For {remote}
-        header_up X-Forwarded-Proto {scheme}
-    }
-}
-```
-
-Reload Caddy:
+The GitHub deployment job never changes ownership or permissions of the bundle.
+To replace it, temporarily allow a privileged upload, validate its manifest and
+then make it immutable again:
 
 ```bash
-sudo systemctl reload caddy
+ssh root@VPS 'chmod -R u+w /home/deploy/map-data-quality-lab/data/bundle/rybnik_35km'
+rsync -a --delete /local/new-bundle/rybnik_35km/ \
+  root@VPS:/home/deploy/map-data-quality-lab/data/bundle/rybnik_35km/
+ssh root@VPS 'chown -R 1001:1001 /home/deploy/map-data-quality-lab/data/bundle/rybnik_35km && chmod -R a-w /home/deploy/map-data-quality-lab/data/bundle/rybnik_35km'
 ```
+
+### Step 2: Configure Cloudflare and Nginx Proxy Manager
+
+In Cloudflare DNS, create a proxied (orange-cloud) `A` record for
+`maplab.robertlacheta.pl` pointing to the VPS IPv4 address. Set SSL/TLS
+encryption mode to **Full (strict)**; never use `Flexible` for this origin.
+
+Create a Cloudflare Origin Certificate for `maplab.robertlacheta.pl` and place
+the certificate and private key on the VPS:
+
+```bash
+sudo install -d -o root -g root -m 0700 /etc/ssl/cloudflare
+sudo install -o root -g root -m 0600 maplab-origin.key /etc/ssl/cloudflare/maplab.robertlacheta.pl.key
+sudo install -o root -g root -m 0644 maplab-origin.pem /etc/ssl/cloudflare/maplab.robertlacheta.pl.pem
+```
+
+In NPM, import the Cloudflare Origin Certificate as a **Custom** SSL
+certificate. Create a Proxy Host with domain `maplab.robertlacheta.pl`, scheme
+`http`, forward hostname `map-data-quality-lab-prod` and port `3001`. Select
+the imported certificate, enable **Force SSL** and **HTTP/2 Support**, then
+save. NPM and MDQ share the pre-existing external Docker network `app_network`;
+the public proxy resolves the MDQ container by name without a public app port.
+
+Keep ports 80 and 443 open to Cloudflare. Docker publishes only
+`127.0.0.1:3001`; do not expose port 3001 in a firewall or public security
+group.
 
 ### Step 3: Configure GitHub Repository Secrets
 
 In GitHub repo settings (_Settings -> Secrets and variables -> Actions_):
 
 - `VPS_HOST`: VPS IP address or host.
-- `VPS_USER`: SSH user (e.g. `deploy`).
+- `VPS_USER`: `root`.
 - `VPS_SSH_KEY`: SSH private key.
 - `VPS_DEMO_BUNDLE_ID`: immutable ID of the bundle already provisioned under `data/bundle/rybnik_35km`.
-- `VPS_CADDY_CONFIG_PATH`: optional Caddy drop-in path, normally `/etc/caddy/conf.d/map-data-quality-lab.caddy`.
 
 ---
 
@@ -91,13 +90,14 @@ Pushes to the `main` branch automatically trigger `.github/workflows/deploy.yml`
 
 1. **Verification Gate**: Runs `pnpm run verify:provider` ensuring all tests, negative probes, linter, formatting, and builds pass.
 2. **Build & Push**: Builds multi-stage Docker image and pushes immutable tag `ghcr.io/bobby-pole/map-data-quality-lab:${GITHUB_SHA}` and `latest`.
-3. **Deploy**: Requires the external bundle and its ID, copies `docker-compose.prod.yml` and `Caddyfile` to `/home/deploy/map-data-quality-lab/`, writes immutable image/bundle IDs to `.env`, pulls the image, optionally validates/reloads Caddy, restarts the container, and verifies health via `http://127.0.0.1:3001/api/health`.
+3. **Deploy**: Requires the external bundle and its ID, copies `docker-compose.prod.yml` to `/home/deploy/map-data-quality-lab/`, writes immutable image/bundle IDs to `.env`, pulls the image, starts the container on `app_network` and verifies health via `http://127.0.0.1:3001/api/health`. NPM Proxy Host configuration is durable host state and is not rewritten by CI.
 
 Prepare a bundle from an existing local prepared cache with:
 
 ```bash
 ./scripts/prepare_demo.sh /path/to/rybnik_35km /path/to/mdq-demo-bundle rybnik-35km-2026-08-24
-rsync -a --delete /path/to/mdq-demo-bundle/rybnik_35km/ deploy@VPS:/home/deploy/map-data-quality-lab/data/bundle/rybnik_35km/
+rsync -a --delete /path/to/mdq-demo-bundle/rybnik_35km/ root@VPS:/home/deploy/map-data-quality-lab/data/bundle/rybnik_35km/
+ssh root@VPS 'chown -R 1001:1001 /home/deploy/map-data-quality-lab/data/bundle/rybnik_35km && chmod -R a-w /home/deploy/map-data-quality-lab/data/bundle/rybnik_35km'
 ```
 
 The container validates every declared file, checksum, domain-pack version and

@@ -102,6 +102,8 @@ from geo_pipeline.water import (
 
 DOMAIN_PACK_VERSION = "provider_domain_pack/v2"
 PACK_DIRNAME = "domain-pack-v2"
+OSM_COPYRIGHT_URL = "https://www.openstreetmap.org/copyright"
+OSM_ODBL_NOTICE_PATH = "licenses/openstreetmap-odbl.md"
 ARTIFACT_KINDS = {
     "native_vector",
     "native_raster",
@@ -198,6 +200,7 @@ def validate_domain_pack(
         if not isinstance(record, dict) or not isinstance(record.get("path"), str):
             raise ValueError(f"Domain-pack {record_name} requires a file path")
         _safe_file(pack_root, record["path"])
+    _validate_public_data_license_notices(manifest, pack_root=pack_root, registry=registry)
 
 
 def write_domain_pack(
@@ -208,6 +211,7 @@ def write_domain_pack(
     manifest: dict[str, Any],
     files: dict[str, bytes],
 ) -> dict[str, Any]:
+    manifest, files = _with_public_data_license_notices(manifest, files)
     target = domain_pack_root(aoi_id, domain, root=root)
     staging = target.parent / f".{PACK_DIRNAME}-staging-{uuid.uuid4().hex}"
     try:
@@ -236,6 +240,81 @@ def write_domain_pack(
         return read_domain_pack(aoi_id, domain, root=root)
     finally:
         shutil.rmtree(staging, ignore_errors=True)
+
+
+def _with_public_data_license_notices(
+    manifest: dict[str, Any], files: dict[str, bytes]
+) -> tuple[dict[str, Any], dict[str, bytes]]:
+    """Attach source-specific licence notices to every public OSM data pack.
+
+    The notice is intentionally stored inside the distributable pack, rather
+    than only in repository documentation, so a copied bundle keeps the ODbL
+    attribution and licence link with its exported database.
+    """
+    public_source_ids = {
+        record["source_id"]
+        for artifact in manifest.get("artifacts", [])
+        if artifact.get("public_export") is True
+        for record in artifact.get("source_provenance", [])
+        if isinstance(record, dict) and isinstance(record.get("source_id"), str)
+    }
+    if "openstreetmap" not in public_source_ids:
+        return manifest, files
+
+    updated_manifest = deepcopy(manifest)
+    updated_files = dict(files)
+    updated_files[OSM_ODBL_NOTICE_PATH] = (
+        "OpenStreetMap data notice\n\n"
+        "This domain pack includes data derived from OpenStreetMap contributors. "
+        "It is made available under the Open Database License (ODbL) 1.0.\n\n"
+        f"Attribution: © OpenStreetMap contributors — {OSM_COPYRIGHT_URL}\n"
+        "Licence: https://opendatacommons.org/licenses/odbl/1-0/\n\n"
+        "When redistributing this database or a derivative database, retain this "
+        "notice and comply with the ODbL attribution, notice and share-alike terms.\n"
+    ).encode("utf-8")
+    updated_manifest["data_license_notices"] = [
+        {
+            "source_id": "openstreetmap",
+            "license": "ODbL-1.0",
+            "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
+            "attribution": "© OpenStreetMap contributors",
+            "attribution_url": OSM_COPYRIGHT_URL,
+            "notice_path": OSM_ODBL_NOTICE_PATH,
+        }
+    ]
+    return updated_manifest, updated_files
+
+
+def _validate_public_data_license_notices(
+    manifest: dict[str, Any], *, pack_root: Path, registry: dict[str, Any]
+) -> None:
+    public_source_ids = {
+        record["source_id"]
+        for artifact in manifest["artifacts"]
+        if artifact.get("public_export") is True
+        for record in artifact["source_provenance"]
+    }
+    if "openstreetmap" not in public_source_ids:
+        return
+
+    notices = manifest.get("data_license_notices")
+    if not isinstance(notices, list) or len(notices) != 1:
+        raise ValueError("Public OpenStreetMap artifacts require one data licence notice")
+    notice = notices[0]
+    expected = {
+        "source_id": "openstreetmap",
+        "license": "ODbL-1.0",
+        "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
+        "attribution": "© OpenStreetMap contributors",
+        "attribution_url": OSM_COPYRIGHT_URL,
+        "notice_path": OSM_ODBL_NOTICE_PATH,
+    }
+    if not isinstance(notice, dict) or notice != expected:
+        raise ValueError(
+            "OpenStreetMap data licence notice does not match the required ODbL notice"
+        )
+    if not _safe_file(pack_root, OSM_ODBL_NOTICE_PATH).exists():
+        raise FileNotFoundError("Domain-pack OpenStreetMap data licence notice is missing")
 
 
 def build_rybnik_power_domain_pack(*, root: Path) -> dict[str, Any]:
@@ -460,7 +539,7 @@ def build_rybnik_emergency_domain_pack(*, root: Path) -> dict[str, Any]:
                 "sha256": _digest(payload),
                 "feature_count": layer["metadata"]["feature_count"],
                 "source_provenance": prg_provenance,
-                "public_export": True,
+                "public_export": False,
             }
         )
 
@@ -519,7 +598,7 @@ def build_rybnik_emergency_domain_pack(*, root: Path) -> dict[str, Any]:
         ],
         "fixture": str(PRG_EMERGENCY_FIXTURE.relative_to(Path(__file__).resolve().parents[1])),
         "fixture_sha256": _digest(PRG_EMERGENCY_FIXTURE.read_bytes()),
-        "publication": "Public representative points retain PRG identity separately from OSM and do not assert exact facility locations.",
+        "publication": "PRG representative points remain private source evidence until product-specific redistribution terms are recorded.",
         "limitations": PRG_EMERGENCY_LIMITATIONS,
     }
     prg_evidence_payload = json.dumps(prg_evidence, ensure_ascii=False, indent=2).encode()

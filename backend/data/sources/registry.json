@@ -56,12 +56,12 @@
       "qualification": "qualified_free",
       "distribution": {
         "public_export": "prohibited",
-        "reason": "Local demo review input is not an authoritative analytical source."
+        "reason": "Project-owned review fixture may be inspected under the repository licence, but is never emitted as a provider public-data artifact."
       },
       "not_authoritative": true,
       "source_url": "backend/data/fixtures/rybnik_35km/power/rybnik_35km_power_seed_nodes.geojson",
       "attribution": "Map Data Provider manual seed input",
-      "license": "Project-maintained demo input",
+      "license": "Project-maintained review fixture; see DATA_LICENSES.md",
       "eligible_for_analysis": false
     },
     {
@@ -81,13 +81,13 @@
       "usage_role": "analytical",
       "qualification": "qualified_free",
       "distribution": {
-        "public_export": "allowed",
-        "reason": "Published PRG vectors are free and reusable; preserve GUGiK attribution, service evidence and snapshot provenance."
+        "public_export": "prohibited",
+        "reason": "The repository has no versioned, product-specific redistribution record for this PRG service. Preserve it as source evidence only until that record is added."
       },
       "not_authoritative": false,
       "source_url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
       "attribution": "Główny Urząd Geodezji i Kartografii (GUGiK), PRG",
-      "license": "Free reuse of published PRG data; verify current product terms per acquisition.",
+      "license": "Public-sector re-use must be checked against the current product terms before public redistribution.",
       "cache_provenance": {
         "required_fields": [
           "source_registry_id",
@@ -117,13 +117,13 @@
       "usage_role": "analytical",
       "qualification": "qualified_free",
       "distribution": {
-        "public_export": "allowed",
-        "reason": "Published BDOT10k packages are free and reusable; retain GUGiK attribution, package checksum and snapshot provenance."
+        "public_export": "prohibited",
+        "reason": "The repository has no versioned, product-specific redistribution record for the selected BDOT10k package. Preserve it as source evidence only until that record is added."
       },
       "not_authoritative": false,
       "source_url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT/WMS/PobieranieBDOT10k",
       "attribution": "Główny Urząd Geodezji i Kartografii (GUGiK), BDOT10k",
-      "license": "Free reuse of published BDOT10k packages; verify current product terms per acquisition.",
+      "license": "Public-sector re-use must be checked against the current product terms before public redistribution.",
       "cache_provenance": {
         "required_fields": [
           "source_registry_id",

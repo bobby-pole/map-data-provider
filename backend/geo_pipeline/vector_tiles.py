@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import html
 import json
 import math
 import shutil
@@ -362,8 +363,21 @@ def _presentation_layer_descriptor(source_layer: dict[str, Any]) -> dict[str, An
         "readiness": metadata["readiness"],
         "limitations": metadata["limitations"],
         "attribution": "; ".join(source["attribution"] for source in sources),
+        "attribution_html": "; ".join(_presentation_attribution(source) for source in sources),
         "source_provenance": artifact["source_provenance"],
     }
+
+
+def _presentation_attribution(source: dict[str, Any]) -> str:
+    """Return the display attribution required by the source's public artefact."""
+    attribution = html.escape(source["attribution"])
+    if source["id"] != "openstreetmap":
+        return attribution
+    return (
+        f'{attribution} <a href="https://www.openstreetmap.org/copyright">'
+        "copyright</a> · "
+        f'<a href="{html.escape(source["license_url"])}">ODbL 1.0</a>'
+    )
 
 
 def _presentation_properties(raw_properties: Any, metadata: dict[str, Any]) -> dict[str, str]:

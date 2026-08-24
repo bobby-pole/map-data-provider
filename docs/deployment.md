@@ -112,14 +112,24 @@ Pushes to the `main` branch automatically trigger `.github/workflows/deploy.yml`
 Prepare a bundle from an existing local prepared cache with:
 
 ```bash
+# Rebuild all domain packs after a source-policy or data-licence contract change.
+# This intentionally replaces the local prepared Rybnik cache with deterministic fixtures.
+for domain in power emergency public transport bridges water gas sewer industrial telecom district_heating; do
+  (cd backend && uv run python -m geo_pipeline.worker \
+    --aoi rybnik_35km --domain "$domain" --input fixture)
+done
+
 ./scripts/prepare_demo.sh /path/to/rybnik_35km /path/to/mdq-demo-bundle rybnik-35km-2026-08-24
 rsync -a --delete /path/to/mdq-demo-bundle/rybnik_35km/ root@VPS:/home/deploy/map-data-provider/data/bundle/rybnik_35km/
 ssh root@VPS 'chown -R 1001:1001 /home/deploy/map-data-provider/data/bundle/rybnik_35km && chmod -R a-w /home/deploy/map-data-provider/data/bundle/rybnik_35km'
 ```
 
-The container validates every declared file, checksum, domain-pack version and
-bundle ID at startup. A missing or corrupted bundle causes controlled startup
-failure; it never serves an empty public demo.
+`prepare_demo.sh` now verifies source eligibility and data-licence notices as
+well as file checksums. It rejects a bundle with a public non-OSM artifact or a
+public OSM artifact without its ODbL notice. The container validates every
+declared file, checksum, domain-pack version and bundle ID at startup. A
+missing or corrupted bundle causes controlled startup failure; it never serves
+an empty public demo.
 
 ---
 

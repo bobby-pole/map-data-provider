@@ -73,6 +73,7 @@ describe("read-only AOI provider routes", () => {
     await mkdir(path.join(packRoot, "layers"), { recursive: true });
     await mkdir(path.join(packRoot, "validation"), { recursive: true });
     await mkdir(path.join(packRoot, "readiness"), { recursive: true });
+    await mkdir(path.join(packRoot, "licenses"), { recursive: true });
     const metadata = {
       cache_layout_version: "provider_cache/v1",
       geojson_contract_version: "provider_geojson/v1",
@@ -137,6 +138,12 @@ describe("read-only AOI provider routes", () => {
         evaluated_at: "2026-08-01T00:00:00Z",
       }),
     );
+    if (options?.publicExport ?? true) {
+      await writeFile(
+        path.join(packRoot, "licenses", "openstreetmap-odbl.md"),
+        "https://www.openstreetmap.org/copyright\nhttps://opendatacommons.org/licenses/odbl/1-0/\n",
+      );
+    }
     await writeFile(
       path.join(packRoot, "manifest.json"),
       JSON.stringify({
@@ -165,6 +172,18 @@ describe("read-only AOI provider routes", () => {
             public_export: false,
           },
         ],
+        data_license_notices: publicExport
+          ? [
+              {
+                source_id: "openstreetmap",
+                license: "ODbL-1.0",
+                license_url: "https://opendatacommons.org/licenses/odbl/1-0/",
+                attribution: "© OpenStreetMap contributors",
+                attribution_url: "https://www.openstreetmap.org/copyright",
+                notice_path: "licenses/openstreetmap-odbl.md",
+              },
+            ]
+          : undefined,
         validation: { path: "validation/metadata.json" },
         readiness: { path: "readiness/readiness.json" },
       }),
@@ -609,7 +628,7 @@ describe("read-only AOI provider routes", () => {
     });
   });
 
-  it("serves emergency community geometry and distinct official PRG representative evidence", async () => {
+  it("serves only emergency artifacts eligible for public export", async () => {
     const presentations = await request(defaultApp).get("/api/aoi/rybnik_35km/presentations");
     expect(presentations.status).toBe(200);
     expect(presentations.body.presentations).toEqual(
@@ -618,7 +637,6 @@ describe("read-only AOI provider routes", () => {
           domain: "emergency",
           layers: expect.arrayContaining([
             expect.objectContaining({ artifact_id: "emergency.hospital" }),
-            expect.objectContaining({ artifact_id: "emergency.official_police" }),
           ]),
         }),
       ]),
@@ -641,22 +659,10 @@ describe("read-only AOI provider routes", () => {
       },
     });
 
-    const officialPolice = await request(defaultApp).get(
+    const privatePrgEvidence = await request(defaultApp).get(
       "/api/aoi/rybnik_35km/presentations/emergency/features/prg_k02%2F1350186",
     );
-    expect(officialPolice.status).toBe(200);
-    expect(mapFeatureDetailResponseSchema.parse(officialPolice.body)).toMatchObject({
-      artifact_id: "emergency.official_police",
-      source_id: "prg_k02/1350186",
-      feature: {
-        geometry: { type: "Point" },
-        properties: {
-          source: "PRG (official unit-area evidence)",
-          source_geometry_type: "MultiSurface",
-          source_attributes: { official_type: "K02_Komenda_powiatowa_policji" },
-        },
-      },
-    });
+    expect(privatePrgEvidence.status).toBe(404);
   });
 
   it("lists only committed circuits and returns one selected circuit", async () => {

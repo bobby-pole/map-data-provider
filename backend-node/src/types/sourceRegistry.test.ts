@@ -128,6 +128,16 @@ describe("source_registry/v2 contract", () => {
           public_export: true,
         },
       ],
+      data_license_notices: [
+        {
+          source_id: "openstreetmap",
+          license: "ODbL-1.0",
+          license_url: "https://opendatacommons.org/licenses/odbl/1-0/",
+          attribution: "© OpenStreetMap contributors",
+          attribution_url: "https://www.openstreetmap.org/copyright",
+          notice_path: "licenses/openstreetmap-odbl.md",
+        },
+      ],
       validation: { path: "validation/report.json" },
       readiness: { path: "readiness/report.json" },
     });

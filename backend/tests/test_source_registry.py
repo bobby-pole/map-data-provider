@@ -53,8 +53,8 @@ def test_source_registry_v2_registers_required_source_families_and_dimensions() 
     assert sources["nmt_nmpt"]["data_kind"] == "raster"
     assert is_public_export_eligible(sources["openstreetmap"])
     assert not is_public_export_eligible(sources["kiut_gesut_wms"])
-    assert is_public_export_eligible(sources["prg_wfs"])
-    assert is_public_export_eligible(sources["bdot10k"])
+    assert not is_public_export_eligible(sources["prg_wfs"])
+    assert not is_public_export_eligible(sources["bdot10k"])
 
 
 def test_source_registry_accepts_v1_fixture_for_migration_only() -> None:
@@ -110,11 +110,12 @@ def test_public_export_provenance_rejects_reference_and_duplicate_sources() -> N
             registry,
             public_export=True,
         )
-    validate_ordered_provenance(
-        [{"source_id": "prg_wfs", "contribution_role": "primary"}],
-        registry,
-        public_export=True,
-    )
+    with pytest.raises(SourceEligibilityError, match="public_export"):
+        validate_ordered_provenance(
+            [{"source_id": "prg_wfs", "contribution_role": "primary"}],
+            registry,
+            public_export=True,
+        )
     with pytest.raises(ValueError, match="must be unique"):
         validate_ordered_provenance(
             [

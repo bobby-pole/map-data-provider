@@ -668,6 +668,20 @@ export const domainPackV2Schema = z
     domain: providerIdentifierSchema,
     source_provenance: z.array(sourceProvenanceSchema).min(1),
     artifacts: z.array(domainPackArtifactSchema).min(1),
+    data_license_notices: z
+      .array(
+        z
+          .object({
+            source_id: z.literal("openstreetmap"),
+            license: z.literal("ODbL-1.0"),
+            license_url: z.literal("https://opendatacommons.org/licenses/odbl/1-0/"),
+            attribution: z.literal("© OpenStreetMap contributors"),
+            attribution_url: z.literal("https://www.openstreetmap.org/copyright"),
+            notice_path: z.literal("licenses/openstreetmap-odbl.md"),
+          })
+          .strict(),
+      )
+      .optional(),
     validation: z.object({ path: z.string().min(1) }).strict(),
     readiness: z.object({ path: z.string().min(1) }).strict(),
   })
@@ -684,6 +698,17 @@ export const domainPackV2Schema = z
           message: "File-backed artifact requires a path or not-applicable reason.",
         });
       }
+    }
+    const includesPublicOsm = pack.artifacts.some(
+      (artifact) =>
+        artifact.public_export &&
+        artifact.source_provenance.some((record) => record.source_id === "openstreetmap"),
+    );
+    if (includesPublicOsm && pack.data_license_notices?.length !== 1) {
+      context.addIssue({
+        code: "custom",
+        message: "Public OpenStreetMap artifacts require one ODbL data licence notice.",
+      });
     }
   });
 
@@ -823,6 +848,7 @@ export const mapPresentationLayerSchema = z
     readiness: z.enum(["ready", "usable_with_limitations", "needs_source", "not_usable"]),
     limitations: z.array(z.string()),
     attribution: z.string().min(1),
+    attribution_html: z.string().min(1),
     source_provenance: z.array(sourceProvenanceSchema).min(1),
   })
   .strict();

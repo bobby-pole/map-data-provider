@@ -1,11 +1,30 @@
+import { mkdtemp, rm } from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
+
 import request from "supertest";
-import { describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { createApp } from "../app.js";
 import { providerErrorSchema } from "../types/provider.js";
+import { seedCompactRybnikCache } from "./testFixtures.js";
 
 describe("read-only demo mode protection", () => {
-  const readOnlyApp = createApp({ readOnlyMode: true });
+  let fixtureCacheDir: string;
+  let readOnlyApp: ReturnType<typeof createApp>;
+
+  beforeAll(async () => {
+    fixtureCacheDir = await mkdtemp(path.join(os.tmpdir(), "mdq-readonly-cache-"));
+    await seedCompactRybnikCache(fixtureCacheDir);
+    readOnlyApp = createApp({
+      readOnlyMode: true,
+      providerDataPaths: { cacheRoot: fixtureCacheDir },
+    });
+  });
+
+  afterAll(async () => {
+    await rm(fixtureCacheDir, { recursive: true, force: true });
+  });
 
   it("rejects POST /api/aoi/requests with runtime_disabled", async () => {
     const response = await request(readOnlyApp)

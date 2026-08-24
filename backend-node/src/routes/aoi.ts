@@ -477,7 +477,7 @@ export function createAoiRouter(options?: {
 
   aoiRouter.get("/:aoiId/layers", async (request, response) => {
     try {
-      const layers = await getCachedLayers(request.params.aoiId);
+      const layers = await getCachedLayers(request.params.aoiId, options?.providerDataPaths);
       response
         .status(200)
         .json(layerListResponseSchema.parse({ aoi_id: request.params.aoiId, layers }));
@@ -488,7 +488,15 @@ export function createAoiRouter(options?: {
 
   aoiRouter.get("/:aoiId/layers/:domain", async (request, response) => {
     try {
-      response.status(200).json(await getCachedLayer(request.params.aoiId, request.params.domain));
+      response
+        .status(200)
+        .json(
+          await getCachedLayer(
+            request.params.aoiId,
+            request.params.domain,
+            options?.providerDataPaths,
+          ),
+        );
     } catch (error) {
       respondWithProviderError(response, error);
     }
@@ -496,7 +504,7 @@ export function createAoiRouter(options?: {
 
   aoiRouter.get("/:aoiId/readiness", async (request, response) => {
     try {
-      const readiness = await getCachedReadiness(request.params.aoiId);
+      const readiness = await getCachedReadiness(request.params.aoiId, options?.providerDataPaths);
       response
         .status(200)
         .json(readinessListResponseSchema.parse({ aoi_id: request.params.aoiId, readiness }));
@@ -507,7 +515,7 @@ export function createAoiRouter(options?: {
 
   aoiRouter.get("/:aoiId/sources", async (request, response) => {
     try {
-      const registry = await getSourcesForAoi(request.params.aoiId);
+      const registry = await getSourcesForAoi(request.params.aoiId, options?.providerDataPaths);
       response.status(200).json(
         sourceListResponseSchema.parse({
           aoi_id: request.params.aoiId,

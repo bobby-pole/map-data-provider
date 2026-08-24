@@ -14,7 +14,6 @@ from geo_pipeline.aoi_runtime import (
     profile_outcomes,
     resolve_runtime_request,
 )
-from geo_pipeline.config import CACHE_DIR
 from geo_pipeline.domain_pack import read_domain_pack
 from geo_pipeline.query_catalog import (
     DISTRICT_HEATING_OSM_QUERY,
@@ -30,7 +29,7 @@ from geo_pipeline.runtime_osm import (
     _unavailable_power_relation_evidence,
     publish_runtime_osm_collection,
 )
-from geo_pipeline.worker import run_runtime_worker
+from geo_pipeline.worker import run_runtime_worker, run_worker
 
 
 def point_radius() -> dict[str, object]:
@@ -40,6 +39,16 @@ def point_radius() -> dict[str, object]:
         "latitude": 50.102174,
         "radius_m": 35_000,
     }
+
+
+def seed_runtime_fixture_cache(cache_root: Path, *domains: str) -> None:
+    for domain in domains:
+        run_worker(
+            aoi="rybnik_35km",
+            domain=domain,
+            input_mode="fixture",
+            cache_root=cache_root,
+        )
 
 
 def test_administrative_catalog_is_source_labelled_national_hierarchy_without_bulk_geometry() -> (
@@ -248,11 +257,13 @@ def test_runtime_profiles_are_explicit_and_do_not_fabricate_non_fixture_data() -
 
 
 def test_runtime_reuses_only_a_valid_local_request_cache(tmp_path, monkeypatch) -> None:
+    cache_root = tmp_path / "cache"
     request = {"aoi": point_radius(), "profiles": ["power", "public"]}
+    seed_runtime_fixture_cache(cache_root, "power", "public")
     first = run_runtime_worker(
         request=request,
         input_mode="fixture",
-        cache_root=CACHE_DIR,
+        cache_root=cache_root,
         runtime_root=tmp_path,
     )
     validated = []
@@ -266,7 +277,7 @@ def test_runtime_reuses_only_a_valid_local_request_cache(tmp_path, monkeypatch) 
     second = run_runtime_worker(
         request=request,
         input_mode="fixture",
-        cache_root=CACHE_DIR,
+        cache_root=cache_root,
         runtime_root=tmp_path,
     )
 
@@ -276,15 +287,17 @@ def test_runtime_reuses_only_a_valid_local_request_cache(tmp_path, monkeypatch) 
     assert second["request_result"] == "cache"
     assert second["outcomes"] == first["outcomes"]
     assert validated == [
-        ("rybnik_35km", "power", CACHE_DIR),
-        ("rybnik_35km", "public", CACHE_DIR),
+        ("rybnik_35km", "power", cache_root),
+        ("rybnik_35km", "public", cache_root),
     ]
 
 
 def test_runtime_ignores_incomplete_legacy_local_cache_and_refreshes_it(
     tmp_path,
 ) -> None:
+    cache_root = tmp_path / "cache"
     request = {"aoi": point_radius(), "profiles": ["public"]}
+    seed_runtime_fixture_cache(cache_root, "public")
     resolved = resolve_runtime_request(request)
     state_path = tmp_path / "provider-runtime-v1" / f"{resolved['cache_key']}.json"
     state_path.parent.mkdir(parents=True)
@@ -296,7 +309,7 @@ def test_runtime_ignores_incomplete_legacy_local_cache_and_refreshes_it(
     response = run_runtime_worker(
         request=request,
         input_mode="fixture",
-        cache_root=CACHE_DIR,
+        cache_root=cache_root,
         runtime_root=tmp_path,
     )
 
@@ -306,11 +319,13 @@ def test_runtime_ignores_incomplete_legacy_local_cache_and_refreshes_it(
 
 
 def test_runtime_ignores_cache_without_acquisition_counts(tmp_path) -> None:
+    cache_root = tmp_path / "cache"
     request = {"aoi": point_radius(), "profiles": ["gas"]}
+    seed_runtime_fixture_cache(cache_root, "gas")
     first = run_runtime_worker(
         request=request,
         input_mode="fixture",
-        cache_root=CACHE_DIR,
+        cache_root=cache_root,
         runtime_root=tmp_path,
     )
     state_path = tmp_path / "provider-runtime-v1" / f"{first['cache_key']}.json"
@@ -326,7 +341,7 @@ def test_runtime_ignores_cache_without_acquisition_counts(tmp_path) -> None:
     refreshed = run_runtime_worker(
         request=request,
         input_mode="fixture",
-        cache_root=CACHE_DIR,
+        cache_root=cache_root,
         runtime_root=tmp_path,
     )
 
@@ -1116,7 +1131,7 @@ def test_live_worker_refreshes_transport_profile_for_non_demo_aoi(tmp_path, monk
     response = run_runtime_worker(
         request=request,
         input_mode="live",
-        cache_root=CACHE_DIR,
+        cache_root=tmp_path / "cache",
         runtime_root=tmp_path,
         executor_type=ThreadPoolExecutor,
     )
@@ -1127,7 +1142,7 @@ def test_live_worker_refreshes_transport_profile_for_non_demo_aoi(tmp_path, monk
     assert response["outcomes"][0]["status"] == "ready"
     assert len(calls) == 1
     assert calls[0][1] == "transport"
-    assert validated == [(response["aoi"]["aoi_id"], "transport", CACHE_DIR)]
+    assert validated == [(response["aoi"]["aoi_id"], "transport", tmp_path / "cache")]
 
 
 def test_live_worker_refreshes_gas_profile_for_non_demo_aoi(tmp_path, monkeypatch) -> None:
@@ -1162,7 +1177,7 @@ def test_live_worker_refreshes_gas_profile_for_non_demo_aoi(tmp_path, monkeypatc
     response = run_runtime_worker(
         request=request,
         input_mode="live",
-        cache_root=CACHE_DIR,
+        cache_root=tmp_path / "cache",
         runtime_root=tmp_path,
         executor_type=ThreadPoolExecutor,
     )
@@ -1170,7 +1185,7 @@ def test_live_worker_refreshes_gas_profile_for_non_demo_aoi(tmp_path, monkeypatc
     assert response["outcomes"][0]["domain"] == "gas"
     assert response["outcomes"][0]["status"] == "ready"
     assert calls and calls[0][1] == "gas"
-    assert validated == [(response["aoi"]["aoi_id"], "gas", CACHE_DIR)]
+    assert validated == [(response["aoi"]["aoi_id"], "gas", tmp_path / "cache")]
 
 
 def test_live_worker_refreshes_sewer_profile_for_non_demo_aoi(tmp_path, monkeypatch) -> None:
@@ -1205,7 +1220,7 @@ def test_live_worker_refreshes_sewer_profile_for_non_demo_aoi(tmp_path, monkeypa
     response = run_runtime_worker(
         request=request,
         input_mode="live",
-        cache_root=CACHE_DIR,
+        cache_root=tmp_path / "cache",
         runtime_root=tmp_path,
         executor_type=ThreadPoolExecutor,
     )
@@ -1213,7 +1228,7 @@ def test_live_worker_refreshes_sewer_profile_for_non_demo_aoi(tmp_path, monkeypa
     assert response["outcomes"][0]["domain"] == "sewer"
     assert response["outcomes"][0]["status"] == "ready"
     assert calls and calls[0][1] == "sewer"
-    assert validated == [(response["aoi"]["aoi_id"], "sewer", CACHE_DIR)]
+    assert validated == [(response["aoi"]["aoi_id"], "sewer", tmp_path / "cache")]
 
 
 def test_live_worker_with_thread_pool_executor_isolates_from_network(
@@ -1246,7 +1261,7 @@ def test_live_worker_with_thread_pool_executor_isolates_from_network(
     result = run_runtime_worker(
         request=request,
         input_mode="live",
-        cache_root=CACHE_DIR,
+        cache_root=tmp_path / "cache",
         runtime_root=tmp_path,
         executor_type=ThreadPoolExecutor,
     )

@@ -1,4 +1,4 @@
-# Map Data Quality Lab — Performance Baseline & Delivery Measurements
+# Map Data Provider — Performance Baseline & Delivery Measurements
 
 **Document version:** 1.0.0  
 **Scope:** MDQ-052 (Read-Only Portfolio Demo on VPS & Performance Verification)  
@@ -8,7 +8,7 @@
 
 ## 1. Executive Summary
 
-Map Data Quality Lab transitioned from a monolithic full-GeoJSON transport model to a bounded PMTiles vector tile presentation model with typed Node.js Express orchestration.
+Map Data Provider transitioned from a monolithic full-GeoJSON transport model to a bounded PMTiles vector tile presentation model with typed Node.js Express orchestration.
 
 This document records the baseline and post-change performance measurements across:
 

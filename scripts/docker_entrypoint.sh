@@ -8,7 +8,7 @@ BUNDLE_SOURCE="${MDQ_BUNDLE_SOURCE:-/app/data/bundle/rybnik_35km}"
 REQUIRE_DEMO_BUNDLE="${MDQ_REQUIRE_DEMO_BUNDLE:-true}"
 EXPECTED_BUNDLE_ID="${MDQ_DEMO_BUNDLE_ID:-}"
 
-echo "==> Initializing Map Data Quality Lab container..."
+echo "==> Initializing Map Data Provider container..."
 echo "    Prepared storage:   ${PREPARED_ROOT}"
 echo "    Review storage:     ${REVIEW_ROOT}"
 echo "    Runtime storage:    ${RUNTIME_ROOT}"
@@ -128,5 +128,5 @@ else
   verify_bundle "${PREPARED_ROOT}/rybnik_35km"
 fi
 
-echo "==> Starting Map Data Quality Lab provider on port ${PORT:-3001}..."
+echo "==> Starting Map Data Provider on port ${PORT:-3001}..."
 exec node /app/backend-node/dist/server.js

@@ -28,6 +28,7 @@ backend/data/reviews/
 backend/data/source-availability/aoi_*.json
 backend/data/previews/
 .mdq-demo-bundle/
+.local-demo-bundle/
 
 # OS/editor
 .DS_Store

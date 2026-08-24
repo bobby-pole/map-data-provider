@@ -67,8 +67,8 @@ jobs:
           target: production
           push: true
           tags: |
-            ghcr.io/bobby-pole/map-data-quality-lab:${{ github.sha }}
-            ghcr.io/bobby-pole/map-data-quality-lab:latest
+            ghcr.io/bobby-pole/map-data-provider:${{ github.sha }}
+            ghcr.io/bobby-pole/map-data-provider:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -91,7 +91,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           source: "docker-compose.prod.yml"
-          target: "/home/deploy/map-data-quality-lab/"
+          target: "/home/deploy/map-data-provider/"
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.2.1
@@ -110,13 +110,13 @@ jobs:
             # Login to GHCR to pull image
             echo "$GHCR_TOKEN" | docker login ghcr.io -u bobby-pole --password-stdin
 
-            cd /home/deploy/map-data-quality-lab
+            cd /home/deploy/map-data-provider
 
             # Prepare only mutable state directories. The externally uploaded
             # bundle is intentionally not chowned or chmodded during deploy.
             mkdir -p data/prepared data/reviews data/runtime data/bundle/rybnik_35km
-            chown -R 1001:1001 /home/deploy/map-data-quality-lab/data/prepared /home/deploy/map-data-quality-lab/data/reviews /home/deploy/map-data-quality-lab/data/runtime
-            chmod -R u=rwX,g=rX,o= /home/deploy/map-data-quality-lab/data/prepared /home/deploy/map-data-quality-lab/data/reviews /home/deploy/map-data-quality-lab/data/runtime
+            chown -R 1001:1001 /home/deploy/map-data-provider/data/prepared /home/deploy/map-data-provider/data/reviews /home/deploy/map-data-provider/data/runtime
+            chmod -R u=rwX,g=rX,o= /home/deploy/map-data-provider/data/prepared /home/deploy/map-data-provider/data/reviews /home/deploy/map-data-provider/data/runtime
             test -n "$DEMO_BUNDLE_ID"
             test -f data/bundle/rybnik_35km/demo_bundle_manifest.json
 
@@ -136,7 +136,7 @@ jobs:
               fi
               if [ "$i" -eq 12 ]; then
                 echo "Health check failed after 60s"
-                docker logs map-data-quality-lab-prod --tail 30
+                docker logs map-data-provider-prod --tail 30
                 exit 1
               fi
               echo "Waiting for app... ($i/12)"

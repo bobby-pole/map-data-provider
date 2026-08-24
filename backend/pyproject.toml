@@ -1,7 +1,7 @@
 [project]
-name = "map-data-quality-lab-backend"
+name = "map-data-provider-backend"
 version = "0.1.0"
-description = "Geospatial data processing worker for Map Data Quality Lab."
+description = "Geospatial data processing worker for Map Data Provider."
 requires-python = ">=3.14,<3.15"
 dependencies = [
     "geopandas>=1.0.0",
@@ -32,4 +32,3 @@ target-version = "py314"
 [tool.ruff.lint]
 select = ["E", "F", "W", "I"]
 ignore = ["E501", "E402"]
-

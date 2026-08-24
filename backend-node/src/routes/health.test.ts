@@ -13,7 +13,7 @@ describe("GET /api/health", () => {
     expect(response.status).toBe(200);
     expect(healthResponseSchema.parse(response.body)).toEqual({
       status: "ok",
-      service: "map-data-quality-provider",
+      service: "map-data-provider",
       version: "0.1.0",
     });
   });
@@ -31,6 +31,6 @@ describe("GET /api/health", () => {
 
     const spaFallback = await request(app).get("/preview/custom-route");
     expect(spaFallback.status).toBe(200);
-    expect(spaFallback.text).toContain("Map Data Quality Lab");
+    expect(spaFallback.text).toContain("Map Data Provider");
   });
 });

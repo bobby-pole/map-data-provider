@@ -36,12 +36,12 @@ jobs:
         working-directory: backend
         run: uv sync
 
-      - name: Run ruff, pytest (parallel) and smoke check
+      - name: Run ruff, pytest and smoke check
         working-directory: backend
         run: |
           uv run ruff check .
           uv run ruff format --check .
-          uv run pytest -q -W error -n auto
+          uv run pytest -q -W error
           uv run python tests/smoke_check.py
 
   failure-probes:

@@ -1,8 +1,8 @@
-# Map Data Quality Lab Architecture
+# Map Data Provider Architecture
 
 ## Decision
 
-Map Data Quality Lab is developed as a consumer-neutral geospatial data provider.
+Map Data Provider is developed as a consumer-neutral geospatial data provider.
 
 The selected architecture is:
 

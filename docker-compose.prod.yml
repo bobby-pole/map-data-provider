@@ -1,7 +1,7 @@
 services:
   app:
-    container_name: map-data-quality-lab-prod
-    image: ghcr.io/bobby-pole/map-data-quality-lab:${MDQ_IMAGE_TAG:-latest}
+    container_name: map-data-provider-prod
+    image: ghcr.io/bobby-pole/map-data-provider:${MDQ_IMAGE_TAG:-latest}
     ports:
       - "127.0.0.1:3001:3001"
     networks:

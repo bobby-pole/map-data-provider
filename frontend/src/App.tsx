@@ -18,7 +18,9 @@ import { orthophotoReference } from "./orthophotoReference";
 import {
   configuredPreviewLayers,
   defaultLayerEnabled,
+  missingPrimaryDemoDomains,
   previewLayerKey,
+  primaryDemoDomains,
   type TransportRoadClass,
 } from "./previewCatalog";
 import { useAoiStore } from "./stores/aoiStore";
@@ -86,6 +88,14 @@ export default function App() {
   const { aoiId, presentations, issues, sourceAvailability, updateReview, error } =
     useProviderPreview(preparedAoiId);
   const catalog = useMemo(() => configuredPreviewLayers(presentations), [presentations]);
+  const missingDefaultDemoDomains = useMemo(
+    () => missingPrimaryDemoDomains(presentations),
+    [presentations],
+  );
+  const hasIncompleteDefaultDemo =
+    preparedAoiId === DEFAULT_AOI_ID &&
+    presentations.length > 0 &&
+    missingDefaultDemoDomains.length > 0;
   const visibleLayers = useMemo(
     () =>
       shouldHideDefaultObjects
@@ -214,6 +224,15 @@ export default function App() {
     <main className="previewLayout" data-basemap={basemapMode}>
       <PreviewHeader aoiId={runtimeResult?.aoi.aoi_id ?? aoiId} featureCount={featureCount} />
       {error && <div className="error previewError">Provider API error: {error}</div>}
+      {hasIncompleteDefaultDemo && (
+        <div className="previewNotice" role="status">
+          <strong>Incomplete Rybnik demo snapshot.</strong> Showing{" "}
+          {primaryDemoDomains.length - missingDefaultDemoDomains.length} of{" "}
+          {primaryDemoDomains.length} primary domains. Missing packs:{" "}
+          {missingDefaultDemoDomains.join(", ")}. Install the verified local demo bundle before
+          relying on this preview.
+        </div>
+      )}
       <section className="mapWorkspace">
         <div className="mapPanel">
           <MapView

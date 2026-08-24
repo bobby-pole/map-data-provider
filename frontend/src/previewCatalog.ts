@@ -1,5 +1,17 @@
 import type { MapPresentation, MapPresentationLayer, ProviderFeature } from "./types/api";
 
+export const primaryDemoDomains = [
+  "power",
+  "emergency",
+  "public",
+  "transport",
+  "bridges",
+  "water",
+  "gas",
+  "sewer",
+  "industrial",
+] as const;
+
 export type PreviewLayer = {
   artifact: MapPresentationLayer;
   domain: string;
@@ -45,6 +57,14 @@ export function configuredPreviewLayers(presentations: MapPresentation[]): Previ
         archiveMaxZoom: presentation.archive.max_zoom,
       })),
   );
+}
+
+/** A missing primary presentation is an incomplete snapshot, never evidence of absent infrastructure. */
+export function missingPrimaryDemoDomains(
+  presentations: Array<Pick<MapPresentation, "domain">>,
+): string[] {
+  const delivered = new Set(presentations.map((presentation) => presentation.domain));
+  return primaryDemoDomains.filter((domain) => !delivered.has(domain));
 }
 
 /** Inspection samples remain in the exported provider pack, not in the map preview. */

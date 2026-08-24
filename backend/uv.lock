@@ -210,7 +210,7 @@ wheels = [
 ]
 
 [[package]]
-name = "map-data-quality-lab-backend"
+name = "map-data-provider-backend"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

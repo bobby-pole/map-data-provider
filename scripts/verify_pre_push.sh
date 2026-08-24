@@ -3,7 +3,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-export UV_CACHE_DIR="${UV_CACHE_DIR:-${TMPDIR:-/tmp}/map-data-quality-lab-uv-cache}"
+export UV_CACHE_DIR="${UV_CACHE_DIR:-${TMPDIR:-/tmp}/map-data-provider-uv-cache}"
 
 OFFLINE_FLAG=""
 if [[ "${MDQ_OFFLINE:-0}" == "1" ]]; then

@@ -27,4 +27,37 @@ describe("Rate limiting and concurrency protection", () => {
       message: "Rate limit exceeded. Please retry later.",
     });
   });
+
+  it("does not let PMTiles byte-range delivery exhaust the API request budget", async () => {
+    const app = createApp({
+      rateLimitOptions: {
+        windowMs: 60_000,
+        maxRequests: 1,
+        maxConcurrent: 10,
+      },
+    });
+
+    await request(app).get("/api/aoi/not-present/presentations/power/archive");
+    await request(app).get("/api/aoi/not-present/presentations/power/archive");
+
+    expect((await request(app).get("/api/health")).status).toBe(200);
+    expect((await request(app).get("/api/health")).status).toBe(429);
+  });
+
+  it("uses forwarded client addresses behind the trusted reverse proxy", async () => {
+    const app = createApp({
+      rateLimitOptions: {
+        windowMs: 60_000,
+        maxRequests: 1,
+        maxConcurrent: 10,
+      },
+    });
+
+    expect(
+      (await request(app).get("/api/health").set("x-forwarded-for", "198.51.100.10")).status,
+    ).toBe(200);
+    expect(
+      (await request(app).get("/api/health").set("x-forwarded-for", "198.51.100.11")).status,
+    ).toBe(200);
+  });
 });

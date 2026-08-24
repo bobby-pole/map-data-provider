@@ -17,8 +17,23 @@ export function createApp(options?: {
   rateLimitOptions?: RateLimitOptions;
 }) {
   const app = express();
+  // Production receives requests only through the local Nginx Proxy Manager
+  // network. Trust those private proxy hops so rate limiting distinguishes
+  // actual clients instead of treating every request as the proxy container.
+  app.set("trust proxy", ["loopback", "linklocal", "uniquelocal"]);
   app.use(express.json());
-  app.use("/api", createRateLimiter(options?.rateLimitOptions));
+  app.use(
+    "/api",
+    createRateLimiter({
+      ...options?.rateLimitOptions,
+      skipRequestCount: (request) =>
+        options?.rateLimitOptions?.skipRequestCount?.(request) === true ||
+        (request.method === "GET" &&
+          /^\/api\/aoi\/[^/]+\/presentations\/[^/]+\/archive$/.test(
+            request.originalUrl.split("?", 1)[0] ?? "",
+          )),
+    }),
+  );
   app.use("/api", healthRouter);
   app.use("/api/aoi", createAoiRouter(options));
 

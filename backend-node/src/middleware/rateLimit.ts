@@ -4,6 +4,12 @@ export interface RateLimitOptions {
   windowMs?: number;
   maxRequests?: number;
   maxConcurrent?: number;
+  /**
+   * Skips the request-count budget while retaining the concurrent-request
+   * guard. This is for bounded, cacheable delivery routes such as PMTiles
+   * byte ranges, which a map renderer may request many times for one view.
+   */
+  skipRequestCount?: (request: Request) => boolean;
 }
 
 export function createRateLimiter(options?: RateLimitOptions) {
@@ -23,20 +29,22 @@ export function createRateLimiter(options?: RateLimitOptions) {
       return;
     }
 
-    const ip = req.ip || req.socket.remoteAddress || "unknown";
-    const now = Date.now();
-    const entry = requestCounts.get(ip);
+    if (!options?.skipRequestCount?.(req)) {
+      const ip = req.ip || req.socket.remoteAddress || "unknown";
+      const now = Date.now();
+      const entry = requestCounts.get(ip);
 
-    if (!entry || now > entry.resetAt) {
-      requestCounts.set(ip, { count: 1, resetAt: now + windowMs });
-    } else {
-      entry.count += 1;
-      if (entry.count > maxRequests) {
-        res.status(429).json({
-          error: "rate_limit_exceeded",
-          message: "Rate limit exceeded. Please retry later.",
-        });
-        return;
+      if (!entry || now > entry.resetAt) {
+        requestCounts.set(ip, { count: 1, resetAt: now + windowMs });
+      } else {
+        entry.count += 1;
+        if (entry.count > maxRequests) {
+          res.status(429).json({
+            error: "rate_limit_exceeded",
+            message: "Rate limit exceeded. Please retry later.",
+          });
+          return;
+        }
       }
     }
 

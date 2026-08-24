@@ -4,6 +4,7 @@ import {
   configuredPreviewLayers,
   defaultLayerEnabled,
   isInspectionPointArtifact,
+  missingPrimaryDemoDomains,
   popupDetails,
   previewLayerKey,
   sourceAttribution,
@@ -112,5 +113,11 @@ describe("manifest-driven preview catalog", () => {
     );
     expect(isInspectionPointArtifact("gas.inspection_points")).toBe(true);
     expect(isInspectionPointArtifact("water.facilities")).toBe(false);
+  });
+
+  it("identifies primary domains absent from an incomplete Rybnik snapshot", () => {
+    expect(
+      missingPrimaryDemoDomains([fixturePresentation, { ...fixturePresentation, domain: "power" }]),
+    ).toEqual(["emergency", "public", "transport", "bridges", "gas", "sewer", "industrial"]);
   });
 });

@@ -120,11 +120,9 @@ PROFILES: tuple[ProviderProfile, ...] = (
         "openstreetmap",
         "analytical",
         "analytical_vector",
-        "bridges-osm/v1",
+        "bridges-osm/v2",
         {
-            "man_made": ["bridge"],
             "bridge": ["yes", "viaduct", "aqueduct", "boardwalk"],
-            "railway": ["level_crossing", "crossing"],
             "highway": ["viaduct"],
         },
         True,

@@ -22,8 +22,8 @@
       "kind": "processed_vector",
       "format": "geojson",
       "path": "layers/bridges.bridges.geojson",
-      "sha256": "10b72325a67e634808f2d11380f0822e6965e6eec003fcb1b4597092df686dac",
-      "feature_count": 4921,
+      "sha256": "9fa8fd84c3a360d38e750d7106c15d6fad68f2c124d9861f865ee64f0e52e0a3",
+      "feature_count": 4328,
       "source_provenance": [
         {
           "source_id": "openstreetmap",
@@ -37,23 +37,8 @@
       "kind": "processed_vector",
       "format": "geojson",
       "path": "layers/bridges.viaducts.geojson",
-      "sha256": "240c2284692c2a65412e8d2176a4071015dc3369ceb2f043dd17e8fa465cc349",
-      "feature_count": 209,
-      "source_provenance": [
-        {
-          "source_id": "openstreetmap",
-          "contribution_role": "primary"
-        }
-      ],
-      "public_export": true
-    },
-    {
-      "id": "bridges.crossings",
-      "kind": "processed_vector",
-      "format": "geojson",
-      "path": "layers/bridges.crossings.geojson",
-      "sha256": "0c2ae9b2c25efaea32d7794f251441cce5dedf44a34cfc059e53c2e9cdc1ff42",
-      "feature_count": 2161,
+      "sha256": "b0c3a8ba875f834ae3df3595b2f16e434f443baf07b925c204e5c5cf3dfd642e",
+      "feature_count": 247,
       "source_provenance": [
         {
           "source_id": "openstreetmap",
@@ -67,8 +52,8 @@
       "kind": "derived_vector",
       "format": "geojson",
       "path": "layers/bridges.inspection_points.geojson",
-      "sha256": "e37d80f529e531cfe86c97a582bb4676a73b9a3c7786520d05df1a1c379541b3",
-      "feature_count": 5130,
+      "sha256": "e5e9324e41790e655127caf1554c0d8acc16da5b12e2075144ac614bb275938d",
+      "feature_count": 4575,
       "source_provenance": [
         {
           "source_id": "openstreetmap",
@@ -82,7 +67,7 @@
       "kind": "native_vector",
       "format": "json",
       "path": "native/osm-bridges-source-evidence.json",
-      "sha256": "1998e87b9a31dada0097b1f011d8516325568bf2c8fd543c5d565622dfe6840d",
+      "sha256": "1cc6236459b97a38467f811be8bfbd8fc5ca3c64d0950c72af53ff8472cba461",
       "source_provenance": [
         {
           "source_id": "openstreetmap",

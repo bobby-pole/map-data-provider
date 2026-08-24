@@ -16,6 +16,7 @@ import {
   baseMapRasterPaint,
   isLinePresentationLayer,
   openStreetMapBasemap,
+  powerVoltageLabelMinZoom,
   referenceRasterInsertionPoint,
   roadLineColor,
   type VisualBasemapMode,
@@ -864,19 +865,58 @@ export function MapView({
               filter: ["==", ["get", "voltage_bucket"], "low"],
             });
             map.addLayer({
-              id: `${id}-labels`,
+              id: `${id}-labels-transmission`,
               type: "symbol",
               source: sourceId,
               "source-layer": layer.artifact.source_layer,
-              minzoom: 12,
+              minzoom: powerVoltageLabelMinZoom.transmission,
               filter: [
                 "all",
                 ["!=", ["get", "voltage_bucket"], "medium"],
                 ["!=", ["get", "voltage_bucket"], "low"],
+                ["!=", ["get", "voltage_bucket"], "unknown"],
               ],
               layout: {
                 "symbol-placement": "line",
-                "text-field": ["coalesce", ["get", "voltage_label"], ["get", "name"]],
+                "text-field": ["get", "voltage_label"],
+                "text-size": 11,
+                "text-max-angle": 35,
+              },
+              paint: {
+                "text-color": "#f8fafc",
+                "text-halo-color": "#0f172a",
+                "text-halo-width": 1.5,
+              },
+            });
+            map.addLayer({
+              id: `${id}-labels-medium`,
+              type: "symbol",
+              source: sourceId,
+              "source-layer": layer.artifact.source_layer,
+              minzoom: powerVoltageLabelMinZoom.medium,
+              filter: ["==", ["get", "voltage_bucket"], "medium"],
+              layout: {
+                "symbol-placement": "line",
+                "text-field": ["get", "voltage_label"],
+                "text-size": 11,
+                "text-max-angle": 35,
+              },
+              paint: {
+                "text-color": "#f8fafc",
+                "text-halo-color": "#0f172a",
+                "text-halo-width": 1.5,
+              },
+            });
+            map.addLayer({
+              id: `${id}-labels-low`,
+              type: "symbol",
+              source: sourceId,
+              "source-layer": layer.artifact.source_layer,
+              minzoom: powerVoltageLabelMinZoom.low,
+              filter: ["==", ["get", "voltage_bucket"], "low"],
+              layout: {
+                "symbol-placement": "line",
+                "text-field": ["get", "voltage_label"],
                 "text-size": 11,
                 "text-max-angle": 35,
               },

@@ -15,7 +15,56 @@ concurrency:
 
 jobs:
   backend-python:
-    name: verify-backend-python
+    name: verify-backend-python (${{ matrix.name }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: runtime
+            pytest_paths: tests/test_aoi_runtime.py tests/test_worker.py
+          - name: domain-packs-and-tiles
+            pytest_paths: >-
+              tests/test_domain_pack.py tests/test_pipeline_e2e.py tests/test_power_snapshot.py
+              tests/test_transport.py tests/test_vector_tiles.py
+          - name: provider-contracts
+            pytest_paths: >-
+              tests/test_adapters.py tests/test_aoi.py tests/test_bdot10k_adapter.py
+              tests/test_bridges.py tests/test_cache.py tests/test_cross_source.py
+              tests/test_district_heating.py tests/test_gas.py tests/test_industrial.py
+              tests/test_issue_snapshot.py tests/test_pipeline_helpers.py tests/test_quality_rules.py
+              tests/test_readiness_rules.py tests/test_sewer.py tests/test_source_availability.py
+              tests/test_source_registry.py tests/test_source_strategy.py tests/test_telecom.py
+              tests/test_water.py
+          - name: source-adapters
+            pytest_paths: >-
+              tests/test_kiut_adapter.py tests/test_nmt_nmpt_raster_adapter.py
+              tests/test_orthophoto_adapter.py tests/test_prg_adapter.py
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version-file: backend/.python-version
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install Python dependencies
+        working-directory: backend
+        run: uv sync
+
+      - name: Run pytest shard with duration report
+        working-directory: backend
+        run: uv run pytest -q -W error --durations=20 ${{ matrix.pytest_paths }}
+
+  backend-python-quality:
+    name: verify-backend-python-quality
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -36,12 +85,11 @@ jobs:
         working-directory: backend
         run: uv sync
 
-      - name: Run ruff, pytest (parallel) and smoke check
+      - name: Run ruff and smoke check
         working-directory: backend
         run: |
           uv run ruff check .
           uv run ruff format --check .
-          uv run pytest -q -W error -n auto
           uv run python tests/smoke_check.py
 
   failure-probes:
@@ -146,7 +194,7 @@ jobs:
 
   verify-gate:
     name: unit-tests
-    needs: [backend-python, failure-probes, backend-node, frontend]
+    needs: [backend-python, backend-python-quality, failure-probes, backend-node, frontend]
     runs-on: ubuntu-latest
     steps:
       - name: Verification complete

@@ -82,6 +82,13 @@ export const POWER_VOLTAGE_TIERS = [
   },
 ] as const;
 
+/** Labels appear only when the respective density remains readable. */
+export const powerVoltageLabelMinZoom = {
+  transmission: 12,
+  medium: 13,
+  low: 15,
+} as const;
+
 export const voltageLineColor: ExpressionSpecification = [
   "match",
   ["get", "voltage_bucket"],

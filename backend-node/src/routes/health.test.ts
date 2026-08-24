@@ -1,3 +1,5 @@
+import path from "node:path";
+
 import request from "supertest";
 import { describe, expect, it } from "vitest";
 
@@ -11,7 +13,7 @@ describe("GET /api/health", () => {
     expect(response.status).toBe(200);
     expect(healthResponseSchema.parse(response.body)).toEqual({
       status: "ok",
-      service: "map-data-quality-provider",
+      service: "map-data-provider",
       version: "0.1.0",
     });
   });
@@ -20,5 +22,15 @@ describe("GET /api/health", () => {
     const response = await request(createApp()).get("/api/aoi/missing_aoi/layers/power");
 
     expect(response.status).toBe(404);
+  });
+
+  it("serves static SPA files when staticDir is configured", async () => {
+    const app = createApp({ staticDir: path.resolve(import.meta.dirname, "../../../frontend") });
+    const response = await request(app).get("/index.html");
+    expect(response.status).toBe(200);
+
+    const spaFallback = await request(app).get("/preview/custom-route");
+    expect(spaFallback.status).toBe(200);
+    expect(spaFallback.text).toContain("Map Data Provider");
   });
 });

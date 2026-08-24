@@ -1,6 +1,6 @@
-# Map Data Quality Lab Design Baseline
+# Map Data Provider Design Baseline
 
-This document is the canonical UI/UX baseline for the Map Data Quality Lab
+This document is the canonical UI/UX baseline for the Map Data Provider
 dev-preview. Read it before making a visual or interaction change. If a change
 introduces a durable visual or UX decision, update this document in the same
 change.
@@ -79,8 +79,15 @@ must stay within the viewport and retain a visible close control.
   combine it with a competing cyan selection stroke.
 - Red is error-only. It must communicate a failed preparation or blocking
   action, never ordinary absence of data.
+- An incomplete default Rybnik snapshot uses an amber notice above the map. It
+  names missing primary domain packs and never implies that the corresponding
+  infrastructure is absent in the real world.
 - Layer colours describe presentation semantics; they must not silently imply
   validation confidence or real-world authority.
+- Power-line labels show the delivered `voltage_label`: transmission from zoom
+  12, medium voltage from zoom 13 and low voltage from zoom 15. Labels with an
+  unknown voltage are not rendered as map text; their uncertainty remains
+  inspectable in the feature popup.
 
 ### Typography and controls
 

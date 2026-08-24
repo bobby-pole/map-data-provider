@@ -1,4 +1,4 @@
-"""Geospatial data extraction pipeline for Map Data Quality Lab."""
+"""Geospatial data extraction pipeline for Map Data Provider."""
 
 import os
 from pathlib import Path

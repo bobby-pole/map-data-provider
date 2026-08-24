@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 
 import request from "supertest";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
 import { createApp } from "../app.js";
 import {
@@ -27,10 +27,23 @@ import {
   sourceAvailabilityReportSchema,
   sourceListResponseSchema,
 } from "../types/provider.js";
+import { seedCompactRybnikCache } from "./testFixtures.js";
 
 describe("read-only AOI provider routes", () => {
   let temporaryDirectory: string;
   let reviewStorePath: string;
+  let fixtureCacheDir: string;
+  let defaultApp: ReturnType<typeof createApp>;
+
+  beforeAll(async () => {
+    fixtureCacheDir = await mkdtemp(path.join(os.tmpdir(), "mdq-fixture-cache-"));
+    await seedCompactRybnikCache(fixtureCacheDir);
+    defaultApp = createApp({ providerDataPaths: { cacheRoot: fixtureCacheDir } });
+  });
+
+  afterAll(async () => {
+    await rm(fixtureCacheDir, { recursive: true, force: true });
+  });
 
   beforeEach(async () => {
     temporaryDirectory = await mkdtemp(path.join(os.tmpdir(), "mdq-issue-review-"));
@@ -45,10 +58,11 @@ describe("read-only AOI provider routes", () => {
     await rm(temporaryDirectory, { recursive: true, force: true });
   });
 
-  const defaultApp = createApp();
-
   function appWithReviewStore() {
-    return createApp({ issueStorePaths: { reviewsPath: reviewStorePath } });
+    return createApp({
+      issueStorePaths: { reviewsPath: reviewStorePath },
+      providerDataPaths: { cacheRoot: fixtureCacheDir },
+    });
   }
 
   async function writeFixtureDomainPack(options?: { sourceId?: string; publicExport?: boolean }) {

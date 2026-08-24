@@ -1,8 +1,8 @@
 # Provider Demo
 
-This walkthrough demonstrates the implemented multi-domain provider suite across all 9 required G-004 domains (`power`, `emergency`, `public`, `transport`, `bridges`, `water`, `gas`, `sewer`, `industrial`) for the `rybnik_35km` AOI in three to five minutes. It uses the committed cache and offline fixtures; it does not require live Overpass or WMS access.
+This walkthrough demonstrates the implemented multi-domain provider suite across all 9 required G-004 domains (`power`, `emergency`, `public`, `transport`, `bridges`, `water`, `gas`, `sewer`, `industrial`) for the `rybnik_35km` AOI in three to five minutes. It uses an operator-provisioned Rybnik snapshot plus offline fixtures; it does not require live Overpass or WMS access. The full snapshot is intentionally not committed to Git.
 
-The current release produces a provider-compatible export. Loading that export inside the downstream application repository remains separate integration work.
+The current release produces a provider-compatible export for Steel Sentinel v2. Loading that export in the Steel Sentinel v2 repository remains separate integration work.
 
 ## Preparation
 
@@ -14,6 +14,14 @@ pnpm install
 ./scripts/verify_provider.sh
 ```
 
+To run the data endpoint examples outside the production container, provide a prepared-root directory that contains `rybnik_35km/` (for example, an operator-prepared local snapshot). CI fixtures prove contracts but are deliberately not a full Rybnik dataset:
+
+```bash
+export MDQ_PREPARED_ROOT=/absolute/path/to/prepared-root
+```
+
+For the public deployment, instead follow the [deployment guide](./deployment.md): the container receives an immutable bundle, verifies all declared hashes and domain-pack contracts, then promotes it into `data/prepared/` before the API starts.
+
 Start the provider in one terminal:
 
 ```bash
@@ -22,6 +30,19 @@ pnpm run dev
 ```
 
 The examples below use `curl` and `jq` against `http://127.0.0.1:3001`.
+
+For the full local Rybnik demo, first copy the operator-provisioned verified
+bundle and run the API in local read-only mode:
+
+```bash
+./scripts/pull_local_demo_bundle.sh \
+  root@VPS:/home/deploy/map-data-provider/data/bundle/rybnik_35km
+pnpm run demo:local
+```
+
+The bundle remains ignored by Git under `.local-demo-bundle/`. A partial cache
+is still readable for development, but the preview shows an explicit warning
+listing its missing primary domains.
 
 ## 1. Confirm the typed provider boundary — 20 seconds
 
@@ -34,12 +55,12 @@ Expected shape:
 ```json
 {
   "status": "ok",
-  "service": "map-data-quality-provider",
+  "service": "map-data-provider",
   "version": "0.1.0"
 }
 ```
 
-The public API is Node/Express/TypeScript. Python remains the geospatial worker and FastAPI prototype.
+The public API is Node/Express/TypeScript. Python remains the geospatial processing worker.
 
 ## 2. Request the cached Rybnik power layer — 30 seconds
 
@@ -54,7 +75,7 @@ curl -sS http://127.0.0.1:3001/api/aoi/rybnik_35km/layers/power \
     }'
 ```
 
-This read-only endpoint serves the committed, validated cache without extraction side effects. It is the safe path for a repeatable presentation of the full Rybnik snapshot.
+This read-only endpoint serves the prepared, validated snapshot without extraction side effects. It is the safe path for a repeatable presentation of the full Rybnik dataset.
 
 ## 3. Inspect the compact offline map presentation — 45 seconds
 
@@ -70,7 +91,7 @@ curl -sS http://127.0.0.1:3001/api/aoi/rybnik_35km/presentations/power \
 
 The response is compact metadata, not the full GeoJSON collections. The local MapLibre preview uses its `archive_url` with HTTP byte ranges to read only required MVT tiles from PMTiles. The full domain-pack and GeoJSON endpoints remain the data/export path.
 
-The current committed `rybnik_35km` presentation contains 52,976 public power features across its three layers: 6,796 lines, 2,379 assets and 43,801 supports. `power.supports` is a bounded OSM evidence fixture rather than a complete AOI support inventory. Its PMTiles archive is a derived, checked presentation artifact; treat counts and archive size as snapshot-specific.
+The delivered `rybnik_35km` presentation contains 52,976 public power features across its three layers: 6,796 lines, 2,379 assets and 43,801 supports. `power.supports` is a bounded OSM evidence fixture rather than a complete AOI support inventory. Its PMTiles archive is a derived, checked presentation artifact; treat counts and archive size as snapshot-specific.
 
 ## 4. Show why KIUT/GESUT remains reference-only — 45 seconds
 
@@ -119,14 +140,14 @@ The response conforms to `provider_multi_domain_export/v2`. It isolates per-doma
 
 ## Optional utility-domain source-gap examples
 
-The optional `telecom` pack exposes only explicitly tagged OSM communication towers/masts, facilities and cable routes. It never derives a network from KIUT WMS. In the committed Rybnik fixture, `telecom.lines` has zero features and `readiness: needs_source`; this is a visible absence of qualified analytical line coverage, not a rendering failure.
+The optional `telecom` pack exposes only explicitly tagged OSM communication towers/masts, facilities and cable routes. It never derives a network from KIUT WMS. In the delivered Rybnik snapshot, `telecom.lines` has zero features and `readiness: needs_source`; this is a visible absence of qualified analytical line coverage, not a rendering failure.
 
 ```bash
 curl -sS http://127.0.0.1:3001/api/aoi/rybnik_35km/domain-packs/telecom \
   | jq '.layers[] | {id: .artifact.id, count: .layer.metadata.feature_count, readiness: .layer.metadata.readiness}'
 ```
 
-The optional `district_heating` pack separately exposes explicit heating plants, heat-exchanger facilities and heat-network lines. A power plant or generator requires an explicit heat-output/source tag; generic industrial or pipeline features remain excluded. In the committed Rybnik fixture, `district_heating.lines` has zero features and `readiness: needs_source`; KIUT district-heating remains a private WMS reference rather than analytical geometry.
+The optional `district_heating` pack separately exposes explicit heating plants, heat-exchanger facilities and heat-network lines. A power plant or generator requires an explicit heat-output/source tag; generic industrial or pipeline features remain excluded. In the delivered Rybnik snapshot, `district_heating.lines` has zero features and `readiness: needs_source`; KIUT district-heating remains a private WMS reference rather than analytical geometry.
 
 ```bash
 curl -sS http://127.0.0.1:3001/api/aoi/rybnik_35km/domain-packs/district_heating \
@@ -147,7 +168,7 @@ AOI/multi-domain request
   -> provider_multi_domain_export/v2 export
 ```
 
-This repository owns that upstream data workflow. The multi-domain export is ready for a provider-compatible client, but actual cross-repository consumption is not claimed by this release.
+This repository owns that upstream data workflow. The multi-domain export is prepared for Steel Sentinel v2, but actual cross-repository consumption is not claimed by this release.
 
 ## Optional: demonstrate cache refresh after the core demo
 
@@ -160,4 +181,4 @@ curl -sS -X POST http://127.0.0.1:3001/api/aoi/requests \
   | jq '{aoi: .aoi.id, domain, result, cache_status, feature_count: .metadata.feature_count}'
 ```
 
-A snapshot no older than 24 hours returns `result: "cache"`. An older or missing snapshot runs the Python worker with its offline fixture and returns `result: "refresh"`; this replaces the local cache with the fixture artifact. Run this step only after presenting the committed `rybnik_35km` presentation. This legacy compatibility endpoint remains offline; live Overpass acquisition is used only by the separate AOI runtime-request path.
+A snapshot no older than 24 hours returns `result: "cache"`. An older or missing snapshot runs the Python worker with its offline fixture and returns `result: "refresh"`; this replaces the local prepared artifact with the fixture output. Run this step only in a disposable local development directory after presenting the delivered `rybnik_35km` snapshot. The public demo rejects this mutation with `runtime_disabled`; live Overpass acquisition is used only by the separately configured AOI runtime-request path.

@@ -14,7 +14,7 @@ export function PreviewHeader({ aoiId, featureCount }: { aoiId?: string; feature
           <circle cx="12" cy="10" r="2.4" />
         </svg>
         <div>
-          <h1>Map Data Quality Lab</h1>
+          <h1>Map Data Provider</h1>
           <p>Source-aware infrastructure provider</p>
         </div>
       </div>

@@ -1,8 +1,8 @@
-# Map Data Quality Lab Architecture
+# Map Data Provider Architecture
 
 ## Decision
 
-Map Data Quality Lab is developed as a consumer-neutral geospatial data provider.
+Map Data Provider is developed as a consumer-neutral geospatial data provider.
 
 The selected architecture is:
 
@@ -171,7 +171,7 @@ backend/data/cache/{aoi_id}/{domain}/
   readiness.json
 ```
 
-`layer.geojson` is the complete `provider_geojson/v1` provider layer. `metadata.json` records the cache-layout and GeoJSON contract versions, AOI, domain, source query, snapshot timestamp, feature count, normalized validation status, confidence and limitations. `readiness.json` records the bounded readiness decision, quality status, highest applicable issue severity, count and evaluation timestamp. The initial committed snapshot is `rybnik_35km/power`, built from the existing OSM-derived power-lines artifact; it is read and validated locally without invoking Overpass extraction. Existing processed artifacts remain available to the FastAPI prototype during this migration.
+`layer.geojson` is the complete `provider_geojson/v1` provider layer. `metadata.json` records the cache-layout and GeoJSON contract versions, AOI, domain, source query, snapshot timestamp, feature count, normalized validation status, confidence and limitations. `readiness.json` records the bounded readiness decision, quality status, highest applicable issue severity, count and evaluation timestamp. The initial committed snapshot is `rybnik_35km/power`, built from the existing OSM-derived power-lines artifact; it is read and validated locally without invoking Overpass extraction. Legacy prototype endpoints have been fully retired in favor of the unified Node API.
 
 ### Domain packs, map presentations and runtime
 

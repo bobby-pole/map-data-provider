@@ -101,7 +101,7 @@ Python geospatial worker
 
 This split is intentional. Node/Express/TypeScript owns REST APIs, cache orchestration, request validation and TypeScript contracts. Python remains the processing layer because the OSM/geospatial ecosystem around OSMnx, GeoPandas and Shapely is stronger for extraction, clipping and geometry validation.
 
-See [the architecture documentation](./docs/architecture.md) for decisions and the implementation plan.
+See [the architecture documentation](./docs/architecture.md) for the current provider design, contracts and API boundaries.
 
 ## Why this is not an OpenInfraMap clone
 
@@ -243,7 +243,7 @@ KIUT/GESUT is kept as an OGC WMS visual reference overlay. WMS imagery is not co
 
 ## Map presentation and offline use
 
-Full `provider_geojson/v1` artifacts remain the canonical cache, validation and export products. They are intentionally not the dev-preview map read path for the 156,721-feature Rybnik power snapshot or source-separated emergency artifacts. The worker derives only manifest-approved public analytical layers into MVT and packages them in the checked `provider_map_presentation/v1` PMTiles archive. Node returns compact presentation metadata and HTTP byte ranges; MapLibre reads the local archive without a remote vector-data request. Selecting a visible feature loads one validated, allow-listed source-detail record by its stable provider source ID; it never fetches a full GeoJSON layer into the inspector.
+Full `provider_geojson/v1` artifacts remain the canonical cache, validation and export products. They are intentionally not the dev-preview map read path for the current 52,976-feature `rybnik_35km` power presentation or source-separated emergency artifacts. The committed presentation contains 6,796 lines, 2,379 assets and 43,801 supports; these counts are snapshot-specific. The worker derives only manifest-approved public analytical layers into MVT and packages them in the checked `provider_map_presentation/v1` PMTiles archive. Node returns compact presentation metadata and HTTP byte ranges; MapLibre reads the local archive without a remote vector-data request. Selecting a visible feature loads one validated, allow-listed source-detail record by its stable provider source ID; it never fetches a full GeoJSON layer into the inspector.
 
 The presentation has separate power-line, power-asset and bounded power-support layers. Power-line colours use deterministic voltage buckets. The support layer carries OSM `tower`, `pole`, `portal` and `utility_pole` classes where present in the committed source snapshot; towers, portals and utility poles are generated from zoom 12, while ordinary poles are generated from zoom 14. These rules constrain tile generation rather than only hiding client-side features. The bounded support fixture is evidence for this preview behaviour, not a claim of complete support coverage across the AOI.
 

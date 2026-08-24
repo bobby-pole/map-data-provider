@@ -189,8 +189,9 @@ must stay within the viewport and retain a visible close control.
 5. Run the affected checks (`npm run lint`, `npm test`, and `npm run build` for
    frontend changes) and inspect a rendered state when the required API is
    available.
-6. Record visual QA in `design-qa.md`. A build or screenshot alone is not a
-   visual sign-off.
+6. Record visual QA in the local QA log. A build or screenshot alone is not a
+   visual sign-off; detailed QA notes are project-operating context, not public
+   product documentation.
 7. Update this file when the change alters a durable rule, token, layout
    pattern, or interaction ownership. Use `docs/local/DECISIONS.md` as well
    only when the decision changes the wider product or architecture baseline.

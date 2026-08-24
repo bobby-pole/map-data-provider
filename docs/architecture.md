@@ -95,7 +95,7 @@ Each feature exposes these required provider-owned fields in `properties`:
 }
 ```
 
-`osm_tags` is optional. It preserves useful source values such as `power`, `voltage`, `operator` or an original OSM `source` tag for inspection, but consumers must not require it. A representative offline fixture lives at `backend/data/fixtures/rybnik_35km/power/contract-sample.geojson`; it is a contract sample, not the complete cache layout. `MDQ-004` introduces the canonical cache artifacts and metadata/readiness files.
+`osm_tags` is optional. It preserves useful source values such as `power`, `voltage`, `operator` or an original OSM `source` tag for inspection, but consumers must not require it. A representative offline fixture lives at `backend/data/fixtures/rybnik_35km/power/contract-sample.geojson`; it is a contract sample, not the complete cache layout. The provider also publishes canonical cache artifacts together with metadata and readiness files.
 
 ### Layer catalog provenance metadata
 
@@ -173,35 +173,44 @@ backend/data/cache/{aoi_id}/{domain}/
 
 `layer.geojson` is the complete `provider_geojson/v1` provider layer. `metadata.json` records the cache-layout and GeoJSON contract versions, AOI, domain, source query, snapshot timestamp, feature count, normalized validation status, confidence and limitations. `readiness.json` records the bounded readiness decision, quality status, highest applicable issue severity, count and evaluation timestamp. The initial committed snapshot is `rybnik_35km/power`, built from the existing OSM-derived power-lines artifact; it is read and validated locally without invoking Overpass extraction. Existing processed artifacts remain available to the FastAPI prototype during this migration.
 
-`MDQ-019` adds an additive `domain-pack-v2/manifest.json` under the same AOI/domain root. `provider_domain_pack/v2` can retain multiple role-named processed or derived vector layers, native vector/raster artifacts, remote-service records, validation/readiness files and ordered source provenance. File artifacts are constrained to the pack root and validated for existence, SHA-256 integrity and GeoJSON feature counts. Public-export selection admits only artifacts whose source provenance is qualified, analytical and distributable under `source_registry/v2`; WMS/WMTS reference imagery and pending or rejected candidates remain in the pack as evidence but are excluded. `MDQ-032` completes the committed Rybnik power pack with public OSM `power.lines` and `power.assets` layers, private dated OSM source evidence and line representative points, plus a private KIUT electricity `remote_service` record. KIUT cannot enter a public analytical artifact; the existing v1 cache remains compatible while the manifest is the generic v2 read source.
+### Domain packs, map presentations and runtime
 
-`MDQ-047` adds `presentation/manifest.json`, `presentation/benchmark.json` and a version-3 PMTiles archive below the same domain-pack root. `provider_map_presentation/v1` records the parent domain-manifest digest, archive SHA-256/size/bounds/zoom range, compact layer descriptors, attribution, source provenance and the measured full-GeoJSON baseline. Generation checks every public input checksum and source-eligibility record before writing tiles; private evidence, manual/review material, WMS/raster references and non-exportable sources cannot enter the archive. The archive is a render derivative, not a replacement source or public GeoJSON export.
+The `provider_domain_pack/v2` manifest stores role-named processed and derived
+vector layers, native artifacts, remote-service records, validation/readiness
+files and ordered source provenance. Pack-relative paths, SHA-256 integrity and
+feature counts are validated before a layer is exposed. Public export admits
+only qualified, analytical and distributable vector provenance; WMS/WMTS
+references, pending candidates and rejected material remain evidence rather
+than public analytical data.
 
-`MDQ-048` adds a public `power.supports` OSM vector layer from a bounded committed source fixture. Its source tag allow-list preserves only map-inspection fields: power/class, identity and operator, voltage, frequency, circuit/conductor, location/design, and explicitly named equipment fields. The presentation keeps compact selection properties only; the source-detail route resolves one validated record by stable OSM source ID from the canonical public artifact. Lines receive deterministic low, medium, high, extra-high, multiple, missing or unparseable voltage states. Tiles for `tower`, `portal` and `utility_pole` start at zoom 12; ordinary `pole` tiles start at zoom 14. The fixture does not establish exhaustive AOI support coverage or electrical topology.
+The `provider_map_presentation/v1` manifest describes a checked PMTiles archive
+derived from public domain-pack layers. It records the parent-manifest digest,
+archive integrity, bounds, zoom range, compact layer descriptors, attribution
+and source provenance. The archive is a read-optimized render derivative, not a
+replacement for the source pack or the public GeoJSON export. The current
+`rybnik_35km` preview includes the required provider domains and keeps support,
+inspection-point and source-detail behavior bounded by their delivered
+contracts.
 
-`MDQ-033` adds the fixture-first `rybnik_35km/emergency` vertical slice. It publishes separate OSM `hospital`, `fire_service`, `police` and `ambulance_rescue` artifacts using only explicit source tags; OSM areas retain their original geometry and a derived inspection-point artifact. Supplementary PRG `K02` police and `K07` fire records are published only as source-labelled representative points because their source geometry is an official unit area rather than a verified facility footprint. PRG and OSM IDs, provenance, attribution and limitations remain distinct; no matching, deduplication or facility-location inference occurs. The generic Node feature-detail route accepts valid provider IDs, while circuit endpoints remain power/OSM-specific. The PMTiles read model includes all public processed, derived and representative-vector artifacts, and the generic MapLibre renderer supports point and polygon inspection. No qualified official hospital or ambulance/rescue registry is enabled; OSM evidence remains visible with that gap explicitly recorded.
+The provider currently supports nine required domain profiles and optional
+`telecom` and `district_heating` profiles. Each profile uses explicit source
+semantics; an absent qualified network remains a visible `needs_source` state.
+OSM-derived analytical vectors, PRG/BDOT10k context, manual evidence and KIUT
+reference overlays retain separate provenance and are never silently merged or
+vectorized from WMS imagery.
 
-`MDQ-034` adds the fixture-first `rybnik_35km/public` vertical slice. It publishes independent OSM `administration`, `education`, `post` and `community_social` artifacts only from explicit allow-listed amenity/office semantics. A building footprint, address or spatial proximity cannot create a facility. Original polygons remain unchanged and receive linked representative inspection points. BDOT10k is retained only as labelled topographic context; the lack of a qualified PRG facility class is a visible source gap. Candidate comparison evidence remains private and ambiguous rather than causing geometry fusion, source deletion or a winner selection. The existing bounded runtime OSM path now serves the same `public-osm/v1` profile for a selected AOI.
+AOI requests use `provider_aoi_request/v2` for a bounded point/radius or a
+source-labelled administrative selection. The runtime derives a deterministic
+request identity, coalesces equivalent local requests, reuses a fresh result for
+24 hours, and preserves the previous published state when preparation fails.
+Cache misses use the separately governed OSM/Overpass acquisition profiles,
+validate an atomic domain pack and derive the PMTiles presentation. Committed
+Rybnik artifacts remain deterministic demo fallbacks, while live acquisition is
+limited to the runtime-request path.
 
-`MDQ-035` adds the fixture-first `rybnik_35km/transport` vertical slice. It publishes independent OSM `roads`, `railways`, `stations` and `aviation` artifacts only from explicit allow-listed highway, railway and aeroway semantics. Provider-normalized classes do not depend on raw OSM or BDOT codes in client components. Non-point geometries receive linked representative inspection points. BDOT10k road and railway lines remain labelled topographic context; the lack of a qualified PRG transport network or facility class is an explicit source gap. Candidate comparison evidence remains private and ambiguous without silent conflation, geometry fusion, or source deletion. The existing bounded runtime OSM path now serves the same `transport-osm/v3` profile for a selected AOI.
-
-`MDQ-037` corrects the Water vertical slice so source semantics cannot cross domain boundaries. `water-osm/v2` acquires only explicit water tags; generic `man_made=pipeline` and `man_made=pumping_station` objects are excluded unless their properties state water semantics. Consequently gas, sewer and unlabelled infrastructure cannot be published as `water.facilities` or `water.pipelines`. The water source evidence records this rule, and `geo_pipeline/runtime/v10` invalidates older runtime results. The Power runtime profile is derived from its canonical query catalogue, keeping the API descriptor aligned with the live acquisition query.
-
-`MDQ-038` adds the fixture-first `rybnik_35km/gas` vertical slice and the matching bounded runtime profile `gas-osm/v2`. It publishes only `gas.facilities` and `gas.pipelines` with explicit gas semantics, plus derived representative inspection points for non-point geometry. Generic unlabelled pipelines and valves remain excluded; KIUT gas is a reference-only overlay, never analytical vector geometry. The AOI preparation result reports OSM candidates, accepted analytical source objects and derived inspection points, so sparse OSM coverage is visible rather than misrepresented as a rendering failure.
-
-`MDQ-039` adds the fixture-first `rybnik_35km/sewer` vertical slice and bounded `sewer-osm/v2` runtime profile. It publishes only facilities and pipelines with explicit sewer or wastewater semantics, plus derived representative inspection points. Generic, water, gas, stormwater and drainage infrastructure is excluded rather than inferred as sewer; KIUT sewer remains a reference-only overlay. `geo_pipeline/runtime/v12` invalidates results created before the stricter semantics, and the AOI result distinguishes queried candidates from accepted analytical objects.
-
-`MDQ-041` adds the optional fixture-first `rybnik_35km/telecom` vertical slice and bounded `telecom-osm/v1` runtime profile. It separates explicitly tagged communication towers/masts (including GSM infrastructure), telecom facilities and communication cable routes. Generic structures, poles, buildings and utilities do not become telecom objects. `telecom.lines` is intentionally allowed to contain zero features with `readiness=needs_source`, making the lack of a qualified analytical local-network feed visible. KIUT telecom remains a private `remote_service` reference record and a rendered overlay only; it is never vectorized, tiled as analytical data or publicly exported. `geo_pipeline/runtime/v14` invalidates previous runtime identities.
-
-`MDQ-042` adds the optional fixture-first `rybnik_35km/district_heating` vertical slice and bounded `district-heating-osm/v1` runtime profile. It separates explicitly tagged heating plants, heat-exchanger facilities and heat-network lines. A plant or generator requires explicit heat-output/source evidence; generic industrial buildings, chimneys, power equipment and pipelines do not become district-heating features. `district_heating.lines` is intentionally allowed to contain zero features with `readiness=needs_source`, making the absence of a qualified analytical network feed visible. KIUT district-heating remains a private `remote_service` reference record and a rendered overlay only; it is never vectorized, tiled as analytical data or publicly exported. `geo_pipeline/runtime/v15` invalidates previous runtime identities.
-
-`MDQ-053` closes the live runtime vertical slice for transport and introduces on-demand line inspection. `geo_pipeline/runtime/v5` and `transport-osm/v3` ensure a cache entry created for the older major-road-only profile or an MVT payload without `road_class` cannot be reused. Road features are categorized into `major`, `secondary`, `local` and `service` classes while preserving raw `highway` tags. In the MapLibre preview, transport line networks (`roads`, `railways`) and representative points are hidden by default; once roads are intentionally enabled, each class has its own filter and `service` remains off by default. Zoom level guidance (zoom < 11) and a persistent numeric zoom indicator make the rendering threshold explicit. Selecting a road or railway feature highlights its exact original LineString geometry, displays source attributes, and marks verified start/end coordinates without claiming network routing or connectivity.
-
-`MDQ-020` defines `provider_aoi/v1` before generic adapter or API work. A bounded circle request records its EPSG:4326 boundary, source CRS, radius/area limits and request provenance; an approved administrative reference records its PRG identifier and offline fixture/snapshot provenance without claiming a live WFS read. The provider derives canonical AOI identity from normalized geometry, contract version and identity-relevant provenance. Cache paths accept only validated provider identifiers; `rybnik_35km` remains a compatibility alias and v1 cache key for the committed power snapshot while retaining its derived geometry identity.
-
-`MDQ-051` adds `provider_aoi_request/v2` above that stable v1 compatibility contract. The MapLibre settings panel accepts either a point/radius contained within Poland or a deterministic union of source-labelled units from the bounded PRG administrative catalogue. A request identity includes normalized true AOI geometry, PRG catalogue version/snapshot and unit IDs where relevant, ordered category/query versions and the pipeline version. The local runtime coalesces equivalent in-progress Node requests and caches a complete validated result for 24 hours below ignored `backend/cache/`; a failed run never replaces prior state. On a cache miss, qualified OSM required-domain profiles plus optional `telecom` and `district_heating` acquire only the resolved true AOI, normalize and clip their vectors, validate an atomic local domain pack and derive PMTiles for the preview. Existing `rybnik_35km` artifacts remain deterministic demo fallbacks. BDOT10k is labelled topographic context, PRG is official administrative context, KIUT/orthophoto stay reference-only and NMT/NMPT remains raster-derived context. None enters an analytical-vector artifact through the runtime.
-
-`MDQ-022` introduces a Python adapter catalog and versioned OSM query catalog. The worker resolves an approved AOI/domain adapter before creating paths, returns its source registry ID and query version, and stages the v1 compatibility cache with its v2 domain pack before atomic replacement. Registered fixture adapters are `rybnik_35km/power`, `rybnik_35km/emergency`, `rybnik_35km/public` and `rybnik_35km/transport`; each live acquisition path remains separately governed and the public fixture adapter directs selected-AOI acquisition through the bounded runtime contract.
+The Python worker resolves the approved AOI/domain adapter and versioned query
+catalog before staging the compatibility cache and domain pack. Publication is
+atomic, and the Node API exposes only validated artifacts and manifests.
 
 ## Source Registry and Attribution
 
@@ -237,11 +246,16 @@ The fixture-first `nmt_nmpt_raster_adapter/v1` accepts a bounded NMT/NMPT ASCII 
 
 `cross_source_comparison/v1` records deterministic comparison evidence without conflating features. The initial power rule prefers a shared stable source ID, otherwise uses a bounded geometry distance only when both eligible analytical vectors expose the same comparable asset type; an absent candidate is explicitly `source_only`. It emits `matched`, `conflicting`, `source_only`, `ambiguous` or `not_comparable` with rule/version evidence and preserved source/feature identifiers. Reference WMS, manual review and rejected sources are explicitly not comparable; disagreement is not a claim that either source is wrong. The validation boundary turns only conflict, source-only and ambiguity outcomes into structured quality issues; readiness consumes those enums directly and reduces the result to `usable_with_limitations`, while a matched or not-comparable result alone does not invent a problem.
 
-## Planned API
+## API and runtime boundary
 
 The Node/Express/TypeScript provider now serves typed, read-only local artifacts through `GET /api/health`, `GET /api/aoi/:aoiId/layers`, `GET /api/aoi/:aoiId/layers/:domain`, `GET /api/aoi/:aoiId/readiness` and `GET /api/aoi/:aoiId/sources`. These routes validate identifiers and file contracts, return 422 for malformed input and 404 for a missing cache, and do not invoke Python, Overpass or WMS.
 
-`POST /api/aoi/requests` currently supports only `rybnik_35km/power`, whose registered boundary reference uses EPSG:4326. The provider treats a cache as fresh for 24 hours after `snapshot_at`; a missing or stale cache invokes the Python worker fixture path and returns whether the artifact came from cache or refresh.
+`POST /api/aoi/requests` remains the legacy compatibility path for
+`rybnik_35km/power`, whose registered boundary reference uses EPSG:4326. The
+provider treats a cache as fresh for 24 hours after `snapshot_at`; a missing or
+stale cache invokes the Python worker fixture path and returns whether the
+artifact came from cache or refresh. Live OSM/Overpass acquisition belongs to
+the separate `POST /api/aoi/runtime-requests` path.
 
 `GET /api/aoi/catalog` returns the bounded offline PRG administrative selection catalogue. `POST /api/aoi/runtime-requests` validates `provider_aoi_request/v2`, then calls the local runtime worker only after validation. A cache miss for any required profile or optional `telecom` makes a bounded live OSM/Overpass request, then publishes a validated local domain pack and PMTiles presentation; it makes no WMS or raster request. Telecom accepts only explicit OSM communication semantics and preserves an empty line layer as `needs_source`. Other profiles remain typed source gaps until their separately governed adapters are complete.
 
@@ -280,63 +294,18 @@ Consumer: GIS consumer
 
 The current release implements the provider side of all 9 required domain slices (`power`, `emergency`, `public`, `transport`, `bridges`, `water`, `gas`, `sewer`, `industrial`): cache-first requests, source/readiness/issue contracts, durable review state, bounded multi-artifact domain packs, manifest-driven v2 reads/exports, and `provider_multi_domain_export/v2` consolidation. The MapLibre dev-preview derives its layer toggles, counts, domain-specific styling, attribution and limitations from compact presentation metadata, resolves one selected feature into its validated source detail, and reads public MVT from local PMTiles ranges; KIUT remains a separate external reference-only overlay. The preview is a non-operational provider inspection tool. Consumer-side loading remains a separate repository task.
 
-## Repository Plan
+## Delivery boundary and future options
 
-### Phase 1 - Stabilize Existing Provider Prototype
+The implemented delivery is a cache-first, source-aware provider: Python owns
+geospatial acquisition and validation, Node owns typed read/API orchestration,
+and the frontend reads the checked PMTiles presentation while retaining source
+and readiness context. The repository does not claim consumer-side Steel
+Sentinel integration.
 
-- Keep the current FastAPI implementation as a working prototype.
-- Fix the Python smoke check dependency gap.
-- Normalize validation statuses such as `pass` so readiness metrics are meaningful.
-- Make source/confidence fields explicit in the existing catalog and data-quality outputs.
-
-### Phase 2 - Define Contracts, Quality Rules and Cache
-
-- Define provider-owned GeoJSON, metadata, readiness and issue schemas before implementing their public API.
-- Define source-aware quality rules with stable identifiers, severity, evidence and applicability.
-- Introduce a cache layout such as:
-
-```text
-backend/data/cache/{aoi_id}/{domain}/layer.geojson
-backend/data/cache/{aoi_id}/{domain}/metadata.json
-backend/data/cache/{aoi_id}/{domain}/readiness.json
-```
-
-- Record source query, attribution/license, snapshot timestamp, AOI, domain, feature count, pipeline/query version, validation status and known limitations.
-- Prefer cached reads for consumer use.
-
-### Phase 3 - Add Node/Express Provider API
-
-- Add `backend-node/` with Express, TypeScript, Zod, test tooling and API routes.
-- Implement read-only endpoints backed by the current cached GeoJSON/report artifacts.
-- Add the source registry before exposing `/sources`.
-- Add API tests for health, catalog/layers, readiness and export endpoints.
-
-### Phase 4 - Connect Worker and Complete Provider Workflow
-
-- Keep Python as a CLI/worker invoked by Node only when extraction or refresh is needed.
-- Validate registered AOIs/domains and use explicit snapshot-freshness rules.
-- Complete the cache-first request path and provider-compatible export.
-- Verify the entire fixture-to-export pipeline without live Overpass.
-
-### Phase 5 - Dev Preview and Issue Review
-
-- Align the map preview with provider contracts and source metadata.
-- Persist human review decisions separately from generated issue evidence.
-- Support the issue lifecycle `open -> acknowledged -> resolved | accepted | ignored`.
-- Keep the preview focused on data inspection rather than consumer operational behavior.
-
-### Phase 6 - Provider Release
-
-- Run the Python, Node and frontend verification baseline locally and in CI.
-- Publish provider setup, verification and integration documentation based only on implemented behavior.
-- Treat consumer integration as external follow-up work after this release.
-
-### Phase 7 - Evidence-Driven Scale Options
-
-- Add a job queue when direct CLI invocation becomes too limiting.
-- Add SQLite/PostGIS for metadata and larger AOI management if file cache becomes awkward.
-- Extend the established PMTiles/MVT read model only when later measured domain or AOI needs require it; consider PostGIS only for dynamic AOIs or server-side spatial-query evidence.
-- Keep WMS reference overlays separate from analytical vector data.
+Future infrastructure choices remain evidence-driven. A job queue, SQLite or
+PostGIS, and additional server-side spatial-query capabilities should be added
+only when measured AOI volume, concurrency, cache management or product needs
+exceed the current file-cache and local-runtime boundary.
 
 ## Non-Goals
 

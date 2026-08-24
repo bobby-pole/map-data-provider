@@ -14,20 +14,16 @@ import {
 import { ProviderDataError } from "./providerDataService.js";
 
 const projectRoot = path.resolve(fileURLToPath(new URL("../../../", import.meta.url)));
-const defaultIssueSnapshotPath = path.join(
-  projectRoot,
-  "backend",
-  "data",
-  "issues",
-  "rybnik_35km.json",
-);
-const defaultReviewStorePath = path.join(
-  projectRoot,
-  "backend",
-  "data",
-  "reviews",
-  "issue-reviews.json",
-);
+const defaultIssueSnapshotPath =
+  process.env.MDQ_ISSUES_PATH ??
+  path.join(
+    process.env.MDQ_DATA_DIR ?? path.join(projectRoot, "backend", "data"),
+    "issues",
+    "rybnik_35km.json",
+  );
+const defaultReviewStorePath = process.env.MDQ_REVIEW_ROOT
+  ? path.join(process.env.MDQ_REVIEW_ROOT, "issue-reviews.json")
+  : path.join(projectRoot, "backend", "data", "reviews", "issue-reviews.json");
 let reviewUpdateQueue: Promise<void> = Promise.resolve();
 
 export type IssueStorePaths = {

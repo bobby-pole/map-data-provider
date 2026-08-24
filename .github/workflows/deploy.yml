@@ -1,0 +1,147 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  verify:
+    name: Verify Provider Gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "0.6.2"
+
+      - name: Install Python dependencies
+        run: cd backend && uv sync --locked --dev
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run Full Provider Verification
+        run: pnpm run verify:provider
+
+  build-and-push:
+    name: Build & Push to GHCR
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: production
+          push: true
+          tags: |
+            ghcr.io/bobby-pole/map-data-quality-lab:${{ github.sha }}
+            ghcr.io/bobby-pole/map-data-quality-lab:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    name: Deploy to VPS
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Copy config files to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: "docker-compose.prod.yml,Caddyfile"
+          target: "/home/deploy/map-data-quality-lab/"
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.1
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_SHA: ${{ github.sha }}
+          DEMO_BUNDLE_ID: ${{ secrets.VPS_DEMO_BUNDLE_ID }}
+          CADDY_CONFIG_PATH: ${{ secrets.VPS_CADDY_CONFIG_PATH }}
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          envs: GHCR_TOKEN,GITHUB_SHA,DEMO_BUNDLE_ID,CADDY_CONFIG_PATH
+          script: |
+            set -e
+
+            # Login to GHCR to pull image
+            echo "$GHCR_TOKEN" | docker login ghcr.io -u bobby-pole --password-stdin
+
+            cd /home/deploy/map-data-quality-lab
+
+            # Prepare data directories
+            test -n "$DEMO_BUNDLE_ID"
+            test -f data/bundle/rybnik_35km/demo_bundle_manifest.json
+            mkdir -p data/prepared data/reviews data/runtime data/bundle/rybnik_35km
+            chmod -R 750 data
+            sudo chown -R 1001:1001 data 2>/dev/null || true
+
+            # Set immutable image tag
+            echo "MDQ_IMAGE_TAG=${GITHUB_SHA}" > .env
+            echo "MDQ_DEMO_BUNDLE_ID=${DEMO_BUNDLE_ID}" >> .env
+
+            # Pull and restart container
+            docker compose -f docker-compose.prod.yml pull
+            docker compose -f docker-compose.prod.yml up -d
+
+            if [ -n "$CADDY_CONFIG_PATH" ]; then
+              sudo install -D -m 0644 Caddyfile "$CADDY_CONFIG_PATH"
+              sudo caddy validate --config /etc/caddy/Caddyfile
+              sudo systemctl reload caddy
+            fi
+
+            # Health check with retry (up to 60s)
+            for i in $(seq 1 12); do
+              if curl --silent --fail http://127.0.0.1:3001/api/health; then
+                echo "Health check passed"
+                break
+              fi
+              if [ "$i" -eq 12 ]; then
+                echo "Health check failed after 60s"
+                docker logs map-data-quality-lab-prod --tail 30
+                exit 1
+              fi
+              echo "Waiting for app... ($i/12)"
+              sleep 5
+            done

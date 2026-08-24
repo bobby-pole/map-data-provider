@@ -39,7 +39,7 @@ Expected shape:
 }
 ```
 
-The public API is Node/Express/TypeScript. Python remains the geospatial worker and FastAPI prototype.
+The public API is Node/Express/TypeScript. Python remains the geospatial processing worker.
 
 ## 2. Request the cached Rybnik power layer — 30 seconds
 

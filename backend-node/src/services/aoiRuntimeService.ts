@@ -1,5 +1,6 @@
 import { execFile, spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
+import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 
 import {
@@ -17,6 +18,8 @@ import { ProviderDataError } from "./providerDataService.js";
 
 const execFileAsync = promisify(execFile);
 const RUNTIME_WORKER_TIMEOUT_MS = 8 * 60 * 1000;
+const backendCwd =
+  process.env.MDQ_BACKEND_DIR ?? fileURLToPath(new URL("../../../backend/", import.meta.url));
 export function createRuntimeRequestCoordinator(
   runner: (request: ProviderRuntimeRequest) => Promise<ProviderRuntimeResponse> = runRuntimeWorker,
 ) {
@@ -163,7 +166,7 @@ const defaultCatalogFetcher: CatalogFetcher = () =>
       "-c",
       "from geo_pipeline.aoi_runtime import administrative_catalog; import json; print(json.dumps(administrative_catalog()))",
     ],
-    { cwd: new URL("../../../backend/", import.meta.url) },
+    { cwd: backendCwd },
   );
 
 let cachedCatalogPromise: Promise<unknown> | null = null;
@@ -227,7 +230,7 @@ async function runAoiRuntimePython<T>(
       "uv",
       ["run", "--offline", "python", "-c", code, JSON.stringify(argument)],
       {
-        cwd: new URL("../../../backend/", import.meta.url),
+        cwd: backendCwd,
         maxBuffer: 32 * 1024 * 1024,
         timeout: 120_000,
       },
@@ -283,7 +286,7 @@ async function runRuntimeWorker(
         "live",
         "--progress-jsonl",
       ],
-      { cwd: new URL("../../../backend/", import.meta.url), stdio: ["ignore", "pipe", "pipe"] },
+      { cwd: backendCwd, stdio: ["ignore", "pipe", "pipe"] },
     );
 
     const timeout = setTimeout(() => {

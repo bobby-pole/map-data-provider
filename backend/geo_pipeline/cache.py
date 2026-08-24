@@ -49,10 +49,12 @@ from geo_pipeline.water import build_osm_water_cache_layer, water_osm_metadata
 
 CACHE_LAYOUT_VERSION = "provider_cache/v1"
 POWER_LINES_SOURCE = (
-    Path(__file__).resolve().parents[1] / "data/processed/rybnik_35km_power_lines_clipped.geojson"
+    Path(__file__).resolve().parents[1]
+    / "data/fixtures/rybnik_35km/power/rybnik_35km_power_lines_clipped.geojson"
 )
 POWER_VALIDATION_REPORT = (
-    Path(__file__).resolve().parents[1] / "data/reports/rybnik_35km_power_validation_clipped.json"
+    Path(__file__).resolve().parents[1]
+    / "data/fixtures/rybnik_35km/power/rybnik_35km_power_validation_clipped.json"
 )
 POWER_LIMITATIONS = [
     "OSM completeness varies by area and asset type.",

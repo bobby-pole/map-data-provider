@@ -1,3 +1,4 @@
+import os
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -22,17 +23,19 @@ RYBNIK_AOI = AoiConfig(
 )
 
 BACKEND_DIR = Path(__file__).resolve().parents[1]
-DATA_DIR = BACKEND_DIR / "data"
+DATA_DIR = Path(os.getenv("MDQ_DATA_DIR", str(BACKEND_DIR / "data")))
 RAW_DIR = DATA_DIR / "raw"
-MANUAL_DIR = DATA_DIR / "manual"
-PROCESSED_DIR = DATA_DIR / "processed"
+MANUAL_DIR = Path(os.getenv("MDQ_MANUAL_DIR", str(DATA_DIR / "manual")))
+PROCESSED_DIR = Path(os.getenv("MDQ_PROCESSED_DIR", str(DATA_DIR / "processed")))
 GEOJSON_DIR = DATA_DIR / "geojson"
 PREVIEWS_DIR = DATA_DIR / "previews"
-REPORTS_DIR = DATA_DIR / "reports"
-CACHE_DIR = DATA_DIR / "cache"
-# Runtime request outcomes are local, mutable cache state.  They deliberately
+REPORTS_DIR = Path(os.getenv("MDQ_REPORTS_DIR", str(DATA_DIR / "reports")))
+CACHE_DIR = Path(
+    os.getenv("MDQ_PREPARED_ROOT", os.getenv("MDQ_CACHE_ROOT", str(DATA_DIR / "cache")))
+)
+# Runtime request outcomes are local, mutable cache state. They deliberately
 # live outside committed fixture evidence under data/cache.
-RUNTIME_CACHE_DIR = BACKEND_DIR / "cache"
+RUNTIME_CACHE_DIR = Path(os.getenv("MDQ_RUNTIME_ROOT", str(BACKEND_DIR / "cache")))
 
 
 def ensure_data_dirs() -> None:

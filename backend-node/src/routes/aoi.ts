@@ -64,8 +64,22 @@ import {
 export function createAoiRouter(options?: {
   issueStorePaths?: IssueStorePaths;
   providerDataPaths?: ProviderDataPaths;
+  readOnlyMode?: boolean;
 }) {
   const aoiRouter = Router();
+  const isReadOnly =
+    options?.readOnlyMode ??
+    (process.env.MDQ_DEMO_MODE === "readonly" ||
+      process.env.MDQ_RUNTIME_ACQUISITION_ENABLED === "false");
+
+  const assertRuntimeEnabled = () => {
+    if (isReadOnly) {
+      throw new ProviderDataError(
+        "runtime_disabled",
+        "Live acquisition and cache refresh are disabled in public demo mode.",
+      );
+    }
+  };
 
   aoiRouter.get("/catalog", async (_request, response) => {
     try {
@@ -123,6 +137,7 @@ export function createAoiRouter(options?: {
 
   aoiRouter.post("/runtime-requests", async (request, response) => {
     try {
+      assertRuntimeEnabled();
       response
         .status(200)
         .json(
@@ -144,6 +159,7 @@ export function createAoiRouter(options?: {
 
   aoiRouter.post("/runtime-jobs", (request, response) => {
     try {
+      assertRuntimeEnabled();
       response
         .status(202)
         .json(
@@ -442,6 +458,7 @@ export function createAoiRouter(options?: {
 
   aoiRouter.post("/requests", async (request, response) => {
     try {
+      assertRuntimeEnabled();
       const body = aoiRequestSchema.parse(request.body);
       response
         .status(200)
@@ -587,7 +604,9 @@ function respondWithProviderError(response: Response, error: unknown): void {
             ? 404
             : providerError.kind === "conflict"
               ? 409
-              : 502,
+              : providerError.kind === "runtime_disabled"
+                ? 403
+                : 502,
       )
       .json(
         providerErrorSchema.parse({

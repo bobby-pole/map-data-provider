@@ -55,7 +55,7 @@
         "reason": "Local demo review input is not an authoritative analytical source."
       },
       "not_authoritative": true,
-      "source_url": "backend/data/manual/rybnik_35km_power_seed_nodes.geojson",
+      "source_url": "backend/data/fixtures/rybnik_35km/power/rybnik_35km_power_seed_nodes.geojson",
       "attribution": "Map Data Quality Lab manual seed input",
       "license": "Project-maintained demo input",
       "eligible_for_analysis": false

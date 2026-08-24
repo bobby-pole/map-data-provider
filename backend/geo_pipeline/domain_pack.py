@@ -119,7 +119,7 @@ FILE_KINDS = {
 }
 POWER_ASSETS_SOURCE = (
     Path(__file__).resolve().parents[1]
-    / "data/processed/rybnik_35km_power_node_points_display_clipped.geojson"
+    / "data/fixtures/rybnik_35km/power/rybnik_35km_power_node_points_display_clipped.geojson"
 )
 POWER_SUPPORTS_SOURCE = (
     Path(__file__).resolve().parents[1]

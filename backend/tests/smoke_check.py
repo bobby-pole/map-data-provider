@@ -1,64 +1,59 @@
+from __future__ import annotations
+
+import json
 import sys
 from pathlib import Path
 
 BACKEND_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BACKEND_DIR))
 
-from fastapi.testclient import TestClient
+from geo_pipeline.quality_rules import triggered_issues
+from geo_pipeline.readiness import derive_readiness, normalize_validation_status
+from geo_pipeline.source_registry import load_source_registry
 
-from app.main import app
-
-client = TestClient(app)
-
-for path in [
-    "/api/health",
-    "/api/layers/catalog",
-    "/api/data-quality/issues",
-    "/api/data-quality/metrics",
-]:
-    response = client.get(path)
-    assert response.status_code == 200, f"{path}: {response.status_code} {response.text}"
-
-catalog = client.get("/api/layers/catalog").json()
-issues = client.get("/api/data-quality/issues").json()
-metrics = client.get("/api/data-quality/metrics").json()
-
-assert catalog, "Layer catalog should not be empty"
-assert issues, "Data quality issues should not be empty"
-assert metrics["total_issues"] == len(issues), "Metrics should match issue count"
-assert all(
-    layer["quality_status"] in {"passed", "warning", "failed", "unknown"} for layer in catalog
+# 1. Verify source registry loads
+registry = load_source_registry()
+sources = (
+    registry.get("sources") if isinstance(registry, dict) else getattr(registry, "sources", [])
 )
-assert all(
-    layer["readiness"] in {"ready", "usable_with_limitations", "needs_source", "not_usable"}
-    for layer in catalog
+assert sources, "Source registry should have registered sources"
+
+# 2. Verify readiness and normalization
+assert normalize_validation_status("pass") == "passed"
+assert normalize_validation_status("invalid") == "failed"
+assert (
+    derive_readiness(quality_status="passed", feature_count=10, source_type="analytical_vector")
+    == "ready"
 )
-assert all(
-    {"source_type", "confidence", "limitations", "not_authoritative"} <= set(layer)
-    for layer in catalog
-)
-assert {layer["source_type"] for layer in catalog} == {
-    "analytical_vector",
-    "manual_seed",
-    "reference_overlay",
+
+# 3. Verify quality rules evaluation
+sample_layer = {
+    "id": "power.lines",
+    "domain": "power",
+    "source_type": "analytical_vector",
+    "quality_status": "passed",
+    "feature_count": 100,
+    "confidence": "medium",
+    "limitations": ["OSM completeness varies."],
+    "not_authoritative": False,
+    "eligible_for_analysis": True,
 }
-assert all(
-    {
-        "rule_id",
-        "rule_version",
-        "severity",
-        "source_type",
-        "domain",
-        "layer_id",
-        "affected_object",
-        "evidence",
-        "recommendation",
-    }
-    <= set(issue)
-    for issue in issues
-)
-assert metrics["layers_by_quality_status"], "Metrics should summarize normalized quality statuses"
-assert metrics["layers_by_readiness"], "Metrics should summarize readiness values"
+issues = triggered_issues(sample_layer)
+assert isinstance(issues, list)
 
-print("Smoke check passed")
-print(f"layers={len(catalog)} issues={len(issues)}")
+# 4. Verify baseline issue snapshot file
+snapshot_file = BACKEND_DIR / "data" / "issues" / "rybnik_35km.json"
+assert snapshot_file.exists(), f"Issue snapshot {snapshot_file} must exist"
+snapshot_data = json.loads(snapshot_file.read_text(encoding="utf-8"))
+assert snapshot_data["issue_snapshot_version"] == "provider_issues/v1"
+assert len(snapshot_data["issues"]) > 0
+
+# 5. Verify source availability report
+avail_file = BACKEND_DIR / "data" / "source-availability" / "rybnik_35km.json"
+if avail_file.exists():
+    avail_data = json.loads(avail_file.read_text(encoding="utf-8"))
+    assert avail_data["report_version"] == "provider_source_availability/v1"
+    assert len(avail_data["sources"]) > 0
+
+print("Geospatial pipeline smoke check passed successfully.")
+print(f"sources={len(sources)} snapshot_issues={len(snapshot_data['issues'])}")

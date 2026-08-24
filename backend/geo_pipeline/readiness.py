@@ -4,6 +4,25 @@ from __future__ import annotations
 
 QUALITY_STATUSES = frozenset({"passed", "warning", "failed", "unknown"})
 SOURCE_TYPES = frozenset({"analytical_vector", "manual_seed", "reference_overlay"})
+PASSING_VALIDATION_STATUSES = frozenset({"pass", "ok", "success", "valid"})
+WARNING_VALIDATION_STATUSES = frozenset({"warn", "warning"})
+FAILING_VALIDATION_STATUSES = frozenset({"fail", "failed", "error", "invalid"})
+CONFIDENCE_LEVELS = frozenset({"high", "medium", "low", "not_applicable"})
+
+
+def normalize_validation_status(value: object | None) -> str:
+    """Map report-specific validation spellings to provider-facing quality states."""
+    if value is None:
+        return "unknown"
+
+    status = str(value).strip().casefold().replace("-", "_").replace(" ", "_")
+    if status in PASSING_VALIDATION_STATUSES:
+        return "passed"
+    if status in WARNING_VALIDATION_STATUSES:
+        return "warning"
+    if status in FAILING_VALIDATION_STATUSES:
+        return "failed"
+    return "unknown"
 
 
 def derive_readiness(

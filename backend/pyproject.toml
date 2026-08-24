@@ -1,11 +1,9 @@
 [project]
 name = "map-data-quality-lab-backend"
 version = "0.1.0"
-description = "FastAPI backend for a geospatial data quality tooling portfolio project."
+description = "Geospatial data processing worker for Map Data Quality Lab."
 requires-python = ">=3.14,<3.15"
 dependencies = [
-    "fastapi==0.139.2",
-    "uvicorn[standard]==0.51.0",
     "geopandas>=1.0.0",
     "osmnx>=2.0.0",
     "matplotlib>=3.8.0",
@@ -19,7 +17,6 @@ package = false
 
 [dependency-groups]
 dev = [
-    "httpx2==2.7.0",
     "pytest>=8.3,<9",
     "pytest-xdist>=3.8.0",
     "ruff>=0.16.4",

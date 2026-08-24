@@ -319,8 +319,7 @@ DOMAIN_QUERIES = {
     "bridges": {
         "ql": f"""
           nwr["bridge"~"^(yes|viaduct|aqueduct|boardwalk)$"](around:{RADIUS_M}, {CENTER_LAT}, {CENTER_LON});
-          nwr["man_made"="bridge"](around:{RADIUS_M}, {CENTER_LAT}, {CENTER_LON});
-          nwr["railway"~"^(level_crossing|crossing)$"](around:{RADIUS_M}, {CENTER_LAT}, {CENTER_LON});
+          nwr["highway"="viaduct"](around:{RADIUS_M}, {CENTER_LAT}, {CENTER_LON});
         """,
         "classifier": bridges_category,
         "adapter": BRIDGES_ADAPTER,

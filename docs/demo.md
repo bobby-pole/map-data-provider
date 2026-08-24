@@ -70,7 +70,7 @@ curl -sS http://127.0.0.1:3001/api/aoi/rybnik_35km/presentations/power \
 
 The response is compact metadata, not the full GeoJSON collections. The local MapLibre preview uses its `archive_url` with HTTP byte ranges to read only required MVT tiles from PMTiles. The full domain-pack and GeoJSON endpoints remain the data/export path.
 
-The current committed snapshot contains 156,721 public power features across the three GeoJSON layers: 16,505 lines, 7,087 assets and 133,129 supports. `power.supports` is a bounded OSM evidence fixture rather than a complete AOI support inventory. Its PMTiles archive is a derived, checked presentation artifact; treat counts and archive size as snapshot-specific.
+The current committed `rybnik_35km` presentation contains 52,976 public power features across its three layers: 6,796 lines, 2,379 assets and 43,801 supports. `power.supports` is a bounded OSM evidence fixture rather than a complete AOI support inventory. Its PMTiles archive is a derived, checked presentation artifact; treat counts and archive size as snapshot-specific.
 
 ## 4. Show why KIUT/GESUT remains reference-only — 45 seconds
 
@@ -160,4 +160,4 @@ curl -sS -X POST http://127.0.0.1:3001/api/aoi/requests \
   | jq '{aoi: .aoi.id, domain, result, cache_status, feature_count: .metadata.feature_count}'
 ```
 
-A snapshot no older than 24 hours returns `result: "cache"`. An older or missing snapshot runs the Python worker with its offline fixture and returns `result: "refresh"`; this replaces the local cache with the smaller fixture artifact. Run this step only after presenting the committed 16,505-feature snapshot. Neither path calls live Overpass in the current workflow.
+A snapshot no older than 24 hours returns `result: "cache"`. An older or missing snapshot runs the Python worker with its offline fixture and returns `result: "refresh"`; this replaces the local cache with the fixture artifact. Run this step only after presenting the committed `rybnik_35km` presentation. This legacy compatibility endpoint remains offline; live Overpass acquisition is used only by the separate AOI runtime-request path.

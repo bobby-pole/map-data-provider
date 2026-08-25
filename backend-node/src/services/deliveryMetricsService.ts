@@ -79,7 +79,8 @@ export async function getDeliveryMetrics(paths?: DeliveryMetricsPaths) {
       fixture_preparation: {
         duration_ms: report.parsed.fixture_worker.fixture_preparation.duration_ms,
         domains: report.parsed.fixture_worker.fixture_preparation.domains,
-        processed_feature_count: report.parsed.fixture_worker.fixture_preparation.processed_feature_count,
+        processed_feature_count:
+          report.parsed.fixture_worker.fixture_preparation.processed_feature_count,
       },
       worker: report.parsed.fixture_worker.worker,
       runtime_cache: {

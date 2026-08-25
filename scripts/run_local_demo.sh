@@ -16,5 +16,8 @@ node "${PROJECT_ROOT}/scripts/verify_demo_bundle.mjs" "${LOCAL_BUNDLE_ROOT}/rybn
 export MDQ_PREPARED_ROOT="${LOCAL_BUNDLE_ROOT}"
 export MDQ_DEMO_MODE=readonly
 export MDQ_RUNTIME_ACQUISITION_ENABLED=false
+# The local benchmark makes 600 ordinary API requests. Keep its development-only
+# server budget above that value; production retains the default 240/min limit.
+export MDQ_RATE_LIMIT_MAX_REQUESTS="${MDQ_RATE_LIMIT_MAX_REQUESTS:-1200}"
 
 exec pnpm --dir "${PROJECT_ROOT}/backend-node" run dev

@@ -24,6 +24,7 @@ import {
   getMapCircuitsForFeature,
   getMapFeatureDetail,
   getMapPresentation,
+  getMapPresentationArchiveInfo,
   getMapPresentationArchiveRange,
   getMapPresentations,
   getSourceAvailability,
@@ -288,11 +289,27 @@ export function createAoiRouter(options?: {
 
   aoiRouter.get("/:aoiId/presentations/:domain/archive", async (request, response) => {
     try {
+      const archiveInfo = await getMapPresentationArchiveInfo(
+        request.params.aoiId,
+        request.params.domain,
+        options?.providerDataPaths,
+      );
+      if (matchesIfNoneMatch(request.header("if-none-match"), archiveInfo.etag)) {
+        response
+          .status(304)
+          .set({
+            etag: archiveInfo.etag,
+            "cache-control": "public, max-age=0, must-revalidate",
+          })
+          .end();
+        return;
+      }
       const archive = await getMapPresentationArchiveRange(
         request.params.aoiId,
         request.params.domain,
         request.header("range"),
         options?.providerDataPaths,
+        archiveInfo,
       );
       response
         .status(206)
@@ -581,6 +598,16 @@ export function createAoiRouter(options?: {
   });
 
   return aoiRouter;
+}
+
+function matchesIfNoneMatch(headerValue: string | undefined, etag: string): boolean {
+  if (!headerValue) {
+    return false;
+  }
+  return headerValue
+    .split(",")
+    .map((value) => value.trim())
+    .some((value) => value === "*" || value === etag);
 }
 
 function respondWithProviderError(response: Response, error: unknown): void {

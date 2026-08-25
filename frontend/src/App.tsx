@@ -49,6 +49,9 @@ const ActivityWindow = lazy(() =>
 const LegendPanel = lazy(() =>
   import("./components/LegendPanel").then((m) => ({ default: m.LegendPanel })),
 );
+const DeliveryMetricsPanel = lazy(() =>
+  import("./components/DeliveryMetricsPanel").then((m) => ({ default: m.DeliveryMetricsPanel })),
+);
 
 const DEFAULT_AOI_ID = "rybnik_35km";
 
@@ -218,7 +221,9 @@ export default function App() {
         ? "Layers"
         : activePanel === "providers"
           ? "Providers"
-          : "Legend";
+          : activePanel === "metrics"
+            ? "Delivery evidence"
+            : "Legend";
 
   return (
     <main className="previewLayout" data-basemap={basemapMode}>
@@ -331,6 +336,7 @@ export default function App() {
                   }
                 />
               )}
+              {activePanel === "metrics" && <DeliveryMetricsPanel />}
             </Suspense>
           </aside>
         )}

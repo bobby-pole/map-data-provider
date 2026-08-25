@@ -248,7 +248,7 @@ The fixture-first `nmt_nmpt_raster_adapter/v1` accepts a bounded NMT/NMPT ASCII 
 
 ## API and runtime boundary
 
-The Node/Express/TypeScript provider now serves typed, read-only local artifacts through `GET /api/health`, `GET /api/aoi/:aoiId/layers`, `GET /api/aoi/:aoiId/layers/:domain`, `GET /api/aoi/:aoiId/readiness` and `GET /api/aoi/:aoiId/sources`. These routes validate identifiers and file contracts, return 422 for malformed input and 404 for a missing cache, and do not invoke Python, Overpass or WMS.
+The Node/Express/TypeScript provider now serves typed, read-only local artifacts through `GET /api/health`, `GET /api/metrics/delivery`, `GET /api/aoi/:aoiId/layers`, `GET /api/aoi/:aoiId/layers/:domain`, `GET /api/aoi/:aoiId/readiness` and `GET /api/aoi/:aoiId/sources`. Delivery metrics are published only when their recorded bundle ID and manifest SHA-256 match the prepared, verified demo bundle; the raw measurement JSON is available separately at `GET /api/metrics/delivery/raw`. These routes validate identifiers and file contracts, return 422 for malformed input and 404 for a missing cache or unmatched measurement report, and do not invoke Python, Overpass or WMS.
 
 `POST /api/aoi/requests` remains the legacy compatibility path for
 `rybnik_35km/power`, whose registered boundary reference uses EPSG:4326. The

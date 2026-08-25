@@ -174,6 +174,14 @@ must stay within the viewport and retain a visible close control.
   readable size and staying inside the viewport.
 - Opening a power feature should not force the Layers drawer open. The map
   popup is sufficient for the primary inspection flow.
+- The icon rail includes **Delivery evidence**. Its drawer is a compact,
+  read-only summary of a versioned benchmark report: measurement date, bundle,
+  code revision, API percentiles, PMTiles range bytes and conditional ETag
+  result. It links to the full raw JSON rather than turning the preview into a
+  monitoring dashboard.
+- Fixture-worker values must be visibly labelled as deterministic pipeline
+  evidence. The panel must show an unavailable state when no report matches
+  the active bundle instead of presenting stale or synthetic values.
 
 ## States and accessibility
 

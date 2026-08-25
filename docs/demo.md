@@ -44,6 +44,17 @@ The bundle remains ignored by Git under `.local-demo-bundle/`. A partial cache
 is still readable for development, but the preview shows an explicit warning
 listing its missing primary domains.
 
+To record reproducible API, PMTiles and fixture-worker delivery metrics, leave
+this API running and execute the following in a second terminal:
+
+```bash
+pnpm run measure:demo
+```
+
+It sends 100 requests to each documented core endpoint and writes a dated raw
+JSON report under `docs/measurements/`; see the [measurement procedure](./performance_baseline.md)
+for scope and interpretation limits.
+
 ## 1. Confirm the typed provider boundary — 20 seconds
 
 ```bash

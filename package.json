@@ -13,6 +13,7 @@
     "verify:pre-push": "./scripts/verify_pre_push.sh",
     "verify:provider": "./scripts/verify_provider.sh",
     "demo:local": "./scripts/run_local_demo.sh",
+    "measure:demo": "node ./scripts/measure_demo.mjs",
     "verify:node": "pnpm --dir backend-node run build && pnpm --dir backend-node test && pnpm --dir backend-node run lint",
     "verify:frontend": "pnpm --dir frontend test && pnpm --dir frontend run build && pnpm --dir frontend run lint",
     "format": "prettier --write .",

@@ -22,6 +22,7 @@ describe("Rate limiting and concurrency protection", () => {
 
     const res4 = await request(app).get("/api/health");
     expect(res4.status).toBe(429);
+    expect(res4.headers["retry-after"]).toMatch(/^\d+$/);
     expect(res4.body).toEqual({
       error: "rate_limit_exceeded",
       message: "Rate limit exceeded. Please retry later.",

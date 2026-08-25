@@ -1,0 +1,80 @@
+.deliveryMetrics {
+  gap: 12px;
+}
+
+.deliveryIdentity {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+}
+
+.deliveryIdentity > div,
+.deliveryMetric {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.deliveryIdentity dt,
+.deliveryMetricLabel {
+  color: var(--color-text-muted);
+  font-size: 11px;
+}
+
+.deliveryIdentity dd,
+.deliveryMetric strong {
+  margin: 0;
+  color: var(--color-text-strong);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+
+.deliveryMetricGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.deliveryMetric {
+  display: grid;
+  gap: 3px;
+  min-height: 54px;
+  padding: 9px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: rgba(15, 23, 42, 0.28);
+}
+
+.deliveryMetric strong {
+  text-align: left;
+}
+
+.metricDetail,
+.deliveryFixtureNote p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.deliveryFixtureNote {
+  padding-top: 3px;
+}
+
+.deliveryFixtureNote summary {
+  color: var(--color-text-soft);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.deliveryFixtureNote p + p {
+  margin-top: 6px;
+}
+
+.deliveryRawLink {
+  justify-self: start;
+  margin-top: 2px;
+}

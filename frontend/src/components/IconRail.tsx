@@ -1,12 +1,13 @@
-import { Filter, Layers3, Ruler, Settings2, Wrench } from "lucide-react";
+import { Filter, Gauge, Layers3, Ruler, Settings2, Wrench } from "lucide-react";
 
-export type PreviewPanel = "layers" | "providers" | "legend" | "settings";
+export type PreviewPanel = "layers" | "providers" | "legend" | "settings" | "metrics";
 
 const items: Array<{ id: PreviewPanel | "activity"; label: string }> = [
   { id: "layers", label: "Layers" },
   { id: "providers", label: "Providers" },
   { id: "legend", label: "Legend" },
   { id: "settings", label: "AOI settings" },
+  { id: "metrics", label: "Delivery evidence" },
   { id: "activity", label: "Activity" },
 ];
 
@@ -50,6 +51,7 @@ function RailIcon({ name }: { name: PreviewPanel | "activity" }) {
     providers: Filter,
     legend: Ruler,
     settings: Wrench,
+    metrics: Gauge,
     activity: Settings2,
   }[name];
   return <Icon className="railIcon" aria-hidden="true" strokeWidth={1.8} />;

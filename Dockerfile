@@ -54,6 +54,10 @@ COPY backend/ ./
 # Copy compiled frontend static assets
 COPY --from=build-frontend /app/frontend/dist /app/static
 
+# Committed delivery reports are served only after the API verifies that their
+# bundle manifest hash matches the mounted, checksummed demo bundle.
+COPY docs/measurements /app/measurements
+
 # Copy compiled backend-node and node_modules
 WORKDIR /app/backend-node
 COPY --from=build-backend-node /app/backend-node/dist ./dist
@@ -82,6 +86,7 @@ ENV MDQ_REVIEW_ROOT=/app/data/reviews
 ENV MDQ_RUNTIME_ROOT=/app/data/runtime
 ENV MDQ_BUNDLE_SOURCE=/app/data/bundle/rybnik_35km
 ENV MDQ_REQUIRE_DEMO_BUNDLE=true
+ENV MDQ_MEASUREMENTS_ROOT=/app/measurements
 ENV MDQ_DATA_DIR=/app/backend/data
 ENV MDQ_BACKEND_DIR=/app/backend
 ENV PATH="/app/backend/.venv/bin:$PATH"

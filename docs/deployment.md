@@ -109,6 +109,15 @@ Pushes to the `main` branch automatically trigger `.github/workflows/deploy.yml`
 2. **Build & Push**: Builds multi-stage Docker image and pushes immutable tag `ghcr.io/bobby-pole/map-data-provider:${GITHUB_SHA}` and `latest`.
 3. **Deploy**: Requires the external bundle and its ID, copies `docker-compose.prod.yml` to `/home/deploy/map-data-provider/`, writes immutable image/bundle IDs to `.env`, pulls the image, starts the container on `app_network` and verifies health via `http://127.0.0.1:3001/api/health`. NPM Proxy Host configuration is durable host state and is not rewritten by CI.
 
+### Publish delivery evidence
+
+After measuring a verified local copy of the same bundle mounted on the VPS,
+commit the generated `docs/measurements/*.json` before deploying the image.
+The report includes the bundle ID and SHA-256 of its manifest. The public
+`/api/metrics/delivery` endpoint and preview panel publish it only if both
+values match the prepared bundle promoted at container startup. A stale report
+is deliberately unavailable rather than relabelled as current performance.
+
 Prepare a bundle from an existing local prepared cache with:
 
 ```bash

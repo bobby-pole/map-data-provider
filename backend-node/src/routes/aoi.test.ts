@@ -587,6 +587,25 @@ describe("read-only AOI provider routes", () => {
     expect(providerErrorSchema.parse(unbounded.body)).toMatchObject({ error: "invalid_request" });
   });
 
+  it("returns 304 for a matching PMTiles ETag without reading a range body", async () => {
+    const archiveUrl = "/api/aoi/rybnik_35km/presentations/power/archive";
+    const initial = await request(defaultApp).get(archiveUrl).set("range", "bytes=0-126");
+    const etag = initial.headers.etag;
+    if (!etag) {
+      throw new Error("Expected PMTiles response to include an ETag.");
+    }
+
+    const cached = await request(defaultApp)
+      .get(archiveUrl)
+      .set("range", "bytes=0-126")
+      .set("if-none-match", etag);
+
+    expect(cached.status).toBe(304);
+    expect(cached.headers.etag).toBe(etag);
+    expect(cached.headers["cache-control"]).toBe("public, max-age=0, must-revalidate");
+    expect(cached.text).toBe("");
+  });
+
   it("serves one validated public map feature without serializing its layer", async () => {
     const response = await request(defaultApp).get(
       "/api/aoi/rybnik_35km/presentations/power/features/node%2F1528794574",

@@ -5,13 +5,16 @@ import express from "express";
 
 import { createRateLimiter, type RateLimitOptions } from "./middleware/rateLimit.js";
 import { createAoiRouter } from "./routes/aoi.js";
+import { createDeliveryMetricsRouter } from "./routes/deliveryMetrics.js";
 import { healthRouter } from "./routes/health.js";
+import type { DeliveryMetricsPaths } from "./services/deliveryMetricsService.js";
 import type { IssueStorePaths } from "./services/issueReviewService.js";
 import type { ProviderDataPaths } from "./services/providerDataService.js";
 
 export function createApp(options?: {
   issueStorePaths?: IssueStorePaths;
   providerDataPaths?: ProviderDataPaths;
+  deliveryMetricsPaths?: DeliveryMetricsPaths;
   readOnlyMode?: boolean;
   staticDir?: string;
   rateLimitOptions?: RateLimitOptions;
@@ -35,6 +38,7 @@ export function createApp(options?: {
     }),
   );
   app.use("/api", healthRouter);
+  app.use("/api/metrics", createDeliveryMetricsRouter(options?.deliveryMetricsPaths));
   app.use("/api/aoi", createAoiRouter(options));
 
   const staticDir = options?.staticDir ?? process.env.STATIC_DIR;

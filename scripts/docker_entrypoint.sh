@@ -113,7 +113,11 @@ if [[ ! -d "${PREPARED_ROOT}/rybnik_35km" ]]; then
     echo "==> Found demo bundle at ${BUNDLE_SOURCE}. Starting checksummed bootstrap..."
     TMP_STAGE=$(mktemp -d "${PREPARED_ROOT}/.bootstrap_stage_XXXXXX")
     trap 'rm -rf "${TMP_STAGE}"' EXIT
-    cp -a "${BUNDLE_SOURCE}" "${TMP_STAGE}/rybnik_35km"
+    # The externally provisioned bundle is deliberately immutable. Do not
+    # preserve its read-only modes in mutable prepared storage: this process
+    # runs as appuser and must be able to promote and remove its own stage.
+    cp -R --no-preserve=mode,ownership "${BUNDLE_SOURCE}" "${TMP_STAGE}/rybnik_35km"
+    chmod -R u=rwX "${TMP_STAGE}/rybnik_35km"
     verify_bundle "${TMP_STAGE}/rybnik_35km"
     mv "${TMP_STAGE}/rybnik_35km" "${PREPARED_ROOT}/rybnik_35km"
     rm -rf "${TMP_STAGE}"

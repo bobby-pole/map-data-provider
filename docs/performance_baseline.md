@@ -1,106 +1,138 @@
-# Map Data Provider — Performance Baseline & Delivery Measurements
+# Map Data Provider — Reproducible delivery measurements
 
-**Document version:** 1.0.0  
-**Scope:** MDQ-052 (Read-Only Portfolio Demo on VPS & Performance Verification)  
-**AOI Baseline:** `rybnik_35km` (11 domains, 85,000+ features)
+**Measurement contract:** `mdq_demo_delivery_measurement/v1`
+**Scope:** the immutable, read-only `rybnik_35km` demo bundle
 
----
+This document intentionally does not publish a fixed latency, cache-ratio or
+viewport number. Those values depend on the verified bundle, host, CPU,
+runtime and request path. A number is evidence only when its dated raw JSON is
+committed with the revision, method and raw observations that produced it.
 
-## 1. Executive Summary
+## What is measured
 
-Map Data Provider transitioned from a monolithic full-GeoJSON transport model to a bounded PMTiles vector tile presentation model with typed Node.js Express orchestration.
+`pnpm run measure:demo` makes **100 sequential requests per endpoint** by
+default and records nearest-rank p50, p95 and p99 latencies. The report also
+contains:
 
-This document records the baseline and post-change performance measurements across:
+- response status and transferred byte totals for `/api/health`, layer list,
+  presentation list, readiness, a power domain pack and the nine-domain export;
+- PMTiles `Range: bytes=0-16383` response sizes and status distribution;
+- HTTP PMTiles revalidation hits: the archive is requested again with its
+  `ETag`; `304 Not Modified` is counted as a hit and `206` as a miss;
+- fixture worker preparation duration, per-domain processed feature count and
+  success/failure rate;
+- 100 warm runtime-cache lookups against temporary, fixture-built artifacts;
+- runtime outcome totals for `ready`, `needs_source` and `failed`.
 
-1. **Viewport-settle latency** during initial load and interactive pan/zoom.
-2. **Network payload and byte-range request efficiency** comparing full GeoJSON downloads against targeted PMTiles MVT slices.
-3. **API endpoint latency** for domain metadata, presentations, and readiness summaries.
-4. **MapLibre source lifecycle stability** (preventing canvas flashing and redundant source recreation).
-5. **Decision Gate:** Justification of the bounded PMTiles model vs a standalone PostGIS/MVT tile server.
+Every HTTP and warm-cache observation is retained in the JSON alongside its
+aggregate. Percentiles can therefore be recomputed without rerunning the
+bundle.
 
----
+The production ordinary API endpoints are protected by a 240-request-per-minute
+limit per client. `pnpm run demo:local` sets its local-only budget to 1,200 so a
+default 100-sample run does not wait on this protection; the production Compose
+configuration does not set that override. When testing an endpoint with the
+ordinary production limit, the benchmark honours an HTTP `429` response and
+its `Retry-After` header, waits, then repeats the same sample. That wait is not
+included in the request latency percentile, and `methodology.rate_limit_retries`
+records how often it occurred. PMTiles archive range requests do not consume
+this ordinary API request budget.
 
-## 2. Payload & Network Efficiency Comparison
+The fixture-worker portion is deliberately isolated in a temporary directory.
+It never modifies a demo bundle, the checked-in cache or VPS storage. It is a
+deterministic pipeline measurement, not an Overpass/network acquisition
+benchmark.
 
-### 2.1 Full GeoJSON vs PMTiles MVT Range Delivery
+## Run a measurement
 
-| Domain        | Full GeoJSON Features | Full GeoJSON Payload | PMTiles Archive Size | Addressed Zoom Levels | Typical Viewport Range Request | Payload Reduction Factor |
-| ------------- | --------------------- | -------------------- | -------------------- | --------------------- | ------------------------------ | ------------------------ |
-| **Power**     | 52,976                | 42.6 MB              | 10.6 MB              | z7–z14                | 12 KB – 48 KB                  | **~900x per viewport**   |
-| **Transport** | 32,917                | 51.8 MB              | 19.4 MB              | z7–z14                | 18 KB – 64 KB                  | **~800x per viewport**   |
-| **Water**     | 14,210                | 18.2 MB              | 4.8 MB               | z7–z14                | 8 KB – 32 KB                   | **~560x per viewport**   |
-| **Emergency** | 1,480                 | 1.8 MB               | 0.6 MB               | z7–z14                | 4 KB – 16 KB                   | **~110x per viewport**   |
-| **Public**    | 4,210                 | 4.9 MB               | 1.4 MB               | z7–z14                | 6 KB – 24 KB                   | **~200x per viewport**   |
-| **Bridges**   | 1,120                 | 1.2 MB               | 0.4 MB               | z7–z14                | 3 KB – 12 KB                   | **~100x per viewport**   |
+First prepare a current local copy of the immutable bundle and start the API:
 
-### 2.2 Byte-Range Request & Cache Hit Characteristics
+```bash
+./scripts/pull_local_demo_bundle.sh \
+  root@VPS:/home/deploy/map-data-provider/data/bundle/rybnik_35km
+pnpm run demo:local
+```
 
-- **Protocol:** HTTP/1.1 and HTTP/2 `Range: bytes=start-end` via Express static / Nginx Proxy Manager reverse proxy.
-- **Status Codes:** `206 Partial Content` on first-time tile access; `304 Not Modified` / browser disk-cache hit on revisited tiles.
-- **Initial PMTiles Header Request:** 16,384 bytes (header + root directory read).
-- **Subsequent Leaf/Tile Requests:** 2 KB – 64 KB per addressed tile index.
-- **Range Cache Hit Ratio:** >92% during typical regional inspection workflow (panning within Rybnik urban core).
+In a second terminal, run:
 
----
+```bash
+pnpm run measure:demo
+```
 
-## 3. Latency & Viewport-Settle Benchmarks
+The command checks that the API is reachable at `http://127.0.0.1:3001` and
+writes a dated raw report to:
 
-Measurements conducted on Node.js provider instance serving `rybnik_35km` demo bundle:
+```text
+docs/measurements/YYYY-MM-DD-rybnik_35km-local.json
+```
 
-### 3.1 API Endpoint Latency (Warm Cache)
+Do not replace an older report: a new date or a distinct suffix preserves the
+historical evidence. Review the diff, then commit the JSON with the code and
+bundle revision it measures. The command never stages or commits results on
+the operator's behalf.
 
-| Endpoint                                  | Method | 50th Percentile (p50) | 95th Percentile (p95) | 99th Percentile (p99) | Payload Size |
-| ----------------------------------------- | ------ | --------------------- | --------------------- | --------------------- | ------------ |
-| `/api/health`                             | GET    | 1.2 ms                | 3.5 ms                | 6.1 ms                | ~40 B        |
-| `/api/aoi/rybnik_35km/layers`             | GET    | 4.1 ms                | 8.8 ms                | 14.2 ms               | ~3.2 KB      |
-| `/api/aoi/rybnik_35km/presentations`      | GET    | 5.3 ms                | 11.2 ms               | 18.0 ms               | ~4.8 KB      |
-| `/api/aoi/rybnik_35km/readiness`          | GET    | 3.8 ms                | 7.9 ms                | 12.5 ms               | ~2.1 KB      |
-| `/api/aoi/rybnik_35km/layers/power`       | GET    | 4.6 ms                | 9.4 ms                | 15.1 ms               | ~1.8 KB      |
-| `/api/aoi/rybnik_35km/export` (9 domains) | GET    | 18.4 ms               | 32.1 ms               | 48.6 ms               | ~28.5 KB     |
+## Publish the evidence in the demo
 
-### 3.2 Viewport Interaction Latency
+The report records both `bundle_id` and a SHA-256 digest of the exact
+`demo_bundle_manifest.json` used during measurement. First commit the
+application and benchmark code, then run the measurement from that committed
+revision; its `git_revision` will identify the code actually measured. Review
+and commit the resulting JSON as a separate evidence-only commit, then deploy
+both commits with the same external bundle. The production image copies
+committed reports and exposes a compact summary at:
 
-| Action                               | Baseline (Full GeoJSON)         | Implemented (PMTiles + Node)        | Target SLA |
-| ------------------------------------ | ------------------------------- | ----------------------------------- | ---------- |
-| **Initial Map Load & Settle**        | 3,850 ms (parsing 94MB GeoJSON) | **180 ms – 240 ms**                 | < 500 ms   |
-| **Pan & Settle (within urban core)** | 850 ms (re-render lag)          | **16 ms – 35 ms** (60 fps)          | < 100 ms   |
-| **Zoom Step In/Out (z10 -> z14)**    | 1,200 ms (DOM canvas lock)      | **45 ms – 70 ms**                   | < 150 ms   |
-| **Theme / Layer Toggle**             | 420 ms                          | **< 10 ms** (paint property update) | < 50 ms    |
+```text
+GET /api/metrics/delivery
+```
 
----
+The full report is available at `GET /api/metrics/delivery/raw`. Both endpoints
+return `404` when no report matches the manifest of the actively mounted
+bundle. The MapLibre preview's **Delivery evidence** rail icon shows the same
+summary and links to the raw JSON. This fail-closed match prevents a report
+from a previous snapshot being presented as evidence for newly deployed data.
 
-## 4. Map Canvas & Source Lifecycle Stability
+## Optional controls
 
-### 4.1 Preserving Active Provider Sources During Navigation
+```bash
+# Measure a different locally reachable deployment.
+MDQ_MEASURE_BASE_URL=https://maplab.robertlacheta.pl pnpm run measure:demo
 
-- **Problem:** Naive map implementations destroy and recreate `map.addSource` / `map.addLayer` on viewport change or UI theme toggling, causing visual flash and garbage collector spikes.
-- **Implemented Solution in `MapView.tsx`:**
-  1. Provider PMTiles sources and MVT vector layers are registered once during AOI initialization.
-  2. Dark/Light style transitions mutate raster basemap opacity and vector layer paint properties (`map.setPaintProperty`) without deregistering vector tile sources.
-  3. Single-feature inspection highlights use an isolated overlay source (`SELECTED_FEATURE_SOURCE_ID`) without triggering multi-domain tile re-fetches.
+# When measuring a remote deployment, explicitly select the exact local copy
+# of the bundle served there.
+MDQ_MEASURE_BUNDLE_MANIFEST=/absolute/path/to/rybnik_35km/demo_bundle_manifest.json \
+  MDQ_MEASURE_BASE_URL=https://maplab.robertlacheta.pl pnpm run measure:demo
 
-### 4.2 Eliminating Dark Canvas Flashes
+# Use a smaller diagnostic sample; this is not a portfolio baseline.
+MDQ_MEASURE_SAMPLES=10 pnpm run measure:demo
 
-- **Basemap Loading:** CartoDB / OSM raster tiles are pre-rendered with CSS background color fallback (`#1a1d20` for dark mode, `#f8f9fa` for light mode).
-- **PMTiles Bounds Clamping:** Viewport bounds are constrained to the validated AOI bounding box (`[18.0, 49.8, 19.0, 50.4]`), preventing tile requests outside the generated archive boundary.
+# Write a report outside the repository while investigating.
+MDQ_MEASURE_REPORT_DIR=/tmp/mdq-measurements pnpm run measure:demo
+```
 
----
+For a public deployment, run the command only against an endpoint and bundle
+you are authorized to test. The tool makes read-only `GET` requests, but a
+100-request sample per endpoint is still intentional load.
 
-## 5. Architectural Decision Gate: Bounded PMTiles vs PostGIS/MVT Server
+## Interpretation boundary
 
-### Current Architecture Assessment
+- `304` in the PMTiles revalidation section proves a conditional HTTP request
+  was revalidated against the archive `ETag`; it does **not** claim a CDN or
+  browser disk-cache hit.
+- PMTiles bytes are bytes transferred by the tested API. They are not a claim
+  about an entire MapLibre viewport, which can require several tile ranges.
+- The worker data comes from deterministic fixtures and reports generated
+  artifact feature counts. It must not be interpreted as live OSM coverage or
+  live Overpass performance.
+- Browser paint/settle time is intentionally out of scope until it is captured
+  by a browser trace with a documented hardware and viewport setup.
 
-- **Current Model:** Bounded PMTiles files stored per domain in prepared storage (`/app/data/prepared/rybnik_35km/<domain>/domain-pack-v2/presentation/<domain>.pmtiles`).
-- **Memory Footprint:** Node.js process uses ~65 MB RSS; zero database process overhead.
-- **Disk Footprint:** ~72 MB total for all 11 domain PMTiles archives for Rybnik 35 km AOI.
-- **Concurrency:** Built-in sliding-window rate limiter handles 240 req/min with up to 50 concurrent range streams with <1% CPU utilization on standard 2 vCPU VPS.
+## Portfolio wording after a report is committed
 
-### Decision
+Once a dated report exists, the following statement is supportable with a link
+to that report:
 
-> **Decision: The bounded PMTiles artifact model remains fully sufficient for regional portfolio demo deployments.**
->
-> A dedicated PostGIS database or dynamic tile server (e.g. Martin / Tegola) is **NOT** recommended for single-AOI or regional snapshot delivery. It should only be evaluated under a future ticket if:
->
-> 1. Multi-region countrywide dynamic spatial filtering across arbitrary bounding boxes is required.
-> 2. Concurrent write/editing workloads on spatial vectors occur in real-time.
-> 3. Total vector cache volume exceeds the available disk capacity of static artifact hosting.
+> Established reproducible API and PMTiles delivery metrics covering p50/p95
+> latency, ETag revalidation ratio and PMTiles range payload size.
+
+Do not claim a fixed p50/p95, cache ratio, worker throughput or viewport FPS
+without linking the measurement JSON and stating its environment.

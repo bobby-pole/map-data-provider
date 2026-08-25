@@ -119,6 +119,62 @@ export type MapPresentationListResponse = {
   presentations: MapPresentation[];
 };
 
+export type DeliveryMetricsResponse = {
+  response_version: "provider_delivery_metrics/v1";
+  measured_at: string;
+  git_revision: string | null;
+  bundle_id: string;
+  methodology: {
+    samples_per_endpoint: number;
+    percentile: string;
+    service_mode: string;
+    caveat: string;
+  };
+  environment: {
+    base_url: string;
+    aoi_id: string;
+    node: string;
+    platform: string;
+    cpu_model: string;
+  };
+  api: Array<{
+    id: string;
+    method: "GET";
+    path: string;
+    sample_count: number;
+    latency_ms: { p50: number; p95: number; p99: number };
+    response_bytes: { mean: number; total: number };
+  }>;
+  pmtiles: {
+    path: string;
+    range: string;
+    range_requests: { response_bytes: { mean: number; total: number } };
+    revalidation_cache: {
+      hits: number;
+      misses: number;
+      hit_ratio: number;
+      hit_definition: string;
+    };
+  };
+  delivered_inventory: {
+    domains: number;
+    public_layers: number;
+    processed_feature_count: number;
+  };
+  fixture_worker: {
+    fixture_mode: true;
+    fixture_preparation: {
+      duration_ms: number;
+      domains: number;
+      processed_feature_count: number;
+    };
+    worker: { successes: number; failures: number; success_rate: number };
+    runtime_cache: { samples: number; hits: number; misses: number; hit_ratio: number };
+    runtime_outcomes: { ready: number; needs_source: number; failed: number };
+  };
+  raw_report_url: "/api/metrics/delivery/raw";
+};
+
 export type MapFeatureDetail = {
   response_version: "provider_map_feature_detail/v1";
   aoi_id: string;

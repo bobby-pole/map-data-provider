@@ -68,6 +68,12 @@ export type MapPresentationArchiveRange = {
   etag: string;
 };
 
+export type MapPresentationArchiveInfo = {
+  archivePath: string;
+  totalSize: number;
+  etag: string;
+};
+
 export class ProviderDataError extends Error {
   constructor(
     readonly kind:
@@ -470,18 +476,31 @@ export async function getMapPresentationArchiveRange(
   domain: string,
   rangeHeader: string | undefined,
   dataPaths?: ProviderDataPaths,
+  archiveInfo?: MapPresentationArchiveInfo,
 ): Promise<MapPresentationArchiveRange> {
-  const { presentation, archivePath } = await validatedMapPresentation(aoiId, domain, dataPaths);
-  const totalSize = presentation.archive.size_bytes;
-  const range = parseSingleRange(rangeHeader, totalSize);
-  const handle = await open(archivePath, "r");
+  const archive = archiveInfo ?? (await getMapPresentationArchiveInfo(aoiId, domain, dataPaths));
+  const range = parseSingleRange(rangeHeader, archive.totalSize);
+  const handle = await open(archive.archivePath, "r");
   try {
     const bytes = Buffer.alloc(range.end - range.start + 1);
     await handle.read(bytes, 0, bytes.length, range.start);
-    return { ...range, bytes, totalSize, etag: `"${presentation.archive.sha256}"` };
+    return { ...range, bytes, totalSize: archive.totalSize, etag: archive.etag };
   } finally {
     await handle.close();
   }
+}
+
+export async function getMapPresentationArchiveInfo(
+  aoiId: string,
+  domain: string,
+  dataPaths?: ProviderDataPaths,
+): Promise<MapPresentationArchiveInfo> {
+  const { presentation, archivePath } = await validatedMapPresentation(aoiId, domain, dataPaths);
+  return {
+    archivePath,
+    totalSize: presentation.archive.size_bytes,
+    etag: `"${presentation.archive.sha256}"`,
+  };
 }
 
 export async function getMapFeatureDetail(

@@ -148,6 +148,21 @@ starts the API in read-only demo mode. If only a partial cache is present, the
 preview explicitly names the missing primary domains rather than presenting it
 as a complete Rybnik demo.
 
+With that API running, use a second terminal to generate a reproducible,
+dated API/PMTiles/worker measurement report:
+
+```bash
+pnpm run measure:demo
+```
+
+The report contains 100 requests per core endpoint, p50/p95/p99 latency,
+PMTiles range response sizes, ETag revalidation results and isolated fixture
+worker preparation metrics. See [delivery measurements](./docs/performance_baseline.md)
+for the exact method and interpretation boundaries. Once its dated JSON is
+committed and deployed with the matching external bundle, the preview exposes
+the compact result through its **Delivery evidence** rail icon and links to the
+raw report.
+
 Node provider service:
 
 ```bash
@@ -168,6 +183,8 @@ Open `http://localhost:5173`.
 ## Node provider endpoints
 
 - `GET /api/health`
+- `GET /api/metrics/delivery`
+- `GET /api/metrics/delivery/raw`
 - `GET /api/aoi/catalog`
 - `POST /api/aoi/catalog/boundary`
 - `POST /api/aoi/runtime-requests/preflight`

@@ -39,6 +39,8 @@ export function createRateLimiter(options?: RateLimitOptions) {
       } else {
         entry.count += 1;
         if (entry.count > maxRequests) {
+          const retryAfterSeconds = Math.max(1, Math.ceil((entry.resetAt - now) / 1_000));
+          res.set("retry-after", String(retryAfterSeconds));
           res.status(429).json({
             error: "rate_limit_exceeded",
             message: "Rate limit exceeded. Please retry later.",

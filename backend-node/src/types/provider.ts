@@ -807,6 +807,131 @@ export const domainPackListResponseSchema = z
   })
   .strict();
 
+const measurementLatencySchema = z
+  .object({
+    p50: z.number().nonnegative(),
+    p95: z.number().nonnegative(),
+    p99: z.number().nonnegative(),
+  })
+  .passthrough();
+
+const measurementResponseBytesSchema = z
+  .object({
+    mean: z.number().nonnegative(),
+    total: z.number().nonnegative(),
+  })
+  .passthrough();
+
+const deliveryMeasurementApiSchema = z
+  .object({
+    id: z.string().min(1),
+    method: z.literal("GET"),
+    path: z.string().startsWith("/api/"),
+    sample_count: z.number().int().positive(),
+    latency_ms: measurementLatencySchema,
+    response_bytes: measurementResponseBytesSchema,
+  })
+  .passthrough();
+
+const deliveryMeasurementWorkerSchema = z
+  .object({
+    fixture_mode: z.literal(true),
+    fixture_preparation: z
+      .object({
+        duration_ms: z.number().nonnegative(),
+        domains: z.number().int().nonnegative(),
+        processed_feature_count: z.number().int().nonnegative(),
+      })
+      .passthrough(),
+    worker: z
+      .object({
+        successes: z.number().int().nonnegative(),
+        failures: z.number().int().nonnegative(),
+        success_rate: z.number().min(0).max(1),
+      })
+      .strict(),
+    runtime_cache: z
+      .object({
+        samples: z.number().int().positive(),
+        hits: z.number().int().nonnegative(),
+        misses: z.number().int().nonnegative(),
+        hit_ratio: z.number().min(0).max(1),
+      })
+      .passthrough(),
+    runtime_outcomes: z
+      .object({
+        ready: z.number().int().nonnegative(),
+        needs_source: z.number().int().nonnegative(),
+        failed: z.number().int().nonnegative(),
+      })
+      .strict(),
+  })
+  .passthrough();
+
+export const deliveryMeasurementReportSchema = z
+  .object({
+    measurement_version: z.literal("mdq_demo_delivery_measurement/v1"),
+    measured_at: z.string().datetime(),
+    git_revision: z.string().nullable(),
+    bundle_id: z.string().min(1),
+    bundle_manifest_sha256: z.string().regex(/^[a-f0-9]{64}$/),
+    methodology: z
+      .object({
+        samples_per_endpoint: z.number().int().positive(),
+        percentile: z.string().min(1),
+        rate_limit_retries: z.number().int().nonnegative().optional(),
+        service_mode: z.string().min(1),
+        caveat: z.string().min(1),
+      })
+      .strict(),
+    environment: z
+      .object({
+        base_url: z.string().url(),
+        aoi_id: providerIdentifierSchema,
+        node: z.string().min(1),
+        platform: z.string().min(1),
+        cpu_model: z.string().min(1),
+      })
+      .strict(),
+    api: z.array(deliveryMeasurementApiSchema).min(1),
+    pmtiles: z
+      .object({
+        path: z.string().startsWith("/api/"),
+        range: z.string().min(1),
+        revalidation_cache: z
+          .object({
+            hits: z.number().int().nonnegative(),
+            misses: z.number().int().nonnegative(),
+            hit_ratio: z.number().min(0).max(1),
+            hit_definition: z.string().min(1),
+          })
+          .strict(),
+        range_requests: z
+          .object({
+            response_bytes: measurementResponseBytesSchema,
+          })
+          .passthrough(),
+      })
+      .passthrough(),
+    delivered_inventory: z
+      .object({
+        domains: z.number().int().nonnegative(),
+        public_layers: z.number().int().nonnegative(),
+        processed_feature_count: z.number().int().nonnegative(),
+      })
+      .passthrough(),
+    fixture_worker: deliveryMeasurementWorkerSchema,
+  })
+  .strict();
+
+export const deliveryMetricsResponseSchema = deliveryMeasurementReportSchema
+  .omit({ bundle_manifest_sha256: true })
+  .extend({
+    response_version: z.literal("provider_delivery_metrics/v1"),
+    raw_report_url: z.literal("/api/metrics/delivery/raw"),
+  })
+  .strict();
+
 export const domainExportOutcomeSchema = z
   .object({
     domain: runtimeProfileSchema,

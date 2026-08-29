@@ -10,6 +10,10 @@ backend/data/cache
 backend/data/runtime
 backend/data/reviews
 backend/data/fixtures
+!backend/data/fixtures/
+backend/data/fixtures/*
+!backend/data/fixtures/aoi/
+!backend/data/fixtures/aoi/prg_administrative_catalog.geojson
 backend/data/manual
 backend/data/processed
 backend/data/reports

@@ -1,10 +1,14 @@
 import { execFile } from "node:child_process";
+import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 
 import type { CachedMetadata } from "../types/provider.js";
 import { getCachedLayers, ProviderDataError } from "./providerDataService.js";
+import { runtimePythonExecutable } from "./runtimePython.js";
 
 const execFileAsync = promisify(execFile);
+const backendCwd =
+  process.env.MDQ_BACKEND_DIR ?? fileURLToPath(new URL("../../../backend/", import.meta.url));
 export const CACHE_FRESHNESS_MS = 24 * 60 * 60 * 1000;
 
 const RYBNIK_AOI = {
@@ -95,22 +99,10 @@ async function readDomain(
 
 async function defaultWorkerRunner(aoiId: string, domain: string): Promise<void> {
   await execFileAsync(
-    "uv",
-    [
-      "run",
-      "--offline",
-      "python",
-      "-m",
-      "geo_pipeline.worker",
-      "--aoi",
-      aoiId,
-      "--domain",
-      domain,
-      "--input",
-      "fixture",
-    ],
+    runtimePythonExecutable(backendCwd),
+    ["-m", "geo_pipeline.worker", "--aoi", aoiId, "--domain", domain, "--input", "fixture"],
     {
-      cwd: new URL("../../../backend/", import.meta.url),
+      cwd: backendCwd,
     },
   );
 }

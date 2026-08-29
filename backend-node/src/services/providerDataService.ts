@@ -37,6 +37,7 @@ import {
   sourceRegistryV2Schema,
   validateOrderedSourceProvenance,
 } from "../types/provider.js";
+import { runtimePythonExecutable } from "./runtimePython.js";
 
 const projectRoot = path.resolve(fileURLToPath(new URL("../../../", import.meta.url)));
 const defaultCacheRoot =
@@ -708,11 +709,12 @@ async function recoverPowerCircuitEvidence(
       "result = backfill_power_circuit_evidence_for_member(aoi=json.loads(sys.argv[1]), source_id=sys.argv[2], root=Path(sys.argv[3]))",
       "print(json.dumps({'availability': result.get('availability', 'available')}))",
     ].join("\n");
+    const backendDirectory = process.env.MDQ_BACKEND_DIR ?? path.join(projectRoot, "backend");
     await execFileAsync(
-      "uv",
-      ["run", "--offline", "python", "-c", script, JSON.stringify(aoi), sourceId, defaultCacheRoot],
+      runtimePythonExecutable(backendDirectory),
+      ["-c", script, JSON.stringify(aoi), sourceId, defaultCacheRoot],
       {
-        cwd: process.env.MDQ_BACKEND_DIR ?? path.join(projectRoot, "backend"),
+        cwd: backendDirectory,
         timeout: 90_000,
         maxBuffer: 4 * 1024 * 1024,
       },

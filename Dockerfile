@@ -93,9 +93,9 @@ ENV PATH="/app/backend/.venv/bin:$PATH"
 
 USER appuser
 WORKDIR /app/backend
-# Keep this in the final, non-root image: a root-owned uv Python installation
-# previously made every PRG/catalogue worker call fail with EACCES at runtime.
-RUN uv run --offline python -c "from geo_pipeline.aoi_runtime import administrative_catalog, preflight_runtime_request; assert len(administrative_catalog()['units']) == 2875; assert preflight_runtime_request({'aoi': {'type': 'point_radius', 'longitude': 18.55, 'latitude': 50.1, 'radius_m': 1000}, 'profiles': ['power']})['status'] == 'ready'"
+# Keep this in the final, non-root image: it executes the already prepared
+# virtualenv directly, avoiding another uv interpreter-resolution step.
+RUN /app/backend/.venv/bin/python -c "from geo_pipeline.aoi_runtime import administrative_catalog, preflight_runtime_request; assert len(administrative_catalog()['units']) == 2875; assert preflight_runtime_request({'aoi': {'type': 'point_radius', 'longitude': 18.55, 'latitude': 50.1, 'radius_m': 1000}, 'profiles': ['power']})['status'] == 'ready'"
 WORKDIR /app
 EXPOSE 3001
 

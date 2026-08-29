@@ -15,11 +15,13 @@ import {
   providerRuntimeResponseSchema,
 } from "../types/provider.js";
 import { ProviderDataError } from "./providerDataService.js";
+import { runtimePythonExecutable } from "./runtimePython.js";
 
 const execFileAsync = promisify(execFile);
 const RUNTIME_WORKER_TIMEOUT_MS = 8 * 60 * 1000;
 const backendCwd =
   process.env.MDQ_BACKEND_DIR ?? fileURLToPath(new URL("../../../backend/", import.meta.url));
+const runtimePython = runtimePythonExecutable(backendCwd);
 export function createRuntimeRequestCoordinator(
   runner: (request: ProviderRuntimeRequest) => Promise<ProviderRuntimeResponse> = runRuntimeWorker,
 ) {
@@ -158,11 +160,8 @@ type CatalogFetcher = () => Promise<{ stdout: string }>;
 
 const defaultCatalogFetcher: CatalogFetcher = () =>
   execFileAsync(
-    "uv",
+    runtimePython,
     [
-      "run",
-      "--offline",
-      "python",
       "-c",
       "from geo_pipeline.aoi_runtime import administrative_catalog; import json; print(json.dumps(administrative_catalog()))",
     ],
@@ -226,15 +225,11 @@ async function runAoiRuntimePython<T>(
 ): Promise<T> {
   try {
     const code = `from geo_pipeline.aoi_runtime import ${functionName}, RuntimeRequestError; import json, sys\ntry:\n print(json.dumps({"status":"ok","result":${functionName}(json.loads(sys.argv[1]))}))\nexcept RuntimeRequestError as error:\n print(json.dumps({"status":"error","code":"invalid_request","message":str(error)}))`;
-    const { stdout } = await execFileAsync(
-      "uv",
-      ["run", "--offline", "python", "-c", code, JSON.stringify(argument)],
-      {
-        cwd: backendCwd,
-        maxBuffer: 32 * 1024 * 1024,
-        timeout: 120_000,
-      },
-    );
+    const { stdout } = await execFileAsync(runtimePython, ["-c", code, JSON.stringify(argument)], {
+      cwd: backendCwd,
+      maxBuffer: 32 * 1024 * 1024,
+      timeout: 120_000,
+    });
     const payload = JSON.parse(stdout) as {
       status?: unknown;
       code?: unknown;
@@ -273,11 +268,8 @@ async function runRuntimeWorker(
     let pendingStderr = "";
     let timedOut = false;
     const worker = spawn(
-      "uv",
+      runtimePython,
       [
-        "run",
-        "--offline",
-        "python",
         "-m",
         "geo_pipeline.worker",
         "--runtime-request",

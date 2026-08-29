@@ -1,3 +1,6 @@
+# --- Stable CPython runtime for the production Node image ---
+FROM python:3.14.4-slim-bookworm AS python-runtime
+
 # --- STAGE 1: Build Frontend (React 19 + MapLibre + Vite) ---
 FROM node:22-bookworm-slim AS build-frontend
 
@@ -37,6 +40,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install uv for Python environment management (pinned version)
 COPY --from=ghcr.io/astral-sh/uv:0.6.2 /uv /uvx /bin/
+# `uv:0.6.2` predates stable Python 3.14 and resolves `3.14` to an alpha
+# build. Copy the exact supported CPython instead, so binary wheels such as
+# NumPy share the interpreter ABI they were built for.
+COPY --from=python-runtime /usr/local /usr/local
 
 # Create non-root user (UID/GID 1001)
 RUN groupadd -g 1001 appgroup && \
@@ -45,9 +52,7 @@ RUN groupadd -g 1001 appgroup && \
 # Configure Python virtual environment via uv
 WORKDIR /app/backend
 COPY backend/pyproject.toml backend/uv.lock ./
-ENV UV_PYTHON_INSTALL_DIR=/app/.uv-python
-RUN uv python install 3.14 && \
-    uv sync --frozen --no-dev --python 3.14
+RUN uv sync --frozen --no-dev --python /usr/local/bin/python3.14
 
 # Copy backend Python code and data fixtures
 COPY backend/ ./

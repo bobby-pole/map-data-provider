@@ -33,6 +33,13 @@ import {
   type ProviderDataPaths,
 } from "../services/providerDataService.js";
 import {
+  DEMO_AOI_TEMPLATE,
+  DEMO_AOI_TEMPLATE_ID,
+  hasTrustedRuntimeAuthorization,
+  type RuntimeAcquisitionPolicy,
+  runtimePolicyFromEnvironment,
+} from "../services/runtimeAcquisitionPolicy.js";
+import {
   administrativeBoundaryRequestSchema,
   administrativeBoundaryResponseSchema,
   administrativeCatalogResponseSchema,
@@ -57,6 +64,7 @@ import {
   providerRuntimeResponseSchema,
   readinessListResponseSchema,
   type ReviewedIssue,
+  runtimeCapabilityResponseSchema,
   runtimeProfileSchema,
   sourceAvailabilityReportSchema,
   sourceListResponseSchema,
@@ -65,22 +73,58 @@ import {
 export function createAoiRouter(options?: {
   issueStorePaths?: IssueStorePaths;
   providerDataPaths?: ProviderDataPaths;
-  readOnlyMode?: boolean;
+  runtimePolicy?: RuntimeAcquisitionPolicy;
+  runtimeJobSubmitter?: typeof submitRuntimeJob;
+  runtimeJobGetter?: typeof getRuntimeJob;
 }) {
   const aoiRouter = Router();
-  const isReadOnly =
-    options?.readOnlyMode ??
-    (process.env.MDQ_DEMO_MODE === "readonly" ||
-      process.env.MDQ_RUNTIME_ACQUISITION_ENABLED === "false");
+  const runtimePolicy = options?.runtimePolicy ?? runtimePolicyFromEnvironment();
+  const runtimeJobSubmitter = options?.runtimeJobSubmitter ?? submitRuntimeJob;
+  const runtimeJobGetter = options?.runtimeJobGetter ?? getRuntimeJob;
 
-  const assertRuntimeEnabled = () => {
-    if (isReadOnly) {
+  const assertGenericRuntimeAllowed = (authorizationHeader: string | undefined) => {
+    if (runtimePolicy.mode === "disabled") {
       throw new ProviderDataError(
         "runtime_disabled",
-        "Live acquisition and cache refresh are disabled in public demo mode.",
+        "Runtime acquisition is disabled in this deployment.",
+      );
+    }
+    if (runtimePolicy.mode === "demo_fixed_aoi") {
+      throw new ProviderDataError(
+        "demo_aoi_restricted",
+        "Public demo acquisition is limited to the fixed Rybnik administrative AOI.",
+      );
+    }
+    if (
+      runtimePolicy.mode === "trusted" &&
+      !hasTrustedRuntimeAuthorization(authorizationHeader, runtimePolicy.trustedToken)
+    ) {
+      throw new ProviderDataError(
+        "runtime_unauthorized",
+        "Trusted runtime acquisition requires an authenticated service identity.",
       );
     }
   };
+
+  aoiRouter.get("/runtime-capabilities", (_request, response) => {
+    const isDemo = runtimePolicy.mode === "demo_fixed_aoi";
+    response.status(200).json(
+      runtimeCapabilityResponseSchema.parse({
+        response_version: "provider_runtime_capability/v1",
+        mode: runtimePolicy.mode,
+        supports_custom_aoi:
+          runtimePolicy.mode === "local_bounded" || runtimePolicy.mode === "trusted",
+        demo_template: isDemo
+          ? {
+              id: DEMO_AOI_TEMPLATE.id,
+              label: DEMO_AOI_TEMPLATE.label,
+              unit_ids: DEMO_AOI_TEMPLATE.unit_ids,
+              profiles: DEMO_AOI_TEMPLATE.profiles,
+            }
+          : null,
+      }),
+    );
+  });
 
   aoiRouter.get("/catalog", async (_request, response) => {
     try {
@@ -117,11 +161,12 @@ export function createAoiRouter(options?: {
 
   aoiRouter.post("/runtime-requests/preflight", async (request, response) => {
     try {
+      const runtimeRequest = providerRuntimeRequestSchema.parse(request.body);
       response
         .status(200)
         .json(
           providerRuntimePreflightResponseSchema.parse(
-            await preflightRuntimeRequest(providerRuntimeRequestSchema.parse(request.body)),
+            await preflightRuntimeRequest(runtimeRequest),
           ),
         );
     } catch (error) {
@@ -138,14 +183,11 @@ export function createAoiRouter(options?: {
 
   aoiRouter.post("/runtime-requests", async (request, response) => {
     try {
-      assertRuntimeEnabled();
+      const runtimeRequest = providerRuntimeRequestSchema.parse(request.body);
+      assertGenericRuntimeAllowed(request.header("authorization"));
       response
         .status(200)
-        .json(
-          providerRuntimeResponseSchema.parse(
-            await submitRuntimeRequest(providerRuntimeRequestSchema.parse(request.body)),
-          ),
-        );
+        .json(providerRuntimeResponseSchema.parse(await submitRuntimeRequest(runtimeRequest)));
     } catch (error) {
       if (error instanceof Error && error.name === "ZodError") {
         respondWithProviderError(
@@ -160,14 +202,11 @@ export function createAoiRouter(options?: {
 
   aoiRouter.post("/runtime-jobs", (request, response) => {
     try {
-      assertRuntimeEnabled();
+      const runtimeRequest = providerRuntimeRequestSchema.parse(request.body);
+      assertGenericRuntimeAllowed(request.header("authorization"));
       response
         .status(202)
-        .json(
-          providerRuntimeJobSchema.parse(
-            submitRuntimeJob(providerRuntimeRequestSchema.parse(request.body)),
-          ),
-        );
+        .json(providerRuntimeJobSchema.parse(runtimeJobSubmitter(runtimeRequest)));
     } catch (error) {
       if (error instanceof Error && error.name === "ZodError") {
         respondWithProviderError(
@@ -180,8 +219,34 @@ export function createAoiRouter(options?: {
     }
   });
 
+  aoiRouter.post("/demo-acquisitions/:templateId", (request, response) => {
+    try {
+      if (
+        runtimePolicy.mode !== "demo_fixed_aoi" ||
+        request.params.templateId !== DEMO_AOI_TEMPLATE_ID
+      ) {
+        throw new ProviderDataError(
+          "demo_aoi_restricted",
+          "This deployment exposes only the fixed Rybnik demo acquisition template.",
+        );
+      }
+      const demoRequestBody = request.body as object | undefined;
+      if (demoRequestBody && Object.keys(demoRequestBody).length > 0) {
+        throw new ProviderDataError(
+          "invalid_request",
+          "Demo acquisition requests do not accept a custom AOI or profile payload.",
+        );
+      }
+      response
+        .status(202)
+        .json(providerRuntimeJobSchema.parse(runtimeJobSubmitter(DEMO_AOI_TEMPLATE.request)));
+    } catch (error) {
+      respondWithProviderError(response, error);
+    }
+  });
+
   aoiRouter.get("/runtime-jobs/:jobId", (request, response) => {
-    const job = getRuntimeJob(request.params.jobId);
+    const job = runtimeJobGetter(request.params.jobId);
     if (!job) {
       respondWithProviderError(
         response,
@@ -475,8 +540,8 @@ export function createAoiRouter(options?: {
 
   aoiRouter.post("/requests", async (request, response) => {
     try {
-      assertRuntimeEnabled();
       const body = aoiRequestSchema.parse(request.body);
+      assertGenericRuntimeAllowed(request.header("authorization"));
       response
         .status(200)
         .json(aoiRequestResponseSchema.parse(await requestAoi(body.aoi_id, body.domain)));
@@ -641,7 +706,11 @@ function respondWithProviderError(response: Response, error: unknown): void {
               ? 409
               : providerError.kind === "runtime_disabled"
                 ? 403
-                : 502,
+                : providerError.kind === "demo_aoi_restricted"
+                  ? 403
+                  : providerError.kind === "runtime_unauthorized"
+                    ? 401
+                    : 502,
       )
       .json(
         providerErrorSchema.parse({

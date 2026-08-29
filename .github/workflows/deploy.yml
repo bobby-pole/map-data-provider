@@ -131,6 +131,7 @@ jobs:
 
             # Pull and restart container
             docker compose -f docker-compose.prod.yml pull
+            docker logout ghcr.io
             docker compose -f docker-compose.prod.yml up -d
 
             # Health check with retry (up to 60s)

@@ -29,6 +29,8 @@ export function AoiSettings({
 }: Props) {
   const catalog = useAoiStore((s) => s.catalog);
   const loadCatalog = useAoiStore((s) => s.loadCatalog);
+  const runtimeCapability = useAoiStore((s) => s.runtimeCapability);
+  const loadRuntimeCapability = useAoiStore((s) => s.loadRuntimeCapability);
   const mode = useAoiStore((s) => s.mode);
   const setMode = useAoiStore((s) => s.setMode);
   const longitude = useAoiStore((s) => s.longitude);
@@ -50,6 +52,7 @@ export function AoiSettings({
   const progress = useAoiStore((s) => s.progress);
   const result = useAoiStore((s) => s.result);
   const applyAoi = useAoiStore((s) => s.applyAoi);
+  const applyDemoAoi = useAoiStore((s) => s.applyDemoAoi);
 
   const [latBubble, setLatBubble] = useState<string | null>(null);
   const latTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -78,8 +81,14 @@ export function AoiSettings({
   };
 
   useEffect(() => {
-    void loadCatalog(onActivity);
-  }, [loadCatalog, onActivity]);
+    void loadRuntimeCapability();
+  }, [loadRuntimeCapability]);
+
+  useEffect(() => {
+    if (runtimeCapability?.supports_custom_aoi) {
+      void loadCatalog(onActivity);
+    }
+  }, [loadCatalog, onActivity, runtimeCapability?.supports_custom_aoi]);
 
   useEffect(() => {
     if (!error && (!preflight || preflight.status !== "blocked")) {
@@ -214,6 +223,94 @@ export function AoiSettings({
     }
     await applyAoi(onActivity, onApplied);
   };
+
+  if (runtimeCapability?.mode === "demo_fixed_aoi" && runtimeCapability.demo_template) {
+    const template = runtimeCapability.demo_template;
+    return (
+      <section
+        className="drawerContent drawerSection aoiSettings"
+        aria-label="AOI & Profile Configuration"
+      >
+        <div className="sectionHeading">
+          <h2>AOI & cache</h2>
+          <span>public demo</span>
+        </div>
+        <div className="defaultAoiCard">
+          <div className="defaultAoiInfo">
+            <strong>Default Snapshot: Rybnik (35 km)</strong>
+            <p className="muted">All 11 infrastructure domains pre-generated and cached offline.</p>
+          </div>
+          <div className="defaultAoiActions">
+            <button
+              type="button"
+              disabled={busy || (isDefaultAoiActive && !isDefaultAoiHidden)}
+              className="secondaryButton"
+              onClick={() => {
+                if (isDefaultAoiHidden && onToggleDefaultAoiHidden) {
+                  onToggleDefaultAoiHidden();
+                }
+                onResetToDefault?.();
+              }}
+            >
+              {isDefaultAoiActive && !isDefaultAoiHidden ? "Default active" : "Load default"}
+            </button>
+            <button
+              type="button"
+              disabled={busy || !isDefaultAoiActive}
+              className="secondaryButton"
+              onClick={onToggleDefaultAoiHidden}
+            >
+              {isDefaultAoiHidden ? "Show objects" : "Hide objects"}
+            </button>
+          </div>
+        </div>
+        <hr className="drawerDivider" />
+        <div className="runtimeModeNotice">
+          <h3>Controlled live acquisition</h3>
+          <p>
+            This public demo intentionally exposes one server-defined AOI:{" "}
+            <strong>{template.label}</strong>. It can prepare only {template.profiles.join(", ")}{" "}
+            and cannot accept coordinates, PRG selections, custom profiles, or a force refresh.
+          </p>
+          <p className="muted">
+            The server coalesces the fixed request and reuses a verified snapshot when it is still
+            fresh.
+          </p>
+          <button
+            type="button"
+            className="prepareAoiButton"
+            disabled={busy}
+            onClick={() => void applyDemoAoi(onActivity, onApplied)}
+          >
+            {busy ? "Preparing fixed demo AOI…" : "Run fixed Rybnik demo"}
+          </button>
+        </div>
+        {progress && <RuntimeProgress job={progress} />}
+        {result && <RuntimeOutcomeSummary result={result} />}
+      </section>
+    );
+  }
+
+  if (runtimeCapability?.mode === "disabled") {
+    return (
+      <section
+        className="drawerContent drawerSection aoiSettings"
+        aria-label="AOI & Profile Configuration"
+      >
+        <div className="sectionHeading">
+          <h2>AOI & cache</h2>
+          <span>read-only</span>
+        </div>
+        <div className="runtimeModeNotice">
+          <h3>Custom acquisition is unavailable</h3>
+          <p>
+            This deployment serves verified prepared snapshots only. Start the local bounded runtime
+            to prepare a new AOI.
+          </p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section

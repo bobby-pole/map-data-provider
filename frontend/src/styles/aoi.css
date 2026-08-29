@@ -176,6 +176,20 @@
   font-weight: 600;
 }
 
+.runtimeModeNotice {
+  display: grid;
+  gap: 0.65rem;
+  padding: 1rem;
+  border: 1px solid color-mix(in srgb, var(--accent, #35a7ff) 45%, transparent);
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--accent, #35a7ff) 9%, transparent);
+}
+
+.runtimeModeNotice h3,
+.runtimeModeNotice p {
+  margin: 0;
+}
+
 /* Prepare AOI Action Button */
 .prepareAoiAnchor {
   width: 100%;

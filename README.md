@@ -144,9 +144,11 @@ pnpm --dir frontend run dev
 ```
 
 `pnpm run demo:local` sets `MDQ_PREPARED_ROOT` to the verified local bundle and
-starts the API in read-only demo mode. If only a partial cache is present, the
-preview explicitly names the missing primary domains rather than presenting it
-as a complete Rybnik demo.
+starts the API in `local_bounded` mode. It permits the existing bounded
+point/radius and PRG workflows for operator preparation; do not expose that
+mode on a public host. If only a partial cache is present, the preview
+explicitly names the missing primary domains rather than presenting it as a
+complete Rybnik demo.
 
 With that API running, use a second terminal to generate a reproducible,
 dated API/PMTiles/worker measurement report:
@@ -217,11 +219,28 @@ The Node runtime path accepts a `provider_aoi_request/v2` point/radius or admini
 
 Map Data Provider is deployed as a single multi-stage container behind the VPS Nginx Proxy Manager instance at **`maplab.robertlacheta.pl`**.
 
-- **Read-Only Demo Mode**: Public mutations/refreshes (`POST /api/aoi/requests`, `POST /api/aoi/runtime-requests`, `POST /api/aoi/runtime-jobs`) are blocked with typed `runtime_disabled` responses.
+### Runtime-acquisition policy
+
+`MDQ_RUNTIME_MODE` is authoritative and fails closed: an omitted value means
+`disabled`, and an unknown value stops the service during startup. The supported
+values are `disabled`, `demo_fixed_aoi`, `local_bounded` and `trusted`.
+
+- `disabled` serves prepared data only.
+- `demo_fixed_aoi` is the public VPS setting described below.
+- `local_bounded` is for a developer/operator machine and keeps the existing bounded point/radius and PRG guards for preparing Steel Sentinel inputs.
+- `trusted` is for a non-browser operator/service integration and requires `MDQ_TRUSTED_ACQUISITION_TOKEN` as a bearer token; it is not a public demo mode.
+
+All acquisitions remain cache-first and canonical equivalent jobs are coalesced.
+Fresh cached outcomes are reused for 24 hours; partial outcomes remain explicit
+per-domain source evidence, and every snapshot is source-dated rather than a
+claim of live or complete infrastructure state.
+
+- **Controlled demo acquisition**: Production uses `MDQ_RUNTIME_MODE=demo_fixed_aoi` and exposes only `POST /api/aoi/demo-acquisitions/rybnik_gmina_demo`. The server fixes the AOI to the PRG Rybnik gmina (`gmina_2473011`) and profiles to `power`, `emergency`, `public` and `transport`; it accepts neither coordinates nor a client-selected profile or force-refresh option. Generic runtime endpoints return typed `demo_aoi_restricted` (HTTP 403).
+- **Explicit runtime policy**: `GET /api/aoi/runtime-capabilities` declares the active policy. `disabled` is the fail-closed default; `local_bounded` enables the existing bounded local workflow; `trusted` additionally requires a bearer token configured outside the browser.
 - **Provider API**: Node.js 22 Express provider serves all REST routes, PMTiles range reads, and SPA frontend assets.
 - **Geospatial Engine**: Python 3.14 + `uv` CLI worker handles offline data preparation and startup bootstrap.
 - **External snapshot**: The full Rybnik snapshot is an operator-provisioned, checksum-verified demo bundle, not data committed to Git. The container validates and atomically promotes it to prepared storage before serving requests.
-- **Runtime boundary**: Live AOI acquisition is available only to explicitly configured local/development workflows. It is deliberately disabled in the public demo so visitors cannot trigger Overpass acquisition or alter the snapshot.
+- **Runtime boundary**: The public demo can demonstrate one coalesced, cache-first fixed request. Arbitrary AOI acquisition remains local/operator-only, so visitors cannot turn the VPS into an open Overpass proxy.
 - **Deployment Guide**: See [docs/deployment.md](docs/deployment.md) for Nginx Proxy Manager/Cloudflare, directory setup, and rollback instructions.
 
 ## Verification

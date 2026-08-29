@@ -18,6 +18,7 @@ import type {
   AdministrativeCatalog,
   ProviderRuntimeJob,
   ProviderRuntimeResponse,
+  RuntimeCapability,
   RuntimeCategory,
   RuntimePreflight,
 } from "../types/api";
@@ -39,6 +40,8 @@ export const ALL_RUNTIME_CATEGORIES: RuntimeCategory[] = [
 export type AoiState = {
   catalog: AdministrativeCatalog | null;
   catalogLoading: boolean;
+  runtimeCapability: RuntimeCapability | null;
+  runtimeCapabilityLoading: boolean;
   mode: "point_radius" | "administrative_selection";
   longitude: string;
   latitude: string;
@@ -60,6 +63,7 @@ export type AoiState = {
   loadCatalog: (
     onActivity: (event: Omit<ActivityEvent, "id" | "timestamp">) => void,
   ) => Promise<void>;
+  loadRuntimeCapability: () => Promise<void>;
   setMode: (mode: "point_radius" | "administrative_selection") => void;
   setLongitude: (longitude: string) => void;
   setLatitude: (latitude: string) => void;
@@ -73,6 +77,10 @@ export type AoiState = {
     onActivity: (event: Omit<ActivityEvent, "id" | "timestamp">) => void,
   ) => void;
   applyAoi: (
+    onActivity: (event: Omit<ActivityEvent, "id" | "timestamp">) => void,
+    onApplied: (result: ProviderRuntimeResponse) => void,
+  ) => Promise<void>;
+  applyDemoAoi: (
     onActivity: (event: Omit<ActivityEvent, "id" | "timestamp">) => void,
     onApplied: (result: ProviderRuntimeResponse) => void,
   ) => Promise<void>;
@@ -122,6 +130,8 @@ function updatePointRadiusDraft(
 export const useAoiStore = create<AoiState>((set, get) => ({
   catalog: null,
   catalogLoading: false,
+  runtimeCapability: null,
+  runtimeCapabilityLoading: false,
   mode: "point_radius",
   longitude: "",
   latitude: "",
@@ -167,6 +177,31 @@ export const useAoiStore = create<AoiState>((set, get) => ({
     } catch (reason) {
       const error = reason instanceof Error ? reason.message : String(reason);
       set({ error, catalogLoading: false });
+    }
+  },
+
+  loadRuntimeCapability: async () => {
+    if (get().runtimeCapability || get().runtimeCapabilityLoading) {
+      return;
+    }
+    set({ runtimeCapabilityLoading: true });
+    try {
+      const response = await fetch("/api/aoi/runtime-capabilities");
+      if (!response.ok) {
+        throw new Error(
+          await providerResponseMessage(
+            response,
+            `Runtime capabilities could not be read (HTTP ${response.status}).`,
+          ),
+        );
+      }
+      set({
+        runtimeCapability: (await response.json()) as RuntimeCapability,
+        runtimeCapabilityLoading: false,
+      });
+    } catch (reason) {
+      const error = reason instanceof Error ? reason.message : String(reason);
+      set({ error, runtimeCapabilityLoading: false });
     }
   },
 
@@ -320,6 +355,47 @@ export const useAoiStore = create<AoiState>((set, get) => ({
       const output = message.startsWith("No new AOI snapshot was published;")
         ? message
         : `AOI preparation could not be completed. No new snapshot was published; the existing map was left unchanged. ${message}`;
+      set({ error: output });
+      onActivity({ phase: "error", message: output });
+    } finally {
+      set({ busy: false });
+    }
+  },
+
+  applyDemoAoi: async (onActivity, onApplied) => {
+    const { busy, runtimeCapability } = get();
+    const template = runtimeCapability?.demo_template;
+    if (busy || !template) {
+      return;
+    }
+    set({ busy: true, error: null, preflight: null, progress: null, result: null });
+    try {
+      onActivity({
+        phase: "cache",
+        message:
+          "Queued the fixed Rybnik demo AOI; the provider will reuse a verified snapshot when available.",
+      });
+      const response = await fetch(`/api/aoi/demo-acquisitions/${template.id}`, { method: "POST" });
+      if (!response.ok) {
+        throw new Error(await runtimeRequestError(response));
+      }
+      const initialJob = (await response.json()) as ProviderRuntimeJob;
+      set({ progress: initialJob });
+      const res = await pollRuntimeJob(initialJob, (job) => set({ progress: job }), onActivity);
+      set({ result: res });
+      const failed = res.outcomes.filter((outcome) => outcome.status === "failed");
+      onActivity({
+        phase: res.request_result === "cache" ? "cache" : "publication",
+        message: failed.length
+          ? `Published a partial fixed demo snapshot. ${failed.map((outcome) => `${outcome.domain}: ${outcome.detail}`).join(" ")}`
+          : res.request_result === "cache"
+            ? "Reused the verified fixed Rybnik demo snapshot."
+            : "Published a refreshed fixed Rybnik demo snapshot.",
+      });
+      onApplied(res);
+    } catch (reason) {
+      const message = reason instanceof Error ? reason.message : String(reason);
+      const output = `Demo AOI preparation could not be completed. No new snapshot was published; the existing map was left unchanged. ${message}`;
       set({ error: output });
       onActivity({ phase: "error", message: output });
     } finally {

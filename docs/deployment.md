@@ -10,7 +10,7 @@ This guide documents the production deployment architecture, Nginx Proxy Manager
 - **Application Container**: Single production Docker container (`map-data-provider-prod`) running as non-root user `appuser` (UID:GID `1001:1001`).
   - **Node.js 22 Express Provider**: Serves public REST API (`/api/*`), PMTiles archive streaming, in-memory rate limiting / concurrency protection, and static SPA frontend.
   - **Python 3.14 + uv**: Geospatial processing CLI engine used during bootstrap and offline data preparation.
-- **Read-Only Demo Mode**: Mutating/refresh endpoints (`POST /api/aoi/requests`, `POST /api/aoi/runtime-requests`, `POST /api/aoi/runtime-jobs`) are blocked with typed `runtime_disabled` (HTTP 403) responses, preventing unauthenticated Overpass queries or worker execution.
+- **Controlled Demo Acquisition**: Compose sets `MDQ_RUNTIME_MODE=demo_fixed_aoi` and `MDQ_DEMO_AOI_TEMPLATE=rybnik_gmina_demo`. The only public write path is `POST /api/aoi/demo-acquisitions/rybnik_gmina_demo`; its AOI and four profiles are server-defined. Generic runtime endpoints return `demo_aoi_restricted` (HTTP 403), so the VPS is not an unauthenticated Overpass proxy.
 - **Storage Volumes**:
   - `data/prepared`: Prepared domain packs and PMTiles presentation archives (`MDQ_PREPARED_ROOT`).
   - `data/bundle/rybnik_35km`: Externally provisioned, immutable demo bundle mounted read-only. It is not part of the image or Git repository.

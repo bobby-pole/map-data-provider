@@ -61,6 +61,32 @@ export const providerRuntimeRequestSchema = z
     profiles: z.array(runtimeProfileSchema).min(1),
   })
   .strict();
+export const runtimeAcquisitionModeSchema = z.enum([
+  "disabled",
+  "demo_fixed_aoi",
+  "local_bounded",
+  "trusted",
+]);
+export const runtimeCapabilityResponseSchema = z
+  .object({
+    response_version: z.literal("provider_runtime_capability/v1"),
+    mode: runtimeAcquisitionModeSchema,
+    supports_custom_aoi: z.boolean(),
+    demo_template: z
+      .object({
+        id: z.literal("rybnik_gmina_demo"),
+        label: z.string().min(1),
+        unit_ids: z.tuple([z.literal("gmina_2473011")]),
+        profiles: z.tuple([
+          z.literal("power"),
+          z.literal("emergency"),
+          z.literal("public"),
+          z.literal("transport"),
+        ]),
+      })
+      .nullable(),
+  })
+  .strict();
 const runtimeGeometrySchema = z
   .object({
     type: z.enum(["Polygon", "MultiPolygon"]),
@@ -252,7 +278,15 @@ export const resolvedAoiSchema = z.object({
 });
 
 export const providerErrorSchema = z.object({
-  error: z.enum(["invalid_request", "not_found", "conflict", "worker_failed", "runtime_disabled"]),
+  error: z.enum([
+    "invalid_request",
+    "not_found",
+    "conflict",
+    "worker_failed",
+    "runtime_disabled",
+    "demo_aoi_restricted",
+    "runtime_unauthorized",
+  ]),
   message: z.string(),
 });
 
@@ -1162,6 +1196,7 @@ export type IssueReviewRecord = z.infer<typeof issueReviewRecordSchema>;
 export type ReviewedIssue = z.infer<typeof reviewedIssueSchema>;
 export type IssueReviewUpdate = z.infer<typeof issueReviewUpdateSchema>;
 export type ProviderRuntimeRequest = z.infer<typeof providerRuntimeRequestSchema>;
+export type RuntimeCapabilityResponse = z.infer<typeof runtimeCapabilityResponseSchema>;
 export type ProviderRuntimeResponse = z.infer<typeof providerRuntimeResponseSchema>;
 export type ProviderRuntimeJob = z.infer<typeof providerRuntimeJobSchema>;
 export type AdministrativeBoundaryRequest = z.infer<typeof administrativeBoundaryRequestSchema>;

@@ -45,6 +45,7 @@ RUN groupadd -g 1001 appgroup && \
 # Configure Python virtual environment via uv
 WORKDIR /app/backend
 COPY backend/pyproject.toml backend/uv.lock ./
+ENV UV_PYTHON_INSTALL_DIR=/app/.uv-python
 RUN uv python install 3.14 && \
     uv sync --frozen --no-dev --python 3.14
 
@@ -79,8 +80,7 @@ RUN mkdir -p /app/data/prepared /app/data/reviews /app/data/runtime /app/data/bu
 ENV NODE_ENV=production
 ENV PORT=3001
 ENV STATIC_DIR=/app/static
-ENV MDQ_DEMO_MODE=readonly
-ENV MDQ_RUNTIME_ACQUISITION_ENABLED=false
+ENV MDQ_RUNTIME_MODE=disabled
 ENV MDQ_PREPARED_ROOT=/app/data/prepared
 ENV MDQ_REVIEW_ROOT=/app/data/reviews
 ENV MDQ_RUNTIME_ROOT=/app/data/runtime
@@ -92,6 +92,11 @@ ENV MDQ_BACKEND_DIR=/app/backend
 ENV PATH="/app/backend/.venv/bin:$PATH"
 
 USER appuser
+WORKDIR /app/backend
+# Keep this in the final, non-root image: a root-owned uv Python installation
+# previously made every PRG/catalogue worker call fail with EACCES at runtime.
+RUN uv run --offline python -c "from geo_pipeline.aoi_runtime import administrative_catalog, preflight_runtime_request; assert len(administrative_catalog()['units']) == 2875; assert preflight_runtime_request({'aoi': {'type': 'point_radius', 'longitude': 18.55, 'latitude': 50.1, 'radius_m': 1000}, 'profiles': ['power']})['status'] == 'ready'"
+WORKDIR /app
 EXPOSE 3001
 
 ENTRYPOINT ["/app/scripts/docker_entrypoint.sh"]

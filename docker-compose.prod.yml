@@ -10,8 +10,8 @@ services:
       - NODE_ENV=production
       - PORT=3001
       - STATIC_DIR=/app/static
-      - MDQ_DEMO_MODE=readonly
-      - MDQ_RUNTIME_ACQUISITION_ENABLED=false
+      - MDQ_RUNTIME_MODE=demo_fixed_aoi
+      - MDQ_DEMO_AOI_TEMPLATE=rybnik_gmina_demo
       - MDQ_PREPARED_ROOT=/app/data/prepared
       - MDQ_REVIEW_ROOT=/app/data/reviews
       - MDQ_RUNTIME_ROOT=/app/data/runtime

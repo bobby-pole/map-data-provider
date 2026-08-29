@@ -14,8 +14,7 @@ fi
 node "${PROJECT_ROOT}/scripts/verify_demo_bundle.mjs" "${LOCAL_BUNDLE_ROOT}/rybnik_35km"
 
 export MDQ_PREPARED_ROOT="${LOCAL_BUNDLE_ROOT}"
-export MDQ_DEMO_MODE=readonly
-export MDQ_RUNTIME_ACQUISITION_ENABLED=false
+export MDQ_RUNTIME_MODE=local_bounded
 # The local benchmark makes 600 ordinary API requests. Keep its development-only
 # server budget above that value; production retains the default 240/min limit.
 export MDQ_RATE_LIMIT_MAX_REQUESTS="${MDQ_RATE_LIMIT_MAX_REQUESTS:-1200}"

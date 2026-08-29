@@ -10,12 +10,16 @@ import { healthRouter } from "./routes/health.js";
 import type { DeliveryMetricsPaths } from "./services/deliveryMetricsService.js";
 import type { IssueStorePaths } from "./services/issueReviewService.js";
 import type { ProviderDataPaths } from "./services/providerDataService.js";
+import type { RuntimeAcquisitionPolicy } from "./services/runtimeAcquisitionPolicy.js";
+import type { ProviderRuntimeJob, ProviderRuntimeRequest } from "./types/provider.js";
 
 export function createApp(options?: {
   issueStorePaths?: IssueStorePaths;
   providerDataPaths?: ProviderDataPaths;
   deliveryMetricsPaths?: DeliveryMetricsPaths;
-  readOnlyMode?: boolean;
+  runtimePolicy?: RuntimeAcquisitionPolicy;
+  runtimeJobSubmitter?: (runtimeRequest: ProviderRuntimeRequest) => ProviderRuntimeJob;
+  runtimeJobGetter?: (jobId: string) => ProviderRuntimeJob | undefined;
   staticDir?: string;
   rateLimitOptions?: RateLimitOptions;
 }) {

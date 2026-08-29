@@ -264,6 +264,18 @@ export type RuntimeCategory =
   | "industrial"
   | "telecom"
   | "district_heating";
+export type RuntimeAcquisitionMode = "disabled" | "demo_fixed_aoi" | "local_bounded" | "trusted";
+export type RuntimeCapability = {
+  response_version: "provider_runtime_capability/v1";
+  mode: RuntimeAcquisitionMode;
+  supports_custom_aoi: boolean;
+  demo_template: {
+    id: "rybnik_gmina_demo";
+    label: string;
+    unit_ids: ["gmina_2473011"];
+    profiles: ["power", "emergency", "public", "transport"];
+  } | null;
+};
 export type RuntimeAoiInput =
   | { type: "point_radius"; longitude: number; latitude: number; radius_m: number }
   | { type: "administrative_selection"; unit_ids: string[] };

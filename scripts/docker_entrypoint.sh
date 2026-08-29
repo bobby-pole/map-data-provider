@@ -12,7 +12,7 @@ echo "==> Initializing Map Data Provider container..."
 echo "    Prepared storage:   ${PREPARED_ROOT}"
 echo "    Review storage:     ${REVIEW_ROOT}"
 echo "    Runtime storage:    ${RUNTIME_ROOT}"
-echo "    Demo mode:          ${MDQ_DEMO_MODE:-readonly}"
+echo "    Runtime mode:       ${MDQ_RUNTIME_MODE:-disabled}"
 
 mkdir -p "${PREPARED_ROOT}" "${REVIEW_ROOT}" "${RUNTIME_ROOT}"
 

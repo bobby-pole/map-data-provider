@@ -77,7 +77,13 @@ export type MapPresentationArchiveInfo = {
 export class ProviderDataError extends Error {
   constructor(
     readonly kind:
-      "invalid_request" | "not_found" | "conflict" | "worker_failed" | "runtime_disabled",
+      | "invalid_request"
+      | "not_found"
+      | "conflict"
+      | "worker_failed"
+      | "runtime_disabled"
+      | "demo_aoi_restricted"
+      | "runtime_unauthorized",
     message: string,
   ) {
     super(message);

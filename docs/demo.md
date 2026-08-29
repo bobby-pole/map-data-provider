@@ -32,7 +32,7 @@ pnpm run dev
 The examples below use `curl` and `jq` against `http://127.0.0.1:3001`.
 
 For the full local Rybnik demo, first copy the operator-provisioned verified
-bundle and run the API in local read-only mode:
+bundle and run the API in local bounded-acquisition mode:
 
 ```bash
 ./scripts/pull_local_demo_bundle.sh \
@@ -43,6 +43,12 @@ pnpm run demo:local
 The bundle remains ignored by Git under `.local-demo-bundle/`. A partial cache
 is still readable for development, but the preview shows an explicit warning
 listing its missing primary domains.
+
+The public VPS intentionally uses a different policy: it exposes one clearly
+labelled, server-defined Rybnik-gmina preparation through
+`POST /api/aoi/demo-acquisitions/rybnik_gmina_demo`. It does not accept a
+visitor's coordinates, PRG selection, profile list or refresh flag. Inspect
+`GET /api/aoi/runtime-capabilities` before integrating either mode.
 
 To record reproducible API, PMTiles and fixture-worker delivery metrics, leave
 this API running and execute the following in a second terminal:

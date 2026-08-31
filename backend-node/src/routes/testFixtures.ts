@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 function canonicalJson(value: unknown): string {
@@ -655,4 +655,49 @@ export async function seedCompactRybnikCache(cacheRoot: string): Promise<void> {
     );
     await writeFile(path.join(packRoot, "manifest.json"), JSON.stringify(domainManifest));
   }
+
+  const domainOutcomes = await Promise.all(
+    domains.map(async (domain) => ({
+      domain,
+      status: "ready" as const,
+      detail: "Checksum-validated fixture domain pack is published.",
+      manifest_sha256: sha256(
+        await readFile(path.join(cacheRoot, aoiId, domain, "domain-pack-v2", "manifest.json")),
+      ),
+      readiness: "usable_with_limitations" as const,
+      limitations: ["Fixture-only publication; not a live completeness claim."],
+    })),
+  );
+  const unsignedSnapshot = {
+    snapshot_version: "provider_prepared_snapshot/v1" as const,
+    snapshot_id: aoiId,
+    aoi_id: aoiId,
+    version: "fixture-v1",
+    state: "ready" as const,
+    published_at: "2026-08-31T00:00:00Z",
+    source_observed_at: "2026-08-31T00:00:00Z",
+    pipeline_version: "fixture/v1",
+    coverage: {
+      geometry: {
+        type: "Polygon" as const,
+        coordinates: [
+          [
+            [18.0, 49.8],
+            [19.0, 49.8],
+            [19.0, 50.4],
+            [18.0, 49.8],
+          ],
+        ],
+      },
+      geometry_crs: "EPSG:4326" as const,
+      input_type: "circle" as const,
+      source_label: "Fixture Rybnik coverage",
+      limitations: ["Fixture-only publication; not a live completeness claim."],
+    },
+    domain_outcomes: domainOutcomes,
+  };
+  await writeFile(
+    path.join(cacheRoot, aoiId, "snapshot_manifest.json"),
+    JSON.stringify({ ...unsignedSnapshot, checksum: sha256(canonicalJson(unsignedSnapshot)) }),
+  );
 }

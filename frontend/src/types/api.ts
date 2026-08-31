@@ -4,6 +4,28 @@ export type LayerSourceType = "analytical_vector" | "manual_seed" | "reference_o
 export type LayerConfidence = "high" | "medium" | "low" | "not_applicable";
 export type LayerReadiness = "ready" | "usable_with_limitations" | "needs_source" | "not_usable";
 
+export type RuntimeAcquisitionEvidence = {
+  evidence_version: "provider_runtime_acquisition_evidence/v1";
+  aoi_id: string;
+  snapshot_id: string;
+  resolved_geometry: Geometry;
+  allowed_domains: RuntimeCategory[];
+  source_observed_at: string;
+  overpass_endpoint: string | null;
+  pipeline_version: string;
+  published_at: string;
+  domains: Array<{
+    domain: RuntimeCategory;
+    preparation_duration_ms: number | null;
+    queried_feature_count: number | null;
+    accepted_feature_count: number | null;
+    rejected_feature_count: number | null;
+    validation_status: "passed" | "warning" | "failed" | "unknown";
+    limitations: string[];
+    overpass_endpoint: string | null;
+  }>;
+};
+
 export type CachedMetadata = {
   aoi_id: string;
   domain: string;

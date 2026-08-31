@@ -9,6 +9,7 @@ import {
 import { ALL_RUNTIME_CATEGORIES, useAoiStore } from "../stores/aoiStore";
 import type { AdministrativeUnit, ProviderRuntimeJob, ProviderRuntimeResponse } from "../types/api";
 import type { ActivityEvent } from "./ActivityWindow";
+import { RuntimeAcquisitionEvidencePanel } from "./RuntimeAcquisitionEvidencePanel";
 
 type Props = {
   onActivity: (event: Omit<ActivityEvent, "id" | "timestamp">) => void;
@@ -273,8 +274,8 @@ export function AoiSettings({
             and cannot accept coordinates, PRG selections, custom profiles, or a force refresh.
           </p>
           <p className="muted">
-            The server coalesces the fixed request and reuses a verified snapshot when it is still
-            fresh.
+            The server coalesces the fixed request and reuses its verified result for 24 hours; the
+            public demo cannot force a refresh.
           </p>
           <button
             type="button"
@@ -282,11 +283,12 @@ export function AoiSettings({
             disabled={busy}
             onClick={() => void applyDemoAoi(onActivity, onApplied)}
           >
-            {busy ? "Preparing fixed demo AOI…" : "Run fixed Rybnik demo"}
+            {busy ? "Preparing Rybnik demo AOI…" : "Prepare Rybnik demo AOI"}
           </button>
         </div>
         {progress && <RuntimeProgress job={progress} />}
         {result && <RuntimeOutcomeSummary result={result} />}
+        <RuntimeAcquisitionEvidencePanel aoiId={result?.aoi.aoi_id ?? null} />
       </section>
     );
   }
@@ -509,6 +511,7 @@ export function AoiSettings({
       </div>
       {progress && <RuntimeProgress job={progress} />}
       {result && <RuntimeOutcomeSummary result={result} />}
+      <RuntimeAcquisitionEvidencePanel aoiId={result?.aoi.aoi_id ?? null} />
     </section>
   );
 }

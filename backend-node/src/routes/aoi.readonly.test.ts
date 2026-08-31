@@ -14,6 +14,8 @@ describe("runtime acquisition policy", () => {
   let fixtureCacheDir: string;
   let disabledApp: ReturnType<typeof createApp>;
   let demoApp: ReturnType<typeof createApp>;
+  let localApp: ReturnType<typeof createApp>;
+  let trustedApp: ReturnType<typeof createApp>;
 
   beforeAll(async () => {
     fixtureCacheDir = await mkdtemp(path.join(os.tmpdir(), "mdq-readonly-cache-"));
@@ -25,7 +27,7 @@ describe("runtime acquisition policy", () => {
     demoApp = createApp({
       runtimePolicy: { mode: "demo_fixed_aoi" },
       providerDataPaths: { cacheRoot: fixtureCacheDir },
-      runtimeJobSubmitter: () => ({
+      demoRuntimeJobSubmitter: () => ({
         job_id: "0d0ce687-3834-4d9f-933e-20f5778ff441",
         state: "queued",
         event: "queued",
@@ -38,6 +40,29 @@ describe("runtime acquisition policy", () => {
         started_at: "2026-08-29T10:00:00.000Z",
         updated_at: "2026-08-29T10:00:00.000Z",
       }),
+    });
+    const queuedJob = () => ({
+      job_id: "f7b93d9e-b620-413c-82cd-ccb7a9e7f963",
+      state: "queued" as const,
+      event: "queued" as const,
+      total_domains: 1,
+      completed_domains: 0,
+      active_domain: null,
+      queried_feature_count: 0,
+      accepted_feature_count: 0,
+      derived_feature_count: 0,
+      started_at: "2026-08-29T10:00:00.000Z",
+      updated_at: "2026-08-29T10:00:00.000Z",
+    });
+    localApp = createApp({
+      runtimePolicy: { mode: "local_bounded" },
+      providerDataPaths: { cacheRoot: fixtureCacheDir },
+      runtimeJobSubmitter: queuedJob,
+    });
+    trustedApp = createApp({
+      runtimePolicy: { mode: "trusted", trustedToken: "fixture-service-token" },
+      providerDataPaths: { cacheRoot: fixtureCacheDir },
+      runtimeJobSubmitter: queuedJob,
     });
   });
 
@@ -121,6 +146,39 @@ describe("runtime acquisition policy", () => {
     );
     expect(demoJob.status).toBe(202);
     expect(demoJob.body).toMatchObject({ state: "queued", total_domains: 4 });
+
+    const forceRefresh = await request(demoApp)
+      .post(`/api/aoi/demo-acquisitions/${DEMO_AOI_TEMPLATE.id}`)
+      .send({ force_refresh: true });
+    expect(forceRefresh.status).toBe(403);
+    expect(providerErrorSchema.parse(forceRefresh.body).error).toBe("demo_aoi_restricted");
+
+    const genericForceRefresh = await request(demoApp)
+      .post("/api/aoi/runtime-jobs")
+      .send({ force_refresh: true });
+    expect(genericForceRefresh.status).toBe(403);
+    expect(providerErrorSchema.parse(genericForceRefresh.body).error).toBe("demo_aoi_restricted");
+  });
+
+  it("permits bounded local jobs and requires a trusted service token remotely", async () => {
+    const runtimeRequest = {
+      aoi: { type: "point_radius", longitude: 18.546285, latitude: 50.102174, radius_m: 5000 },
+      profiles: ["power"],
+    };
+    const local = await request(localApp).post("/api/aoi/runtime-jobs").send(runtimeRequest);
+    expect(local.status).toBe(202);
+
+    const unauthenticated = await request(trustedApp)
+      .post("/api/aoi/runtime-jobs")
+      .send(runtimeRequest);
+    expect(unauthenticated.status).toBe(401);
+    expect(providerErrorSchema.parse(unauthenticated.body).error).toBe("runtime_unauthorized");
+
+    const trusted = await request(trustedApp)
+      .post("/api/aoi/runtime-jobs")
+      .set("authorization", "Bearer fixture-service-token")
+      .send(runtimeRequest);
+    expect(trusted.status).toBe(202);
   });
 
   it("allows read-only endpoints in disabled mode", async () => {

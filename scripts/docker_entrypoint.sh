@@ -55,6 +55,36 @@ verify_bundle() {
       process.exit(1);
     }
 
+    const snapshotPath = path.join(bundleDir, "snapshot_manifest.json");
+    if (!fs.existsSync(snapshotPath) || !manifest.files["snapshot_manifest.json"]) {
+      console.error("ERROR: Demo bundle is missing its prepared snapshot manifest");
+      process.exit(1);
+    }
+    const snapshot = JSON.parse(fs.readFileSync(snapshotPath, "utf8"));
+    const { checksum: snapshotChecksum, ...unsignedSnapshot } = snapshot;
+    const canonicalJson = (value) => {
+      if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
+      if (value && typeof value === "object") {
+        return `{${Object.keys(value)
+          .sort()
+          .map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`)
+          .join(",")}}`;
+      }
+      return JSON.stringify(value);
+    };
+    if (
+      snapshot.snapshot_version !== "provider_prepared_snapshot/v1" ||
+      snapshot.aoi_id !== manifest.aoi_id ||
+      snapshot.snapshot_id !== manifest.aoi_id ||
+      snapshot.state !== "ready" ||
+      !/^[a-f0-9]{64}$/.test(snapshotChecksum || "") ||
+      crypto.createHash("sha256").update(canonicalJson(unsignedSnapshot)).digest("hex") !== snapshotChecksum
+    ) {
+      console.error("ERROR: Prepared snapshot is invalid, not ready, or has a checksum mismatch");
+      process.exit(1);
+    }
+    const snapshotDomains = new Map((snapshot.domain_outcomes || []).map((outcome) => [outcome.domain, outcome]));
+
     const root = fs.realpathSync(bundleDir);
     let verifiedCount = 0;
     for (const [relPath, fileInfo] of Object.entries(manifest.files)) {
@@ -94,6 +124,12 @@ verify_bundle() {
       const packManifest = JSON.parse(fs.readFileSync(packManifestPath, "utf8"));
       if (packManifest.domain_pack_version !== "provider_domain_pack/v2") {
         console.error(`ERROR: Invalid domain pack version in ${domain}`);
+        process.exit(1);
+      }
+      const outcome = snapshotDomains.get(domain);
+      const manifestChecksum = crypto.createHash("sha256").update(fs.readFileSync(packManifestPath)).digest("hex");
+      if (outcome?.status !== "ready" || outcome.manifest_sha256 !== manifestChecksum) {
+        console.error(`ERROR: Prepared snapshot does not validate domain pack ${domain}`);
         process.exit(1);
       }
     }

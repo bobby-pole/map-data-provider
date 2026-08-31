@@ -5,7 +5,9 @@ import {
   getAdministrativeBoundary,
   getAdministrativeCatalog,
   getRuntimeJob,
+  getRuntimeJobForAoi,
   preflightRuntimeRequest,
+  submitDemoRuntimeJob,
   submitRuntimeJob,
   submitRuntimeRequest,
 } from "../services/aoiRuntimeService.js";
@@ -14,6 +16,12 @@ import {
   type IssueStorePaths,
   updateIssueReview,
 } from "../services/issueReviewService.js";
+import {
+  availabilityForResolvedAoi,
+  getPreparedSnapshot,
+  getRuntimeAcquisitionEvidence,
+  listPreparedSnapshots,
+} from "../services/preparedSnapshotService.js";
 import {
   getCachedLayer,
   getCachedLayers,
@@ -43,6 +51,8 @@ import {
   administrativeBoundaryRequestSchema,
   administrativeBoundaryResponseSchema,
   administrativeCatalogResponseSchema,
+  aoiAvailabilityRequestSchema,
+  aoiAvailabilityResponseSchema,
   aoiRequestResponseSchema,
   aoiRequestSchema,
   domainPackListResponseSchema,
@@ -57,6 +67,7 @@ import {
   mapPresentationListResponseSchema,
   mapPresentationResponseSchema,
   multiDomainExportResponseSchema,
+  preparedSnapshotCatalogueResponseSchema,
   providerErrorSchema,
   providerRuntimeJobSchema,
   providerRuntimePreflightResponseSchema,
@@ -64,6 +75,7 @@ import {
   providerRuntimeResponseSchema,
   readinessListResponseSchema,
   type ReviewedIssue,
+  runtimeAcquisitionEvidenceSchema,
   runtimeCapabilityResponseSchema,
   runtimeProfileSchema,
   sourceAvailabilityReportSchema,
@@ -75,11 +87,13 @@ export function createAoiRouter(options?: {
   providerDataPaths?: ProviderDataPaths;
   runtimePolicy?: RuntimeAcquisitionPolicy;
   runtimeJobSubmitter?: typeof submitRuntimeJob;
+  demoRuntimeJobSubmitter?: typeof submitDemoRuntimeJob;
   runtimeJobGetter?: typeof getRuntimeJob;
 }) {
   const aoiRouter = Router();
   const runtimePolicy = options?.runtimePolicy ?? runtimePolicyFromEnvironment();
   const runtimeJobSubmitter = options?.runtimeJobSubmitter ?? submitRuntimeJob;
+  const demoRuntimeJobSubmitter = options?.demoRuntimeJobSubmitter ?? submitDemoRuntimeJob;
   const runtimeJobGetter = options?.runtimeJobGetter ?? getRuntimeJob;
 
   const assertGenericRuntimeAllowed = (authorizationHeader: string | undefined) => {
@@ -124,6 +138,59 @@ export function createAoiRouter(options?: {
           : null,
       }),
     );
+  });
+
+  aoiRouter.get("/snapshots", async (_request, response) => {
+    try {
+      response.status(200).json(
+        preparedSnapshotCatalogueResponseSchema.parse({
+          response_version: "provider_prepared_snapshot_catalogue/v1",
+          snapshots: await listPreparedSnapshots(options?.providerDataPaths),
+        }),
+      );
+    } catch (error) {
+      respondWithProviderError(response, error);
+    }
+  });
+
+  aoiRouter.post("/availability", async (request, response) => {
+    try {
+      const requested = aoiAvailabilityRequestSchema.parse(request.body);
+      const preflight = await preflightRuntimeRequest({ ...requested, profiles: ["power"] });
+      const job = getRuntimeJobForAoi(requested.aoi);
+      if (job && (job.state === "queued" || job.state === "running")) {
+        response.status(200).json(
+          aoiAvailabilityResponseSchema.parse({
+            response_version: "provider_aoi_availability/v1",
+            requested_aoi_id: preflight.aoi.aoi_id,
+            state: job.state,
+            snapshot_ids: [],
+            explanation: `A permitted acquisition job is ${job.state}; only completed domains will be published.`,
+            limitations: [],
+          }),
+        );
+        return;
+      }
+      response
+        .status(200)
+        .json(
+          aoiAvailabilityResponseSchema.parse(
+            availabilityForResolvedAoi(
+              { aoi_id: preflight.aoi.aoi_id, geometry: preflight.aoi.geometry },
+              await listPreparedSnapshots(options?.providerDataPaths),
+            ),
+          ),
+        );
+    } catch (error) {
+      if (error instanceof Error && error.name === "ZodError") {
+        respondWithProviderError(
+          response,
+          new ProviderDataError("invalid_request", "Malformed AOI availability request."),
+        );
+        return;
+      }
+      respondWithProviderError(response, error);
+    }
   });
 
   aoiRouter.get("/catalog", async (_request, response) => {
@@ -183,8 +250,8 @@ export function createAoiRouter(options?: {
 
   aoiRouter.post("/runtime-requests", async (request, response) => {
     try {
-      const runtimeRequest = providerRuntimeRequestSchema.parse(request.body);
       assertGenericRuntimeAllowed(request.header("authorization"));
+      const runtimeRequest = providerRuntimeRequestSchema.parse(request.body);
       response
         .status(200)
         .json(providerRuntimeResponseSchema.parse(await submitRuntimeRequest(runtimeRequest)));
@@ -202,8 +269,8 @@ export function createAoiRouter(options?: {
 
   aoiRouter.post("/runtime-jobs", (request, response) => {
     try {
-      const runtimeRequest = providerRuntimeRequestSchema.parse(request.body);
       assertGenericRuntimeAllowed(request.header("authorization"));
+      const runtimeRequest = providerRuntimeRequestSchema.parse(request.body);
       response
         .status(202)
         .json(providerRuntimeJobSchema.parse(runtimeJobSubmitter(runtimeRequest)));
@@ -233,13 +300,13 @@ export function createAoiRouter(options?: {
       const demoRequestBody = request.body as object | undefined;
       if (demoRequestBody && Object.keys(demoRequestBody).length > 0) {
         throw new ProviderDataError(
-          "invalid_request",
-          "Demo acquisition requests do not accept a custom AOI or profile payload.",
+          "demo_aoi_restricted",
+          "The fixed public demo does not accept a force refresh, custom AOI, or profile payload.",
         );
       }
       response
         .status(202)
-        .json(providerRuntimeJobSchema.parse(runtimeJobSubmitter(DEMO_AOI_TEMPLATE.request)));
+        .json(providerRuntimeJobSchema.parse(demoRuntimeJobSubmitter(DEMO_AOI_TEMPLATE.request)));
     } catch (error) {
       respondWithProviderError(response, error);
     }
@@ -257,6 +324,35 @@ export function createAoiRouter(options?: {
     response.status(200).json(providerRuntimeJobSchema.parse(job));
   });
 
+  // Data readers are deliberately snapshot-gated. A pack left beside a failed
+  // refresh is not a publication and must not become visible simply because a
+  // caller knows its AOI path. Source-availability and issue-review records
+  // are metadata workflows, not prepared spatial artefacts, so they remain
+  // available for a not-yet-published AOI. The legacy POST /requests route
+  // below has no AOI path and is also outside this read-only guard.
+  aoiRouter.use("/:aoiId", async (request, response, next) => {
+    if (
+      request.params.aoiId === "requests" ||
+      /\/(?:sources|source-availability|issues)(?:\/|$)/.test(request.path)
+    ) {
+      next();
+      return;
+    }
+    try {
+      const snapshot = await getPreparedSnapshot(request.params.aoiId, options?.providerDataPaths);
+      if (snapshot.state !== "ready") {
+        throw new ProviderDataError(
+          "conflict",
+          `Snapshot '${snapshot.snapshot_id}' is ${snapshot.state}; normal data reads require a fully ready publication.`,
+        );
+      }
+      response.locals.preparedSnapshot = snapshot;
+      next();
+    } catch (error) {
+      respondWithProviderError(response, error);
+    }
+  });
+
   aoiRouter.get("/:aoiId/presentations", async (request, response) => {
     try {
       response.status(200).json(
@@ -269,6 +365,20 @@ export function createAoiRouter(options?: {
           ),
         }),
       );
+    } catch (error) {
+      respondWithProviderError(response, error);
+    }
+  });
+
+  aoiRouter.get("/:aoiId/metrics/acquisition", async (request, response) => {
+    try {
+      response
+        .status(200)
+        .json(
+          runtimeAcquisitionEvidenceSchema.parse(
+            await getRuntimeAcquisitionEvidence(request.params.aoiId, options?.providerDataPaths),
+          ),
+        );
     } catch (error) {
       respondWithProviderError(response, error);
     }
@@ -465,6 +575,16 @@ export function createAoiRouter(options?: {
       const requestedDomains = Array.from(new Set(rawSegments)) as Array<
         (typeof runtimeProfileSchema.options)[number]
       >;
+      const snapshot = await getPreparedSnapshot(request.params.aoiId, options?.providerDataPaths);
+      if (snapshot.state !== "ready" && snapshot.state !== "partial") {
+        throw new ProviderDataError(
+          "conflict",
+          `Snapshot '${snapshot.snapshot_id}' is ${snapshot.state} and cannot be exported.`,
+        );
+      }
+      const snapshotDomains = new Map(
+        snapshot.domain_outcomes.map((outcome) => [outcome.domain, outcome]),
+      );
 
       const domainOutcomes: Array<{
         domain: (typeof runtimeProfileSchema.options)[number];
@@ -476,6 +596,18 @@ export function createAoiRouter(options?: {
 
       for (const domain of requestedDomains) {
         const typedDomain = domain;
+        const snapshotOutcome = snapshotDomains.get(typedDomain);
+        if (!snapshotOutcome || snapshotOutcome.status !== "ready") {
+          domainOutcomes.push({
+            domain: typedDomain,
+            status: snapshotOutcome?.status === "failed" ? "failed" : "needs_source",
+            detail:
+              snapshotOutcome?.detail ??
+              `Snapshot '${snapshot.snapshot_id}' has no published '${typedDomain}' domain.`,
+            has_domain_pack: false,
+          });
+          continue;
+        }
         try {
           const pack = await getDomainPack(
             request.params.aoiId,
@@ -520,6 +652,7 @@ export function createAoiRouter(options?: {
         multiDomainExportResponseSchema.parse({
           export_version: "provider_multi_domain_export/v2",
           aoi_id: request.params.aoiId,
+          snapshot,
           exported_at: new Date().toISOString(),
           domain_outcomes: domainOutcomes,
           domain_packs: exportPacks,
@@ -540,8 +673,8 @@ export function createAoiRouter(options?: {
 
   aoiRouter.post("/requests", async (request, response) => {
     try {
-      const body = aoiRequestSchema.parse(request.body);
       assertGenericRuntimeAllowed(request.header("authorization"));
+      const body = aoiRequestSchema.parse(request.body);
       response
         .status(200)
         .json(aoiRequestResponseSchema.parse(await requestAoi(body.aoi_id, body.domain)));

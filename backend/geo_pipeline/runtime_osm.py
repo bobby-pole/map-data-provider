@@ -31,7 +31,7 @@ from geo_pipeline.emergency import category_for_osm_feature
 from geo_pipeline.extract import (
     OVERPASS_ENDPOINTS,
     configure_osmnx,
-    fetch_osm_features_geometry,
+    fetch_osm_features_geometry_with_endpoint,
     sanitize_for_geojson,
 )
 from geo_pipeline.gas import category_for_osm_feature as gas_category_for_osm_feature
@@ -94,7 +94,10 @@ def refresh_runtime_osm_domain(*, aoi: dict[str, Any], domain: str, root: Path) 
     if query is None:
         raise ValueError(f"Runtime OSM acquisition is not enabled for domain: {domain}")
     configure_osmnx()
-    raw = sanitize_for_geojson(fetch_osm_features_geometry(aoi["geometry"], query.tags))
+    raw_frame, overpass_endpoint = fetch_osm_features_geometry_with_endpoint(
+        aoi["geometry"], query.tags
+    )
+    raw = sanitize_for_geojson(raw_frame)
     queried_feature_count = len(raw)
     if domain == "power":
         raw = _compact_power_properties(_add_power_categories(raw))
@@ -137,6 +140,7 @@ def refresh_runtime_osm_domain(*, aoi: dict[str, Any], domain: str, root: Path) 
         queried_feature_count=queried_feature_count,
         relation_elements=relation_elements,
         relation_evidence=relation_evidence,
+        overpass_endpoint=overpass_endpoint,
     )
 
 
@@ -150,6 +154,7 @@ def publish_runtime_osm_collection(
     queried_feature_count: int | None = None,
     relation_elements: list[dict[str, Any]] | None = None,
     relation_evidence: dict[str, Any] | None = None,
+    overpass_endpoint: str | None = None,
 ) -> dict[str, Any]:
     """Publish already-acquired OSM GeoJSON; kept separate for offline contract tests."""
     layers = _domain_layers(domain, source)
@@ -180,6 +185,7 @@ def publish_runtime_osm_collection(
         snapshot_at=snapshot_at,
         layers=layers,
         relation_evidence=relation_evidence,
+        overpass_endpoint=overpass_endpoint,
     )
     pack = write_domain_pack(aoi["aoi_id"], domain, root=root, manifest=manifest, files=files)
     build_map_presentation(
@@ -202,6 +208,7 @@ def publish_runtime_osm_collection(
         else accepted_feature_count,
         "accepted_feature_count": accepted_feature_count,
         "derived_feature_count": derived_feature_count,
+        "overpass_endpoint": overpass_endpoint,
     }
 
 
@@ -483,6 +490,7 @@ def _pack_payload(
     snapshot_at: str,
     layers: dict[str, list[dict[str, Any]]],
     relation_evidence: dict[str, Any] | None = None,
+    overpass_endpoint: str | None = None,
 ) -> tuple[dict[str, Any], dict[str, bytes]]:
     limitations = [
         "OSM completeness varies by area and object type.",
@@ -508,7 +516,7 @@ def _pack_payload(
             "source": "OpenStreetMap",
             "source_type": "analytical_vector",
             "source_registry_id": "openstreetmap",
-            "source_url": "https://overpass-api.de/api/interpreter",
+            "source_url": overpass_endpoint or "https://overpass-api.de/api/interpreter",
             "source_query": f"On-demand bounded OSM query for {domain} inside resolved provider AOI.",
             "snapshot_at": snapshot_at,
             "pipeline_version": RUNTIME_PIPELINE_VERSION,

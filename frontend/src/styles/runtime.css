@@ -54,6 +54,45 @@
   font-size: 12px;
 }
 
+.runtimeEvidence {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 10px;
+  color: #dbeafe;
+  background: rgba(30, 64, 175, 0.16);
+  border: 1px solid rgba(96, 165, 250, 0.35);
+  border-radius: 8px;
+  font-size: 11.5px;
+}
+
+.runtimeEvidence h3,
+.runtimeEvidence p,
+.runtimeEvidence ul {
+  margin: 0;
+}
+
+.runtimeEvidence dl {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin: 0;
+}
+
+.runtimeEvidence dt {
+  color: #93c5fd;
+}
+.runtimeEvidence dd {
+  margin: 2px 0 0;
+  color: #f8fafc;
+  overflow-wrap: anywhere;
+}
+.runtimeEvidence ul {
+  display: grid;
+  gap: 4px;
+  padding-left: 16px;
+}
+
 .partialSnapshot {
   display: grid;
   gap: 7px;

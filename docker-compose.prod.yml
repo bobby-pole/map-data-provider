@@ -12,6 +12,7 @@ services:
       - STATIC_DIR=/app/static
       - MDQ_RUNTIME_MODE=demo_fixed_aoi
       - MDQ_DEMO_AOI_TEMPLATE=rybnik_gmina_demo
+      - MDQ_DEMO_AOI_ID=rybnik_35km
       - MDQ_PREPARED_ROOT=/app/data/prepared
       - MDQ_REVIEW_ROOT=/app/data/reviews
       - MDQ_RUNTIME_ROOT=/app/data/runtime

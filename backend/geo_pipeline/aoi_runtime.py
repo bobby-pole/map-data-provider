@@ -319,6 +319,8 @@ def profile_outcomes(request: dict[str, Any], *, fixture_mode: bool = True) -> l
                 "queried_feature_count": None,
                 "accepted_feature_count": None,
                 "derived_feature_count": None,
+                "preparation_duration_ms": None,
+                "overpass_endpoint": None,
             }
         )
     return outcomes

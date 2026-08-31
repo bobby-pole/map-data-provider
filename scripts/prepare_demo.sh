@@ -70,18 +70,46 @@ function walk(dir) {
 }
 
 copyTree(sourceDir, outputDir);
+' "${SOURCE_DIR}" "${OUTPUT_DIR}" "${BUNDLE_ID}"
+
+PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+if [[ -x "${PROJECT_ROOT}/backend/.venv/bin/python" ]]; then
+  "${PROJECT_ROOT}/backend/.venv/bin/python" "${PROJECT_ROOT}/scripts/publish_existing_snapshot.py" \
+    --prepared-root "${OUTPUT_ROOT}" --aoi-id rybnik_35km --version "${BUNDLE_ID}"
+else
+  (
+    cd "${PROJECT_ROOT}/backend"
+    uv run python ../scripts/publish_existing_snapshot.py \
+      --prepared-root "${OUTPUT_ROOT}" --aoi-id rybnik_35km --version "${BUNDLE_ID}"
+  )
+fi
+
+node -e '
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const outputDir = path.resolve(process.argv[1]);
+const bundleId = process.argv[2];
+function walk(dir) {
+  const files = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) files.push(...walk(fullPath));
+    else if (entry.isFile() && entry.name !== "demo_bundle_manifest.json") files.push(fullPath);
+  }
+  return files;
+}
 const fileEntries = {};
 const domains = new Set();
 for (const filePath of walk(outputDir)) {
   const relPath = path.relative(outputDir, filePath).split(path.sep).join("/");
-  domains.add(relPath.split("/")[0]);
+  if (relPath.includes("/")) domains.add(relPath.split("/")[0]);
   const content = fs.readFileSync(filePath);
   fileEntries[relPath] = {
     sha256: crypto.createHash("sha256").update(content).digest("hex"),
     size_bytes: content.length,
   };
 }
-
 const manifest = {
   demo_bundle_version: "mdq_demo_bundle/v1",
   bundle_id: bundleId,
@@ -91,6 +119,6 @@ const manifest = {
 };
 fs.writeFileSync(path.join(outputDir, "demo_bundle_manifest.json"), `${JSON.stringify(manifest, null, 2)}\n`);
 console.log(`Demo bundle ${bundleId} prepared at ${outputDir} (${Object.keys(fileEntries).length} files).`);
-' "${SOURCE_DIR}" "${OUTPUT_DIR}" "${BUNDLE_ID}"
+' "${OUTPUT_DIR}" "${BUNDLE_ID}"
 
 node "$(cd "$(dirname "$0")" && pwd)/verify_demo_bundle.mjs" "${OUTPUT_DIR}"

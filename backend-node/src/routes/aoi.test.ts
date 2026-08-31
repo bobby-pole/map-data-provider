@@ -29,6 +29,20 @@ import {
 } from "../types/provider.js";
 import { seedCompactRybnikCache } from "./testFixtures.js";
 
+function canonicalJson(value: unknown): string {
+  if (Array.isArray(value)) {
+    return `[${value.map(canonicalJson).join(",")}]`;
+  }
+  if (value && typeof value === "object") {
+    const record = value as Record<string, unknown>;
+    return `{${Object.keys(record)
+      .sort()
+      .map((key) => `${JSON.stringify(key)}:${canonicalJson(record[key])}`)
+      .join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
 describe("read-only AOI provider routes", () => {
   let temporaryDirectory: string;
   let reviewStorePath: string;
@@ -38,7 +52,10 @@ describe("read-only AOI provider routes", () => {
   beforeAll(async () => {
     fixtureCacheDir = await mkdtemp(path.join(os.tmpdir(), "mdq-fixture-cache-"));
     await seedCompactRybnikCache(fixtureCacheDir);
-    defaultApp = createApp({ providerDataPaths: { cacheRoot: fixtureCacheDir } });
+    defaultApp = createApp({
+      providerDataPaths: { cacheRoot: fixtureCacheDir },
+      runtimePolicy: { mode: "local_bounded" },
+    });
   });
 
   afterAll(async () => {
@@ -186,6 +203,52 @@ describe("read-only AOI provider routes", () => {
           : undefined,
         validation: { path: "validation/metadata.json" },
         readiness: { path: "readiness/readiness.json" },
+      }),
+    );
+    const snapshotUnsigned = {
+      snapshot_version: "provider_prepared_snapshot/v1",
+      snapshot_id: aoiId,
+      aoi_id: aoiId,
+      version: "fixture-v1",
+      state: "ready",
+      published_at: "2026-08-01T00:00:00Z",
+      source_observed_at: "2026-08-01T00:00:00Z",
+      pipeline_version: "fixture/v1",
+      coverage: {
+        geometry: {
+          type: "Polygon",
+          coordinates: [
+            [
+              [18.4, 50.0],
+              [18.6, 50.0],
+              [18.6, 50.2],
+              [18.4, 50.0],
+            ],
+          ],
+        },
+        geometry_crs: "EPSG:4326",
+        input_type: "circle",
+        source_label: "Fixture AOI",
+        limitations: ["Fixture-only source evidence."],
+      },
+      domain_outcomes: [
+        {
+          domain,
+          status: "ready",
+          detail: "Fixture domain pack is published.",
+          manifest_sha256: createHash("sha256")
+            .update(await readFile(path.join(packRoot, "manifest.json")))
+            .digest("hex"),
+          readiness: "usable_with_limitations",
+          limitations: ["Fixture-only source evidence."],
+        },
+      ],
+    };
+    await writeFile(
+      path.join(temporaryDirectory, aoiId, "snapshot_manifest.json"),
+      JSON.stringify({
+        ...snapshotUnsigned,
+        checksum: createHash("sha256").update(canonicalJson(snapshotUnsigned)).digest("hex"),
       }),
     );
     return {
@@ -452,6 +515,7 @@ describe("read-only AOI provider routes", () => {
     const exportData = multiDomainExportResponseSchema.parse(response.body);
     expect(exportData.export_version).toBe("provider_multi_domain_export/v2");
     expect(exportData.aoi_id).toBe("rybnik_35km");
+    expect(exportData.snapshot).toMatchObject({ snapshot_id: "rybnik_35km", state: "ready" });
     expect(exportData.domain_outcomes).toHaveLength(2);
     expect(exportData.domain_outcomes).toEqual(
       expect.arrayContaining([
@@ -542,12 +606,28 @@ describe("read-only AOI provider routes", () => {
       {
         domain: "power",
         status: "needs_source",
-        detail: "Domain pack for 'power' is not cached or unavailable.",
+        detail: "Snapshot 'fixture_aoi' has no published 'power' domain.",
         has_domain_pack: false,
       },
     ]);
     expect(exportData.domain_packs).toHaveLength(1);
     expect(exportData.domain_packs[0]?.domain).toBe("water");
+  });
+
+  it("rejects an export that is not tied to a checksum-validated prepared snapshot", async () => {
+    const app = createApp({ providerDataPaths: { cacheRoot: temporaryDirectory } });
+    const response = await request(app).get("/api/aoi/unpublished_aoi/export?domains=power");
+    expect(response.status).toBe(404);
+    expect(providerErrorSchema.parse(response.body)).toMatchObject({ error: "not_found" });
+  });
+
+  it("does not serve a PMTiles presentation that is outside a ready prepared snapshot", async () => {
+    const app = createApp({ providerDataPaths: { cacheRoot: temporaryDirectory } });
+    const response = await request(app)
+      .get("/api/aoi/unpublished_aoi/presentations/power/archive")
+      .set("range", "bytes=0-126");
+    expect(response.status).toBe(404);
+    expect(providerErrorSchema.parse(response.body)).toMatchObject({ error: "not_found" });
   });
 
   it("serves compact MapLibre presentation metadata without loading public GeoJSON into the response", async () => {

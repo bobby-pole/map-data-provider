@@ -18,6 +18,37 @@ if (manifest.demo_bundle_version !== "mdq_demo_bundle/v1" || manifest.aoi_id !==
   throw new Error("Unsupported demo bundle identity");
 }
 
+const snapshotPath = path.join(root, "snapshot_manifest.json");
+if (!fs.existsSync(snapshotPath)) {
+  throw new Error("Missing checksum-validated prepared snapshot manifest");
+}
+const snapshot = JSON.parse(fs.readFileSync(snapshotPath, "utf8"));
+const { checksum: snapshotChecksum, ...unsignedSnapshot } = snapshot;
+const canonicalJson = (value) => {
+  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
+  if (value && typeof value === "object") {
+    return `{${Object.keys(value)
+      .sort()
+      .map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`)
+      .join(",")}}`;
+  }
+  return JSON.stringify(value);
+};
+if (
+  snapshot.snapshot_version !== "provider_prepared_snapshot/v1" ||
+  snapshot.aoi_id !== manifest.aoi_id ||
+  snapshot.snapshot_id !== manifest.aoi_id ||
+  snapshot.state !== "ready" ||
+  !/^[a-f0-9]{64}$/.test(snapshotChecksum ?? "") ||
+  crypto.createHash("sha256").update(canonicalJson(unsignedSnapshot)).digest("hex") !==
+    snapshotChecksum
+) {
+  throw new Error("Prepared snapshot manifest is invalid, not ready, or has a checksum mismatch");
+}
+const snapshotDomains = new Map(
+  (snapshot.domain_outcomes ?? []).map((outcome) => [outcome.domain, outcome]),
+);
+
 const primaryDomains = [
   "power",
   "emergency",
@@ -40,6 +71,10 @@ const openStreetMapNotice = {
 for (const domain of primaryDomains) {
   if (!manifest.domains?.includes(domain)) {
     throw new Error(`Missing primary domain: ${domain}`);
+  }
+  const outcome = snapshotDomains.get(domain);
+  if (outcome?.status !== "ready" || !/^[a-f0-9]{64}$/.test(outcome.manifest_sha256 ?? "")) {
+    throw new Error(`Prepared snapshot does not publish a ready checksum for ${domain}`);
   }
 }
 
@@ -67,6 +102,14 @@ for (const domain of primaryDomains) {
     throw new Error(`Missing domain-pack manifest for ${domain}`);
   }
   const pack = JSON.parse(fs.readFileSync(packManifestPath, "utf8"));
+  const manifestChecksum = crypto
+    .createHash("sha256")
+    .update(fs.readFileSync(packManifestPath))
+    .digest("hex");
+  const snapshotOutcome = snapshotDomains.get(domain);
+  if (snapshotOutcome?.manifest_sha256 !== manifestChecksum) {
+    throw new Error(`Prepared snapshot checksum does not match ${domain} domain pack.`);
+  }
   const publicArtifacts = (pack.artifacts ?? []).filter(
     (artifact) => artifact.public_export === true,
   );

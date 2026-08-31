@@ -1,6 +1,7 @@
 # Map Data Provider
 
 A source-aware geospatial data provider for Steel Sentinel v2 and other GIS consumers.
+[🇵🇱 Polish / Polski](./README.pl.md)
 
 The primary goal is to prepare trusted, source-aware infrastructure data for [Steel Sentinel v2](../steel-sentinel-v2) across selected areas of interest. It provides OSM-derived infrastructure layers, cached data snapshots, source metadata, validation reports, confidence scoring and map-layer APIs through a reusable provider contract.
 
@@ -150,6 +151,12 @@ mode on a public host. If only a partial cache is present, the preview
 explicitly names the missing primary domains rather than presenting it as a
 complete Rybnik demo.
 
+The bundle must be produced by the current `scripts/prepare_demo.sh`: it now
+includes a checksum-validated `snapshot_manifest.json` binding all published
+domain packs. Rebuild a pre-MDQ-057 bundle with that command before importing
+or deploying it; the API and container bootstrap deliberately reject a legacy
+bundle without this publication record.
+
 With that API running, use a second terminal to generate a reproducible,
 dated API/PMTiles/worker measurement report:
 
@@ -237,6 +244,8 @@ claim of live or complete infrastructure state.
 
 - **Controlled demo acquisition**: Production uses `MDQ_RUNTIME_MODE=demo_fixed_aoi` and exposes only `POST /api/aoi/demo-acquisitions/rybnik_gmina_demo`. The server fixes the AOI to the PRG Rybnik gmina (`gmina_2473011`) and profiles to `power`, `emergency`, `public` and `transport`; it accepts neither coordinates nor a client-selected profile or force-refresh option. Generic runtime endpoints return typed `demo_aoi_restricted` (HTTP 403).
 - **Explicit runtime policy**: `GET /api/aoi/runtime-capabilities` declares the active policy. `disabled` is the fail-closed default; `local_bounded` enables the existing bounded local workflow; `trusted` additionally requires a bearer token configured outside the browser.
+- **Prepared snapshots and availability**: `GET /api/aoi/snapshots` lists only checksum-validated operator publications. `POST /api/aoi/availability` accepts a bounded circle or PRG selection and returns `ready`, `partial_coverage`, `not_prepared`, `queued`, `running` or `failed`; non-identical geometric overlap is deliberately never advertised as full coverage. Normal PMTiles, feature-detail and export reads use only the published local pack and never invoke Overpass or Python.
+- **Runtime acquisition evidence**: Before a newly acquired AOI is marked published, the pipeline writes `acquisition_evidence.json` beside its prepared pack. `GET /api/aoi/:aoiId/metrics/acquisition` returns its source date, per-domain counts, validation, preparation duration and pipeline version (or typed `404` when no evidence exists). The frontend labels this as provenance/quality evidence, not a delivery benchmark.
 - **Provider API**: Node.js 22 Express provider serves all REST routes, PMTiles range reads, and SPA frontend assets.
 - **Geospatial Engine**: Python 3.14 + `uv` CLI worker handles offline data preparation and startup bootstrap.
 - **External snapshot**: The full Rybnik snapshot is an operator-provisioned, checksum-verified demo bundle, not data committed to Git. The container validates and atomically promotes it to prepared storage before serving requests.

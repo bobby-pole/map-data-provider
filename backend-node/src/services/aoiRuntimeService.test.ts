@@ -8,6 +8,7 @@ import {
 import {
   createRuntimeJobCoordinator,
   createRuntimeRequestCoordinator,
+  PUBLIC_DEMO_REFRESH_COOLDOWN_MS,
   workerFailureMessage,
 } from "./aoiRuntimeService.js";
 
@@ -102,6 +103,46 @@ describe("runtime request coordinator", () => {
       event: "published",
       result: response,
     });
+  });
+
+  it("finds only a queued or running job for the same canonical AOI", async () => {
+    let release: (() => void) | undefined;
+    const coordinator = createRuntimeJobCoordinator(
+      async () =>
+        new Promise((resolve) => {
+          release = () => resolve(response);
+        }),
+    );
+    const job = coordinator.submit(request);
+    expect(
+      coordinator.getForAoi({
+        type: "administrative_selection",
+        unit_ids: ["county_rybnicki", "county_rybnik_city"],
+      }),
+    ).toMatchObject({ job_id: job.job_id, state: "queued" });
+    release?.();
+    await new Promise<void>((resolve) => setImmediate(resolve));
+    expect(coordinator.getForAoi(request.aoi)).toBeUndefined();
+  });
+
+  it("reuses a completed public-demo job throughout the explicit 24-hour cooldown", async () => {
+    let calls = 0;
+    const coordinator = createRuntimeJobCoordinator(async () => {
+      calls += 1;
+      return response;
+    });
+    const first = coordinator.submit(request, {
+      reuseSucceededWithinMs: PUBLIC_DEMO_REFRESH_COOLDOWN_MS,
+    });
+    await new Promise<void>((resolve) => setImmediate(resolve));
+    const completed = coordinator.get(first.job_id);
+    expect(completed).toMatchObject({ state: "succeeded", result: response });
+
+    const repeated = coordinator.submit(request, {
+      reuseSucceededWithinMs: PUBLIC_DEMO_REFRESH_COOLDOWN_MS,
+    });
+    expect(repeated.job_id).toBe(first.job_id);
+    expect(calls).toBe(1);
   });
 
   it("caches the administrative catalog promise and reuses it on subsequent calls", async () => {

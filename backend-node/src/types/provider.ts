@@ -153,6 +153,8 @@ export const providerRuntimeResponseSchema = z
           queried_feature_count: z.number().int().nonnegative().nullable(),
           accepted_feature_count: z.number().int().nonnegative().nullable(),
           derived_feature_count: z.number().int().nonnegative().nullable(),
+          preparation_duration_ms: z.number().int().nonnegative().nullable().optional(),
+          overpass_endpoint: z.string().url().nullable().optional(),
         })
         .strict(),
     ),
@@ -253,6 +255,100 @@ export const providerRuntimePreflightResponseSchema = z
     message: z.string().min(1),
     aoi: runtimeResolvedAoiSchema,
     metric_area_sq_m: z.number().nonnegative(),
+  })
+  .strict();
+
+/**
+ * Immutable, operator-published description of a regional prepared snapshot.
+ * The checksum deliberately covers the canonical manifest without this field,
+ * avoiding a self-referential hash while keeping the on-disk contract
+ * tamper-evident.
+ */
+export const preparedSnapshotStateSchema = z.enum([
+  "ready",
+  "partial",
+  "queued",
+  "running",
+  "failed",
+]);
+export const preparedSnapshotDomainOutcomeSchema = z
+  .object({
+    domain: runtimeProfileSchema,
+    status: z.enum(["ready", "needs_source", "failed"]),
+    detail: z.string().min(1),
+    manifest_sha256: z
+      .string()
+      .regex(/^[a-f0-9]{64}$/)
+      .nullable(),
+    readiness: z.enum(["ready", "usable_with_limitations", "needs_source", "not_usable"]),
+    limitations: z.array(z.string()),
+  })
+  .strict();
+export const preparedSnapshotManifestSchema = z
+  .object({
+    snapshot_version: z.literal("provider_prepared_snapshot/v1"),
+    snapshot_id: providerIdentifierSchema,
+    aoi_id: providerIdentifierSchema,
+    version: z.string().min(1),
+    state: preparedSnapshotStateSchema,
+    published_at: z.string().datetime().nullable(),
+    source_observed_at: z.string().datetime().nullable(),
+    pipeline_version: z.string().min(1),
+    coverage: z
+      .object({
+        geometry: runtimeGeometrySchema,
+        geometry_crs: z.literal("EPSG:4326"),
+        input_type: z.enum(["circle", "administrative_selection"]),
+        source_label: z.string().min(1),
+        limitations: z.array(z.string()),
+      })
+      .strict(),
+    domain_outcomes: z.array(preparedSnapshotDomainOutcomeSchema).min(1),
+    checksum: z.string().regex(/^[a-f0-9]{64}$/),
+  })
+  .strict();
+export const preparedSnapshotCatalogueResponseSchema = z
+  .object({
+    response_version: z.literal("provider_prepared_snapshot_catalogue/v1"),
+    snapshots: z.array(preparedSnapshotManifestSchema),
+  })
+  .strict();
+export const aoiAvailabilityRequestSchema = z.object({ aoi: runtimeAoiInputSchema }).strict();
+export const aoiAvailabilityResponseSchema = z
+  .object({
+    response_version: z.literal("provider_aoi_availability/v1"),
+    requested_aoi_id: providerIdentifierSchema,
+    state: z.enum(["ready", "partial_coverage", "not_prepared", "queued", "running", "failed"]),
+    snapshot_ids: z.array(providerIdentifierSchema),
+    explanation: z.string().min(1),
+    limitations: z.array(z.string()),
+  })
+  .strict();
+export const runtimeAcquisitionEvidenceSchema = z
+  .object({
+    evidence_version: z.literal("provider_runtime_acquisition_evidence/v1"),
+    aoi_id: providerIdentifierSchema,
+    snapshot_id: providerIdentifierSchema,
+    resolved_geometry: runtimeGeometrySchema,
+    allowed_domains: z.array(runtimeProfileSchema).min(1),
+    source_observed_at: z.string().datetime(),
+    overpass_endpoint: z.string().url().nullable(),
+    pipeline_version: z.string().min(1),
+    published_at: z.string().datetime(),
+    domains: z.array(
+      z
+        .object({
+          domain: runtimeProfileSchema,
+          preparation_duration_ms: z.number().int().nonnegative().nullable(),
+          queried_feature_count: z.number().int().nonnegative().nullable(),
+          accepted_feature_count: z.number().int().nonnegative().nullable(),
+          rejected_feature_count: z.number().int().nonnegative().nullable(),
+          validation_status: z.enum(["passed", "warning", "failed", "unknown"]),
+          limitations: z.array(z.string()),
+          overpass_endpoint: z.string().url().nullable(),
+        })
+        .strict(),
+    ),
   })
   .strict();
 
@@ -979,6 +1075,7 @@ export const multiDomainExportResponseSchema = z
   .object({
     export_version: z.literal("provider_multi_domain_export/v2"),
     aoi_id: providerIdentifierSchema,
+    snapshot: preparedSnapshotManifestSchema,
     exported_at: z.string().datetime(),
     domain_outcomes: z.array(domainExportOutcomeSchema),
     domain_packs: z.array(domainPackReadResponseSchema),
@@ -1204,3 +1301,6 @@ export type AdministrativeBoundaryResponse = z.infer<typeof administrativeBounda
 export type ProviderRuntimePreflightResponse = z.infer<
   typeof providerRuntimePreflightResponseSchema
 >;
+export type PreparedSnapshotManifest = z.infer<typeof preparedSnapshotManifestSchema>;
+export type AoiAvailabilityResponse = z.infer<typeof aoiAvailabilityResponseSchema>;
+export type RuntimeAcquisitionEvidence = z.infer<typeof runtimeAcquisitionEvidenceSchema>;

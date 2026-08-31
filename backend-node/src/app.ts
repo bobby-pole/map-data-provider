@@ -19,6 +19,7 @@ export function createApp(options?: {
   deliveryMetricsPaths?: DeliveryMetricsPaths;
   runtimePolicy?: RuntimeAcquisitionPolicy;
   runtimeJobSubmitter?: (runtimeRequest: ProviderRuntimeRequest) => ProviderRuntimeJob;
+  demoRuntimeJobSubmitter?: (runtimeRequest: ProviderRuntimeRequest) => ProviderRuntimeJob;
   runtimeJobGetter?: (jobId: string) => ProviderRuntimeJob | undefined;
   staticDir?: string;
   rateLimitOptions?: RateLimitOptions;

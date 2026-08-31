@@ -21,6 +21,7 @@ const defaultPreparedRoot =
 export type DeliveryMetricsPaths = {
   measurementsRoot?: string;
   preparedRoot?: string;
+  demoAoiId?: string;
 };
 
 type DeliveryMeasurementReport = z.infer<typeof deliveryMeasurementReportSchema>;
@@ -146,7 +147,10 @@ async function getMatchingReport(paths?: DeliveryMetricsPaths): Promise<{
 
 async function getPreparedManifestIdentity(paths?: DeliveryMetricsPaths) {
   const preparedRoot = paths?.preparedRoot ?? defaultPreparedRoot;
-  const manifestPath = path.join(preparedRoot, "rybnik_35km", "demo_bundle_manifest.json");
+  const configuredAoiId = paths?.demoAoiId ?? process.env.MDQ_DEMO_AOI_ID;
+  const manifestPath = configuredAoiId
+    ? path.join(preparedRoot, configuredAoiId, "demo_bundle_manifest.json")
+    : await discoverPreparedDemoManifest(preparedRoot);
   let manifestBytes: Buffer;
   try {
     manifestBytes = await readFile(manifestPath);
@@ -184,6 +188,45 @@ async function getPreparedManifestIdentity(paths?: DeliveryMetricsPaths) {
     bundleId: manifest.bundle_id,
     sha256: createHash("sha256").update(manifestBytes).digest("hex"),
   };
+}
+
+async function discoverPreparedDemoManifest(preparedRoot: string): Promise<string> {
+  let entries: string[];
+  try {
+    entries = await readdir(preparedRoot);
+  } catch (error) {
+    if (isMissingPath(error)) {
+      throw new DeliveryMetricsError(
+        "not_found",
+        "The active demo bundle manifest is unavailable.",
+      );
+    }
+    throw error;
+  }
+  const candidates = await Promise.all(
+    entries.sort().map(async (aoiId) => {
+      const candidate = path.join(preparedRoot, aoiId, "demo_bundle_manifest.json");
+      try {
+        await readFile(candidate);
+        return candidate;
+      } catch (error) {
+        if (isMissingPath(error)) {
+          return null;
+        }
+        throw error;
+      }
+    }),
+  );
+  const manifests = candidates.filter((candidate): candidate is string => candidate !== null);
+  if (manifests.length !== 1) {
+    throw new DeliveryMetricsError(
+      "not_found",
+      manifests.length === 0
+        ? "The active demo bundle manifest is unavailable."
+        : "More than one prepared demo bundle exists; configure MDQ_DEMO_AOI_ID explicitly.",
+    );
+  }
+  return manifests[0]!;
 }
 
 function isMissingPath(error: unknown): boolean {

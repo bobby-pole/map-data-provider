@@ -140,6 +140,29 @@ declared file, checksum, domain-pack version and bundle ID at startup. A
 missing or corrupted bundle causes controlled startup failure; it never serves
 an empty public demo.
 
+### Prepare MDQ-057 regional snapshots
+
+The two Steel Sentinel regional sources are operator-only targets, never public
+AOI templates: `rybnik_50km` is a true 50 km circle around the configured
+Rybnik centre; `rybnik_prg_neighbours` is the Rybnik PRG gmina plus every
+touching county-level PRG unit. Prepare them on a trusted workstation with a
+persistent root outside Git:
+
+```bash
+cd backend
+uv run python ../scripts/prepare_regional_snapshots.py rybnik_50km \
+  --prepared-root /srv/mdq/prepared
+uv run python ../scripts/prepare_regional_snapshots.py rybnik_prg_neighbours \
+  --prepared-root /srv/mdq/prepared
+```
+
+Each command uses only the four fixed demo domains (`power`, `emergency`,
+`public`, `transport`), validates every ready domain pack, writes
+`acquisition_evidence.json` before the checksummed snapshot manifest, and
+retains the preceding AOI directory under `previous/` for rollback. Restore the
+latest backup explicitly with `--rollback`; do not replace a mounted prepared
+snapshot in place without retaining its source-dated evidence.
+
 ---
 
 ## 4. Data Lifecycle, Backup, Retention & Purge

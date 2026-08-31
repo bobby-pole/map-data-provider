@@ -19,6 +19,7 @@ import { runtimePythonExecutable } from "./runtimePython.js";
 
 const execFileAsync = promisify(execFile);
 const RUNTIME_WORKER_TIMEOUT_MS = 8 * 60 * 1000;
+export const PUBLIC_DEMO_REFRESH_COOLDOWN_MS = 24 * 60 * 60 * 1000;
 const backendCwd =
   process.env.MDQ_BACKEND_DIR ?? fileURLToPath(new URL("../../../backend/", import.meta.url));
 const runtimePython = runtimePythonExecutable(backendCwd);
@@ -58,10 +59,30 @@ type RuntimeJobRunner = (
 
 export function createRuntimeJobCoordinator(runner: RuntimeJobRunner = runRuntimeWorker) {
   const jobs = new Map<string, ProviderRuntimeJob>();
+  const requestByJob = new Map<string, ProviderRuntimeRequest>();
   const inProgressByRequest = new Map<string, string>();
   return {
-    submit(request: ProviderRuntimeRequest): ProviderRuntimeJob {
+    submit(
+      request: ProviderRuntimeRequest,
+      options?: { reuseSucceededWithinMs?: number; now?: number },
+    ): ProviderRuntimeJob {
       const requestKey = canonicalJson(request);
+      const cooldownMs = options?.reuseSucceededWithinMs ?? 0;
+      if (cooldownMs > 0) {
+        const now = options?.now ?? Date.now();
+        const reusable = [...requestByJob.entries()]
+          .filter(([, existingRequest]) => canonicalJson(existingRequest) === requestKey)
+          .map(([jobId]) => jobs.get(jobId))
+          .filter((job): job is ProviderRuntimeJob => job?.state === "succeeded")
+          .filter((job) => {
+            const completedAt = Date.parse(job.updated_at);
+            return Number.isFinite(completedAt) && completedAt >= now - cooldownMs;
+          })
+          .sort((left, right) => Date.parse(right.updated_at) - Date.parse(left.updated_at))[0];
+        if (reusable) {
+          return reusable;
+        }
+      }
       const existingId = inProgressByRequest.get(requestKey);
       if (existingId) {
         const existing = jobs.get(existingId);
@@ -84,6 +105,7 @@ export function createRuntimeJobCoordinator(runner: RuntimeJobRunner = runRuntim
         updated_at: now,
       };
       jobs.set(job.job_id, job);
+      requestByJob.set(job.job_id, request);
       inProgressByRequest.set(requestKey, job.job_id);
       void runner(request, (progress) => {
         const current = jobs.get(job.job_id);
@@ -137,6 +159,18 @@ export function createRuntimeJobCoordinator(runner: RuntimeJobRunner = runRuntim
     get(jobId: string): ProviderRuntimeJob | undefined {
       return jobs.get(jobId);
     },
+    getForAoi(aoi: ProviderRuntimeRequest["aoi"]): ProviderRuntimeJob | undefined {
+      const aoiKey = canonicalJson(aoi);
+      for (const [jobId, request] of requestByJob) {
+        if (canonicalJson(request.aoi) === aoiKey) {
+          const job = jobs.get(jobId);
+          if (job && (job.state === "queued" || job.state === "running")) {
+            return job;
+          }
+        }
+      }
+      return undefined;
+    },
   };
 }
 
@@ -152,8 +186,22 @@ export function submitRuntimeJob(request: ProviderRuntimeRequest): ProviderRunti
   return defaultJobCoordinator.submit(request);
 }
 
+/** Public demo submissions may observe a completed fresh snapshot, but may not
+ * create a second job during the fixed 24-hour public refresh interval. */
+export function submitDemoRuntimeJob(request: ProviderRuntimeRequest): ProviderRuntimeJob {
+  return defaultJobCoordinator.submit(request, {
+    reuseSucceededWithinMs: PUBLIC_DEMO_REFRESH_COOLDOWN_MS,
+  });
+}
+
 export function getRuntimeJob(jobId: string): ProviderRuntimeJob | undefined {
   return defaultJobCoordinator.get(jobId);
+}
+
+export function getRuntimeJobForAoi(
+  aoi: ProviderRuntimeRequest["aoi"],
+): ProviderRuntimeJob | undefined {
+  return defaultJobCoordinator.getForAoi(aoi);
 }
 
 type CatalogFetcher = () => Promise<{ stdout: string }>;

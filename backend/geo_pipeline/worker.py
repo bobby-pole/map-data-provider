@@ -8,6 +8,7 @@ import shutil
 import signal
 import sys
 import threading
+import time
 import uuid
 from collections.abc import Callable
 from concurrent.futures import (
@@ -32,6 +33,7 @@ from geo_pipeline.aoi_runtime import (
 from geo_pipeline.cache import cache_paths, read_cached_layer
 from geo_pipeline.config import CACHE_DIR, RUNTIME_CACHE_DIR
 from geo_pipeline.domain_pack import read_domain_pack
+from geo_pipeline.prepared_snapshot import publish_runtime_snapshot
 from geo_pipeline.runtime_osm import refresh_runtime_osm_domain
 from geo_pipeline.source_availability import build_runtime_source_availability
 
@@ -175,6 +177,16 @@ def run_runtime_worker(
             "request_result": "refresh",
             "cached_at": _utc_timestamp(),
         }
+        # Fixture mode reports contract fixtures, not a newly published AOI.
+        # Only a real runtime acquisition may create public snapshot/evidence
+        # metadata, and it does so after all ready packs validate.
+        if input_mode == "live":
+            publish_runtime_snapshot(
+                cache_root=cache_root,
+                resolved=resolved,
+                outcomes=outcomes,
+                pipeline_version=resolved["pipeline_version"],
+            )
         _write_runtime_state(state_path, response)
         return response
     except WorkerError:
@@ -282,8 +294,10 @@ def _refresh_runtime_domain(aoi: dict[str, Any], domain: str, cache_root: str) -
     3. Layer 3 (Host orchestrator safety ceiling): Node runtime coordinator
        terminates worker subprocess after 8 minutes (RUNTIME_WORKER_TIMEOUT_MS).
     """
+    started = time.monotonic()
     if not hasattr(signal, "SIGALRM") or threading.current_thread() is not threading.main_thread():
-        return refresh_runtime_osm_domain(aoi=aoi, domain=domain, root=Path(cache_root))
+        result = refresh_runtime_osm_domain(aoi=aoi, domain=domain, root=Path(cache_root))
+        return {**result, "preparation_duration_ms": int((time.monotonic() - started) * 1000)}
 
     timeout_seconds = _domain_acquisition_timeout(aoi)
 
@@ -295,7 +309,8 @@ def _refresh_runtime_domain(aoi: dict[str, Any], domain: str, cache_root: str) -
     previous = signal.signal(signal.SIGALRM, timed_out)
     signal.setitimer(signal.ITIMER_REAL, timeout_seconds)
     try:
-        return refresh_runtime_osm_domain(aoi=aoi, domain=domain, root=Path(cache_root))
+        result = refresh_runtime_osm_domain(aoi=aoi, domain=domain, root=Path(cache_root))
+        return {**result, "preparation_duration_ms": int((time.monotonic() - started) * 1000)}
     finally:
         signal.setitimer(signal.ITIMER_REAL, 0)
         signal.signal(signal.SIGALRM, previous)
@@ -318,6 +333,8 @@ def _failed_runtime_outcome(outcome: dict[str, Any], error: BaseException) -> di
         "queried_feature_count": None,
         "accepted_feature_count": None,
         "derived_feature_count": None,
+        "preparation_duration_ms": None,
+        "overpass_endpoint": None,
     }
 
 

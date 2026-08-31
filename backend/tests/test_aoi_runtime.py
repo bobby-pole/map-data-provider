@@ -461,6 +461,7 @@ def test_runtime_power_publication_builds_a_valid_pmtiles_domain_pack(tmp_path) 
         "queried_feature_count": 2,
         "accepted_feature_count": 2,
         "derived_feature_count": 0,
+        "overpass_endpoint": None,
     }
     assert [
         artifact["id"]

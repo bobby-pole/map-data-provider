@@ -45,6 +45,14 @@ def configure_osmnx() -> None:
 
 def query_overpass_ql_direct(ql_statements: str, timeout_sec: int = 120) -> dict[str, Any]:
     """Execute a single composite Overpass QL query with automatic endpoint failover."""
+    data, _endpoint = query_overpass_ql_direct_with_endpoint(ql_statements, timeout_sec)
+    return data
+
+
+def query_overpass_ql_direct_with_endpoint(
+    ql_statements: str, timeout_sec: int = 120
+) -> tuple[dict[str, Any], str]:
+    """Execute bounded Overpass QL and retain the endpoint that supplied the response."""
     full_query = f"""
     [out:json][timeout:{timeout_sec}][maxsize:1073741824];
     (
@@ -77,7 +85,7 @@ def query_overpass_ql_direct(ql_statements: str, timeout_sec: int = 120) -> dict
                         len(elements),
                     )
                     time.sleep(2)
-                    return data
+                    return data, server
                 elif resp.status_code == 429:
                     logger.warning(
                         "  [%s] Rate limited (HTTP 429). Waiting 5s before retry...",
@@ -187,10 +195,18 @@ def fetch_osm_features_geometry(
     geometry: dict[str, Any], tags: dict[str, list[str]]
 ) -> gpd.GeoDataFrame:
     """Fetch a bounded Polygon/MultiPolygon AOI without reducing it to its bbox."""
+    frame, _endpoint = fetch_osm_features_geometry_with_endpoint(geometry, tags)
+    return frame
+
+
+def fetch_osm_features_geometry_with_endpoint(
+    geometry: dict[str, Any], tags: dict[str, list[str]]
+) -> tuple[gpd.GeoDataFrame, str | None]:
+    """Fetch a bounded AOI and return the actual Overpass endpoint used."""
     return guard_source_access(
         "openstreetmap",
         "acquisition",
-        lambda: _fetch_osm_features_geometry(geometry, tags),
+        lambda: _fetch_osm_features_geometry_with_endpoint(geometry, tags),
     )
 
 
@@ -229,6 +245,13 @@ def _fetch_osm_features(aoi: AoiConfig, tags: dict[str, list[str]]) -> gpd.GeoDa
 def _fetch_osm_features_geometry(
     geometry: dict[str, Any], tags: dict[str, list[str]]
 ) -> gpd.GeoDataFrame:
+    frame, _endpoint = _fetch_osm_features_geometry_with_endpoint(geometry, tags)
+    return frame
+
+
+def _fetch_osm_features_geometry_with_endpoint(
+    geometry: dict[str, Any], tags: dict[str, list[str]]
+) -> tuple[gpd.GeoDataFrame, str | None]:
     polygonal = shape(geometry)
     if polygonal.geom_type not in {"Polygon", "MultiPolygon"} or polygonal.is_empty:
         raise ValueError("OSM acquisition requires a non-empty polygonal AOI")
@@ -255,12 +278,12 @@ def _fetch_osm_features_geometry(
                     statements.append(f'nwr["{key}"="{val}"](poly:"{poly_str}");')
 
     if not statements:
-        return gpd.GeoDataFrame(geometry=[], crs="EPSG:4326")
+        return gpd.GeoDataFrame(geometry=[], crs="EPSG:4326"), None
 
     ql = "\n      ".join(statements)
-    data = query_overpass_ql_direct(ql)
+    data, endpoint = query_overpass_ql_direct_with_endpoint(ql)
     elements = data.get("elements", [])
-    return elements_to_gdf(elements)
+    return elements_to_gdf(elements), endpoint
 
 
 def sanitize_for_geojson(gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:

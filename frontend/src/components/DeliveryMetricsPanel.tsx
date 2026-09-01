@@ -47,7 +47,13 @@ export function DeliveryMetricsPanel({
   }, [aoiId, refreshToken]);
 
   if (isRuntimeAcquisitionReport(aoiId)) {
-    return <RuntimeAcquisitionEvidencePanel aoiId={aoiId ?? null} refreshToken={refreshToken} />;
+    return (
+      <RuntimeAcquisitionEvidencePanel
+        aoiId={aoiId ?? null}
+        refreshToken={refreshToken}
+        showUnavailable
+      />
+    );
   }
 
   if (!metrics) {

@@ -140,7 +140,7 @@ export const useAoiStore = create<AoiState>((set, get) => ({
   latitude: "",
   radius: "20000",
   unitIds: [],
-  selectedCategories: [],
+  selectedCategories: [...ALL_RUNTIME_CATEGORIES],
   busy: false,
   error: null,
   preflight: null,
@@ -388,7 +388,17 @@ export const useAoiStore = create<AoiState>((set, get) => ({
   },
 
   applyDemoAoi: async (onActivity, onApplied) => {
-    const { busy, runtimeCapability, mode, longitude, latitude, radius, unitIds, catalog } = get();
+    const {
+      busy,
+      runtimeCapability,
+      mode,
+      longitude,
+      latitude,
+      radius,
+      unitIds,
+      selectedCategories,
+      catalog,
+    } = get();
     const template = runtimeCapability?.demo_template;
     if (busy || !template) {
       return;
@@ -397,12 +407,12 @@ export const useAoiStore = create<AoiState>((set, get) => ({
     try {
       onActivity({
         phase: "validation",
-        message: "Validating the Poland-bounded demo AOI before preparing all 11 domains.",
+        message: `Validating the Poland-bounded demo AOI before preparing ${selectedCategories.length} selected domain${selectedCategories.length === 1 ? "" : "s"}.`,
       });
       const runtimeRequest = buildRuntimeRequest(
         mode,
         { longitude, latitude, radius, unitIds },
-        template.profiles,
+        selectedCategories,
         catalog?.units,
         template.max_radius_m,
       );

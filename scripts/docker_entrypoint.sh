@@ -15,6 +15,10 @@ echo "    Runtime storage:    ${RUNTIME_ROOT}"
 echo "    Runtime mode:       ${MDQ_RUNTIME_MODE:-disabled}"
 
 mkdir -p "${PREPARED_ROOT}" "${REVIEW_ROOT}" "${RUNTIME_ROOT}"
+# A killed or concurrently restarted bootstrap can leave a complete temporary
+# copy behind. It is not a published snapshot and may be removed once stale;
+# a recent stage remains protected in case another bootstrap is still running.
+find "${PREPARED_ROOT}" -mindepth 1 -maxdepth 1 -type d -name '.bootstrap_stage_*' -mmin +60 -exec rm -rf -- {} +
 
 if [[ ! -f "${REVIEW_ROOT}/issue-reviews.json" ]]; then
   echo "==> Initializing empty issue review store..."

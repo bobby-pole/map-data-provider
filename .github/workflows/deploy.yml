@@ -132,6 +132,7 @@ jobs:
             done
             # Runtime cache is explicitly ephemeral; remove stale entries and
             # old unused BuildKit cache without touching prepared/bundle data.
+            find data/prepared -mindepth 1 -maxdepth 1 -type d -name '.bootstrap_stage_*' -mmin +60 -exec rm -rf -- {} +
             find data/runtime -type f -mtime +7 -delete
             find data/runtime -type d -empty -delete
             docker builder prune --force --filter "until=168h"

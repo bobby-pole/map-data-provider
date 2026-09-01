@@ -198,6 +198,10 @@ find /home/deploy/map-data-provider/data/runtime -type d -empty -delete
 - **Build cache**: Unused BuildKit cache older than seven days is pruned before
   each deployment. Prepared snapshots, the immutable bundle and review state
   are never part of this cleanup.
+- **Bootstrap staging**: Interrupted bundle bootstraps are stored under hidden
+  `.bootstrap_stage_*` directories only until atomic promotion. Stages older
+  than 60 minutes are removed at container start and before each deployment;
+  published snapshots are not matched by this pattern.
 
 To inspect disk pressure without reading application logs:
 

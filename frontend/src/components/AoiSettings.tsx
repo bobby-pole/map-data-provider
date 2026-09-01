@@ -481,7 +481,7 @@ export function AoiSettings({
             : failedDomainCount
               ? "Retry failed domains"
               : demoMode
-                ? "Prepare Rybnik demo AOI"
+                ? "Prepare selected demo AOI"
                 : "Prepare AOI"}
         </button>
       </div>

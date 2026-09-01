@@ -7,7 +7,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { createApp } from "../app.js";
 import { DEMO_AOI_TEMPLATE } from "../services/runtimeAcquisitionPolicy.js";
-import { providerErrorSchema } from "../types/provider.js";
+import { providerErrorSchema, type ProviderRuntimeRequest } from "../types/provider.js";
 import { seedCompactRybnikCache } from "./testFixtures.js";
 
 describe("runtime acquisition policy", () => {
@@ -27,11 +27,11 @@ describe("runtime acquisition policy", () => {
     demoApp = createApp({
       runtimePolicy: { mode: "demo_fixed_aoi" },
       providerDataPaths: { cacheRoot: fixtureCacheDir },
-      demoRuntimeJobSubmitter: () => ({
+      demoRuntimeJobSubmitter: (request: ProviderRuntimeRequest) => ({
         job_id: "0d0ce687-3834-4d9f-933e-20f5778ff441",
         state: "queued",
         event: "queued",
-        total_domains: 11,
+        total_domains: new Set(request.profiles).size,
         completed_domains: 0,
         active_domain: null,
         queried_feature_count: 0,
@@ -134,14 +134,14 @@ describe("runtime acquisition policy", () => {
       },
     });
 
-    const restricted = await request(demoApp)
+    const selectedSubset = await request(demoApp)
       .post(`/api/aoi/demo-acquisitions/${DEMO_AOI_TEMPLATE.id}`)
       .send({
         aoi: { type: "point_radius", longitude: 18.546285, latitude: 50.102174, radius_m: 5000 },
         profiles: ["power"],
       });
-    expect(restricted.status).toBe(403);
-    expect(providerErrorSchema.parse(restricted.body).error).toBe("demo_aoi_restricted");
+    expect(selectedSubset.status).toBe(202);
+    expect(selectedSubset.body).toMatchObject({ state: "queued", total_domains: 1 });
 
     const overLimit = await request(demoApp)
       .post(`/api/aoi/demo-acquisitions/${DEMO_AOI_TEMPLATE.id}`)

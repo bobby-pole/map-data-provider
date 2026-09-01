@@ -6,11 +6,15 @@ import type { RuntimeAcquisitionEvidence } from "../types/api";
 export function RuntimeAcquisitionEvidencePanel({
   aoiId,
   refreshToken = null,
+  showUnavailable = false,
 }: {
   aoiId: string | null;
   refreshToken?: string | null;
+  showUnavailable?: boolean;
 }) {
   const [evidence, setEvidence] = useState<RuntimeAcquisitionEvidence | null>(null);
+  const [loadedKey, setLoadedKey] = useState<string | null>(null);
+  const requestKey = `${aoiId ?? ""}:${refreshToken ?? ""}`;
 
   useEffect(() => {
     if (!aoiId) {
@@ -23,21 +27,45 @@ export function RuntimeAcquisitionEvidencePanel({
       )
       .then((next) => {
         if (!cancelled) {
+          setLoadedKey(requestKey);
           setEvidence(next);
         }
       })
       .catch(() => {
         if (!cancelled) {
+          setLoadedKey(requestKey);
           setEvidence(null);
         }
       });
     return () => {
       cancelled = true;
     };
-  }, [aoiId, refreshToken]);
+  }, [aoiId, refreshToken, requestKey]);
 
+  const requestSettled = loadedKey === requestKey;
+  if (!requestSettled) {
+    if (!showUnavailable) {
+      return null;
+    }
+    return (
+      <section className="drawerSection runtimeEvidence" aria-live="polite">
+        <h2>AOI report</h2>
+        <p className="muted">Loading the acquisition evidence for the active AOI…</p>
+      </section>
+    );
+  }
   if (!evidence || evidence.aoi_id !== aoiId) {
-    return null;
+    if (!showUnavailable) {
+      return null;
+    }
+    return (
+      <section className="drawerSection runtimeEvidence" aria-live="polite">
+        <h2>AOI report</h2>
+        <p className="muted">
+          No AOI-scoped acquisition evidence is available for this published snapshot.
+        </p>
+      </section>
+    );
   }
   return (
     <section className="runtimeEvidence" aria-label="Runtime acquisition evidence">

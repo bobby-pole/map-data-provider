@@ -100,14 +100,11 @@ export function createAoiRouter(options?: {
   const assertDemoRuntimeRequest = async (runtimeRequest: unknown) => {
     const parsed = providerRuntimeRequestSchema.parse(runtimeRequest);
     const requestedProfiles = [...new Set(parsed.profiles)].sort();
-    const allowedProfiles = [...DEMO_AOI_TEMPLATE.profiles].sort();
-    if (
-      requestedProfiles.length !== allowedProfiles.length ||
-      requestedProfiles.some((profile, index) => profile !== allowedProfiles[index])
-    ) {
+    const allowedProfiles = new Set(DEMO_AOI_TEMPLATE.profiles);
+    if (requestedProfiles.some((profile) => !allowedProfiles.has(profile))) {
       throw new ProviderDataError(
         "demo_aoi_restricted",
-        "The public demo always prepares the complete set of 11 provider domains.",
+        "The public demo accepts only provider domains listed in its 11-domain capability template.",
       );
     }
     if (

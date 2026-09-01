@@ -127,11 +127,6 @@ export function AoiSettings({
   const demoMode = runtimeCapability?.mode === "demo_fixed_aoi";
   const maxRadiusM = demoMode ? MAX_DEMO_RADIUS_M : MAX_CUSTOM_RADIUS_M;
   useEffect(() => {
-    if (demoMode && selectedCategories.length !== ALL_RUNTIME_CATEGORIES.length) {
-      useAoiStore.setState({ selectedCategories: [...ALL_RUNTIME_CATEGORIES] });
-    }
-  }, [demoMode, selectedCategories.length]);
-  useEffect(() => {
     const currentRadius = parseCoordinate(radius);
     if (Number.isFinite(currentRadius) && currentRadius > maxRadiusM) {
       setRadius(String(maxRadiusM));
@@ -304,8 +299,8 @@ export function AoiSettings({
           <h3>Controlled demo acquisition</h3>
           <p>
             Choose a point inside Poland (maximum 10 km radius) or one PRG county. The server
-            prepares all 11 domains and generates a PMTiles presentation so the map can switch to
-            the new AOI.
+            prepares the selected provider domains and generates a PMTiles presentation so the map
+            can switch to the new AOI.
           </p>
         </div>
       ) : null}
@@ -439,12 +434,7 @@ export function AoiSettings({
       </p>
       <fieldset className="categorySelector">
         <legend>Provider domains</legend>
-        <button
-          type="button"
-          disabled={busy || demoMode}
-          className="textButton"
-          onClick={toggleAllCategories}
-        >
+        <button type="button" disabled={busy} className="textButton" onClick={toggleAllCategories}>
           {selectedCategories.length === ALL_RUNTIME_CATEGORIES.length ? "Clear all" : "Select all"}
         </button>
         <div className="categoryGrid">
@@ -452,7 +442,7 @@ export function AoiSettings({
             <label className="layerToggle" key={category}>
               <input
                 type="checkbox"
-                disabled={busy || demoMode}
+                disabled={busy}
                 checked={selectedCategories.includes(category)}
                 onChange={(event) => toggleCategory(category, event.target.checked)}
               />

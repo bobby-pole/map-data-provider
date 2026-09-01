@@ -89,7 +89,7 @@ export default function App() {
     ? runtimeResult.aoi.aoi_id
     : DEFAULT_AOI_ID;
   const { aoiId, presentations, issues, sourceAvailability, updateReview, error } =
-    useProviderPreview(preparedAoiId);
+    useProviderPreview(preparedAoiId, runtimeResult?.cached_at ?? null);
   const catalog = useMemo(() => configuredPreviewLayers(presentations), [presentations]);
   const missingDefaultDemoDomains = useMemo(
     () => missingPrimaryDemoDomains(presentations),

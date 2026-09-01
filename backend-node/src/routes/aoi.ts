@@ -419,10 +419,13 @@ export function createAoiRouter(options?: {
 
   // Data readers are deliberately snapshot-gated. A pack left beside a failed
   // refresh is not a publication and must not become visible simply because a
-  // caller knows its AOI path. Source-availability and issue-review records
-  // are metadata workflows, not prepared spatial artefacts, so they remain
-  // available for a not-yet-published AOI. The legacy POST /requests route
-  // below has no AOI path and is also outside this read-only guard.
+  // caller knows its AOI path. A checksum-validated partial publication is
+  // readable so its completed domain packs can remain useful while failed
+  // outcomes stay explicit in the snapshot manifest. Source-availability and
+  // issue-review records are metadata workflows, not prepared spatial
+  // artefacts, so they remain available for a not-yet-published AOI. The
+  // legacy POST /requests route below has no AOI path and is also outside this
+  // read-only guard.
   aoiRouter.use("/:aoiId", async (request, response, next) => {
     if (
       request.params.aoiId === "requests" ||
@@ -433,10 +436,10 @@ export function createAoiRouter(options?: {
     }
     try {
       const snapshot = await getPreparedSnapshot(request.params.aoiId, options?.providerDataPaths);
-      if (snapshot.state !== "ready") {
+      if (snapshot.state !== "ready" && snapshot.state !== "partial") {
         throw new ProviderDataError(
           "conflict",
-          `Snapshot '${snapshot.snapshot_id}' is ${snapshot.state}; normal data reads require a fully ready publication.`,
+          `Snapshot '${snapshot.snapshot_id}' is ${snapshot.state}; map data is not published yet.`,
         );
       }
       response.locals.preparedSnapshot = snapshot;

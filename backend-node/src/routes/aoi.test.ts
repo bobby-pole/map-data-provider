@@ -82,7 +82,11 @@ describe("read-only AOI provider routes", () => {
     });
   }
 
-  async function writeFixtureDomainPack(options?: { sourceId?: string; publicExport?: boolean }) {
+  async function writeFixtureDomainPack(options?: {
+    sourceId?: string;
+    publicExport?: boolean;
+    snapshotState?: "ready" | "partial";
+  }) {
     const aoiId = "fixture_aoi";
     const domain = "water";
     const artifactId = "water.main";
@@ -210,7 +214,7 @@ describe("read-only AOI provider routes", () => {
       snapshot_id: aoiId,
       aoi_id: aoiId,
       version: "fixture-v1",
-      state: "ready",
+      state: options?.snapshotState ?? "ready",
       published_at: "2026-08-01T00:00:00Z",
       source_observed_at: "2026-08-01T00:00:00Z",
       pipeline_version: "fixture/v1",
@@ -242,6 +246,18 @@ describe("read-only AOI provider routes", () => {
           readiness: "usable_with_limitations",
           limitations: ["Fixture-only source evidence."],
         },
+        ...(options?.snapshotState === "partial"
+          ? [
+              {
+                domain: "power" as const,
+                status: "failed" as const,
+                detail: "Fixture domain timed out.",
+                manifest_sha256: null,
+                readiness: "not_usable" as const,
+                limitations: ["Fixture-only source evidence."],
+              },
+            ]
+          : []),
       ],
     };
     await writeFile(
@@ -612,6 +628,15 @@ describe("read-only AOI provider routes", () => {
     ]);
     expect(exportData.domain_packs).toHaveLength(1);
     expect(exportData.domain_packs[0]?.domain).toBe("water");
+  });
+
+  it("serves completed domain packs from a published partial snapshot", async () => {
+    const { app } = await writeFixtureDomainPack({ snapshotState: "partial" });
+    const response = await request(app).get("/api/aoi/fixture_aoi/domain-packs");
+    expect(response.status).toBe(200);
+    expect(domainPackListResponseSchema.parse(response.body).domain_packs).toEqual([
+      expect.objectContaining({ aoi_id: "fixture_aoi", domain: "water" }),
+    ]);
   });
 
   it("rejects an export that is not tied to a checksum-validated prepared snapshot", async () => {

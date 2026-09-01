@@ -164,6 +164,66 @@ describe("runtime request coordinator", () => {
     expect(calls).toBe(1);
   });
 
+  it("retries a completed job when its publication contains failed domains", async () => {
+    let calls = 0;
+    const partialResponse = providerRuntimeResponseSchema.parse({
+      ...response,
+      outcomes: [
+        {
+          domain: "power",
+          source_registry_id: "openstreetmap",
+          source_role: "analytical",
+          output_kind: "analytical_vector",
+          query_version: "fixture/v1",
+          tags: {},
+          status: "ready",
+          detail: "Published",
+          failure_reason: null,
+          artifact_aoi_id: "aoi_fixture",
+          cache_status: "fresh",
+          queried_feature_count: 1,
+          accepted_feature_count: 1,
+          derived_feature_count: 0,
+        },
+        {
+          domain: "water",
+          source_registry_id: "openstreetmap",
+          source_role: "analytical",
+          output_kind: "analytical_vector",
+          query_version: "fixture/v1",
+          tags: {},
+          status: "failed",
+          detail: "Timed out",
+          failure_reason: "timeout",
+          artifact_aoi_id: null,
+          cache_status: "missing",
+          queried_feature_count: null,
+          accepted_feature_count: null,
+          derived_feature_count: null,
+        },
+      ],
+    });
+    const coordinator = createRuntimeJobCoordinator(async () => {
+      calls += 1;
+      return partialResponse;
+    });
+    const first = coordinator.submit(request, {
+      reuseSucceededWithinMs: PUBLIC_DEMO_REFRESH_COOLDOWN_MS,
+    });
+    await new Promise<void>((resolve) => setImmediate(resolve));
+    expect(
+      coordinator
+        .get(first.job_id)
+        ?.result?.outcomes.some((outcome) => outcome.status === "failed"),
+    ).toBe(true);
+
+    const retry = coordinator.submit(request, {
+      reuseSucceededWithinMs: PUBLIC_DEMO_REFRESH_COOLDOWN_MS,
+    });
+    expect(retry.job_id).not.toBe(first.job_id);
+    expect(calls).toBe(2);
+  });
+
   it("caches the administrative catalog promise and reuses it on subsequent calls", async () => {
     const service = await import("./aoiRuntimeService.js");
     service.resetAdministrativeCatalogCache();

@@ -16,7 +16,7 @@ async function fetchJson<T>(path: string): Promise<T> {
   return response.json() as Promise<T>;
 }
 
-export function useProviderPreview(aoiId?: string) {
+export function useProviderPreview(aoiId?: string, refreshToken?: string | null) {
   const [presentations, setPresentations] = useState<MapPresentation[]>([]);
   const [issues, setIssues] = useState<ProviderIssue[]>([]);
   const [sourceAvailability, setSourceAvailability] = useState<SourceAvailabilityReport | null>(
@@ -55,7 +55,7 @@ export function useProviderPreview(aoiId?: string) {
     return () => {
       cancelled = true;
     };
-  }, [aoiId]);
+  }, [aoiId, refreshToken]);
 
   async function updateReview(
     issue: ProviderIssue,

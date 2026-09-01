@@ -25,6 +25,11 @@ services:
       - ./data/runtime:/app/data/runtime
       - ./data/bundle/rybnik_35km:/app/data/bundle/rybnik_35km:ro
     restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     mem_limit: 2g
     mem_reservation: 512m
     healthcheck:

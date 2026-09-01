@@ -116,10 +116,33 @@ jobs:
             echo "$GHCR_TOKEN" | docker login ghcr.io -u bobby-pole --password-stdin
 
             cd /home/deploy/map-data-provider
+            mkdir -p data/prepared data/reviews data/runtime data/bundle/rybnik_35km
+
+            # Keep the running image and the newest rollback candidate, then
+            # remove only older images from this application. This runs before
+            # the pull so a new multi-gigabyte image cannot exhaust the root
+            # filesystem while the previous image is still present.
+            active_image_id="$(docker inspect --format '{{.Image}}' map-data-provider-prod 2>/dev/null || true)"
+            keep_image_ids="$(docker image ls --no-trunc ghcr.io/bobby-pole/map-data-provider --format '{{.ID}} {{.CreatedAt}}' | sort -k2,3r | awk 'NR <= 2 {print $1}')"
+            for image_id in $(docker image ls --no-trunc -q ghcr.io/bobby-pole/map-data-provider | sort -u); do
+              if [ "$image_id" = "$active_image_id" ] || printf '%s\n' "$keep_image_ids" | grep -Fxq "$image_id"; then
+                continue
+              fi
+              docker image rm "$image_id"
+            done
+            # Runtime cache is explicitly ephemeral; remove stale entries and
+            # old unused BuildKit cache without touching prepared/bundle data.
+            find data/runtime -type f -mtime +7 -delete
+            find data/runtime -type d -empty -delete
+            docker builder prune --force --filter "until=168h"
+            available_kb="$(df -Pk / | awk 'NR == 2 {print $4}')"
+            if [ -z "$available_kb" ] || [ "$available_kb" -lt 2097152 ]; then
+              echo "Less than 2 GiB is available on the VPS after safe cleanup; refusing image pull."
+              exit 1
+            fi
 
             # Prepare only mutable state directories. The externally uploaded
             # bundle is intentionally not chowned or chmodded during deploy.
-            mkdir -p data/prepared data/reviews data/runtime data/bundle/rybnik_35km
             chown -R 1001:1001 /home/deploy/map-data-provider/data/prepared /home/deploy/map-data-provider/data/reviews /home/deploy/map-data-provider/data/runtime
             chmod -R u=rwX,g=rX,o= /home/deploy/map-data-provider/data/prepared /home/deploy/map-data-provider/data/reviews /home/deploy/map-data-provider/data/runtime
             test -n "$DEMO_BUNDLE_ID"

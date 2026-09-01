@@ -75,6 +75,14 @@ export function createRuntimeJobCoordinator(runner: RuntimeJobRunner = runRuntim
           .filter(([, existingRequest]) => canonicalJson(existingRequest) === requestKey)
           .map(([jobId]) => jobs.get(jobId))
           .filter((job): job is ProviderRuntimeJob => job?.state === "succeeded")
+          // A job can finish with a published partial snapshot while one or
+          // more domains remain retryable. Do not let the public cooldown
+          // turn that partial result into a permanent retry no-op.
+          .filter(
+            (job) =>
+              job.result !== undefined &&
+              !job.result.outcomes.some((outcome) => outcome.status === "failed"),
+          )
           .filter((job) => {
             const completedAt = Date.parse(job.updated_at);
             return Number.isFinite(completedAt) && completedAt >= now - cooldownMs;

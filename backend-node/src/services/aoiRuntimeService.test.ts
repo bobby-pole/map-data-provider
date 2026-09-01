@@ -77,6 +77,9 @@ describe("runtime request coordinator", () => {
     expect(workerFailureMessage({ signal: "SIGKILL" }, "Safe fallback.")).toBe(
       "worker_terminated: AOI preparation worker exited with SIGKILL before publishing a snapshot.",
     );
+    expect(workerFailureMessage({ spawnErrorCode: "EAGAIN" }, "Safe fallback.")).toBe(
+      "worker_spawn_failed: AOI preparation worker could not be started (EAGAIN).",
+    );
     expect(workerFailureMessage({ exitCode: 3 }, "Safe fallback.")).toBe(
       "worker_failed: AOI preparation worker exited with code 3 before publishing a snapshot.",
     );

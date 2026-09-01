@@ -11,6 +11,7 @@ import {
   PUBLIC_DEMO_REFRESH_COOLDOWN_MS,
   workerFailureMessage,
 } from "./aoiRuntimeService.js";
+import { ProviderDataError } from "./providerDataService.js";
 
 const request: ProviderRuntimeRequest = {
   aoi: { type: "administrative_selection", unit_ids: ["county_rybnik_city", "county_rybnicki"] },
@@ -83,6 +84,15 @@ describe("runtime request coordinator", () => {
     expect(workerFailureMessage({ exitCode: 3 }, "Safe fallback.")).toBe(
       "worker_failed: AOI preparation worker exited with code 3 before publishing a snapshot.",
     );
+    expect(
+      workerFailureMessage(
+        new ProviderDataError(
+          "worker_failed",
+          "worker_spawn_failed: worker could not be started (ENOENT).",
+        ),
+        "Safe fallback.",
+      ),
+    ).toBe("worker_spawn_failed: worker could not be started (ENOENT).");
   });
 
   it("exposes real worker progress before the final runtime response is available", async () => {

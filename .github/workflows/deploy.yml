@@ -118,7 +118,7 @@ jobs:
             cd /home/deploy/map-data-provider
             mkdir -p data/prepared data/reviews data/runtime data/bundle/rybnik_35km
 
-            # Keep the running image and the newest rollback candidate, then
+            # Keep the running image and the two newest rollback candidates, then
             # remove only older images from this application. This runs before
             # the pull so a new multi-gigabyte image cannot exhaust the root
             # filesystem while the previous image is still present.

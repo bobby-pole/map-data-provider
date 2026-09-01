@@ -107,7 +107,7 @@ Pushes to the `main` branch automatically trigger `.github/workflows/deploy.yml`
 
 1. **Verification Gate**: Runs `pnpm run verify:provider` ensuring all tests, negative probes, linter, formatting, and builds pass.
 2. **Build & Push**: Builds multi-stage Docker image and pushes immutable tag `ghcr.io/bobby-pole/map-data-provider:${GITHUB_SHA}` and `latest`.
-3. **Deploy**: Requires the external bundle and its ID, copies `docker-compose.prod.yml` to `/home/deploy/map-data-provider/`, removes only older unused MDQ images while retaining the running image and newest rollback candidate, prunes stale runtime/build cache, refuses the pull when less than 2 GiB remains, writes immutable image/bundle IDs to `.env`, pulls the image, starts the container on `app_network` and verifies health via `http://127.0.0.1:3001/api/health`. NPM Proxy Host configuration is durable host state and is not rewritten by CI.
+3. **Deploy**: Requires the external bundle and its ID, copies `docker-compose.prod.yml` to `/home/deploy/map-data-provider/`, removes only older unused MDQ images while retaining the running image and two newest rollback candidates, prunes stale runtime/build cache, refuses the pull when less than 2 GiB remains, writes immutable image/bundle IDs to `.env`, pulls the image, starts the container on `app_network` and verifies health via `http://127.0.0.1:3001/api/health`. NPM Proxy Host configuration is durable host state and is not rewritten by CI.
 
 ### Publish delivery evidence
 
@@ -189,8 +189,8 @@ find /home/deploy/map-data-provider/data/runtime -type f -mtime +7 -delete
 find /home/deploy/map-data-provider/data/runtime -type d -empty -delete
 ```
 
-- **Application images**: CI retains the running image and one newest rollback
-  candidate for `ghcr.io/bobby-pole/map-data-provider`; older images are removed
+- **Application images**: CI retains the running image and the two newest rollback
+  candidates for `ghcr.io/bobby-pole/map-data-provider`; older images are removed
   before each pull. This is deliberately scoped to MDQ and does not prune the
   images used by Nginx Proxy Manager, AdGuard, WireGuard or other applications.
 - **Container logs**: The Compose service uses Docker's `json-file` driver with

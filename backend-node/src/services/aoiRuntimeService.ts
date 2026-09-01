@@ -423,6 +423,9 @@ function sumOutcomeCounts(
 }
 
 export function workerFailureMessage(error: unknown, fallback: string): string {
+  if (error instanceof ProviderDataError && error.kind === "worker_failed") {
+    return error.message;
+  }
   if (
     error &&
     typeof error === "object" &&

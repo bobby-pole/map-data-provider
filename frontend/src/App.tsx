@@ -336,7 +336,12 @@ export default function App() {
                   }
                 />
               )}
-              {activePanel === "metrics" && <DeliveryMetricsPanel />}
+              {activePanel === "metrics" && (
+                <DeliveryMetricsPanel
+                  aoiId={aoiId}
+                  refreshToken={runtimeResult?.cached_at ?? null}
+                />
+              )}
             </Suspense>
           </aside>
         )}

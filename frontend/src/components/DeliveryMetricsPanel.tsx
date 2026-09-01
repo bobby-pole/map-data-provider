@@ -1,12 +1,23 @@
 import { useEffect, useState } from "react";
 
+import { DEFAULT_DELIVERY_AOI_ID, isRuntimeAcquisitionReport } from "../deliveryReport";
 import type { DeliveryMetricsResponse } from "../types/api";
+import { RuntimeAcquisitionEvidencePanel } from "./RuntimeAcquisitionEvidencePanel";
 
-export function DeliveryMetricsPanel() {
+export function DeliveryMetricsPanel({
+  aoiId = DEFAULT_DELIVERY_AOI_ID,
+  refreshToken = null,
+}: {
+  aoiId?: string | null;
+  refreshToken?: string | null;
+}) {
   const [metrics, setMetrics] = useState<DeliveryMetricsResponse | null>(null);
   const [state, setState] = useState<"loading" | "unavailable" | "error">("loading");
 
   useEffect(() => {
+    if (isRuntimeAcquisitionReport(aoiId)) {
+      return;
+    }
     let cancelled = false;
     void fetch("/api/metrics/delivery")
       .then(async (response) => {
@@ -33,7 +44,11 @@ export function DeliveryMetricsPanel() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [aoiId, refreshToken]);
+
+  if (isRuntimeAcquisitionReport(aoiId)) {
+    return <RuntimeAcquisitionEvidencePanel aoiId={aoiId ?? null} refreshToken={refreshToken} />;
+  }
 
   if (!metrics) {
     return (

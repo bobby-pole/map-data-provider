@@ -3,7 +3,13 @@ import { useEffect, useState } from "react";
 import type { RuntimeAcquisitionEvidence } from "../types/api";
 
 /** Provenance evidence for a just-published AOI, never a delivery benchmark. */
-export function RuntimeAcquisitionEvidencePanel({ aoiId }: { aoiId: string | null }) {
+export function RuntimeAcquisitionEvidencePanel({
+  aoiId,
+  refreshToken = null,
+}: {
+  aoiId: string | null;
+  refreshToken?: string | null;
+}) {
   const [evidence, setEvidence] = useState<RuntimeAcquisitionEvidence | null>(null);
 
   useEffect(() => {
@@ -28,7 +34,7 @@ export function RuntimeAcquisitionEvidencePanel({ aoiId }: { aoiId: string | nul
     return () => {
       cancelled = true;
     };
-  }, [aoiId]);
+  }, [aoiId, refreshToken]);
 
   if (!evidence || evidence.aoi_id !== aoiId) {
     return null;

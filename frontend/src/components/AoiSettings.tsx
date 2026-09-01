@@ -487,7 +487,10 @@ export function AoiSettings({
       </div>
       {progress && <RuntimeProgress job={progress} />}
       {result && <RuntimeOutcomeSummary result={result} />}
-      <RuntimeAcquisitionEvidencePanel aoiId={result?.aoi.aoi_id ?? null} />
+      <RuntimeAcquisitionEvidencePanel
+        aoiId={result?.aoi.aoi_id ?? null}
+        refreshToken={result?.cached_at ?? null}
+      />
     </section>
   );
 }

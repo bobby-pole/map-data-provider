@@ -372,13 +372,20 @@ async function runRuntimeWorker(
       clearTimeout(timeout);
       reject(error);
     });
-    worker.on("close", (code) => {
+    worker.on("close", (code, signal) => {
       clearTimeout(timeout);
       if (pendingStderr) {
         processStderrLine(pendingStderr);
       }
       if (code !== 0) {
-        reject(Object.assign(new Error(stderr || "Process failed"), { stderr, timedOut }));
+        reject(
+          Object.assign(new Error(stderr || "Process failed"), {
+            stderr,
+            timedOut,
+            exitCode: code,
+            signal,
+          }),
+        );
         return;
       }
       try {
@@ -414,6 +421,13 @@ export function workerFailureMessage(error: unknown, fallback: string): string {
   ) {
     return "worker_timeout: AOI preparation exceeded its eight-minute safety limit before publishing a snapshot.";
   }
+  const signal =
+    error && typeof error === "object" && "signal" in error
+      ? (error as { signal?: unknown }).signal
+      : undefined;
+  if (typeof signal === "string" && signal.length > 0) {
+    return `worker_terminated: AOI preparation worker exited with ${signal} before publishing a snapshot.`;
+  }
   const stderr =
     error && typeof error === "object" && "stderr" in error
       ? (error as { stderr?: unknown }).stderr
@@ -437,6 +451,13 @@ export function workerFailureMessage(error: unknown, fallback: string): string {
     } catch {
       // Do not expose unstructured subprocess output to the API.
     }
+  }
+  const exitCode =
+    error && typeof error === "object" && "exitCode" in error
+      ? (error as { exitCode?: unknown }).exitCode
+      : undefined;
+  if (typeof exitCode === "number") {
+    return `worker_failed: AOI preparation worker exited with code ${exitCode} before publishing a snapshot.`;
   }
   return fallback;
 }

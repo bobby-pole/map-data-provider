@@ -287,6 +287,41 @@ def test_refresh_live_runtime_outcomes_isolates_domain_refresh_failure(
     assert "Live acquisition failed: Overpass network timeout" in res[1]["detail"]
 
 
+def test_runtime_pmtiles_refresh_serializes_memory_heavy_builders(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    resolved = {"aoi": {"aoi_id": "custom_aoi"}}
+    outcomes = [
+        {"domain": "power", "artifact_aoi_id": None},
+        {"domain": "water", "artifact_aoi_id": None},
+    ]
+    seen_workers: list[int] = []
+
+    class RecordingExecutor(ThreadPoolExecutor):
+        def __init__(self, *, max_workers: int, **kwargs: object) -> None:
+            seen_workers.append(max_workers)
+            super().__init__(max_workers=max_workers, **kwargs)
+
+    monkeypatch.setattr(
+        worker,
+        "refresh_runtime_osm_domain",
+        lambda **_kwargs: {
+            "status": "ready",
+            "artifact_aoi_id": "custom_aoi",
+            "cache_status": "fresh",
+        },
+    )
+
+    worker._refresh_live_runtime_outcomes(
+        resolved, outcomes, tmp_path, executor_type=RecordingExecutor, skip_pmtiles=False
+    )
+    worker._refresh_live_runtime_outcomes(
+        resolved, outcomes, tmp_path, executor_type=RecordingExecutor, skip_pmtiles=True
+    )
+
+    assert seen_workers == [1, 2]
+
+
 def test_partial_runtime_snapshot_retries_only_domains_that_failed(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

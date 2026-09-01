@@ -55,16 +55,23 @@ export function parseCoordinate(value: string): number {
   return Number(value.trim().replace(",", "."));
 }
 
-export const MAX_CUSTOM_RADIUS_M = 20_000;
+export const MAX_DEMO_RADIUS_M = 10_000;
+export const MAX_CUSTOM_RADIUS_M = 30_000;
 
-export function isPointRadiusValid(longitude: string, latitude: string, radius: string): boolean {
-  return validatePointRadiusInput(longitude, latitude, radius).valid;
+export function isPointRadiusValid(
+  longitude: string,
+  latitude: string,
+  radius: string,
+  maxRadiusM = MAX_CUSTOM_RADIUS_M,
+): boolean {
+  return validatePointRadiusInput(longitude, latitude, radius, maxRadiusM).valid;
 }
 
 export function validatePointRadiusInput(
   longitude: string,
   latitude: string,
   radius: string,
+  maxRadiusM = MAX_CUSTOM_RADIUS_M,
 ): { valid: boolean; error: string | null } {
   if (!latitude.trim()) {
     return { valid: false, error: "Latitude coordinate is required." };
@@ -89,8 +96,11 @@ export function validatePointRadiusInput(
   if (!Number.isFinite(rad) || rad <= 0) {
     return { valid: false, error: "Enter a valid positive radius in meters." };
   }
-  if (rad > MAX_CUSTOM_RADIUS_M) {
-    return { valid: false, error: "Radius exceeds maximum allowed limit of 20,000 m (20 km)." };
+  if (rad > maxRadiusM) {
+    return {
+      valid: false,
+      error: `Radius exceeds maximum allowed limit of ${maxRadiusM / 1000} km (${maxRadiusM.toLocaleString()} m).`,
+    };
   }
 
   return { valid: true, error: null };
@@ -99,6 +109,7 @@ export function validatePointRadiusInput(
 export function validateAdministrativeUnitSelection(
   unitIds: string[],
   units: AdministrativeUnit[],
+  maxCounties = 3,
 ): { valid: boolean; error: string | null } {
   if (unitIds.length === 0) {
     return { valid: false, error: "Select at least one administrative unit." };
@@ -135,8 +146,11 @@ export function validateAdministrativeUnitSelection(
     }
   }
 
-  if (involvedCounties.size > 3) {
-    return { valid: false, error: "You can select units from at most 3 adjacent counties." };
+  if (involvedCounties.size > maxCounties) {
+    return {
+      valid: false,
+      error: `You can select units from at most ${maxCounties} ${maxCounties === 1 ? "county" : "adjacent counties"}.`,
+    };
   }
 
   return { valid: true, error: null };
@@ -147,6 +161,7 @@ export function buildRuntimeRequest(
   values: { longitude: string; latitude: string; radius: string; unitIds: string[] },
   profiles: RuntimeCategory[],
   catalogUnits?: AdministrativeUnit[],
+  maxRadiusM = MAX_CUSTOM_RADIUS_M,
 ): { aoi: RuntimeAoiInput; profiles: RuntimeCategory[] } {
   if (profiles.length === 0) {
     throw new Error("Select at least one provider category.");
@@ -172,12 +187,9 @@ export function buildRuntimeRequest(
   if (![longitude, latitude, radius_m].every(Number.isFinite) || radius_m <= 0) {
     throw new Error("Point/radius AOI requires finite coordinates and radius.");
   }
-  if (
-    radius_m > MAX_CUSTOM_RADIUS_M &&
-    !(longitude === 18.546285 && latitude === 50.102174 && radius_m === 35_000)
-  ) {
+  if (radius_m > maxRadiusM) {
     throw new Error(
-      `Point/radius AOI radius cannot exceed ${MAX_CUSTOM_RADIUS_M / 1000} km (${MAX_CUSTOM_RADIUS_M} m).`,
+      `Point/radius AOI radius cannot exceed ${maxRadiusM / 1000} km (${maxRadiusM} m).`,
     );
   }
   return {

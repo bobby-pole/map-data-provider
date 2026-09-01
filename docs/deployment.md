@@ -10,7 +10,7 @@ This guide documents the production deployment architecture, Nginx Proxy Manager
 - **Application Container**: Single production Docker container (`map-data-provider-prod`) running as non-root user `appuser` (UID:GID `1001:1001`).
   - **Node.js 22 Express Provider**: Serves public REST API (`/api/*`), PMTiles archive streaming, in-memory rate limiting / concurrency protection, and static SPA frontend.
   - **Python 3.14 + uv**: Geospatial processing CLI engine used during bootstrap and offline data preparation.
-- **Controlled Demo Acquisition**: Compose sets `MDQ_RUNTIME_MODE=demo_fixed_aoi` and `MDQ_DEMO_AOI_TEMPLATE=rybnik_gmina_demo`. The only public write path is `POST /api/aoi/demo-acquisitions/rybnik_gmina_demo`; its AOI and four profiles are server-defined. Generic runtime endpoints return `demo_aoi_restricted` (HTTP 403), so the VPS is not an unauthenticated Overpass proxy.
+- **Controlled Demo Acquisition**: Compose sets `MDQ_RUNTIME_MODE=demo_fixed_aoi` and `MDQ_DEMO_AOI_TEMPLATE=rybnik_gmina_demo`. The public write path accepts a server-validated point/radius (at most 10 km and wholly inside Poland) or one-county PRG selection, always runs all 11 domains, and builds PMTiles for the new map presentation. Generic runtime endpoints, force refresh and out-of-policy requests return `demo_aoi_restricted` (HTTP 403), so the VPS is not an unauthenticated Overpass proxy.
 - **Storage Volumes**:
   - `data/prepared`: Prepared domain packs and PMTiles presentation archives (`MDQ_PREPARED_ROOT`).
   - `data/bundle/rybnik_35km`: Externally provisioned, immutable demo bundle mounted read-only. It is not part of the image or Git repository.
@@ -140,24 +140,22 @@ declared file, checksum, domain-pack version and bundle ID at startup. A
 missing or corrupted bundle causes controlled startup failure; it never serves
 an empty public demo.
 
-### Prepare MDQ-057 regional snapshots
+### Prepare MDQ-057 snapshots
 
-The two Steel Sentinel regional sources are operator-only targets, never public
-AOI templates: `rybnik_50km` is a true 50 km circle around the configured
-Rybnik centre; `rybnik_prg_neighbours` is the Rybnik PRG gmina plus every
-touching county-level PRG unit. Prepare them on a trusted workstation with a
-persistent root outside Git:
+The default regional source is the operator-only `rybnik_35km` baseline (35 km
+around the configured Rybnik centre), with all 11 provider domains. Demo jobs
+are limited to 10 km/one PRG county and build PMTiles so the map can switch to
+the new AOI. Local and trusted Steel Sentinel preparation may use up to 30 km or
+three adjacent counties and may build PMTiles. Prepare the default snapshot on a trusted workstation with
+a persistent root outside Git:
 
 ```bash
 cd backend
-uv run python ../scripts/prepare_regional_snapshots.py rybnik_50km \
-  --prepared-root /srv/mdq/prepared
-uv run python ../scripts/prepare_regional_snapshots.py rybnik_prg_neighbours \
+uv run python ../scripts/prepare_regional_snapshots.py rybnik_35km \
   --prepared-root /srv/mdq/prepared
 ```
 
-Each command uses only the four fixed demo domains (`power`, `emergency`,
-`public`, `transport`), validates every ready domain pack, writes
+The command validates every ready domain pack, writes
 `acquisition_evidence.json` before the checksummed snapshot manifest, and
 retains the preceding AOI directory under `previous/` for rollback. Restore the
 latest backup explicitly with `--rollback`; do not replace a mounted prepared

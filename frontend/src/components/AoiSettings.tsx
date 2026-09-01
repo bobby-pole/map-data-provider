@@ -2,9 +2,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import {
   administrativeSelectionRoots,
-  isPointRadiusValid,
+  MAX_CUSTOM_RADIUS_M,
+  MAX_DEMO_RADIUS_M,
   parseCoordinate,
   validateAdministrativeUnitSelection,
+  validatePointRadiusInput,
 } from "../aoiSettings";
 import { ALL_RUNTIME_CATEGORIES, useAoiStore } from "../stores/aoiStore";
 import type { AdministrativeUnit, ProviderRuntimeJob, ProviderRuntimeResponse } from "../types/api";
@@ -53,7 +55,6 @@ export function AoiSettings({
   const progress = useAoiStore((s) => s.progress);
   const result = useAoiStore((s) => s.result);
   const applyAoi = useAoiStore((s) => s.applyAoi);
-  const applyDemoAoi = useAoiStore((s) => s.applyDemoAoi);
 
   const [latBubble, setLatBubble] = useState<string | null>(null);
   const latTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -123,12 +124,25 @@ export function AoiSettings({
   }, [catalog]);
 
   const allUnits = useMemo(() => catalog?.units ?? [], [catalog]);
+  const demoMode = runtimeCapability?.mode === "demo_fixed_aoi";
+  const maxRadiusM = demoMode ? MAX_DEMO_RADIUS_M : MAX_CUSTOM_RADIUS_M;
+  useEffect(() => {
+    if (demoMode && selectedCategories.length !== ALL_RUNTIME_CATEGORIES.length) {
+      useAoiStore.setState({ selectedCategories: [...ALL_RUNTIME_CATEGORIES] });
+    }
+  }, [demoMode, selectedCategories.length]);
+  useEffect(() => {
+    const currentRadius = parseCoordinate(radius);
+    if (Number.isFinite(currentRadius) && currentRadius > maxRadiusM) {
+      setRadius(String(maxRadiusM));
+    }
+  }, [maxRadiusM, radius, setRadius]);
   const validation = useMemo(() => {
     if (mode === "administrative_selection") {
-      return validateAdministrativeUnitSelection(unitIds, allUnits);
+      return validateAdministrativeUnitSelection(unitIds, allUnits, demoMode ? 1 : 3);
     }
-    return { valid: isPointRadiusValid(longitude, latitude, radius), error: null };
-  }, [mode, unitIds, allUnits, longitude, latitude, radius]);
+    return validatePointRadiusInput(longitude, latitude, radius, maxRadiusM);
+  }, [mode, unitIds, allUnits, longitude, latitude, radius, maxRadiusM, demoMode]);
 
   const parsedLat = parseCoordinate(latitude);
   const isLatitudeInvalid =
@@ -175,7 +189,7 @@ export function AoiSettings({
   };
 
   const parsedRadius = parseCoordinate(radius);
-  const isRadiusTooLarge = Number.isFinite(parsedRadius) && parsedRadius > 20_000;
+  const isRadiusTooLarge = Number.isFinite(parsedRadius) && parsedRadius > maxRadiusM;
   const isRadiusInvalid =
     radius.trim().length > 0 && (!Number.isFinite(parsedRadius) || parsedRadius <= 0);
 
@@ -186,8 +200,8 @@ export function AoiSettings({
       clearTimeout(radiusTimerRef.current);
     }
 
-    if (val.trim().length > 0 && Number.isFinite(parsed) && parsed > 20_000) {
-      setRadiusBubble("Radius exceeds maximum allowed limit of 20,000 m (20 km).");
+    if (val.trim().length > 0 && Number.isFinite(parsed) && parsed > maxRadiusM) {
+      setRadiusBubble(`Radius exceeds maximum allowed limit of ${maxRadiusM / 1000} km.`);
       radiusTimerRef.current = setTimeout(() => {
         setRadiusBubble(null);
       }, 3500);
@@ -225,74 +239,6 @@ export function AoiSettings({
     await applyAoi(onActivity, onApplied);
   };
 
-  if (runtimeCapability?.mode === "demo_fixed_aoi" && runtimeCapability.demo_template) {
-    const template = runtimeCapability.demo_template;
-    return (
-      <section
-        className="drawerContent drawerSection aoiSettings"
-        aria-label="AOI & Profile Configuration"
-      >
-        <div className="sectionHeading">
-          <h2>AOI & cache</h2>
-          <span>public demo</span>
-        </div>
-        <div className="defaultAoiCard">
-          <div className="defaultAoiInfo">
-            <strong>Default Snapshot: Rybnik (35 km)</strong>
-            <p className="muted">All 11 infrastructure domains pre-generated and cached offline.</p>
-          </div>
-          <div className="defaultAoiActions">
-            <button
-              type="button"
-              disabled={busy || (isDefaultAoiActive && !isDefaultAoiHidden)}
-              className="secondaryButton"
-              onClick={() => {
-                if (isDefaultAoiHidden && onToggleDefaultAoiHidden) {
-                  onToggleDefaultAoiHidden();
-                }
-                onResetToDefault?.();
-              }}
-            >
-              {isDefaultAoiActive && !isDefaultAoiHidden ? "Default active" : "Load default"}
-            </button>
-            <button
-              type="button"
-              disabled={busy || !isDefaultAoiActive}
-              className="secondaryButton"
-              onClick={onToggleDefaultAoiHidden}
-            >
-              {isDefaultAoiHidden ? "Show objects" : "Hide objects"}
-            </button>
-          </div>
-        </div>
-        <hr className="drawerDivider" />
-        <div className="runtimeModeNotice">
-          <h3>Controlled live acquisition</h3>
-          <p>
-            This public demo intentionally exposes one server-defined AOI:{" "}
-            <strong>{template.label}</strong>. It can prepare only {template.profiles.join(", ")}{" "}
-            and cannot accept coordinates, PRG selections, custom profiles, or a force refresh.
-          </p>
-          <p className="muted">
-            The server coalesces the fixed request and reuses its verified result for 24 hours; the
-            public demo cannot force a refresh.
-          </p>
-          <button
-            type="button"
-            className="prepareAoiButton"
-            disabled={busy}
-            onClick={() => void applyDemoAoi(onActivity, onApplied)}
-          >
-            {busy ? "Preparing Rybnik demo AOI…" : "Prepare Rybnik demo AOI"}
-          </button>
-        </div>
-        {progress && <RuntimeProgress job={progress} />}
-        {result && <RuntimeOutcomeSummary result={result} />}
-        <RuntimeAcquisitionEvidencePanel aoiId={result?.aoi.aoi_id ?? null} />
-      </section>
-    );
-  }
-
   if (runtimeCapability?.mode === "disabled") {
     return (
       <section
@@ -321,7 +267,7 @@ export function AoiSettings({
     >
       <div className="sectionHeading">
         <h2>AOI & cache</h2>
-        <span>Poland / PRG</span>
+        <span>{demoMode ? "public demo" : "Poland / PRG"}</span>
       </div>
       <div className="defaultAoiCard">
         <div className="defaultAoiInfo">
@@ -353,26 +299,40 @@ export function AoiSettings({
         </div>
       </div>
       <hr className="drawerDivider" />
+      {demoMode ? (
+        <div className="runtimeModeNotice">
+          <h3>Controlled demo acquisition</h3>
+          <p>
+            Choose a point inside Poland (maximum 10 km radius) or one PRG county. The server
+            prepares all 11 domains and generates a PMTiles presentation so the map can switch to
+            the new AOI.
+          </p>
+        </div>
+      ) : null}
       <div className="sectionSubheading">
-        <h3>Prepare Custom AOI</h3>
+        <h3>{demoMode ? "Prepare demo AOI" : "Prepare Custom AOI"}</h3>
       </div>
       <div className="aoiRulesBanner">
         <strong>AOI Selection Rules & Limits:</strong>
         <ul>
           <li>
-            <strong>Point on map:</strong> maximum radius of <strong>20 km</strong>.
+            <strong>Point on map:</strong> maximum radius of <strong>{maxRadiusM / 1000} km</strong>
+            .
           </li>
           <li>
             <strong>Voivodeships:</strong> selecting an entire voivodeship is{" "}
             <strong>blocked</strong> (expand to select counties/gminas).
           </li>
           <li>
-            <strong>Counties:</strong> up to <strong>3 directly adjacent</strong> counties in the
-            same voivodeship.
+            <strong>Counties:</strong> up to <strong>{demoMode ? "1" : "3"}</strong>{" "}
+            {demoMode ? "county" : "directly adjacent counties"} in the same voivodeship.
           </li>
           <li>
-            <strong>Gminas:</strong> any number of gminas across up to{" "}
-            <strong>3 adjacent counties</strong>.
+            <strong>Gminas:</strong>{" "}
+            {demoMode
+              ? "gminas within the selected county only"
+              : "any number of gminas across up to 3 adjacent counties"}
+            .
           </li>
         </ul>
       </div>
@@ -383,7 +343,7 @@ export function AoiSettings({
           className={mode === "point_radius" ? "active" : ""}
           onClick={() => setMode("point_radius")}
         >
-          Point + radius (max 20 km)
+          Point + radius (max {maxRadiusM / 1000} km)
         </button>
         <button
           type="button"
@@ -437,10 +397,12 @@ export function AoiSettings({
                 <span>{radiusBubble}</span>
               </div>
             )}
-            <span>Radius (m) — max 20 000 m (20 km)</span>
+            <span>
+              Radius (m) — max {maxRadiusM.toLocaleString()} m ({maxRadiusM / 1000} km)
+            </span>
             <input
               disabled={busy}
-              placeholder="e.g. 20000"
+              placeholder={`e.g. ${maxRadiusM}`}
               value={radius}
               onChange={(event) => onRadiusChange(event.target.value)}
               inputMode="numeric"
@@ -459,6 +421,7 @@ export function AoiSettings({
       ) : (
         <AdministrativeTree
           disabled={busy}
+          maxCounties={demoMode ? 1 : 3}
           unitsByKind={unitsByKind}
           unitIds={unitIds}
           treeBubble={effectiveTreeBubble}
@@ -469,12 +432,19 @@ export function AoiSettings({
       )}
       {boundaryMessage && <p className="muted boundaryMessage">{boundaryMessage}</p>}
       <p className="muted">
-        Selected units: {selectedUnitCount}. Choose up to 3 adjacent counties or their gminas within
-        one voivodeship.
+        Selected units: {selectedUnitCount}.{" "}
+        {demoMode
+          ? "Select one county or its gminas."
+          : "Choose up to 3 adjacent counties or their gminas within one voivodeship."}
       </p>
       <fieldset className="categorySelector">
         <legend>Provider domains</legend>
-        <button type="button" disabled={busy} className="textButton" onClick={toggleAllCategories}>
+        <button
+          type="button"
+          disabled={busy || demoMode}
+          className="textButton"
+          onClick={toggleAllCategories}
+        >
           {selectedCategories.length === ALL_RUNTIME_CATEGORIES.length ? "Clear all" : "Select all"}
         </button>
         <div className="categoryGrid">
@@ -482,7 +452,7 @@ export function AoiSettings({
             <label className="layerToggle" key={category}>
               <input
                 type="checkbox"
-                disabled={busy}
+                disabled={busy || demoMode}
                 checked={selectedCategories.includes(category)}
                 onChange={(event) => toggleCategory(category, event.target.checked)}
               />
@@ -506,7 +476,13 @@ export function AoiSettings({
           disabled={busy || selectedCategories.length === 0 || !canPrepare}
           onClick={() => void handleApply()}
         >
-          {busy ? "Preparing AOI…" : failedDomainCount ? "Retry failed domains" : "Prepare AOI"}
+          {busy
+            ? "Preparing AOI…"
+            : failedDomainCount
+              ? "Retry failed domains"
+              : demoMode
+                ? "Prepare Rybnik demo AOI"
+                : "Prepare AOI"}
         </button>
       </div>
       {progress && <RuntimeProgress job={progress} />}
@@ -606,6 +582,7 @@ type AdministrativeBranch = {
 function AdministrativeTree({
   unitsByKind,
   unitIds,
+  maxCounties = 3,
   disabled = false,
   treeBubble,
   onShowTreeError,
@@ -618,6 +595,7 @@ function AdministrativeTree({
     gmina: AdministrativeUnit[];
   };
   unitIds: string[];
+  maxCounties?: number;
   disabled?: boolean;
   treeBubble?: { unitId: string; message: string } | null;
   onShowTreeError: (unitId: string, message: string) => void;
@@ -678,7 +656,8 @@ function AdministrativeTree({
   return (
     <section className="aoiUnits administrativeTree" aria-label="Administrative PRG tree">
       <p className="muted">
-        Expand a voivodeship branch to select up to 3 adjacent counties or their gminas.
+        Expand a voivodeship branch to select up to {maxCounties}{" "}
+        {maxCounties === 1 ? "county or its gminas." : "adjacent counties or their gminas."}
       </p>
       {branches.map((branch) => {
         const rootDisabled = disabled || Boolean(activeRoot && activeRoot !== branch.unit.id);
@@ -709,7 +688,7 @@ function AdministrativeTree({
 
                   const canSelectCounty =
                     !rootDisabled &&
-                    (involvedCounties.size < 3 || involvedCounties.has(county.unit.id));
+                    (involvedCounties.size < maxCounties || involvedCounties.has(county.unit.id));
                   const countyToggleDisabled = disabled || !canSelectCounty;
 
                   const handleCountyClick = (e: React.MouseEvent) => {
@@ -725,7 +704,7 @@ function AdministrativeTree({
                       } else {
                         onShowTreeError(
                           county.unit.id,
-                          "Maximum 3 adjacent counties can be selected.",
+                          `Maximum ${maxCounties} ${maxCounties === 1 ? "county" : "adjacent counties"} can be selected.`,
                         );
                       }
                     }
@@ -767,7 +746,8 @@ function AdministrativeTree({
                             const isGminaSelected = countySelected || isGminaDirectlySelected;
                             const canSelectGmina =
                               !rootDisabled &&
-                              (involvedCounties.size < 3 || involvedCounties.has(county.unit.id));
+                              (involvedCounties.size < maxCounties ||
+                                involvedCounties.has(county.unit.id));
                             const gminaDisabled = disabled || (!isGminaSelected && !canSelectGmina);
 
                             const handleGminaClick = (e: React.MouseEvent) => {
@@ -783,7 +763,7 @@ function AdministrativeTree({
                                 } else {
                                   onShowTreeError(
                                     gmina.id,
-                                    "You can select units from at most 3 adjacent counties.",
+                                    `You can select units from at most ${maxCounties} ${maxCounties === 1 ? "county" : "adjacent counties"}.`,
                                   );
                                 }
                               }

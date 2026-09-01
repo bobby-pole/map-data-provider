@@ -76,13 +76,10 @@ export const runtimeCapabilityResponseSchema = z
       .object({
         id: z.literal("rybnik_gmina_demo"),
         label: z.string().min(1),
-        unit_ids: z.tuple([z.literal("gmina_2473011")]),
-        profiles: z.tuple([
-          z.literal("power"),
-          z.literal("emergency"),
-          z.literal("public"),
-          z.literal("transport"),
-        ]),
+        max_radius_m: z.number().positive(),
+        max_counties: z.number().int().positive(),
+        generates_pmtiles: z.boolean(),
+        profiles: z.array(runtimeProfileSchema).min(1),
       })
       .nullable(),
   })
@@ -330,6 +327,7 @@ export const runtimeAcquisitionEvidenceSchema = z
     aoi_id: providerIdentifierSchema,
     snapshot_id: providerIdentifierSchema,
     resolved_geometry: runtimeGeometrySchema,
+    radius_m: z.number().positive().nullable(),
     allowed_domains: z.array(runtimeProfileSchema).min(1),
     source_observed_at: z.string().datetime(),
     overpass_endpoint: z.string().url().nullable(),

@@ -20,7 +20,7 @@ if str(BACKEND_ROOT) not in sys.path:
 
 from geo_pipeline.aoi_runtime import PIPELINE_VERSION
 from geo_pipeline.prepared_snapshot import publish_runtime_snapshot
-from geo_pipeline.regional_snapshots import DEMO_DOMAINS, regional_snapshot_aoi
+from geo_pipeline.regional_snapshots import RUNTIME_DOMAINS, regional_snapshot_aoi
 from geo_pipeline.runtime_osm import refresh_runtime_osm_domain
 
 
@@ -28,9 +28,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description="Prepare a checksum-validated MDQ regional snapshot."
     )
-    parser.add_argument("snapshot_id", choices=["rybnik_50km", "rybnik_prg_neighbours"])
+    parser.add_argument("snapshot_id", choices=["rybnik_35km"])
     parser.add_argument("--prepared-root", type=Path, required=True)
-    parser.add_argument("--domain", action="append", choices=DEMO_DOMAINS)
+    parser.add_argument("--domain", action="append", choices=RUNTIME_DOMAINS)
     parser.add_argument("--rollback", action="store_true")
     args = parser.parse_args()
     root: Path = args.prepared_root.resolve()
@@ -39,13 +39,15 @@ def main() -> int:
         return rollback(root, target)
 
     aoi = regional_snapshot_aoi(args.snapshot_id)
-    domains = tuple(args.domain or DEMO_DOMAINS)
+    domains = tuple(args.domain or RUNTIME_DOMAINS)
     backup_existing(root, target)
     outcomes = []
     for domain in domains:
         try:
-            outcomes.append(refresh_runtime_osm_domain(aoi=aoi, domain=domain, root=root))
-        except Exception as error:  # publish a partial state with an explicit retry reason
+            outcomes.append(
+                refresh_runtime_osm_domain(aoi=aoi, domain=domain, root=root)
+            )
+        except Exception as error:  # noqa: BLE001 - publish a partial state with an explicit retry reason
             outcomes.append(
                 {
                     "domain": domain,
@@ -66,7 +68,9 @@ def main() -> int:
         outcomes=outcomes,
         pipeline_version=PIPELINE_VERSION,
     )
-    print(f"Published {args.snapshot_id} with {len(domains)} requested domains at {target}")
+    print(
+        f"Published {args.snapshot_id} with {len(domains)} requested domains at {target}"
+    )
     return 0
 
 
@@ -82,12 +86,17 @@ def backup_existing(root: Path, target: Path) -> None:
 
 def rollback(root: Path, target: Path) -> int:
     previous_root = root / "previous" / target.name
-    candidates = sorted((path for path in previous_root.glob("*") if path.is_dir()), reverse=True)
+    candidates = sorted(
+        (path for path in previous_root.glob("*") if path.is_dir()), reverse=True
+    )
     if not candidates:
         raise SystemExit(f"No rollback copy exists for {target.name}.")
     restore = candidates[0]
     failed = (
-        root / "previous" / target.name / f"failed-{datetime.now(UTC).strftime('%Y%m%dT%H%M%SZ')}"
+        root
+        / "previous"
+        / target.name
+        / f"failed-{datetime.now(UTC).strftime('%Y%m%dT%H%M%SZ')}"
     )
     if target.exists():
         target.replace(failed)

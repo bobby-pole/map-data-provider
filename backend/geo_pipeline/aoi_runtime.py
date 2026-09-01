@@ -400,7 +400,7 @@ def _context(
     }
 
 
-MAX_CUSTOM_RADIUS_M = 20_000
+MAX_CUSTOM_RADIUS_M = 30_000
 MAX_COUNTIES_SELECTION = 3
 
 
@@ -416,6 +416,9 @@ def _resolve_runtime_aoi(value: Any):
             _finite(value["latitude"], "latitude"),
         )
         radius_m = _finite(value["radius_m"], "radius_m")
+        # Keep the prepared Rybnik baseline addressable by its historical
+        # centre/radius identity; interactive local/demo requests remain
+        # bounded to 30 km (or the stricter demo policy) before submission.
         if radius_m > MAX_CUSTOM_RADIUS_M and (longitude, latitude, radius_m) != (
             18.546285,
             50.102174,

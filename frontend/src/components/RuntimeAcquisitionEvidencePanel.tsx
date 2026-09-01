@@ -30,7 +30,7 @@ export function RuntimeAcquisitionEvidencePanel({ aoiId }: { aoiId: string | nul
     };
   }, [aoiId]);
 
-  if (!evidence) {
+  if (!evidence || evidence.aoi_id !== aoiId) {
     return null;
   }
   return (
@@ -41,6 +41,16 @@ export function RuntimeAcquisitionEvidencePanel({ aoiId }: { aoiId: string | nul
         benchmark or a live-state claim.
       </p>
       <dl>
+        <div>
+          <dt>AOI</dt>
+          <dd>{evidence.aoi_id}</dd>
+        </div>
+        {evidence.radius_m !== null ? (
+          <div>
+            <dt>Radius</dt>
+            <dd>{evidence.radius_m} m</dd>
+          </div>
+        ) : null}
         <div>
           <dt>Source date</dt>
           <dd>{new Date(evidence.source_observed_at).toLocaleString()}</dd>

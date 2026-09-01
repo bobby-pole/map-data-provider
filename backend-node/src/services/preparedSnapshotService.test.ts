@@ -19,16 +19,16 @@ afterEach(async () => {
 describe("prepared snapshot catalogue", () => {
   it("accepts an exact checksum-validated publication and does not overclaim nearby coverage", async () => {
     const root = await fixtureRoot();
-    await writeSnapshot(root, { aoiId: "rybnik_50km", state: "ready" });
+    await writeSnapshot(root, { aoiId: "rybnik_35km", state: "ready" });
     const snapshots = await listPreparedSnapshots({ cacheRoot: root });
 
     expect(snapshots).toHaveLength(1);
     expect(
       availabilityForResolvedAoi(
-        { aoi_id: "rybnik_50km", geometry: snapshots[0]!.coverage.geometry },
+        { aoi_id: "rybnik_35km", geometry: snapshots[0]!.coverage.geometry },
         snapshots,
       ),
-    ).toMatchObject({ state: "ready", snapshot_ids: ["rybnik_50km"] });
+    ).toMatchObject({ state: "ready", snapshot_ids: ["rybnik_35km"] });
     expect(
       availabilityForResolvedAoi(
         {
@@ -106,6 +106,7 @@ describe("prepared snapshot catalogue", () => {
             ],
           ],
         },
+        radius_m: null,
         allowed_domains: ["power"],
         source_observed_at: "2026-08-31T10:00:00Z",
         overpass_endpoint: null,

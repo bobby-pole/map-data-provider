@@ -13,19 +13,30 @@ export const DEMO_AOI_TEMPLATE_ID = "rybnik_gmina_demo";
 
 export const DEMO_AOI_TEMPLATE = {
   id: DEMO_AOI_TEMPLATE_ID,
-  label: "Rybnik administrative area",
-  unit_ids: ["gmina_2473011"],
-  profiles: ["power", "emergency", "public", "transport"],
-  request: {
-    aoi: { type: "administrative_selection", unit_ids: ["gmina_2473011"] },
-    profiles: ["power", "emergency", "public", "transport"],
-  },
+  label: "Poland-bounded demo AOI",
+  max_radius_m: 10_000,
+  max_counties: 1,
+  generates_pmtiles: true,
+  profiles: [
+    "power",
+    "emergency",
+    "public",
+    "transport",
+    "bridges",
+    "water",
+    "gas",
+    "sewer",
+    "industrial",
+    "telecom",
+    "district_heating",
+  ],
 } satisfies {
   id: string;
   label: string;
-  unit_ids: string[];
+  max_radius_m: number;
+  max_counties: number;
+  generates_pmtiles: boolean;
   profiles: ProviderRuntimeRequest["profiles"];
-  request: ProviderRuntimeRequest;
 };
 
 export class RuntimeAcquisitionConfigurationError extends Error {}

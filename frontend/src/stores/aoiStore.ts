@@ -6,6 +6,7 @@ import {
   buildRuntimeRequest,
   isPointRadiusValid,
   MAX_CUSTOM_RADIUS_M,
+  MAX_DEMO_RADIUS_M,
   parseCoordinate,
   pointRadiusOutline,
   pointRadiusZoom,
@@ -99,15 +100,17 @@ function updatePointRadiusDraft(
     return;
   }
   const rad = parseCoordinate(radius);
-  if (Number.isFinite(rad) && rad > MAX_CUSTOM_RADIUS_M) {
+  const maxRadius =
+    get().runtimeCapability?.mode === "demo_fixed_aoi" ? MAX_DEMO_RADIUS_M : MAX_CUSTOM_RADIUS_M;
+  if (Number.isFinite(rad) && rad > maxRadius) {
     set({
       draftAoiOutline: null,
       aoiViewport: null,
-      error: `Radius exceeds maximum allowed limit of 20,000 m (20 km). Please enter a value ≤ 20,000 m.`,
+      error: `Radius exceeds maximum allowed limit of ${maxRadius / 1000} km (${maxRadius} m).`,
     });
     return;
   }
-  if (isPointRadiusValid(longitude, latitude, radius)) {
+  if (isPointRadiusValid(longitude, latitude, radius, maxRadius)) {
     const lon = parseCoordinate(longitude);
     const lat = parseCoordinate(latitude);
     const outline = pointRadiusOutline(lon, lat, rad);
@@ -275,7 +278,14 @@ export const useAoiStore = create<AoiState>((set, get) => ({
     const lonStr = String(point.longitude);
     const latStr = String(point.latitude);
     const radius = get().radius;
-    const radNum = parseCoordinate(radius) || 20000;
+    const defaultRadius =
+      get().runtimeCapability?.mode === "demo_fixed_aoi" ? MAX_DEMO_RADIUS_M : MAX_CUSTOM_RADIUS_M;
+    const parsedRadius = parseCoordinate(radius);
+    const radNum =
+      Number.isFinite(parsedRadius) && parsedRadius > 0 && parsedRadius <= defaultRadius
+        ? parsedRadius
+        : defaultRadius;
+    set({ radius: String(radNum) });
     const outline = pointRadiusOutline(point.longitude, point.latitude, radNum);
     const zoom = pointRadiusZoom(radNum);
     set({
@@ -294,8 +304,21 @@ export const useAoiStore = create<AoiState>((set, get) => ({
   },
 
   applyAoi: async (onActivity, onApplied) => {
-    const { mode, longitude, latitude, radius, unitIds, selectedCategories, busy } = get();
+    const {
+      mode,
+      longitude,
+      latitude,
+      radius,
+      unitIds,
+      selectedCategories,
+      busy,
+      runtimeCapability,
+    } = get();
     if (busy) {
+      return;
+    }
+    if (runtimeCapability?.mode === "demo_fixed_aoi") {
+      await get().applyDemoAoi(onActivity, onApplied);
       return;
     }
     set({ busy: true, error: null, preflight: null, progress: null, result: null });
@@ -304,6 +327,8 @@ export const useAoiStore = create<AoiState>((set, get) => ({
         mode,
         { longitude, latitude, radius, unitIds },
         selectedCategories,
+        undefined,
+        MAX_CUSTOM_RADIUS_M,
       );
       onActivity({
         phase: "validation",
@@ -363,7 +388,7 @@ export const useAoiStore = create<AoiState>((set, get) => ({
   },
 
   applyDemoAoi: async (onActivity, onApplied) => {
-    const { busy, runtimeCapability } = get();
+    const { busy, runtimeCapability, mode, longitude, latitude, radius, unitIds, catalog } = get();
     const template = runtimeCapability?.demo_template;
     if (busy || !template) {
       return;
@@ -371,11 +396,35 @@ export const useAoiStore = create<AoiState>((set, get) => ({
     set({ busy: true, error: null, preflight: null, progress: null, result: null });
     try {
       onActivity({
-        phase: "cache",
-        message:
-          "Queued the fixed Rybnik demo AOI; the provider will reuse a verified snapshot when available.",
+        phase: "validation",
+        message: "Validating the Poland-bounded demo AOI before preparing all 11 domains.",
       });
-      const response = await fetch(`/api/aoi/demo-acquisitions/${template.id}`, { method: "POST" });
+      const runtimeRequest = buildRuntimeRequest(
+        mode,
+        { longitude, latitude, radius, unitIds },
+        template.profiles,
+        catalog?.units,
+        template.max_radius_m,
+      );
+      const preflightResponse = await fetch("/api/aoi/runtime-requests/preflight", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(runtimeRequest),
+      });
+      if (!preflightResponse.ok) {
+        throw new Error(await runtimeRequestError(preflightResponse));
+      }
+      const nextPreflight = (await preflightResponse.json()) as RuntimePreflight;
+      set({ preflight: nextPreflight, draftAoiOutline: nextPreflight.aoi.geometry });
+      if (nextPreflight.status === "blocked") {
+        onActivity({ phase: "error", message: nextPreflight.message });
+        return;
+      }
+      const response = await fetch(`/api/aoi/demo-acquisitions/${template.id}`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(runtimeRequest),
+      });
       if (!response.ok) {
         throw new Error(await runtimeRequestError(response));
       }
@@ -387,10 +436,10 @@ export const useAoiStore = create<AoiState>((set, get) => ({
       onActivity({
         phase: res.request_result === "cache" ? "cache" : "publication",
         message: failed.length
-          ? `Published a partial fixed demo snapshot. ${failed.map((outcome) => `${outcome.domain}: ${outcome.detail}`).join(" ")}`
+          ? `Published a partial demo snapshot. ${failed.map((outcome) => `${outcome.domain}: ${outcome.detail}`).join(" ")}`
           : res.request_result === "cache"
-            ? "Reused the verified fixed Rybnik demo snapshot."
-            : "Published a refreshed fixed Rybnik demo snapshot.",
+            ? "Reused the verified demo AOI snapshot."
+            : "Published a refreshed demo AOI snapshot.",
       });
       onApplied(res);
     } catch (reason) {

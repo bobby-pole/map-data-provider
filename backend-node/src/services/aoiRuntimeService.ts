@@ -55,6 +55,7 @@ type RuntimeProgressUpdate = Pick<
 type RuntimeJobRunner = (
   request: ProviderRuntimeRequest,
   report: (progress: RuntimeProgressUpdate) => void,
+  options?: { skipPmtiles?: boolean },
 ) => Promise<ProviderRuntimeResponse>;
 
 export function createRuntimeJobCoordinator(runner: RuntimeJobRunner = runRuntimeWorker) {
@@ -64,7 +65,7 @@ export function createRuntimeJobCoordinator(runner: RuntimeJobRunner = runRuntim
   return {
     submit(
       request: ProviderRuntimeRequest,
-      options?: { reuseSucceededWithinMs?: number; now?: number },
+      options?: { reuseSucceededWithinMs?: number; now?: number; skipPmtiles?: boolean },
     ): ProviderRuntimeJob {
       const requestKey = canonicalJson(request);
       const cooldownMs = options?.reuseSucceededWithinMs ?? 0;
@@ -107,18 +108,22 @@ export function createRuntimeJobCoordinator(runner: RuntimeJobRunner = runRuntim
       jobs.set(job.job_id, job);
       requestByJob.set(job.job_id, request);
       inProgressByRequest.set(requestKey, job.job_id);
-      void runner(request, (progress) => {
-        const current = jobs.get(job.job_id);
-        if (!current || current.state === "failed" || current.state === "succeeded") {
-          return;
-        }
-        jobs.set(job.job_id, {
-          ...current,
-          state: "running",
-          ...progress,
-          updated_at: new Date().toISOString(),
-        });
-      })
+      void runner(
+        request,
+        (progress) => {
+          const current = jobs.get(job.job_id);
+          if (!current || current.state === "failed" || current.state === "succeeded") {
+            return;
+          }
+          jobs.set(job.job_id, {
+            ...current,
+            state: "running",
+            ...progress,
+            updated_at: new Date().toISOString(),
+          });
+        },
+        { skipPmtiles: options?.skipPmtiles },
+      )
         .then((result) => {
           const current = jobs.get(job.job_id);
           if (current) {
@@ -309,25 +314,29 @@ async function runAoiRuntimePython<T>(
 async function runRuntimeWorker(
   request: ProviderRuntimeRequest,
   report?: (progress: RuntimeProgressUpdate) => void,
+  options?: { skipPmtiles?: boolean },
 ): Promise<ProviderRuntimeResponse> {
   return new Promise<ProviderRuntimeResponse>((resolve, reject) => {
     let stdout = "";
     let stderr = "";
     let pendingStderr = "";
     let timedOut = false;
-    const worker = spawn(
-      runtimePython,
-      [
-        "-m",
-        "geo_pipeline.worker",
-        "--runtime-request",
-        JSON.stringify(request),
-        "--input",
-        "live",
-        "--progress-jsonl",
-      ],
-      { cwd: backendCwd, stdio: ["ignore", "pipe", "pipe"] },
-    );
+    const workerArgs = [
+      "-m",
+      "geo_pipeline.worker",
+      "--runtime-request",
+      JSON.stringify(request),
+      "--input",
+      "live",
+      "--progress-jsonl",
+    ];
+    if (options?.skipPmtiles) {
+      workerArgs.push("--skip-pmtiles");
+    }
+    const worker = spawn(runtimePython, workerArgs, {
+      cwd: backendCwd,
+      stdio: ["ignore", "pipe", "pipe"],
+    });
 
     const timeout = setTimeout(() => {
       timedOut = true;

@@ -31,7 +31,7 @@ describe("runtime acquisition policy", () => {
         job_id: "0d0ce687-3834-4d9f-933e-20f5778ff441",
         state: "queued",
         event: "queued",
-        total_domains: 4,
+        total_domains: 11,
         completed_domains: 0,
         active_domain: null,
         queried_feature_count: 0,
@@ -119,21 +119,23 @@ describe("runtime acquisition policy", () => {
     expect(parsed.message).toContain("disabled in this deployment");
   });
 
-  it("reports and enforces the one fixed public demo acquisition template", async () => {
+  it("reports and enforces bounded public demo acquisition", async () => {
     const capability = await request(demoApp).get("/api/aoi/runtime-capabilities");
     expect(capability.status).toBe(200);
     expect(capability.body).toMatchObject({
       mode: "demo_fixed_aoi",
-      supports_custom_aoi: false,
+      supports_custom_aoi: true,
       demo_template: {
         id: DEMO_AOI_TEMPLATE.id,
-        unit_ids: DEMO_AOI_TEMPLATE.unit_ids,
+        max_radius_m: 10000,
+        max_counties: 1,
+        generates_pmtiles: true,
         profiles: DEMO_AOI_TEMPLATE.profiles,
       },
     });
 
     const restricted = await request(demoApp)
-      .post("/api/aoi/runtime-jobs")
+      .post(`/api/aoi/demo-acquisitions/${DEMO_AOI_TEMPLATE.id}`)
       .send({
         aoi: { type: "point_radius", longitude: 18.546285, latitude: 50.102174, radius_m: 5000 },
         profiles: ["power"],
@@ -141,15 +143,31 @@ describe("runtime acquisition policy", () => {
     expect(restricted.status).toBe(403);
     expect(providerErrorSchema.parse(restricted.body).error).toBe("demo_aoi_restricted");
 
-    const demoJob = await request(demoApp).post(
-      `/api/aoi/demo-acquisitions/${DEMO_AOI_TEMPLATE.id}`,
-    );
+    const overLimit = await request(demoApp)
+      .post(`/api/aoi/demo-acquisitions/${DEMO_AOI_TEMPLATE.id}`)
+      .send({
+        aoi: { type: "point_radius", longitude: 18.546285, latitude: 50.102174, radius_m: 15000 },
+        profiles: DEMO_AOI_TEMPLATE.profiles,
+      });
+    expect(overLimit.status).toBe(403);
+    expect(providerErrorSchema.parse(overLimit.body).error).toBe("demo_aoi_restricted");
+
+    const demoJob = await request(demoApp)
+      .post(`/api/aoi/demo-acquisitions/${DEMO_AOI_TEMPLATE.id}`)
+      .send({
+        aoi: { type: "point_radius", longitude: 18.546285, latitude: 50.102174, radius_m: 5000 },
+        profiles: DEMO_AOI_TEMPLATE.profiles,
+      });
     expect(demoJob.status).toBe(202);
-    expect(demoJob.body).toMatchObject({ state: "queued", total_domains: 4 });
+    expect(demoJob.body).toMatchObject({ state: "queued", total_domains: 11 });
 
     const forceRefresh = await request(demoApp)
       .post(`/api/aoi/demo-acquisitions/${DEMO_AOI_TEMPLATE.id}`)
-      .send({ force_refresh: true });
+      .send({
+        aoi: { type: "point_radius", longitude: 18.546285, latitude: 50.102174, radius_m: 5000 },
+        profiles: DEMO_AOI_TEMPLATE.profiles,
+        force_refresh: true,
+      });
     expect(forceRefresh.status).toBe(403);
     expect(providerErrorSchema.parse(forceRefresh.body).error).toBe("demo_aoi_restricted");
 
@@ -167,6 +185,15 @@ describe("runtime acquisition policy", () => {
     };
     const local = await request(localApp).post("/api/aoi/runtime-jobs").send(runtimeRequest);
     expect(local.status).toBe(202);
+
+    const localOverLimit = await request(localApp)
+      .post("/api/aoi/runtime-jobs")
+      .send({
+        ...runtimeRequest,
+        aoi: { ...runtimeRequest.aoi, radius_m: 35_000 },
+      });
+    expect(localOverLimit.status).toBe(422);
+    expect(providerErrorSchema.parse(localOverLimit.body).error).toBe("invalid_request");
 
     const unauthenticated = await request(trustedApp)
       .post("/api/aoi/runtime-jobs")

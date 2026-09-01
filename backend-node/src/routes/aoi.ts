@@ -71,6 +71,7 @@ import {
   providerErrorSchema,
   providerRuntimeJobSchema,
   providerRuntimePreflightResponseSchema,
+  type ProviderRuntimeRequest,
   providerRuntimeRequestSchema,
   providerRuntimeResponseSchema,
   readinessListResponseSchema,
@@ -96,6 +97,69 @@ export function createAoiRouter(options?: {
   const demoRuntimeJobSubmitter = options?.demoRuntimeJobSubmitter ?? submitDemoRuntimeJob;
   const runtimeJobGetter = options?.runtimeJobGetter ?? getRuntimeJob;
 
+  const assertDemoRuntimeRequest = async (runtimeRequest: unknown) => {
+    const parsed = providerRuntimeRequestSchema.parse(runtimeRequest);
+    const requestedProfiles = [...new Set(parsed.profiles)].sort();
+    const allowedProfiles = [...DEMO_AOI_TEMPLATE.profiles].sort();
+    if (
+      requestedProfiles.length !== allowedProfiles.length ||
+      requestedProfiles.some((profile, index) => profile !== allowedProfiles[index])
+    ) {
+      throw new ProviderDataError(
+        "demo_aoi_restricted",
+        "The public demo always prepares the complete set of 11 provider domains.",
+      );
+    }
+    if (
+      parsed.aoi.type === "point_radius" &&
+      parsed.aoi.radius_m > DEMO_AOI_TEMPLATE.max_radius_m
+    ) {
+      throw new ProviderDataError(
+        "demo_aoi_restricted",
+        "The public demo allows a point radius of at most 10 km.",
+      );
+    }
+    if (parsed.aoi.type === "administrative_selection") {
+      const catalog = (await getAdministrativeCatalog()) as {
+        units?: Array<{ id: string; kind: string; parent_id: string | null }>;
+      };
+      const byId = new Map((catalog.units ?? []).map((unit) => [unit.id, unit]));
+      const counties = new Set<string>();
+      for (const unitId of parsed.aoi.unit_ids) {
+        let current = byId.get(unitId);
+        const visited = new Set<string>();
+        while (
+          current &&
+          current.kind !== "county" &&
+          current.parent_id &&
+          !visited.has(current.id)
+        ) {
+          visited.add(current.id);
+          current = byId.get(current.parent_id);
+        }
+        if (current?.kind === "county") {
+          counties.add(current.id);
+        }
+      }
+      if (counties.size > DEMO_AOI_TEMPLATE.max_counties) {
+        throw new ProviderDataError(
+          "demo_aoi_restricted",
+          "The public demo allows one PRG county at a time.",
+        );
+      }
+    }
+    return parsed;
+  };
+
+  const assertCustomRuntimeBounds = (runtimeRequest: ProviderRuntimeRequest) => {
+    if (runtimeRequest.aoi.type === "point_radius" && runtimeRequest.aoi.radius_m > 30_000) {
+      throw new ProviderDataError(
+        "invalid_request",
+        "Local and trusted runtime acquisition allows a point radius of at most 30 km.",
+      );
+    }
+  };
+
   const assertGenericRuntimeAllowed = (authorizationHeader: string | undefined) => {
     if (runtimePolicy.mode === "disabled") {
       throw new ProviderDataError(
@@ -106,7 +170,7 @@ export function createAoiRouter(options?: {
     if (runtimePolicy.mode === "demo_fixed_aoi") {
       throw new ProviderDataError(
         "demo_aoi_restricted",
-        "Public demo acquisition is limited to the fixed Rybnik administrative AOI.",
+        "Public demo acquisition is limited to a Poland-contained 10 km point or one PRG county.",
       );
     }
     if (
@@ -127,12 +191,16 @@ export function createAoiRouter(options?: {
         response_version: "provider_runtime_capability/v1",
         mode: runtimePolicy.mode,
         supports_custom_aoi:
-          runtimePolicy.mode === "local_bounded" || runtimePolicy.mode === "trusted",
+          runtimePolicy.mode === "demo_fixed_aoi" ||
+          runtimePolicy.mode === "local_bounded" ||
+          runtimePolicy.mode === "trusted",
         demo_template: isDemo
           ? {
               id: DEMO_AOI_TEMPLATE.id,
               label: DEMO_AOI_TEMPLATE.label,
-              unit_ids: DEMO_AOI_TEMPLATE.unit_ids,
+              max_radius_m: DEMO_AOI_TEMPLATE.max_radius_m,
+              max_counties: DEMO_AOI_TEMPLATE.max_counties,
+              generates_pmtiles: DEMO_AOI_TEMPLATE.generates_pmtiles,
               profiles: DEMO_AOI_TEMPLATE.profiles,
             }
           : null,
@@ -229,6 +297,11 @@ export function createAoiRouter(options?: {
   aoiRouter.post("/runtime-requests/preflight", async (request, response) => {
     try {
       const runtimeRequest = providerRuntimeRequestSchema.parse(request.body);
+      if (runtimePolicy.mode === "demo_fixed_aoi") {
+        await assertDemoRuntimeRequest(runtimeRequest);
+      } else if (runtimePolicy.mode !== "disabled") {
+        assertCustomRuntimeBounds(runtimeRequest);
+      }
       response
         .status(200)
         .json(
@@ -250,8 +323,14 @@ export function createAoiRouter(options?: {
 
   aoiRouter.post("/runtime-requests", async (request, response) => {
     try {
-      assertGenericRuntimeAllowed(request.header("authorization"));
+      if (runtimePolicy.mode === "demo_fixed_aoi") {
+        assertGenericRuntimeAllowed(request.header("authorization"));
+      }
       const runtimeRequest = providerRuntimeRequestSchema.parse(request.body);
+      if (runtimePolicy.mode !== "disabled") {
+        assertCustomRuntimeBounds(runtimeRequest);
+      }
+      assertGenericRuntimeAllowed(request.header("authorization"));
       response
         .status(200)
         .json(providerRuntimeResponseSchema.parse(await submitRuntimeRequest(runtimeRequest)));
@@ -269,8 +348,14 @@ export function createAoiRouter(options?: {
 
   aoiRouter.post("/runtime-jobs", (request, response) => {
     try {
-      assertGenericRuntimeAllowed(request.header("authorization"));
+      if (runtimePolicy.mode === "demo_fixed_aoi") {
+        assertGenericRuntimeAllowed(request.header("authorization"));
+      }
       const runtimeRequest = providerRuntimeRequestSchema.parse(request.body);
+      if (runtimePolicy.mode !== "disabled") {
+        assertCustomRuntimeBounds(runtimeRequest);
+      }
+      assertGenericRuntimeAllowed(request.header("authorization"));
       response
         .status(202)
         .json(providerRuntimeJobSchema.parse(runtimeJobSubmitter(runtimeRequest)));
@@ -286,7 +371,7 @@ export function createAoiRouter(options?: {
     }
   });
 
-  aoiRouter.post("/demo-acquisitions/:templateId", (request, response) => {
+  aoiRouter.post("/demo-acquisitions/:templateId", async (request, response) => {
     try {
       if (
         runtimePolicy.mode !== "demo_fixed_aoi" ||
@@ -298,15 +383,23 @@ export function createAoiRouter(options?: {
         );
       }
       const demoRequestBody = request.body as object | undefined;
-      if (demoRequestBody && Object.keys(demoRequestBody).length > 0) {
+      if (!demoRequestBody || Object.keys(demoRequestBody).length === 0) {
         throw new ProviderDataError(
           "demo_aoi_restricted",
-          "The fixed public demo does not accept a force refresh, custom AOI, or profile payload.",
+          "The public demo requires a bounded point or one-county PRG AOI payload.",
         );
       }
+      if (Object.prototype.hasOwnProperty.call(demoRequestBody, "force_refresh")) {
+        throw new ProviderDataError(
+          "demo_aoi_restricted",
+          "The public demo does not allow force refresh.",
+        );
+      }
+      const demoRequest = await assertDemoRuntimeRequest(demoRequestBody);
+      await preflightRuntimeRequest(demoRequest);
       response
         .status(202)
-        .json(providerRuntimeJobSchema.parse(demoRuntimeJobSubmitter(DEMO_AOI_TEMPLATE.request)));
+        .json(providerRuntimeJobSchema.parse(demoRuntimeJobSubmitter(demoRequest)));
     } catch (error) {
       respondWithProviderError(response, error);
     }
@@ -673,8 +766,11 @@ export function createAoiRouter(options?: {
 
   aoiRouter.post("/requests", async (request, response) => {
     try {
-      assertGenericRuntimeAllowed(request.header("authorization"));
+      if (runtimePolicy.mode === "demo_fixed_aoi") {
+        assertGenericRuntimeAllowed(request.header("authorization"));
+      }
       const body = aoiRequestSchema.parse(request.body);
+      assertGenericRuntimeAllowed(request.header("authorization"));
       response
         .status(200)
         .json(aoiRequestResponseSchema.parse(await requestAoi(body.aoi_id, body.domain)));

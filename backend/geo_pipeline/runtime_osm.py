@@ -88,8 +88,10 @@ _QUERY_BY_DOMAIN = {
 }
 
 
-def refresh_runtime_osm_domain(*, aoi: dict[str, Any], domain: str, root: Path) -> dict[str, Any]:
-    """Acquire one qualified OSM profile, clip it to the true AOI and publish PMTiles atomically."""
+def refresh_runtime_osm_domain(
+    *, aoi: dict[str, Any], domain: str, root: Path, build_pmtiles: bool = True
+) -> dict[str, Any]:
+    """Acquire one qualified OSM profile, clip it to the true AOI and publish atomically."""
     query = _QUERY_BY_DOMAIN.get(domain)
     if query is None:
         raise ValueError(f"Runtime OSM acquisition is not enabled for domain: {domain}")
@@ -141,6 +143,7 @@ def refresh_runtime_osm_domain(*, aoi: dict[str, Any], domain: str, root: Path) 
         relation_elements=relation_elements,
         relation_evidence=relation_evidence,
         overpass_endpoint=overpass_endpoint,
+        build_pmtiles=build_pmtiles,
     )
 
 
@@ -155,6 +158,7 @@ def publish_runtime_osm_collection(
     relation_elements: list[dict[str, Any]] | None = None,
     relation_evidence: dict[str, Any] | None = None,
     overpass_endpoint: str | None = None,
+    build_pmtiles: bool = True,
 ) -> dict[str, Any]:
     """Publish already-acquired OSM GeoJSON; kept separate for offline contract tests."""
     layers = _domain_layers(domain, source)
@@ -188,9 +192,10 @@ def publish_runtime_osm_collection(
         overpass_endpoint=overpass_endpoint,
     )
     pack = write_domain_pack(aoi["aoi_id"], domain, root=root, manifest=manifest, files=files)
-    build_map_presentation(
-        pack_root=domain_pack_root(aoi["aoi_id"], domain, root=root), manifest=pack
-    )
+    if build_pmtiles:
+        build_map_presentation(
+            pack_root=domain_pack_root(aoi["aoi_id"], domain, root=root), manifest=pack
+        )
     read_domain_pack(aoi["aoi_id"], domain, root=root)
     derived_feature_count = len(layers.get(f"{domain}.inspection_points", []))
     accepted_feature_count = sum(

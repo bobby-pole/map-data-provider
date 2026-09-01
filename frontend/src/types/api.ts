@@ -9,6 +9,7 @@ export type RuntimeAcquisitionEvidence = {
   aoi_id: string;
   snapshot_id: string;
   resolved_geometry: Geometry;
+  radius_m: number | null;
   allowed_domains: RuntimeCategory[];
   source_observed_at: string;
   overpass_endpoint: string | null;
@@ -294,8 +295,10 @@ export type RuntimeCapability = {
   demo_template: {
     id: "rybnik_gmina_demo";
     label: string;
-    unit_ids: ["gmina_2473011"];
-    profiles: ["power", "emergency", "public", "transport"];
+    max_radius_m: number;
+    max_counties: number;
+    generates_pmtiles: boolean;
+    profiles: RuntimeCategory[];
   } | null;
 };
 export type RuntimeAoiInput =

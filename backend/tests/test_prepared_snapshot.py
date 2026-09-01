@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 
 from geo_pipeline.prepared_snapshot import publish_runtime_snapshot
-from geo_pipeline.regional_snapshots import DEMO_DOMAINS, regional_snapshot_aoi
+from geo_pipeline.regional_snapshots import RUNTIME_DOMAINS, regional_snapshot_aoi
 
 
 def test_runtime_publication_writes_evidence_before_checksum_valid_manifest(tmp_path: Path) -> None:
@@ -20,6 +20,7 @@ def test_runtime_publication_writes_evidence_before_checksum_valid_manifest(tmp_
             },
             "input_type": "administrative_selection",
             "boundary_provenance": {"unit_ids": ["gmina_2473011"]},
+            "constraints": {"radius_m": 50_000},
         },
         "pipeline_version": "geo_pipeline/runtime/v18",
     }
@@ -58,6 +59,7 @@ def test_runtime_publication_writes_evidence_before_checksum_valid_manifest(tmp_
     evidence = json.loads((tmp_path / "prepared_aoi" / "acquisition_evidence.json").read_text())
     snapshot = json.loads((tmp_path / "prepared_aoi" / "snapshot_manifest.json").read_text())
     assert evidence["aoi_id"] == snapshot["aoi_id"] == "prepared_aoi"
+    assert evidence["radius_m"] == 50_000
     assert evidence["domains"][0]["rejected_feature_count"] == 1
     assert evidence["overpass_endpoint"] == "https://overpass-api.de/api/interpreter"
     assert evidence["domains"][0]["overpass_endpoint"] == "https://overpass-api.de/api/interpreter"
@@ -75,15 +77,10 @@ def test_runtime_publication_writes_evidence_before_checksum_valid_manifest(tmp_
     )
 
 
-def test_operator_regional_snapshot_definitions_are_explicit_and_not_public_runtime_aliases() -> (
-    None
-):
-    circle = regional_snapshot_aoi("rybnik_50km")
-    neighbours = regional_snapshot_aoi("rybnik_prg_neighbours")
+def test_operator_default_snapshot_is_35km_and_covers_all_runtime_domains() -> None:
+    snapshot = regional_snapshot_aoi("rybnik_35km")
 
-    assert circle["aoi_id"] == "rybnik_50km"
-    assert circle["constraints"]["radius_m"] == 50_000
-    assert neighbours["aoi_id"] == "rybnik_prg_neighbours"
-    assert neighbours["boundary_provenance"]["unit_ids"][0] == "gmina_2473011"
-    assert len(neighbours["boundary_provenance"]["unit_ids"]) > 1
-    assert DEMO_DOMAINS == ("power", "emergency", "public", "transport")
+    assert snapshot["aoi_id"] == "rybnik_35km"
+    assert snapshot["constraints"]["radius_m"] == 35_000
+    assert len(RUNTIME_DOMAINS) == 11
+    assert "district_heating" in RUNTIME_DOMAINS

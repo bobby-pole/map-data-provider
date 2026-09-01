@@ -199,7 +199,7 @@ describe("AOI settings request state", () => {
     ).toBe(false);
   });
 
-  it("builds a point/radius request and enforces max 20km radius for custom points", () => {
+  it("builds a point/radius request and enforces max 30km radius for custom points", () => {
     expect(
       buildRuntimeRequest(
         "point_radius",
@@ -223,10 +223,10 @@ describe("AOI settings request state", () => {
     expect(() =>
       buildRuntimeRequest(
         "point_radius",
-        { longitude: "18.5", latitude: "50.1", radius: "25000", unitIds: [] },
+        { longitude: "18.5", latitude: "50.1", radius: "31000", unitIds: [] },
         ["power"],
       ),
-    ).toThrow(/cannot exceed 20 km/);
+    ).toThrow(/cannot exceed 30 km/);
     expect(() =>
       buildRuntimeRequest(
         "administrative_selection",
@@ -295,7 +295,7 @@ describe("AOI settings request state", () => {
     expect(validatePointRadiusInput("18.5", "50.1", "").valid).toBe(false);
     expect(validatePointRadiusInput("18.5", "50.1", "0").valid).toBe(false);
     expect(validatePointRadiusInput("18.5", "50.1", "-500").valid).toBe(false);
-    expect(validatePointRadiusInput("18.5", "50.1", "25000").valid).toBe(false);
-    expect(validatePointRadiusInput("18.5", "50.1", "25000").error).toContain("20,000 m");
+    expect(validatePointRadiusInput("18.5", "50.1", "31000").valid).toBe(false);
+    expect(validatePointRadiusInput("18.5", "50.1", "31000").error).toContain("30,000 m");
   });
 });

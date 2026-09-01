@@ -183,37 +183,37 @@ def test_administrative_selection_allows_gminas_across_adjacent_counties() -> No
         administrative_boundary(["gmina_2473011", "gmina_2464011"])
 
 
-def test_point_radius_enforces_20km_limit_for_custom_aoi() -> None:
-    # Custom radius <= 20km: allowed
+def test_point_radius_enforces_30km_limit_for_custom_aoi() -> None:
+    # Custom radius <= 30km: allowed
     resolved = resolve_runtime_request(
         {
             "aoi": {
                 "type": "point_radius",
                 "longitude": 19.0,
                 "latitude": 50.0,
-                "radius_m": 20_000,
+                "radius_m": 30_000,
             },
             "profiles": ["power"],
         }
     )
     assert resolved["aoi"]["geometry"]["type"] == "Polygon"
 
-    # Custom radius > 20km: rejected
-    with pytest.raises(RuntimeRequestError, match="cannot exceed 20 km"):
+    # Custom radius > 30km: rejected
+    with pytest.raises(RuntimeRequestError, match="cannot exceed 30 km"):
         resolve_runtime_request(
             {
                 "aoi": {
                     "type": "point_radius",
                     "longitude": 19.0,
                     "latitude": 50.0,
-                    "radius_m": 25_000,
+                    "radius_m": 31_000,
                 },
                 "profiles": ["power"],
             }
         )
 
-    # Default Rybnik 35km baseline: allowed
-    demo = resolve_runtime_request(
+    # The prepared Rybnik 35 km baseline remains addressable by its canonical identity.
+    baseline = resolve_runtime_request(
         {
             "aoi": {
                 "type": "point_radius",
@@ -224,7 +224,7 @@ def test_point_radius_enforces_20km_limit_for_custom_aoi() -> None:
             "profiles": ["power"],
         }
     )
-    assert demo["aoi"]["geometry"]["type"] == "Polygon"
+    assert baseline["aoi"]["geometry"]["type"] == "Polygon"
 
 
 def test_runtime_profiles_are_explicit_and_do_not_fabricate_non_fixture_data() -> None:
@@ -403,7 +403,9 @@ def test_district_heating_runtime_profile_has_reference_only_kiut_context() -> N
     )
 
 
-def test_runtime_power_publication_builds_a_valid_pmtiles_domain_pack(tmp_path) -> None:
+def test_runtime_power_publication_builds_a_valid_pmtiles_domain_pack(
+    tmp_path, monkeypatch
+) -> None:
     aoi = resolve_runtime_request(
         {
             "aoi": {
@@ -467,6 +469,22 @@ def test_runtime_power_publication_builds_a_valid_pmtiles_domain_pack(tmp_path) 
         artifact["id"]
         for artifact in read_domain_pack(aoi["aoi_id"], "power", root=tmp_path)["artifacts"]
     ] == ["power.lines", "power.assets", "power.osm_relation_evidence"]
+
+    import geo_pipeline.runtime_osm as runtime_osm_module
+
+    monkeypatch.setattr(
+        runtime_osm_module,
+        "build_map_presentation",
+        lambda **_kwargs: pytest.fail("public demo must not build PMTiles"),
+    )
+    publish_runtime_osm_collection(
+        aoi=aoi,
+        domain="power",
+        source=source,
+        query_version="power-osm/v1",
+        root=tmp_path,
+        build_pmtiles=False,
+    )
 
 
 def test_runtime_power_publication_keeps_only_delivered_osm_circuit_members(

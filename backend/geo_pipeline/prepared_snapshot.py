@@ -46,6 +46,7 @@ def publish_runtime_snapshot(
         "aoi_id": aoi_id,
         "snapshot_id": snapshot_id,
         "resolved_geometry": aoi["geometry"],
+        "radius_m": (aoi.get("constraints") or {}).get("radius_m"),
         "allowed_domains": [outcome["domain"] for outcome in outcomes],
         "source_observed_at": source_observed_at,
         "overpass_endpoint": _shared_overpass_endpoint(outcomes),
@@ -103,6 +104,7 @@ def publish_existing_snapshot(
         raise FileNotFoundError(f"Prepared snapshot root does not exist: {root}")
     outcomes = []
     observed_at: list[str] = []
+    evidence_domains: list[dict[str, Any]] = []
     for domain in domains:
         pack = read_domain_pack(snapshot_id, domain, root=cache_root)
         readiness_path = root / domain / "domain-pack-v2" / pack["readiness"]["path"]
@@ -115,6 +117,31 @@ def publish_existing_snapshot(
         source_date = validation_payload.get("snapshot_at")
         if isinstance(source_date, str):
             observed_at.append(source_date)
+        source_url = validation_payload.get("source_url")
+        accepted_count = validation_payload.get("feature_count")
+        evidence_domains.append(
+            {
+                "domain": domain,
+                "preparation_duration_ms": None,
+                "queried_feature_count": None,
+                "accepted_feature_count": accepted_count
+                if isinstance(accepted_count, int) and accepted_count >= 0
+                else None,
+                "rejected_feature_count": None,
+                "validation_status": "passed"
+                if validation_payload.get("quality_status") in {"passed", "warning"}
+                else "unknown",
+                "limitations": [
+                    "Promoted from an existing prepared bundle; acquisition timing and rejected counts were not recorded.",
+                    *(
+                        validation_payload.get("limitations", [])
+                        if isinstance(validation_payload.get("limitations"), list)
+                        else []
+                    ),
+                ],
+                "overpass_endpoint": source_url if isinstance(source_url, str) else None,
+            }
+        )
         outcomes.append(
             {
                 "domain": domain,
@@ -125,6 +152,22 @@ def publish_existing_snapshot(
             }
         )
     now = _utc_timestamp()
+    _atomic_json(
+        root / "acquisition_evidence.json",
+        {
+            "evidence_version": "provider_runtime_acquisition_evidence/v1",
+            "aoi_id": snapshot_id,
+            "snapshot_id": snapshot_id,
+            "resolved_geometry": aoi["geometry"],
+            "radius_m": (aoi.get("constraints") or {}).get("radius_m"),
+            "allowed_domains": list(domains),
+            "source_observed_at": min(observed_at) if observed_at else now,
+            "overpass_endpoint": _shared_overpass_endpoint(evidence_domains),
+            "pipeline_version": pipeline_version,
+            "published_at": now,
+            "domains": evidence_domains,
+        },
+    )
     unsigned = {
         "snapshot_version": "provider_prepared_snapshot/v1",
         "snapshot_id": snapshot_id,

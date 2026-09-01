@@ -97,6 +97,7 @@ def run_runtime_worker(
     runtime_root: Path | None = None,
     progress: RuntimeProgressCallback | None = None,
     executor_type: type[ProcessPoolExecutor | ThreadPoolExecutor] = ProcessPoolExecutor,
+    skip_pmtiles: bool = False,
 ) -> dict[str, Any]:
     """Resolve a v2 request and publish selected qualified OSM runtime packs."""
     if input_mode not in {"fixture", "live"}:
@@ -142,6 +143,7 @@ def run_runtime_worker(
                     cache_root,
                     progress=progress,
                     executor_type=executor_type,
+                    skip_pmtiles=skip_pmtiles,
                 )
                 refreshed_by_domain = {outcome["domain"]: outcome for outcome in refreshed}
                 outcomes = [
@@ -158,6 +160,7 @@ def run_runtime_worker(
                     cache_root,
                     progress=progress,
                     executor_type=executor_type,
+                    skip_pmtiles=skip_pmtiles,
                 )
         else:
             outcomes = _report_existing_runtime_outcomes(outcomes, progress=progress)
@@ -219,6 +222,7 @@ def _refresh_live_runtime_outcomes(
     *,
     progress: RuntimeProgressCallback | None = None,
     executor_type: type[ProcessPoolExecutor | ThreadPoolExecutor] = ProcessPoolExecutor,
+    skip_pmtiles: bool = False,
 ) -> list[dict[str, Any]]:
     """Refresh domains independently, with bounded parallelism and retryable failures.
 
@@ -259,6 +263,7 @@ def _refresh_live_runtime_outcomes(
                 resolved["aoi"],
                 outcome["domain"],
                 str(cache_root),
+                skip_pmtiles,
             )
             futures[future] = outcome
         while futures:
@@ -284,7 +289,9 @@ def _refresh_live_runtime_outcomes(
     return [by_domain[outcome["domain"]] for outcome in outcomes]
 
 
-def _refresh_runtime_domain(aoi: dict[str, Any], domain: str, cache_root: str) -> dict[str, Any]:
+def _refresh_runtime_domain(
+    aoi: dict[str, Any], domain: str, cache_root: str, skip_pmtiles: bool = False
+) -> dict[str, Any]:
     """Run live acquisition for one domain with isolated settings and timeouts.
 
     Timeout Protection Hierarchy:
@@ -296,7 +303,12 @@ def _refresh_runtime_domain(aoi: dict[str, Any], domain: str, cache_root: str) -
     """
     started = time.monotonic()
     if not hasattr(signal, "SIGALRM") or threading.current_thread() is not threading.main_thread():
-        result = refresh_runtime_osm_domain(aoi=aoi, domain=domain, root=Path(cache_root))
+        if skip_pmtiles:
+            result = refresh_runtime_osm_domain(
+                aoi=aoi, domain=domain, root=Path(cache_root), build_pmtiles=False
+            )
+        else:
+            result = refresh_runtime_osm_domain(aoi=aoi, domain=domain, root=Path(cache_root))
         return {**result, "preparation_duration_ms": int((time.monotonic() - started) * 1000)}
 
     timeout_seconds = _domain_acquisition_timeout(aoi)
@@ -309,7 +321,12 @@ def _refresh_runtime_domain(aoi: dict[str, Any], domain: str, cache_root: str) -
     previous = signal.signal(signal.SIGALRM, timed_out)
     signal.setitimer(signal.ITIMER_REAL, timeout_seconds)
     try:
-        result = refresh_runtime_osm_domain(aoi=aoi, domain=domain, root=Path(cache_root))
+        if skip_pmtiles:
+            result = refresh_runtime_osm_domain(
+                aoi=aoi, domain=domain, root=Path(cache_root), build_pmtiles=False
+            )
+        else:
+            result = refresh_runtime_osm_domain(aoi=aoi, domain=domain, root=Path(cache_root))
         return {**result, "preparation_duration_ms": int((time.monotonic() - started) * 1000)}
     finally:
         signal.setitimer(signal.ITIMER_REAL, 0)
@@ -519,6 +536,11 @@ def main() -> int:
         action="store_true",
         help="Write runtime preparation progress as prefixed JSON lines to stderr.",
     )
+    parser.add_argument(
+        "--skip-pmtiles",
+        action="store_true",
+        help="Do not build a PMTiles presentation (public demo mode).",
+    )
     args = parser.parse_args()
     try:
         if args.runtime_request:
@@ -548,6 +570,7 @@ def main() -> int:
                         input_mode=args.input,
                         cache_root=args.cache_root,
                         progress=report_progress,
+                        skip_pmtiles=args.skip_pmtiles,
                     )
                 )
             )

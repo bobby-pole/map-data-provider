@@ -74,6 +74,12 @@ describe("runtime request coordinator", () => {
       ),
     ).toBe("worker_failed: Overpass timed out.");
     expect(workerFailureMessage({ stderr: "not-json" }, "Safe fallback.")).toBe("Safe fallback.");
+    expect(workerFailureMessage({ signal: "SIGKILL" }, "Safe fallback.")).toBe(
+      "worker_terminated: AOI preparation worker exited with SIGKILL before publishing a snapshot.",
+    );
+    expect(workerFailureMessage({ exitCode: 3 }, "Safe fallback.")).toBe(
+      "worker_failed: AOI preparation worker exited with code 3 before publishing a snapshot.",
+    );
   });
 
   it("exposes real worker progress before the final runtime response is available", async () => {

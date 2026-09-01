@@ -234,7 +234,13 @@ def _refresh_live_runtime_outcomes(
         return []
     completed: list[dict[str, Any]] = []
     by_domain: dict[str, dict[str, Any]] = {}
-    workers = min(MAX_CONCURRENT_LIVE_DOMAINS, len(outcomes))
+    # PMTiles construction materializes geometries, an STRtree and tile payloads
+    # in every domain process. Running three of those builders concurrently can
+    # exceed the 2 GiB public container limit before the first domain completes.
+    # Keep acquisition-only runs parallel, but serialize the PMTiles path so a
+    # failed build cannot take down the parent worker without a structured error.
+    max_workers = MAX_CONCURRENT_LIVE_DOMAINS if skip_pmtiles else 1
+    workers = min(max_workers, len(outcomes))
     with executor_type(max_workers=workers) as executor:
         futures = {}
         for outcome in outcomes:

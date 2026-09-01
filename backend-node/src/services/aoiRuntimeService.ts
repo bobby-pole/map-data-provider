@@ -370,7 +370,17 @@ async function runRuntimeWorker(
 
     worker.on("error", (error) => {
       clearTimeout(timeout);
-      reject(error);
+      const spawnErrorCode =
+        error && typeof error === "object" && "code" in error
+          ? (error as { code?: unknown }).code
+          : undefined;
+      reject(
+        Object.assign(error, {
+          stderr,
+          timedOut,
+          spawnErrorCode,
+        }),
+      );
     });
     worker.on("close", (code, signal) => {
       clearTimeout(timeout);
@@ -427,6 +437,13 @@ export function workerFailureMessage(error: unknown, fallback: string): string {
       : undefined;
   if (typeof signal === "string" && signal.length > 0) {
     return `worker_terminated: AOI preparation worker exited with ${signal} before publishing a snapshot.`;
+  }
+  const spawnErrorCode =
+    error && typeof error === "object" && "spawnErrorCode" in error
+      ? (error as { spawnErrorCode?: unknown }).spawnErrorCode
+      : undefined;
+  if (typeof spawnErrorCode === "string" && spawnErrorCode.length > 0) {
+    return `worker_spawn_failed: AOI preparation worker could not be started (${spawnErrorCode}).`;
   }
   const stderr =
     error && typeof error === "object" && "stderr" in error

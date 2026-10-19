@@ -1,9 +1,49 @@
+import { EventEmitter } from "node:events";
+
+import type { Request, Response } from "express";
 import request from "supertest";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { createApp } from "../app.js";
+import { createRateLimiter } from "./rateLimit.js";
 
 describe("Rate limiting and concurrency protection", () => {
+  it("releases aborted responses and counts finish followed by close only once", () => {
+    const limiter = createRateLimiter({ maxConcurrent: 2 });
+    const req = { ip: "198.51.100.10" } as Request;
+    const enter = () => {
+      const res = Object.assign(new EventEmitter(), {
+        status: vi.fn().mockReturnThis(),
+        json: vi.fn().mockReturnThis(),
+      });
+      const next = vi.fn();
+      limiter(req, res as unknown as Response, next);
+      return { res, next };
+    };
+
+    const aborted = enter();
+    const ongoing = enter();
+    expect(aborted.next).toHaveBeenCalledOnce();
+    expect(ongoing.next).toHaveBeenCalledOnce();
+    expect(enter().res.status).toHaveBeenCalledWith(503);
+
+    // A disconnected client never emits finish.
+    aborted.res.emit("close");
+    const replacement = enter();
+    expect(replacement.next).toHaveBeenCalledOnce();
+    expect(enter().res.status).toHaveBeenCalledWith(503);
+
+    replacement.res.emit("finish");
+    replacement.res.emit("close");
+    const afterFinish = enter();
+    expect(afterFinish.next).toHaveBeenCalledOnce();
+    // The earlier request is still active: no second slot may be released.
+    expect(enter().res.status).toHaveBeenCalledWith(503);
+    ongoing.res.emit("finish");
+    afterFinish.res.emit("close");
+    expect(enter().next).toHaveBeenCalledOnce();
+  });
+
   it("enforces rate limits when threshold is exceeded", async () => {
     const app = createApp({
       rateLimitOptions: {

@@ -51,9 +51,20 @@ export function createRateLimiter(options?: RateLimitOptions) {
     }
 
     activeRequests += 1;
-    res.on("finish", () => {
-      activeRequests = Math.max(0, activeRequests - 1);
-    });
+    let released = false;
+    const release = () => {
+      if (released) {
+        return;
+      }
+      released = true;
+      activeRequests -= 1;
+      res.off("finish", release);
+      res.off("close", release);
+    };
+    // Aborted responses emit close without finish; completed responses can
+    // emit both. Every admitted request must release exactly one slot.
+    res.once("finish", release);
+    res.once("close", release);
 
     next();
   };

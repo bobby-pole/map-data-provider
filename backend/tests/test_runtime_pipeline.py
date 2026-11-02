@@ -113,7 +113,7 @@ def test_new_aoi_pipelines_real_packs_publishes_partial_and_hits_cache(tmp_path,
     )
     assert second["request_result"] == "cache"
     assert len(calls) == 2
-    assert not list(tmp_path.glob(".runtime-stage-*"))
+    assert not list(cache.glob(".runtime-stage-*"))
 
 
 def test_interrupted_job_resumes_completed_domain_even_with_changed_profiles(tmp_path, monkeypatch):
@@ -283,7 +283,7 @@ def test_failed_builder_keeps_existing_published_pack(tmp_path, monkeypatch):
     assert {
         str(path.relative_to(root)): path.read_bytes() for path in root.rglob("*") if path.is_file()
     } == before
-    assert not list(tmp_path.glob(".runtime-stage-*"))
+    assert not list(options["cache_root"].glob(".runtime-stage-*"))
 
 
 def test_reusing_domain_preserves_checkpoint_age(tmp_path, monkeypatch):
@@ -305,3 +305,35 @@ def test_reusing_domain_preserves_checkpoint_age(tmp_path, monkeypatch):
     before = checkpoint.read_bytes()
     worker.run_runtime_worker(request=_request(["emergency"]), **options)
     assert checkpoint.read_bytes() == before
+
+
+def test_staging_and_publication_stay_on_the_same_prepared_bind_mount(tmp_path, monkeypatch):
+    import errno
+
+    monkeypatch.setattr(
+        runtime_osm,
+        "fetch_osm_features_geometry_with_endpoint",
+        lambda *_: (_source(), "https://fixture.invalid/api/interpreter"),
+    )
+    cache = tmp_path / "mounted-prepared"
+    real_replace = worker._replace_cache
+    promoted = []
+
+    def replace(target, staged):
+        # Simulate the production bind-mount boundary: cross-volume promotion is invalid.
+        if not staged.is_relative_to(cache) or not target.is_relative_to(cache):
+            raise OSError(errno.EXDEV, "Invalid cross-device link")
+        promoted.append(target)
+        return real_replace(target, staged)
+
+    monkeypatch.setattr(worker, "_replace_cache", replace)
+    result = worker.run_runtime_worker(
+        request=_request(["emergency"]),
+        input_mode="live",
+        cache_root=cache,
+        runtime_root=tmp_path / "runtime",
+        executor_type=ThreadPoolExecutor,
+    )
+    assert result["outcomes"][0]["status"] == "ready", result["outcomes"][0]["detail"]
+    assert len(promoted) == 1
+    assert not list(cache.glob(".runtime-stage-*"))

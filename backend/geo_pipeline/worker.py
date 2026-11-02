@@ -318,7 +318,9 @@ def _refresh_live_runtime_outcomes(
         return []
     completed: list[dict[str, Any]] = []
     by_domain: dict[str, dict[str, Any]] = {}
-    staging_root = cache_root.parent / f".runtime-stage-{uuid.uuid4().hex}"
+    # Keep staged and published packs on the same bind mount for atomic rename.
+    # Dot-prefixed directories are excluded by the snapshot catalogue identifier guard.
+    staging_root = cache_root / f".runtime-stage-{uuid.uuid4().hex}"
 
     def finish(outcome: dict[str, Any]) -> None:
         by_domain[outcome["domain"]] = outcome

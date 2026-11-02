@@ -325,3 +325,28 @@ This architecture provides:
 - Source attribution, confidence and readiness metrics.
 - Separation of service orchestration from geospatial processing.
 - Explicit separation of raster reference overlays from analytical vector data.
+
+## Bounded runtime acquisition pipeline
+
+The AOI worker uses two process-isolated acquisition slots feeding one isolated
+PMTiles builder through staged on-disk packs. Geometry collections are not sent
+through process-pool result queues. A pack enters prepared storage only after
+its source artifacts and, for map requests, presentation validate. On each
+completed domain the parent publishes checksum-bound partial snapshot metadata
+and acquisition evidence before exposing `partial_result` on the running job.
+Pending domains use explicit pending outcomes; the client may display the
+published portion while retaining progress and failure information.
+
+Per-domain checkpoints are keyed by AOI, pipeline version and map/vector/input
+mode. Their original freshness timestamp is preserved during reuse. Every
+reuse verifies the pack and required PMTiles; invalid domains are acquired
+again independently. Complete request caches must also satisfy these domain
+checks. Source, processing, pack-publication and PMTiles timings describe
+measured domain work and exclude queue wait. Public acquisition policy and
+global job limits are unchanged.
+
+The Node worker runs in its own POSIX process group. The eight-minute deadline
+rejects the job without waiting for `close`, sends group SIGTERM, then SIGKILL
+after two seconds. This prevents inherited stdio in Python multiprocessing
+descendants from leaving a job permanently running. Client polling backs off
+from one to five seconds and stops after nine minutes.

@@ -16,6 +16,7 @@ import {
 } from "../types/provider.js";
 import { ProviderDataError } from "./providerDataService.js";
 import { runtimePythonExecutable } from "./runtimePython.js";
+import { armRuntimeWorkerTimeout } from "./runtimeWorkerTimeout.js";
 
 const execFileAsync = promisify(execFile);
 const RUNTIME_WORKER_TIMEOUT_MS = 8 * 60 * 1000;
@@ -45,6 +46,7 @@ const defaultCoordinator = createRuntimeRequestCoordinator();
 type RuntimeProgressUpdate = Pick<
   ProviderRuntimeJob,
   | "event"
+  | "partial_result"
   | "total_domains"
   | "completed_domains"
   | "active_domain"
@@ -343,13 +345,18 @@ async function runRuntimeWorker(
     }
     const worker = spawn(runtimePython, workerArgs, {
       cwd: backendCwd,
+      detached: process.platform !== "win32",
       stdio: ["ignore", "pipe", "pipe"],
     });
 
-    const timeout = setTimeout(() => {
-      timedOut = true;
-      worker.kill("SIGTERM");
-    }, RUNTIME_WORKER_TIMEOUT_MS);
+    const clearWorkerTimeout = armRuntimeWorkerTimeout(
+      worker,
+      () => {
+        timedOut = true;
+        reject(Object.assign(new Error("Runtime worker deadline exceeded"), { timedOut: true }));
+      },
+      { timeoutMs: RUNTIME_WORKER_TIMEOUT_MS },
+    );
 
     const processStderrLine = (line: string) => {
       if (!line.startsWith("MDQ_PROGRESS:")) {
@@ -377,7 +384,7 @@ async function runRuntimeWorker(
     });
 
     worker.on("error", (error) => {
-      clearTimeout(timeout);
+      clearWorkerTimeout();
       const spawnErrorCode =
         error && typeof error === "object" && "code" in error
           ? (error as { code?: unknown }).code
@@ -391,7 +398,7 @@ async function runRuntimeWorker(
       );
     });
     worker.on("close", (code, signal) => {
-      clearTimeout(timeout);
+      clearWorkerTimeout();
       if (pendingStderr) {
         processStderrLine(pendingStderr);
       }

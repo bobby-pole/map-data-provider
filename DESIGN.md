@@ -217,3 +217,14 @@ must stay within the viewport and retain a visible close control.
 - No hidden elevation of WMS/KIUT/GESUT reference imagery to analytical data.
 - No generic dashboard chrome that competes with the map or obscures data
   provenance.
+
+### Incremental AOI publication
+
+A requested AOI can replace the previous map after its first validated domain
+and PMTiles presentation are published. Keep the settings/progress panel open
+while other domains remain pending. Label this as a partial snapshot and state
+that only completed domains are available; never show the all-domains-complete
+message while pending outcomes exist. If the remaining work times out, retain
+the published map and explain that preparation stopped. The evidence panel may
+show measured source, processing, pack and map durations per domain; these are
+not a wall-clock speed claim.

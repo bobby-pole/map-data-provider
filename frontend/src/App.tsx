@@ -177,7 +177,11 @@ export default function App() {
       setSelectedCircuitMember(null);
       setPickingAoi(false);
       setActivePanel(
-        result.outcomes.some((outcome) => outcome.status === "failed") ? "settings" : "layers",
+        result.outcomes.some((outcome) => outcome.status === "pending_qualification")
+          ? "settings"
+          : result.outcomes.some((outcome) => outcome.status === "failed")
+            ? "settings"
+            : "layers",
       );
     },
     [setPickingAoi],

@@ -247,7 +247,7 @@ def test_refresh_live_runtime_outcomes_isolates_domain_refresh_failure(
         {"domain": "water", "artifact_aoi_id": None},
     ]
 
-    def mock_refresh(aoi, domain, root):
+    def mock_refresh(aoi, domain, root, build_pmtiles=False):
         if domain == "water":
             raise RuntimeError("Overpass network timeout")
         return {
@@ -257,6 +257,7 @@ def test_refresh_live_runtime_outcomes_isolates_domain_refresh_failure(
         }
 
     monkeypatch.setattr(worker, "refresh_runtime_osm_domain", mock_refresh)
+    monkeypatch.setattr(worker, "_finish_runtime_domain", lambda aoi, outcome, *args: outcome)
 
     progress: list[dict] = []
     res = worker._refresh_live_runtime_outcomes(
@@ -319,82 +320,55 @@ def test_runtime_pmtiles_refresh_serializes_memory_heavy_builders(
         resolved, outcomes, tmp_path, executor_type=RecordingExecutor, skip_pmtiles=True
     )
 
-    assert seen_workers == [1, 2]
+    assert seen_workers == [2, 1, 2, 1]
 
 
-def test_partial_runtime_snapshot_retries_only_domains_that_failed(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_partial_runtime_snapshot_retries_only_domains_that_failed(tmp_path, monkeypatch) -> None:
+    import geopandas as gpd
+    from shapely.geometry import Point
+
+    from geo_pipeline import runtime_osm
+
     request = {
-        "aoi": {
-            "type": "point_radius",
-            "longitude": 18.546285,
-            "latitude": 50.102174,
-            "radius_m": 20_000,
-        },
-        "profiles": ["power", "water"],
+        "aoi": {"type": "point_radius", "longitude": 19.12, "latitude": 50.81, "radius_m": 1000},
+        "profiles": ["emergency", "public"],
     }
-    calls: list[list[str]] = []
-    cache_root = tmp_path / "cache"
-    for domain in ("power", "water"):
-        run_worker(
-            aoi="rybnik_35km",
-            domain=domain,
-            input_mode="fixture",
-            cache_root=cache_root,
-        )
+    calls = []
 
-    def refresh(_resolved, outcomes, _cache_root, *, progress=None, **_kwargs):
-        calls.append([outcome["domain"] for outcome in outcomes])
-        refreshed = []
-        for outcome in outcomes:
-            if outcome["domain"] == "water" and len(calls) == 1:
-                refreshed.append(
-                    {
-                        **outcome,
-                        "status": "failed",
-                        "detail": "Timed out after 90 seconds while acquiring 'water'. The domain remains queued for a later retry.",
-                        "failure_reason": "timeout",
-                        "artifact_aoi_id": None,
-                        "cache_status": "missing",
-                        "queried_feature_count": None,
-                        "accepted_feature_count": None,
-                        "derived_feature_count": None,
-                    }
-                )
-            else:
-                refreshed.append(
-                    {
-                        **outcome,
-                        "status": "ready",
-                        "detail": "Fixture pack retained for runtime retry verification.",
-                        "failure_reason": None,
-                        "artifact_aoi_id": "rybnik_35km",
-                        "cache_status": "fresh",
-                        "queried_feature_count": 1,
-                        "accepted_feature_count": 1,
-                        "derived_feature_count": 0,
-                    }
-                )
-        return refreshed
+    def fetch(geometry, tags):
+        is_public = "school" in tags.get("amenity", [])
+        calls.append("public" if is_public else "emergency")
+        if is_public and calls.count("public") == 1:
+            raise RuntimeError("Upstream failed")
+        return gpd.GeoDataFrame(
+            [
+                {"element": "node", "id": 1, "amenity": "police", "geometry": Point(19.12, 50.81)},
+                {
+                    "element": "node",
+                    "id": 2,
+                    "amenity": "school",
+                    "geometry": Point(19.121, 50.811),
+                },
+            ],
+            crs="EPSG:4326",
+        ), "https://fixture.invalid/api/interpreter"
 
-    monkeypatch.setattr(worker, "_refresh_live_runtime_outcomes", refresh)
-
-    first = worker.run_runtime_worker(
-        request=request, input_mode="live", cache_root=cache_root, runtime_root=tmp_path
-    )
-    second = worker.run_runtime_worker(
-        request=request, input_mode="live", cache_root=cache_root, runtime_root=tmp_path
-    )
-
-    assert first["request_result"] == "refresh"
+    monkeypatch.setattr(runtime_osm, "fetch_osm_features_geometry_with_endpoint", fetch)
+    options = {
+        "request": request,
+        "input_mode": "live",
+        "cache_root": tmp_path / "cache",
+        "runtime_root": tmp_path / "state",
+        "executor_type": ThreadPoolExecutor,
+    }
+    first = worker.run_runtime_worker(**options)
     assert (
-        next(outcome for outcome in first["outcomes"] if outcome["domain"] == "water")["status"]
-        == "failed"
+        next(item for item in first["outcomes"] if item["domain"] == "public")["status"] == "failed"
     )
-    assert second["request_result"] == "refresh"
-    assert all(outcome["status"] == "ready" for outcome in second["outcomes"])
-    assert calls == [["power", "water"], ["water"]]
+    second = worker.run_runtime_worker(**options)
+    assert all(item["status"] == "ready" for item in second["outcomes"])
+    assert calls.count("emergency") == 1
+    assert calls.count("public") == 2
 
 
 def test_runtime_validation_rejects_a_corrupt_pack_without_rebuilding_it(tmp_path: Path) -> None:

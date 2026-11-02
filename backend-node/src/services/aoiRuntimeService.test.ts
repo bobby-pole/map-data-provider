@@ -259,3 +259,38 @@ describe("runtime request coordinator", () => {
     expect(attempts).toBe(2);
   });
 });
+
+describe("incremental runtime publication", () => {
+  it("exposes a published partial result while running and preserves it after a timeout", async () => {
+    let fail: ((error: Error) => void) | undefined;
+    const coordinator = createRuntimeJobCoordinator(async (_request, report) => {
+      report({
+        event: "domain_completed",
+        total_domains: 2,
+        completed_domains: 1,
+        active_domain: null,
+        queried_feature_count: 1,
+        accepted_feature_count: 1,
+        derived_feature_count: 0,
+        partial_result: response,
+      });
+      return new Promise((_resolve, reject) => {
+        fail = reject;
+      });
+    });
+    const job = coordinator.submit(request);
+    expect(providerRuntimeJobSchema.parse(coordinator.get(job.job_id))).toMatchObject({
+      state: "running",
+      completed_domains: 1,
+      partial_result: response,
+    });
+    fail?.(new ProviderDataError("worker_failed", "worker_timeout: deadline exceeded"));
+    await new Promise<void>((resolve) => setImmediate(resolve));
+    expect(providerRuntimeJobSchema.parse(coordinator.get(job.job_id))).toMatchObject({
+      state: "failed",
+      partial_result: response,
+      error: "worker_timeout: deadline exceeded",
+    });
+    expect(coordinator.getForAoi(request.aoi)).toBeUndefined();
+  });
+});

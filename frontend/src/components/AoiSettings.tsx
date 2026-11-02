@@ -485,8 +485,17 @@ export function AoiSettings({
   );
 }
 
-function RuntimeOutcomeSummary({ result }: { result: ProviderRuntimeResponse }) {
+export function RuntimeOutcomeSummary({ result }: { result: ProviderRuntimeResponse }) {
   const failed = result.outcomes.filter((outcome) => outcome.status === "failed");
+  const pending = result.outcomes.filter((outcome) => outcome.status === "pending_qualification");
+  if (pending.length) {
+    return (
+      <p className="muted runtimeOutcomeSummary">
+        Partial snapshot: completed domains are available on the map. {pending.length} domains are
+        still pending.
+      </p>
+    );
+  }
   if (!failed.length) {
     return (
       <p className="muted runtimeOutcomeSummary">
@@ -556,6 +565,10 @@ function runtimeProgressMessage(job: ProviderRuntimeJob): string {
       return "Preparing the selected AOI…";
     case "domain_started":
       return job.active_domain ? `Preparing ${job.active_domain}…` : "Preparing a provider domain…";
+    case "domain_building":
+      return job.active_domain
+        ? `Building ${job.active_domain} map…`
+        : "Building map presentation…";
     case "domain_completed":
       return job.active_domain
         ? `Preparing ${job.active_domain}…`

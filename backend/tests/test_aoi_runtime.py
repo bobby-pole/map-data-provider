@@ -269,11 +269,13 @@ def test_runtime_reuses_only_a_valid_local_request_cache(tmp_path, monkeypatch) 
     validated = []
     import geo_pipeline.worker as worker_module
 
-    monkeypatch.setattr(
-        worker_module,
-        "read_domain_pack",
-        lambda aoi_id, domain, *, root: validated.append((aoi_id, domain, root)),
-    )
+    real_read = worker_module.read_domain_pack
+
+    def read(aoi_id, domain, *, root):
+        validated.append((aoi_id, domain, root))
+        return real_read(aoi_id, domain, root=root)
+
+    monkeypatch.setattr(worker_module, "read_domain_pack", read)
     second = run_runtime_worker(
         request=request,
         input_mode="fixture",
@@ -328,7 +330,7 @@ def test_runtime_ignores_cache_without_acquisition_counts(tmp_path) -> None:
         cache_root=cache_root,
         runtime_root=tmp_path,
     )
-    state_path = tmp_path / "provider-runtime-v1" / f"{first['cache_key']}.json"
+    state_path = tmp_path / "provider-runtime-v1" / f"{first['cache_key']}-map-fixture.json"
     stale = json.loads(state_path.read_text(encoding="utf-8"))
     for field in (
         "queried_feature_count",
@@ -1126,7 +1128,7 @@ def test_live_worker_refreshes_transport_profile_for_non_demo_aoi(tmp_path, monk
     calls = []
     validated = []
 
-    def mock_refresh(*, aoi, domain, root):
+    def mock_refresh(*, aoi, domain, root, build_pmtiles=False):
         calls.append((aoi["aoi_id"], domain))
         return {
             "status": "ready",
@@ -1141,6 +1143,9 @@ def test_live_worker_refreshes_transport_profile_for_non_demo_aoi(tmp_path, monk
     import geo_pipeline.worker as worker_module
 
     monkeypatch.setattr(worker_module, "refresh_runtime_osm_domain", mock_refresh)
+    monkeypatch.setattr(
+        worker_module, "_finish_runtime_domain", lambda aoi, outcome, *args: outcome
+    )
     monkeypatch.setattr(
         worker_module,
         "read_domain_pack",
@@ -1172,7 +1177,7 @@ def test_live_worker_refreshes_gas_profile_for_non_demo_aoi(tmp_path, monkeypatc
     calls = []
     validated = []
 
-    def mock_refresh(*, aoi, domain, root):
+    def mock_refresh(*, aoi, domain, root, build_pmtiles=False):
         calls.append((aoi["aoi_id"], domain))
         return {
             "status": "ready",
@@ -1187,6 +1192,9 @@ def test_live_worker_refreshes_gas_profile_for_non_demo_aoi(tmp_path, monkeypatc
     import geo_pipeline.worker as worker_module
 
     monkeypatch.setattr(worker_module, "refresh_runtime_osm_domain", mock_refresh)
+    monkeypatch.setattr(
+        worker_module, "_finish_runtime_domain", lambda aoi, outcome, *args: outcome
+    )
     monkeypatch.setattr(
         worker_module,
         "read_domain_pack",
@@ -1215,7 +1223,7 @@ def test_live_worker_refreshes_sewer_profile_for_non_demo_aoi(tmp_path, monkeypa
     calls = []
     validated = []
 
-    def mock_refresh(*, aoi, domain, root):
+    def mock_refresh(*, aoi, domain, root, build_pmtiles=False):
         calls.append((aoi["aoi_id"], domain))
         return {
             "status": "ready",
@@ -1230,6 +1238,9 @@ def test_live_worker_refreshes_sewer_profile_for_non_demo_aoi(tmp_path, monkeypa
     import geo_pipeline.worker as worker_module
 
     monkeypatch.setattr(worker_module, "refresh_runtime_osm_domain", mock_refresh)
+    monkeypatch.setattr(
+        worker_module, "_finish_runtime_domain", lambda aoi, outcome, *args: outcome
+    )
     monkeypatch.setattr(
         worker_module,
         "read_domain_pack",
@@ -1259,7 +1270,7 @@ def test_live_worker_with_thread_pool_executor_isolates_from_network(
     }
     called = False
 
-    def mock_refresh(*, aoi: dict, domain: str, root: Path) -> dict:
+    def mock_refresh(*, aoi: dict, domain: str, root: Path, build_pmtiles=False) -> dict:
         nonlocal called
         called = True
         return {
@@ -1275,6 +1286,9 @@ def test_live_worker_with_thread_pool_executor_isolates_from_network(
     import geo_pipeline.worker as worker_module
 
     monkeypatch.setattr(worker_module, "refresh_runtime_osm_domain", mock_refresh)
+    monkeypatch.setattr(
+        worker_module, "_finish_runtime_domain", lambda aoi, outcome, *args: outcome
+    )
     monkeypatch.setattr(worker_module, "read_domain_pack", lambda *args, **kwargs: None)
 
     result = run_runtime_worker(

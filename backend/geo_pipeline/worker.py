@@ -32,14 +32,15 @@ from geo_pipeline.aoi_runtime import (
 )
 from geo_pipeline.cache import cache_paths, read_cached_layer
 from geo_pipeline.config import CACHE_DIR, RUNTIME_CACHE_DIR
-from geo_pipeline.domain_pack import read_domain_pack
+from geo_pipeline.domain_pack import build_map_presentation, domain_pack_root, read_domain_pack
 from geo_pipeline.prepared_snapshot import publish_runtime_snapshot
 from geo_pipeline.runtime_osm import refresh_runtime_osm_domain
 from geo_pipeline.source_availability import build_runtime_source_availability
+from geo_pipeline.vector_tiles import read_map_presentation
 
 EXIT_INVALID_REQUEST = 2
 EXIT_WORKER_FAILURE = 3
-MAX_CONCURRENT_LIVE_DOMAINS = 3
+MAX_CONCURRENT_LIVE_DOMAINS = 2
 MIN_DOMAIN_ACQUISITION_TIMEOUT_SECONDS = 120
 EXTRA_TIMEOUT_PER_AOI_PART_SECONDS = 15
 MAX_DOMAIN_ACQUISITION_TIMEOUT_SECONDS = 240
@@ -111,14 +112,34 @@ def run_runtime_worker(
     except RuntimeRequestError as error:
         raise WorkerError(EXIT_INVALID_REQUEST, "invalid_aoi_request", str(error)) from error
     state_root = (runtime_root or RUNTIME_CACHE_DIR) / "provider-runtime-v1"
-    state_path = state_root / f"{resolved['cache_key']}.json"
+    # Acquisition-only packs cannot satisfy a subsequent map-producing request.
+    mode_key = ("vectors" if skip_pmtiles else "map") + f"-{input_mode}"
+    state_path = state_root / f"{resolved['cache_key']}-{mode_key}.json"
+    checkpoint_root = state_root / "domains" / resolved["aoi"]["cache_key"] / mode_key
     cached = _read_fresh_runtime_state(state_path)
     if cached is not None:
         try:
-            _validate_ready_runtime_artifacts(cached["outcomes"], cache_root)
+            if input_mode == "live":
+                validated = []
+                for item in cached["outcomes"]:
+                    if item["status"] in {"ready", "needs_source"}:
+                        checkpoint = _read_domain_checkpoint(
+                            checkpoint_root / f"{item['domain']}.json",
+                            resolved,
+                            cache_root,
+                            not skip_pmtiles,
+                        )
+                        if checkpoint is None:
+                            raise ValueError("A cached domain is expired, missing or corrupt")
+                        validated.append(checkpoint)
+                    else:
+                        validated.append(item)
+                cached = {**cached, "outcomes": validated}
+            else:
+                _validate_ready_runtime_artifacts(
+                    cached["outcomes"], cache_root, require_pmtiles=not skip_pmtiles
+                )
         except Exception:
-            # A fresh state record is not enough: missing or corrupt artifacts
-            # are a cache miss and must follow the normal refresh/failure path.
             cached = None
         if cached is not None and not _has_retryable_failures(cached["outcomes"]):
             _emit_runtime_progress(progress, event="cache_hit", outcomes=cached["outcomes"])
@@ -127,41 +148,65 @@ def run_runtime_worker(
         outcomes = profile_outcomes(request, fixture_mode=input_mode == "fixture")
         _emit_runtime_progress(progress, event="started", outcomes=[], total_domains=len(outcomes))
         if input_mode == "live":
-            if cached is not None:
-                previous_by_domain = {outcome["domain"]: outcome for outcome in cached["outcomes"]}
-                retry_domains = {
-                    domain
-                    for domain, outcome in previous_by_domain.items()
-                    if outcome.get("status") == "failed"
-                }
-                retry_outcomes = [
-                    outcome for outcome in outcomes if outcome["domain"] in retry_domains
-                ]
-                refreshed = _refresh_live_runtime_outcomes(
+            checkpointed: set[str] = set()
+            for index, outcome in enumerate(outcomes):
+                checkpoint = _read_domain_checkpoint(
+                    checkpoint_root / f"{outcome['domain']}.json",
                     resolved,
-                    retry_outcomes,
                     cache_root,
-                    progress=progress,
-                    executor_type=executor_type,
-                    skip_pmtiles=skip_pmtiles,
+                    not skip_pmtiles,
                 )
-                refreshed_by_domain = {outcome["domain"]: outcome for outcome in refreshed}
-                outcomes = [
-                    refreshed_by_domain.get(
-                        outcome["domain"],
-                        previous_by_domain.get(outcome["domain"], outcome),
+                if checkpoint is not None:
+                    outcomes[index] = checkpoint
+                    checkpointed.add(outcome["domain"])
+            initial_by_domain = {item["domain"]: item for item in outcomes}
+
+            def publish_completed(completed: list[dict[str, Any]]) -> dict[str, Any] | None:
+                by_domain = {item["domain"]: item for item in completed}
+                partial = [
+                    by_domain.get(
+                        item["domain"],
+                        {
+                            **initial_by_domain[item["domain"]],
+                            "status": "pending_qualification",
+                            "artifact_aoi_id": None,
+                            "detail": "This domain is still being prepared; it is not yet published.",
+                            "cache_status": "missing",
+                            "failure_reason": None,
+                        },
                     )
-                    for outcome in outcomes
+                    for item in outcomes
                 ]
-            else:
-                outcomes = _refresh_live_runtime_outcomes(
-                    resolved,
-                    outcomes,
-                    cache_root,
-                    progress=progress,
-                    executor_type=executor_type,
-                    skip_pmtiles=skip_pmtiles,
-                )
+                for item in completed:
+                    if (
+                        item["status"] in {"ready", "needs_source"}
+                        and item["domain"] not in checkpointed
+                    ):
+                        _write_runtime_state(
+                            checkpoint_root / f"{item['domain']}.json",
+                            {
+                                "cached_at": _utc_timestamp(),
+                                "pipeline_version": resolved["pipeline_version"],
+                                "outcome": item,
+                            },
+                        )
+                        checkpointed.add(item["domain"])
+                if not any(item["status"] == "ready" for item in partial):
+                    return
+                partial_response = _runtime_response(resolved, partial, request)
+                _publish_runtime_response(partial_response, cache_root)
+                _write_runtime_state(state_path, partial_response)
+                return partial_response
+
+            outcomes = _refresh_live_runtime_outcomes(
+                resolved,
+                outcomes,
+                cache_root,
+                progress=progress,
+                executor_type=executor_type,
+                skip_pmtiles=skip_pmtiles,
+                on_completed=publish_completed,
+            )
         else:
             outcomes = _report_existing_runtime_outcomes(outcomes, progress=progress)
         _validate_ready_runtime_artifacts(outcomes, cache_root)
@@ -171,25 +216,9 @@ def run_runtime_worker(
         build_runtime_source_availability(
             aoi_id, out_path=cache_root / aoi_id / "source_availability.json"
         )
-        response = {
-            "status": "ok",
-            **resolved,
-            "outcomes": outcomes,
-            "contexts": context_outcomes(request),
-            "job_state": "ready",
-            "request_result": "refresh",
-            "cached_at": _utc_timestamp(),
-        }
-        # Fixture mode reports contract fixtures, not a newly published AOI.
-        # Only a real runtime acquisition may create public snapshot/evidence
-        # metadata, and it does so after all ready packs validate.
+        response = _runtime_response(resolved, outcomes, request)
         if input_mode == "live":
-            publish_runtime_snapshot(
-                cache_root=cache_root,
-                resolved=resolved,
-                outcomes=outcomes,
-                pipeline_version=resolved["pipeline_version"],
-            )
+            _publish_runtime_response(response, cache_root)
         _write_runtime_state(state_path, response)
         return response
     except WorkerError:
@@ -200,7 +229,61 @@ def run_runtime_worker(
         raise WorkerError(EXIT_WORKER_FAILURE, "worker_failed", str(error)) from error
 
 
-def _validate_ready_runtime_artifacts(outcomes: list[dict[str, Any]], cache_root: Path) -> None:
+def _runtime_response(
+    resolved: dict[str, Any], outcomes: list[dict[str, Any]], request: dict[str, Any]
+) -> dict[str, Any]:
+    return {
+        "status": "ok",
+        **resolved,
+        "outcomes": outcomes,
+        "contexts": context_outcomes(request),
+        "job_state": "ready",
+        "request_result": "refresh",
+        "cached_at": _utc_timestamp(),
+    }
+
+
+def _publish_runtime_response(response: dict[str, Any], cache_root: Path) -> None:
+    aoi_id = response["aoi"]["aoi_id"]
+    build_runtime_source_availability(
+        aoi_id, out_path=cache_root / aoi_id / "source_availability.json"
+    )
+    publish_runtime_snapshot(
+        cache_root=cache_root,
+        resolved=response,
+        outcomes=response["outcomes"],
+        pipeline_version=response["pipeline_version"],
+    )
+
+
+def _read_domain_checkpoint(
+    path: Path, resolved: dict[str, Any], cache_root: Path, require_pmtiles: bool
+) -> dict[str, Any] | None:
+    try:
+        checkpoint = json.loads(path.read_text(encoding="utf-8"))
+        if checkpoint["pipeline_version"] != resolved["pipeline_version"]:
+            return None
+        cached_at = datetime.fromisoformat(checkpoint["cached_at"])
+        if cached_at.tzinfo is None or cached_at < datetime.now(UTC) - timedelta(hours=24):
+            return None
+        outcome = checkpoint["outcome"]
+        if not _is_complete_runtime_state(
+            {"status": "ok", "cache_key": "checkpoint", "contexts": [], "outcomes": [outcome]}
+        ):
+            return None
+        if outcome["domain"] != path.stem or outcome["status"] not in {"ready", "needs_source"}:
+            return None
+        if outcome["status"] == "ready" and outcome["artifact_aoi_id"] != resolved["aoi"]["aoi_id"]:
+            return None
+        _validate_ready_runtime_artifacts([outcome], cache_root, require_pmtiles=require_pmtiles)
+        return {**outcome, "cache_status": "fresh" if outcome["status"] == "ready" else "missing"}
+    except OSError, ValueError, KeyError, TypeError:
+        return None
+
+
+def _validate_ready_runtime_artifacts(
+    outcomes: list[dict[str, Any]], cache_root: Path, *, require_pmtiles: bool = False
+) -> None:
     """Validate every ready runtime result against its own published pack."""
     for outcome in outcomes:
         if outcome["status"] != "ready":
@@ -212,7 +295,12 @@ def _validate_ready_runtime_artifacts(outcomes: list[dict[str, Any]], cache_root
                 "invalid_runtime_artifact",
                 f"Ready {outcome['domain']} outcome has no validated artifact AOI identity.",
             )
-        read_domain_pack(artifact_aoi_id, outcome["domain"], root=cache_root)
+        pack = read_domain_pack(artifact_aoi_id, outcome["domain"], root=cache_root)
+        if require_pmtiles:
+            read_map_presentation(
+                pack_root=domain_pack_root(artifact_aoi_id, outcome["domain"], root=cache_root),
+                manifest=pack,
+            )
 
 
 def _refresh_live_runtime_outcomes(
@@ -223,76 +311,149 @@ def _refresh_live_runtime_outcomes(
     progress: RuntimeProgressCallback | None = None,
     executor_type: type[ProcessPoolExecutor | ThreadPoolExecutor] = ProcessPoolExecutor,
     skip_pmtiles: bool = False,
+    on_completed: Callable[[list[dict[str, Any]]], dict[str, Any] | None] | None = None,
 ) -> list[dict[str, Any]]:
-    """Refresh domains independently, with bounded parallelism and retryable failures.
-
-    OSMnx stores its endpoint settings process-globally, so production work uses
-    separate processes.  Individual domains write to separate cache paths and
-    therefore can safely publish while other domains are still running.
-    """
+    """Two acquisition processes feed one PMTiles builder through staged disk packs."""
     if not outcomes:
         return []
     completed: list[dict[str, Any]] = []
     by_domain: dict[str, dict[str, Any]] = {}
-    # PMTiles construction materializes geometries, an STRtree and tile payloads
-    # in every domain process. Running three of those builders concurrently can
-    # exceed the 2 GiB public container limit before the first domain completes.
-    # Keep acquisition-only runs parallel, but serialize the PMTiles path so a
-    # failed build cannot take down the parent worker without a structured error.
-    max_workers = MAX_CONCURRENT_LIVE_DOMAINS if skip_pmtiles else 1
-    workers = min(max_workers, len(outcomes))
-    with executor_type(max_workers=workers) as executor:
-        futures = {}
-        for outcome in outcomes:
-            _emit_runtime_progress(
-                progress,
-                event="domain_started",
-                outcomes=completed,
-                total_domains=len(outcomes),
-                active_domain=outcome["domain"],
-            )
-            if outcome["artifact_aoi_id"] is not None:
-                by_domain[outcome["domain"]] = outcome
-                completed.append(outcome)
-                remaining_domains = [f_outcome["domain"] for f_outcome in futures.values()]
-                active_domain = remaining_domains[0] if remaining_domains else None
+    staging_root = cache_root.parent / f".runtime-stage-{uuid.uuid4().hex}"
+
+    def finish(outcome: dict[str, Any]) -> None:
+        by_domain[outcome["domain"]] = outcome
+        completed.append(outcome)
+        partial_result = on_completed(list(completed)) if on_completed else None
+        _emit_runtime_progress(
+            progress,
+            event="domain_completed",
+            outcomes=completed,
+            total_domains=len(outcomes),
+            partial_result=partial_result,
+            active_domain=next((item[1]["domain"] for item in futures.values()), None),
+        )
+
+    try:
+        with (
+            executor_type(
+                max_workers=min(MAX_CONCURRENT_LIVE_DOMAINS, len(outcomes))
+            ) as acquisition,
+            executor_type(max_workers=1) as builder,
+        ):
+            futures = {}
+            pending_outcomes = []
+            for outcome in outcomes:
+                if outcome.get("cache_status") == "fresh" or (
+                    outcome.get("status") == "needs_source"
+                    and outcome.get("queried_feature_count") is not None
+                ):
+                    finish(outcome)
+                else:
+                    pending_outcomes.append(outcome)
+            pending = iter(pending_outcomes)
+
+            def submit_next() -> None:
+                outcome = next(pending, None)
+                if outcome is None:
+                    return
                 _emit_runtime_progress(
                     progress,
-                    event="domain_completed",
+                    event="domain_started",
                     outcomes=completed,
                     total_domains=len(outcomes),
-                    active_domain=active_domain,
+                    active_domain=outcome["domain"],
                 )
-                continue
-            future = executor.submit(
-                _refresh_runtime_domain,
-                resolved["aoi"],
-                outcome["domain"],
-                str(cache_root),
-                skip_pmtiles,
+                future = acquisition.submit(
+                    _refresh_runtime_domain,
+                    resolved["aoi"],
+                    outcome["domain"],
+                    str(staging_root),
+                    True,
+                )
+                futures[future] = ("acquisition", outcome)
+
+            for _ in range(min(MAX_CONCURRENT_LIVE_DOMAINS, len(pending_outcomes))):
+                submit_next()
+            while futures:
+                done, _ = wait(futures, return_when=FIRST_COMPLETED)
+                for future in done:
+                    stage, outcome = futures.pop(future)
+                    if stage == "acquisition":
+                        submit_next()
+                    try:
+                        result = future.result()
+                        next_outcome = {**outcome, **result, "failure_reason": None}
+                        if stage == "acquisition" and result["status"] == "ready":
+                            _emit_runtime_progress(
+                                progress,
+                                event="domain_building",
+                                outcomes=completed,
+                                total_domains=len(outcomes),
+                                active_domain=outcome["domain"],
+                            )
+                            build = builder.submit(
+                                _finish_runtime_domain,
+                                resolved["aoi"],
+                                next_outcome,
+                                str(staging_root),
+                                str(cache_root),
+                                skip_pmtiles,
+                            )
+                            futures[build] = ("presentation", next_outcome)
+                            continue
+                    except BaseException as error:
+                        next_outcome = _failed_runtime_outcome(outcome, error)
+                    finish(next_outcome)
+        return [by_domain[outcome["domain"]] for outcome in outcomes]
+    finally:
+        shutil.rmtree(staging_root, ignore_errors=True)
+
+
+def _finish_runtime_domain(
+    aoi: dict[str, Any],
+    outcome: dict[str, Any],
+    staging_root: str,
+    cache_root: str,
+    skip_pmtiles: bool,
+) -> dict[str, Any]:
+    """Only this single-process stage builds memory-heavy map artifacts."""
+    domain = outcome["domain"]
+    started = time.monotonic()
+
+    def timed_out(_signal: int, _frame: Any) -> None:
+        raise DomainAcquisitionTimeout(f"Timed out while building '{domain}' map presentation.")
+
+    use_alarm = hasattr(signal, "SIGALRM") and threading.current_thread() is threading.main_thread()
+    previous = signal.signal(signal.SIGALRM, timed_out) if use_alarm else None
+    if use_alarm:
+        signal.setitimer(signal.ITIMER_REAL, MAX_DOMAIN_ACQUISITION_TIMEOUT_SECONDS)
+    try:
+        root = Path(staging_root)
+        pack = read_domain_pack(aoi["aoi_id"], domain, root=root)
+        if not skip_pmtiles:
+            build_map_presentation(
+                pack_root=domain_pack_root(aoi["aoi_id"], domain, root=root), manifest=pack
             )
-            futures[future] = outcome
-        while futures:
-            done, _ = wait(futures, return_when=FIRST_COMPLETED)
-            for future in done:
-                outcome = futures.pop(future)
-                try:
-                    result = future.result()
-                    next_outcome = {**outcome, **result, "failure_reason": None}
-                except BaseException as error:
-                    next_outcome = _failed_runtime_outcome(outcome, error)
-                by_domain[outcome["domain"]] = next_outcome
-                completed.append(next_outcome)
-                remaining_domains = [f_outcome["domain"] for f_outcome in futures.values()]
-                active_domain = remaining_domains[0] if remaining_domains else None
-                _emit_runtime_progress(
-                    progress,
-                    event="domain_completed",
-                    outcomes=completed,
-                    total_domains=len(outcomes),
-                    active_domain=active_domain,
-                )
-    return [by_domain[outcome["domain"]] for outcome in outcomes]
+            read_map_presentation(
+                pack_root=domain_pack_root(aoi["aoi_id"], domain, root=root), manifest=pack
+            )
+        duration = int((time.monotonic() - started) * 1000)
+        # Do not interrupt the tiny backup/replace transaction with SIGALRM.
+        if use_alarm:
+            signal.setitimer(signal.ITIMER_REAL, 0)
+        _replace_cache(Path(cache_root) / aoi["aoi_id"] / domain, root / aoi["aoi_id"] / domain)
+        return {
+            **outcome,
+            "preparation_duration_ms": (outcome.get("preparation_duration_ms") or 0) + duration,
+            "stage_durations_ms": {
+                **outcome.get("stage_durations_ms", {}),
+                "pmtiles": duration if not skip_pmtiles else 0,
+            },
+        }
+    finally:
+        if use_alarm:
+            signal.setitimer(signal.ITIMER_REAL, 0)
+            signal.signal(signal.SIGALRM, previous)
 
 
 def _refresh_runtime_domain(
@@ -300,12 +461,10 @@ def _refresh_runtime_domain(
 ) -> dict[str, Any]:
     """Run live acquisition for one domain with isolated settings and timeouts.
 
-    Timeout Protection Hierarchy:
-    1. Layer 1 (POSIX per-domain signal): SIGALRM in the isolated process main
-       thread, scaled dynamically by the number of polygonal parts (120-240s).
-    2. Layer 2 (Network socket timeout): OSMnx/requests requests_timeout (180s).
-    3. Layer 3 (Host orchestrator safety ceiling): Node runtime coordinator
-       terminates worker subprocess after 8 minutes (RUNTIME_WORKER_TIMEOUT_MS).
+    Acquisition has a POSIX deadline of 120-240s in the isolated main thread.
+    Direct Overpass requests also have socket timeouts. The host orchestrator
+    enforces an eight-minute deadline on the complete job and its process group.
+    The separate, serialized presentation stage has its own 240s deadline.
     """
     started = time.monotonic()
     if not hasattr(signal, "SIGALRM") or threading.current_thread() is not threading.main_thread():
@@ -362,7 +521,7 @@ def _failed_runtime_outcome(outcome: dict[str, Any], error: BaseException) -> di
 
 
 def _has_retryable_failures(outcomes: list[dict[str, Any]]) -> bool:
-    return any(outcome.get("status") == "failed" for outcome in outcomes)
+    return any(outcome.get("status") in {"failed", "pending_qualification"} for outcome in outcomes)
 
 
 def _domain_acquisition_timeout(aoi: dict[str, Any]) -> int:
@@ -411,12 +570,14 @@ def _emit_runtime_progress(
     outcomes: list[dict[str, Any]],
     total_domains: int | None = None,
     active_domain: str | None = None,
+    partial_result: dict[str, Any] | None = None,
 ) -> None:
     """Emit only observable preparation progress; Overpass has no reliable total beforehand."""
     if progress is None:
         return
     progress(
         {
+            **({"partial_result": partial_result} if partial_result is not None else {}),
             "event": event,
             "total_domains": total_domains if total_domains is not None else len(outcomes),
             "completed_domains": len(outcomes),

@@ -17,6 +17,7 @@ export type RuntimeAcquisitionEvidence = {
   published_at: string;
   domains: Array<{
     domain: RuntimeCategory;
+    stage_durations_ms?: Record<string, number>;
     preparation_duration_ms: number | null;
     queried_feature_count: number | null;
     accepted_feature_count: number | null;
@@ -384,6 +385,7 @@ export type ProviderRuntimeJob = {
     | "started"
     | "domain_started"
     | "domain_completed"
+    | "domain_building"
     | "published"
     | "failed";
   total_domains: number;
@@ -394,6 +396,7 @@ export type ProviderRuntimeJob = {
   derived_feature_count: number;
   started_at: string;
   updated_at: string;
+  partial_result?: ProviderRuntimeResponse;
   result?: ProviderRuntimeResponse;
   error?: string;
 };

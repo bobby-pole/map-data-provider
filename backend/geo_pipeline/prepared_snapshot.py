@@ -38,7 +38,28 @@ def publish_runtime_snapshot(
     root = cache_root / aoi_id
     root.mkdir(parents=True, exist_ok=True)
     now = _utc_timestamp()
-    source_observed_at = now
+    observations = []
+    for outcome in outcomes:
+        if outcome.get("status") != "ready":
+            continue
+        try:
+            metadata_path = (
+                cache_root
+                / outcome["artifact_aoi_id"]
+                / outcome["domain"]
+                / "domain-pack-v2"
+                / "validation"
+                / "metadata.json"
+            )
+            source_time = datetime.fromisoformat(
+                json.loads(metadata_path.read_text(encoding="utf-8"))["snapshot_at"]
+            )
+            if source_time.tzinfo is not None:
+                observations.append(source_time.astimezone(UTC).isoformat().replace("+00:00", "Z"))
+        except OSError, ValueError, KeyError, TypeError:
+            # Historical/minimal operator packs may not have runtime metadata.
+            pass
+    source_observed_at = min(observations) if observations else now
     snapshot_id = aoi_id
     domains = [_evidence_domain(outcome) for outcome in outcomes]
     evidence = {
@@ -59,7 +80,11 @@ def publish_runtime_snapshot(
     _atomic_json(root / "acquisition_evidence.json", evidence)
 
     domain_outcomes = [_manifest_domain(outcome, cache_root) for outcome in outcomes]
-    state = "partial" if any(item["status"] == "failed" for item in domain_outcomes) else "ready"
+    state = (
+        "partial"
+        if any(item["status"] in {"failed", "pending_qualification"} for item in outcomes)
+        else "ready"
+    )
     unsigned = {
         "snapshot_version": "provider_prepared_snapshot/v1",
         "snapshot_id": snapshot_id,
@@ -201,6 +226,11 @@ def _evidence_domain(outcome: dict[str, Any]) -> dict[str, Any]:
     return {
         "domain": outcome["domain"],
         "preparation_duration_ms": _nonnegative_int(outcome.get("preparation_duration_ms")),
+        **(
+            {"stage_durations_ms": outcome["stage_durations_ms"]}
+            if "stage_durations_ms" in outcome
+            else {}
+        ),
         "queried_feature_count": queried,
         "accepted_feature_count": accepted,
         "rejected_feature_count": max(queried - accepted, 0)

@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import time
 import xml.etree.ElementTree as ET
 from datetime import UTC, datetime
 from pathlib import Path
@@ -95,10 +96,12 @@ def refresh_runtime_osm_domain(
     query = _QUERY_BY_DOMAIN.get(domain)
     if query is None:
         raise ValueError(f"Runtime OSM acquisition is not enabled for domain: {domain}")
+    started = time.monotonic()
     configure_osmnx()
     raw_frame, overpass_endpoint = fetch_osm_features_geometry_with_endpoint(
         aoi["geometry"], query.tags
     )
+    acquired_at = time.monotonic()
     raw = sanitize_for_geojson(raw_frame)
     queried_feature_count = len(raw)
     if domain == "power":
@@ -126,6 +129,7 @@ def refresh_runtime_osm_domain(
     source = _clip_to_aoi(_geojson_collection(raw), aoi["geometry"])
     relation_elements = None
     relation_evidence = None
+    relation_started = time.monotonic()
     if domain == "power":
         try:
             relation_elements = _fetch_power_circuit_relation_elements(aoi["geometry"])
@@ -133,7 +137,8 @@ def refresh_runtime_osm_domain(
             # Relation membership enriches power inspection, but it must not
             # discard a validated bounded power snapshot that is already ready.
             relation_evidence = _unavailable_power_relation_evidence(aoi["geometry"], error)
-    return publish_runtime_osm_collection(
+    processed_at = time.monotonic()
+    result = publish_runtime_osm_collection(
         aoi=aoi,
         domain=domain,
         source=source,
@@ -145,6 +150,17 @@ def refresh_runtime_osm_domain(
         overpass_endpoint=overpass_endpoint,
         build_pmtiles=build_pmtiles,
     )
+    published_at = time.monotonic()
+    return {
+        **result,
+        "stage_durations_ms": {
+            "acquisition": int(
+                ((acquired_at - started) + (processed_at - relation_started)) * 1000
+            ),
+            "processing": int((relation_started - acquired_at) * 1000),
+            "pack_publication": int((published_at - processed_at) * 1000),
+        },
+    }
 
 
 def publish_runtime_osm_collection(
@@ -744,12 +760,14 @@ def _fetch_power_circuit_relation_elements_from_osm(
     last_error: Exception | None = None
     for endpoint in OVERPASS_ENDPOINTS:
         try:
-            response = requests.post(f"{endpoint}/interpreter", data={"data": query}, timeout=180)
+            response = requests.post(endpoint, data={"data": query}, timeout=180)
             response.raise_for_status()
             payload = response.json()
             elements = payload.get("elements") if isinstance(payload, dict) else None
-            if not isinstance(elements, list) or not all(
-                isinstance(element, dict) for element in elements
+            if (
+                payload.get("remark")
+                or not isinstance(elements, list)
+                or not all(isinstance(element, dict) for element in elements)
             ):
                 raise ValueError("Overpass relation response has no element list")
             return elements

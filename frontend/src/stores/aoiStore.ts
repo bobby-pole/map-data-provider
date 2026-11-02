@@ -363,7 +363,15 @@ export const useAoiStore = create<AoiState>((set, get) => ({
       const initialJob = (await response.json()) as ProviderRuntimeJob;
       set({ progress: initialJob });
 
-      const res = await pollRuntimeJob(initialJob, (job) => set({ progress: job }), onActivity);
+      const res = await pollRuntimeJob(
+        initialJob,
+        (job) => set({ progress: job }),
+        onActivity,
+        (partial) => {
+          set({ result: partial });
+          onApplied(partial);
+        },
+      );
       set({ result: res });
       const failed = res.outcomes.filter((outcome) => outcome.status === "failed");
       onActivity({
@@ -377,9 +385,11 @@ export const useAoiStore = create<AoiState>((set, get) => ({
       onApplied(res);
     } catch (reason) {
       const message = reason instanceof Error ? reason.message : String(reason);
-      const output = message.startsWith("No new AOI snapshot was published;")
-        ? message
-        : `AOI preparation could not be completed. No new snapshot was published; the existing map was left unchanged. ${message}`;
+      const output = get().result
+        ? `AOI preparation stopped. Published domains remain available on the map. ${message}`
+        : message.startsWith("No new AOI snapshot was published;")
+          ? message
+          : `AOI preparation could not be completed. No new snapshot was published; the existing map was left unchanged. ${message}`;
       set({ error: output });
       onActivity({ phase: "error", message: output });
     } finally {
@@ -440,7 +450,15 @@ export const useAoiStore = create<AoiState>((set, get) => ({
       }
       const initialJob = (await response.json()) as ProviderRuntimeJob;
       set({ progress: initialJob });
-      const res = await pollRuntimeJob(initialJob, (job) => set({ progress: job }), onActivity);
+      const res = await pollRuntimeJob(
+        initialJob,
+        (job) => set({ progress: job }),
+        onActivity,
+        (partial) => {
+          set({ result: partial });
+          onApplied(partial);
+        },
+      );
       set({ result: res });
       const failed = res.outcomes.filter((outcome) => outcome.status === "failed");
       onActivity({
@@ -454,7 +472,9 @@ export const useAoiStore = create<AoiState>((set, get) => ({
       onApplied(res);
     } catch (reason) {
       const message = reason instanceof Error ? reason.message : String(reason);
-      const output = `Demo AOI preparation could not be completed. No new snapshot was published; the existing map was left unchanged. ${message}`;
+      const output = get().result
+        ? `Demo AOI preparation stopped. Published domains remain available on the map. ${message}`
+        : `Demo AOI preparation could not be completed. No new snapshot was published; the existing map was left unchanged. ${message}`;
       set({ error: output });
       onActivity({ phase: "error", message: output });
     } finally {
@@ -514,21 +534,41 @@ function triggerBoundaryFetch(
   }, 350);
 }
 
-async function pollRuntimeJob(
+export async function pollRuntimeJob(
   initial: ProviderRuntimeJob,
   onProgress: (job: ProviderRuntimeJob) => void,
   onActivity: (event: Omit<ActivityEvent, "id" | "timestamp">) => void,
+  onPublished?: (result: ProviderRuntimeResponse) => void,
 ): Promise<ProviderRuntimeResponse> {
   let job = initial;
+  let publishedAt = "";
+  const publishPartial = () => {
+    if (job.partial_result && job.partial_result.cached_at !== publishedAt) {
+      publishedAt = job.partial_result.cached_at;
+      onPublished?.(job.partial_result);
+    }
+  };
+  publishPartial();
   let announced = "";
+  const deadline = Date.now() + 9 * 60 * 1000;
+  let delayMs = 1_000;
   while (job.state !== "succeeded" && job.state !== "failed") {
-    await new Promise((resolve) => setTimeout(resolve, 650));
-    const response = await fetch(`/api/aoi/runtime-jobs/${job.job_id}`);
+    if (Date.now() >= deadline) {
+      throw new Error(
+        "AOI status monitoring exceeded nine minutes. The server job may still be running; check its status before retrying.",
+      );
+    }
+    await new Promise((resolve) => setTimeout(resolve, delayMs));
+    delayMs = Math.min(delayMs * 1.5, 5_000);
+    const response = await fetch(`/api/aoi/runtime-jobs/${job.job_id}`, {
+      signal: AbortSignal.timeout(Math.min(15_000, Math.max(1, deadline - Date.now()))),
+    });
     if (!response.ok) {
       throw new Error(await runtimeRequestError(response));
     }
     job = (await response.json()) as ProviderRuntimeJob;
     onProgress(job);
+    publishPartial();
     const key = `${job.completed_domains}:${job.active_domain ?? ""}`;
     if (job.active_domain && key !== announced) {
       announced = key;
@@ -538,7 +578,7 @@ async function pollRuntimeJob(
       });
     }
   }
-  if (job.state === "failed" && !job.result) {
+  if (job.state === "failed") {
     throw new Error(job.error ?? "AOI preparation job failed unexpectedly.");
   }
   if (!job.result) {

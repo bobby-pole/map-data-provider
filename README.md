@@ -242,6 +242,25 @@ Fresh cached outcomes are reused for 24 hours; partial outcomes remain explicit
 per-domain source evidence, and every snapshot is source-dated rather than a
 claim of live or complete infrastructure state.
 
+Runtime AOI preparation uses at most **two isolated acquisition processes** and
+one separate PMTiles builder. Intermediate packs stay in staging storage; only
+validated packs and map presentations are published. Each published domain
+becomes visible while the job continues, with remaining domains explicitly
+marked pending and the snapshot labelled partial. A later failure keeps those
+published domains available. Fresh per-domain checkpoints let interrupted jobs
+and changed profile selections reuse completed work; a missing/corrupt pack or
+map presentation is retried individually. Map-producing, acquisition-only and
+fixture caches are separate, and the pipeline cache version is `runtime/v19`.
+
+The server enforces an eight-minute job deadline independently of process stream
+closure, terminates the complete worker process group, and force-kills remaining
+processes after two seconds. The browser polls at 1–5 second intervals for at
+most nine minutes. Acquisition evidence records source acquisition, processing,
+pack publication and PMTiles durations per domain; parallel domain durations
+are not a wall-clock benchmark. Overpass failover skips the alternate German
+service aliases and rejects query-error responses even when HTTP status is 200.
+No endpoint is advertised as fastest without comparable source measurements.
+
 - **Controlled demo acquisition**: Production uses `MDQ_RUNTIME_MODE=demo_fixed_aoi` and exposes `POST /api/aoi/demo-acquisitions/rybnik_gmina_demo` for a server-validated custom AOI. The public flow accepts a map point whose circle is at most 10 km and remains inside Poland, or a PRG selection contained in one county. Choose one or more of the 11 advertised provider domains; the server builds a PMTiles presentation for the selected subset so the map can switch to the newly published AOI. Generic runtime endpoints, force refresh and out-of-policy requests return typed `demo_aoi_restricted` (HTTP 403).
 - **Explicit runtime policy**: `GET /api/aoi/runtime-capabilities` declares the active policy. `disabled` is the fail-closed default; `local_bounded` enables the existing bounded local workflow; `trusted` additionally requires a bearer token configured outside the browser.
 - **Prepared snapshots and availability**: `GET /api/aoi/snapshots` lists only checksum-validated operator publications. `POST /api/aoi/availability` accepts a bounded circle or PRG selection and returns `ready`, `partial_coverage`, `not_prepared`, `queued`, `running` or `failed`; non-identical geometric overlap is deliberately never advertised as full coverage. Normal PMTiles, feature-detail and export reads use only the published local pack and never invoke Overpass or Python.

@@ -34,8 +34,8 @@ from geo_pipeline.query_catalog import (
 
 AOI_REQUEST_CONTRACT_VERSION = "provider_aoi_request/v2"
 RUNTIME_CONTRACT_VERSION = "provider_runtime/v2"
-# v18 records retryable per-domain acquisition failures in a publishable snapshot.
-PIPELINE_VERSION = "geo_pipeline/runtime/v18"
+# v19 pipelines staged acquisition/presentation and resumes validated domain checkpoints.
+PIPELINE_VERSION = "geo_pipeline/runtime/v19"
 CATALOG_PATH = (
     Path(__file__).resolve().parents[1]
     / "data"

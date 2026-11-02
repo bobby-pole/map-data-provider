@@ -23,7 +23,9 @@ jobs:
       matrix:
         include:
           - name: runtime
-            pytest_paths: tests/test_aoi_runtime.py tests/test_worker.py
+            pytest_paths: >-
+              tests/test_aoi_runtime.py tests/test_worker.py tests/test_runtime_pipeline.py
+              tests/test_overpass_failover.py tests/test_prepared_snapshot.py
           - name: domain-packs-and-tiles
             pytest_paths: >-
               tests/test_domain_pack.py tests/test_pipeline_e2e.py tests/test_power_snapshot.py

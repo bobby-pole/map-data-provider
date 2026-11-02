@@ -23,8 +23,6 @@ logger = logging.getLogger(__name__)
 
 OVERPASS_ENDPOINTS = [
     "https://overpass-api.de/api/interpreter",
-    "https://lz4.overpass-api.de/api/interpreter",
-    "https://z.overpass-api.de/api/interpreter",
     "https://overpass.openstreetmap.fr/api/interpreter",
     "https://overpass.kumi.systems/api/interpreter",
     "https://overpass.private.coffee/api/interpreter",
@@ -77,7 +75,13 @@ def query_overpass_ql_direct_with_endpoint(
                 duration = time.perf_counter() - t0
                 if resp.status_code == 200:
                     data = resp.json()
-                    elements = data.get("elements", [])
+                    if (
+                        not isinstance(data, dict)
+                        or data.get("remark")
+                        or not isinstance(data.get("elements"), list)
+                    ):
+                        raise ValueError("Overpass returned an incomplete or failed query response")
+                    elements = data["elements"]
                     logger.info(
                         "  [%s] Overpass QL succeeded in %.2fs (%s elements)",
                         server_host,

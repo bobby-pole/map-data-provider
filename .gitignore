@@ -17,6 +17,7 @@ dist/
 !.env.example
 
 # Generated/cache data
+.runtime-stage-*/
 /cache/
 backend/cache/
 backend/data/cache/

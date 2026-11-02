@@ -150,6 +150,7 @@ export const providerRuntimeResponseSchema = z
           queried_feature_count: z.number().int().nonnegative().nullable(),
           accepted_feature_count: z.number().int().nonnegative().nullable(),
           derived_feature_count: z.number().int().nonnegative().nullable(),
+          stage_durations_ms: z.record(z.string(), z.number().int().nonnegative()).optional(),
           preparation_duration_ms: z.number().int().nonnegative().nullable().optional(),
           overpass_endpoint: z.string().url().nullable().optional(),
         })
@@ -196,6 +197,7 @@ export const providerRuntimeJobSchema = z
       "started",
       "domain_started",
       "domain_completed",
+      "domain_building",
       "published",
       "failed",
     ]),
@@ -207,6 +209,7 @@ export const providerRuntimeJobSchema = z
     derived_feature_count: z.number().int().nonnegative(),
     started_at: z.string().datetime(),
     updated_at: z.string().datetime(),
+    partial_result: providerRuntimeResponseSchema.optional(),
     result: providerRuntimeResponseSchema.optional(),
     error: z.string().min(1).optional(),
   })
@@ -337,6 +340,7 @@ export const runtimeAcquisitionEvidenceSchema = z
       z
         .object({
           domain: runtimeProfileSchema,
+          stage_durations_ms: z.record(z.string(), z.number().int().nonnegative()).optional(),
           preparation_duration_ms: z.number().int().nonnegative().nullable(),
           queried_feature_count: z.number().int().nonnegative().nullable(),
           accepted_feature_count: z.number().int().nonnegative().nullable(),

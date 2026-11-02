@@ -109,6 +109,14 @@ export function RuntimeAcquisitionEvidencePanel({
               ? ""
               : `, ${domain.preparation_duration_ms} ms`}
             {domain.overpass_endpoint ? `, ${domain.overpass_endpoint}` : ""}
+            {domain.stage_durations_ms ? (
+              <div className="muted">
+                Source {domain.stage_durations_ms.acquisition ?? 0} ms · processing{" "}
+                {domain.stage_durations_ms.processing ?? 0} ms · pack{" "}
+                {domain.stage_durations_ms.pack_publication ?? 0} ms · map{" "}
+                {domain.stage_durations_ms.pmtiles ?? 0} ms
+              </div>
+            ) : null}
           </li>
         ))}
       </ul>

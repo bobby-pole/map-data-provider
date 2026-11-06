@@ -48,6 +48,23 @@ describe("safeRasterProtocol", () => {
     expect(new Uint8Array(result.data)).toEqual(jpegBytes);
   });
 
+  it("returns image data even if server misreports content-type as text/html when bytes are valid PNG", async () => {
+    const pngBytes = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x00, 0x01, 0x02, 0x03]);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(pngBytes, {
+        status: 200,
+        headers: { "content-type": "text/html; charset=iso-8859-1" },
+      }),
+    );
+
+    const abortController = new AbortController();
+    const result = await safeRasterProtocol(
+      { url: "safe-raster://example.com/tile.png" },
+      abortController,
+    );
+    expect(new Uint8Array(result.data)).toEqual(pngBytes);
+  });
+
   it("returns empty buffer when response is text/xml (e.g. ServiceExceptionReport)", async () => {
     const xml =
       "<ServiceExceptionReport><ServiceException>proj error</ServiceException></ServiceExceptionReport>";

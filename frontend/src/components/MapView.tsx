@@ -29,7 +29,12 @@ import {
   pointSymbolExpression,
   pointSymbolSize,
 } from "../mapSymbols";
-import { ORTHOPHOTO_WMS_URL, orthophotoReference } from "../orthophotoReference";
+import {
+  ORTHOPHOTO_MAX_ZOOM,
+  ORTHOPHOTO_MIN_ZOOM,
+  ORTHOPHOTO_WMTS_URL,
+  orthophotoReference,
+} from "../orthophotoReference";
 import { isPopupOnlyNetworkArtifact, layerPresentationSemantic } from "../presentationSemantics";
 import {
   popupDetails,
@@ -37,6 +42,7 @@ import {
   previewLayerKey,
   type TransportRoadClass,
 } from "../previewCatalog";
+import { safeRasterProtocol, toSafeRasterUrl } from "../safeRasterProtocol";
 import type {
   MapCircuit,
   MapCircuitDetail,
@@ -49,6 +55,7 @@ import { CloseButton } from "./CloseButton";
 
 const pmtilesProtocol = new Protocol();
 maplibregl.addProtocol("pmtiles", pmtilesProtocol.tile);
+maplibregl.addProtocol("safe-raster", safeRasterProtocol);
 
 const PROVIDER_PREFIX = "provider:";
 const REFERENCE_PREFIX = "reference:";
@@ -1002,24 +1009,20 @@ export function MapView({
     }
     removePrefixedLayersAndSources(map, REFERENCE_PREFIX);
     if (orthophotoEnabled) {
-      addRasterReference(
+      addRasterTileReference(
         map,
         "orthophoto",
-        ORTHOPHOTO_WMS_URL,
-        orthophotoReference.wmsLayer,
-        "image/jpeg",
+        toSafeRasterUrl(ORTHOPHOTO_WMTS_URL),
         orthophotoReference.attribution,
-        0,
-        20,
+        ORTHOPHOTO_MIN_ZOOM,
+        ORTHOPHOTO_MAX_ZOOM,
       );
     }
     references.forEach((reference) =>
-      addRasterReference(
+      addRasterTileReference(
         map,
         reference.id,
-        KIUT_WMS_URL,
-        reference.wmsLayer,
-        "image/png",
+        toSafeRasterUrl(wmsTileUrl(KIUT_WMS_URL, reference.wmsLayer, "image/png")),
         "GUGiK, KIUT/GESUT WMS",
         KIUT_MIN_ZOOM,
         KIUT_MAX_ZOOM,
@@ -1725,12 +1728,10 @@ function asProviderFeature(feature: MapGeoJSONFeature): ProviderFeature {
   };
 }
 
-function addRasterReference(
+function addRasterTileReference(
   map: maplibregl.Map,
   key: string,
-  endpoint: string,
-  wmsLayer: string,
-  format: string,
+  tileUrl: string,
   attribution: string,
   minzoom: number,
   maxzoom: number,
@@ -1738,7 +1739,7 @@ function addRasterReference(
   const sourceId = `${REFERENCE_PREFIX}${key}`;
   map.addSource(sourceId, {
     type: "raster",
-    tiles: [wmsTileUrl(endpoint, wmsLayer, format)],
+    tiles: [tileUrl],
     tileSize: 256,
     attribution,
     minzoom,

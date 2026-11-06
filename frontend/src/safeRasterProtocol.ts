@@ -8,16 +8,8 @@ export async function safeRasterProtocol(
 ): Promise<{ data: ArrayBuffer }> {
   const httpUrl = params.url.replace(/^safe-raster:\/\//, "https://");
   try {
-    const response = await fetch(httpUrl, { signal: abortController.signal, mode: "cors" });
+    const response = await fetch(httpUrl, { signal: abortController.signal });
     if (!response.ok) {
-      return { data: new ArrayBuffer(0) };
-    }
-    const contentType = (response.headers.get("content-type") ?? "").toLowerCase();
-    if (
-      contentType.includes("xml") ||
-      contentType.includes("html") ||
-      contentType.includes("text")
-    ) {
       return { data: new ArrayBuffer(0) };
     }
     const data = await response.arrayBuffer();

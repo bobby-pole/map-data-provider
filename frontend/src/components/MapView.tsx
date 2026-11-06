@@ -207,7 +207,7 @@ function wmsTileUrl(endpoint: string, wmsLayer: string, format: string): string 
     VERSION: "1.3.0",
     REQUEST: "GetMap",
     LAYERS: wmsLayer,
-    STYLES: "default",
+    STYLES: "",
     FORMAT: format,
     TRANSPARENT: "TRUE",
     CRS: "EPSG:3857",
@@ -1018,16 +1018,17 @@ export function MapView({
         ORTHOPHOTO_MAX_ZOOM,
       );
     }
-    references.forEach((reference) =>
+    if (references.length > 0) {
+      const combinedLayers = references.map((reference) => reference.wmsLayer).join(",");
       addRasterTileReference(
         map,
-        reference.id,
-        toSafeRasterUrl(wmsTileUrl(KIUT_WMS_URL, reference.wmsLayer, "image/png")),
+        "kiut",
+        toSafeRasterUrl(wmsTileUrl(KIUT_WMS_URL, combinedLayers, "image/png")),
         "GUGiK, KIUT/GESUT WMS",
         KIUT_MIN_ZOOM,
         KIUT_MAX_ZOOM,
-      ),
-    );
+      );
+    }
     if (references.length && map.getZoom() < KIUT_MIN_ZOOM) {
       map.setZoom(KIUT_MIN_ZOOM);
     }
@@ -1754,8 +1755,7 @@ function addRasterTileReference(
       type: "raster",
       source: sourceId,
       minzoom,
-      maxzoom,
-      paint: { "raster-opacity": key === "orthophoto" ? 0.8 : 0.72 },
+      paint: { "raster-opacity": key === "orthophoto" ? 0.8 : 0.85 },
     },
     referenceRasterInsertionPoint(map.getStyle().layers?.map((layer) => layer.id) ?? []),
   );

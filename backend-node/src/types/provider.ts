@@ -1092,8 +1092,8 @@ const presentationBoundsSchema = z
     z.number().min(-180).max(180),
     z.number().min(-90).max(90),
   ])
-  .refine(([minLon, minLat, maxLon, maxLat]) => minLon < maxLon && minLat < maxLat, {
-    message: "Presentation bounds must have a positive extent.",
+  .refine(([minLon, minLat, maxLon, maxLat]) => minLon <= maxLon && minLat <= maxLat, {
+    message: "Presentation bounds must not be inverted (a single point has zero extent).",
   });
 
 export const mapPresentationLayerSchema = z

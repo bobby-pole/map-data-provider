@@ -6,6 +6,7 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  UV_MANAGED_PYTHON: "1"
 
 jobs:
   verify:
@@ -15,18 +16,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version-file: backend/.python-version
-
       - name: Set up uv
         uses: astral-sh/setup-uv@v5
         with:
-          version: "0.6.2"
+          version: "0.13.8"
+          enable-cache: true
 
-      - name: Install Python dependencies
-        run: cd backend && uv sync --locked --dev
+      - name: Install Python and dependencies
+        run: cd backend && uv python install && uv sync --locked --dev
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4

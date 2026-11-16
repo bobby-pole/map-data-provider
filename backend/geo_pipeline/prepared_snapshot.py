@@ -304,6 +304,59 @@ def _atomic_json(path: Path, value: dict[str, Any]) -> None:
             staged.unlink()
 
 
+def prepare_snapshot_domain_manifest_checksum_update(
+    *,
+    cache_root: Path,
+    aoi_id: str,
+    domain: str,
+    manifest_bytes: bytes,
+) -> dict[str, Any] | None:
+    """Validate an existing snapshot_manifest.json and build its updated payload.
+
+    Returns ``None`` when no snapshot manifest exists yet or when ``domain`` has
+    no ``ready`` outcome in it. Raises ``ValueError`` if an existing
+    ``snapshot_manifest.json`` is malformed or fails its own checksum check.
+    """
+    snapshot_path = cache_root / aoi_id / "snapshot_manifest.json"
+    if not snapshot_path.is_file():
+        return None
+    snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
+    if not isinstance(snapshot, dict) or not isinstance(snapshot.get("domain_outcomes"), list):
+        raise ValueError("Published snapshot_manifest.json is malformed")
+    checksum = snapshot.get("checksum")
+    unsigned = {key: value for key, value in snapshot.items() if key != "checksum"}
+    if not isinstance(checksum, str) or checksum != _sha256(
+        _canonical_json(unsigned).encode("utf-8")
+    ):
+        raise ValueError("Published snapshot_manifest.json checksum does not match")
+
+    manifest_sha256 = _sha256(manifest_bytes)
+    updated_outcomes = []
+    updated = False
+    for outcome in unsigned["domain_outcomes"]:
+        if (
+            isinstance(outcome, dict)
+            and outcome.get("domain") == domain
+            and outcome.get("status") == "ready"
+        ):
+            updated_outcomes.append({**outcome, "manifest_sha256": manifest_sha256})
+            updated = True
+        else:
+            updated_outcomes.append(outcome)
+    if not updated:
+        return None
+    next_unsigned = {**unsigned, "domain_outcomes": updated_outcomes}
+    return {
+        **next_unsigned,
+        "checksum": _sha256(_canonical_json(next_unsigned).encode("utf-8")),
+    }
+
+
+def write_snapshot_manifest(cache_root: Path, aoi_id: str, payload: dict[str, Any]) -> None:
+    """Atomically write a prepared snapshot manifest payload."""
+    _atomic_json(cache_root / aoi_id / "snapshot_manifest.json", payload)
+
+
 def _nonnegative_int(value: Any) -> int | None:
     return value if isinstance(value, int) and value >= 0 else None
 

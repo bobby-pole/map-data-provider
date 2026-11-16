@@ -3,10 +3,11 @@ import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
   availabilityForResolvedAoi,
+  getPreparedSnapshot,
   getRuntimeAcquisitionEvidence,
   listPreparedSnapshots,
 } from "./preparedSnapshotService.js";
@@ -71,16 +72,50 @@ describe("prepared snapshot catalogue", () => {
     }
   });
 
-  it("rejects a publication when a ready domain pack no longer matches its recorded checksum", async () => {
+  it("rejects a direct read on checksum mismatch while isolating corrupt snapshots from listing", async () => {
     const root = await fixtureRoot();
+    await writeSnapshot(root, { aoiId: "rybnik_35km", state: "ready" });
     await writeSnapshot(root, { aoiId: "corrupt_aoi", state: "ready" });
     await writeFile(
       path.join(root, "corrupt_aoi", "power", "domain-pack-v2", "manifest.json"),
       "changed",
     );
-    await expect(listPreparedSnapshots({ cacheRoot: root })).rejects.toMatchObject({
+    await mkdir(path.join(root, "malformed_aoi"), { recursive: true });
+    await writeFile(path.join(root, "malformed_aoi", "snapshot_manifest.json"), "{broken json");
+
+    await expect(getPreparedSnapshot("corrupt_aoi", { cacheRoot: root })).rejects.toMatchObject({
+      kind: "invalid_request",
+      message: expect.stringContaining("checksum mismatch for 'power'"),
+    });
+    await expect(getPreparedSnapshot("malformed_aoi", { cacheRoot: root })).rejects.toMatchObject({
       kind: "invalid_request",
     });
+
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    try {
+      const snapshots = await listPreparedSnapshots({ cacheRoot: root });
+      expect(snapshots.map((snapshot) => snapshot.aoi_id)).toEqual(["rybnik_35km"]);
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining("Skipping invalid prepared snapshot 'corrupt_aoi'"),
+      );
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining("Skipping invalid prepared snapshot 'malformed_aoi'"),
+      );
+      expect(
+        availabilityForResolvedAoi(
+          { aoi_id: "rybnik_35km", geometry: snapshots[0]!.coverage.geometry },
+          snapshots,
+        ),
+      ).toMatchObject({ state: "ready", snapshot_ids: ["rybnik_35km"] });
+      expect(
+        availabilityForResolvedAoi(
+          { aoi_id: "corrupt_aoi", geometry: { type: "Point", coordinates: [0, 0] } },
+          snapshots,
+        ),
+      ).toMatchObject({ state: "not_prepared", snapshot_ids: [] });
+    } finally {
+      warnSpy.mockRestore();
+    }
   });
 
   it("requires a schema-valid evidence record tied to the snapshot", async () => {

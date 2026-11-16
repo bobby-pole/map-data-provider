@@ -4,12 +4,13 @@ import os from "node:os";
 import path from "node:path";
 
 import request from "supertest";
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { createApp } from "../app.js";
 import {
   administrativeBoundaryResponseSchema,
   administrativeCatalogResponseSchema,
+  aoiAvailabilityResponseSchema,
   domainPackListResponseSchema,
   domainPackReadResponseSchema,
   issueListResponseSchema,
@@ -20,6 +21,7 @@ import {
   mapPresentationListResponseSchema,
   mapPresentationResponseSchema,
   multiDomainExportResponseSchema,
+  preparedSnapshotCatalogueResponseSchema,
   providerErrorSchema,
   providerLayerResponseSchema,
   providerRuntimePreflightResponseSchema,
@@ -1024,6 +1026,101 @@ describe("read-only AOI provider routes", () => {
       .parse(response.body)
       .issues.find((item) => item.id === "DQ-MANUAL-SEEDS-NON-AUTHORITATIVE");
     expect(issue?.review.status).toBe("open");
+  });
+
+  it("isolates a checksum-mismatched snapshot in /snapshots and /availability while rejecting direct reads", async () => {
+    await seedCompactRybnikCache(temporaryDirectory);
+    const corruptAoiId = "aoi_40357f1be7570f5d";
+    const corruptPackDir = path.join(temporaryDirectory, corruptAoiId, "power", "domain-pack-v2");
+    await mkdir(corruptPackDir, { recursive: true });
+    await writeFile(path.join(corruptPackDir, "manifest.json"), '{"changed":true}');
+
+    const unsignedCorrupt = {
+      snapshot_version: "provider_prepared_snapshot/v1",
+      snapshot_id: corruptAoiId,
+      aoi_id: corruptAoiId,
+      version: "runtime-2026-08-31T10:00:00Z",
+      state: "ready",
+      published_at: "2026-08-31T10:00:00Z",
+      source_observed_at: "2026-08-31T10:00:00Z",
+      pipeline_version: "fixture/v1",
+      coverage: {
+        geometry: {
+          type: "Polygon",
+          coordinates: [
+            [
+              [18.4, 50.0],
+              [18.6, 50.0],
+              [18.6, 50.2],
+              [18.4, 50.0],
+            ],
+          ],
+        },
+        geometry_crs: "EPSG:4326",
+        input_type: "circle",
+        source_label: "Resolved bounded point/radius AOI",
+        limitations: ["Fixture source-dated evidence."],
+      },
+      domain_outcomes: [
+        {
+          domain: "power",
+          status: "ready",
+          detail: "Fixture domain",
+          manifest_sha256: "0".repeat(64),
+          readiness: "ready",
+          limitations: [],
+        },
+      ],
+    };
+    await writeFile(
+      path.join(temporaryDirectory, corruptAoiId, "snapshot_manifest.json"),
+      JSON.stringify({
+        ...unsignedCorrupt,
+        checksum: createHash("sha256").update(canonicalJson(unsignedCorrupt)).digest("hex"),
+      }),
+    );
+
+    const isolatedApp = createApp({
+      providerDataPaths: { cacheRoot: temporaryDirectory },
+      runtimePolicy: { mode: "local_bounded" },
+    });
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    try {
+      const catalogue = await request(isolatedApp).get("/api/aoi/snapshots");
+      expect(catalogue.status).toBe(200);
+      const parsedCatalogue = preparedSnapshotCatalogueResponseSchema.parse(catalogue.body);
+      expect(parsedCatalogue.snapshots.map((item) => item.aoi_id)).toEqual(["rybnik_35km"]);
+
+      const availability = await request(isolatedApp)
+        .post("/api/aoi/availability")
+        .send({
+          aoi: {
+            type: "point_radius",
+            longitude: 18.546,
+            latitude: 50.097,
+            radius_m: 10_000,
+          },
+        });
+      expect(availability.status).toBe(200);
+      expect(aoiAvailabilityResponseSchema.parse(availability.body)).toMatchObject({
+        state: "partial_coverage",
+        snapshot_ids: ["rybnik_35km"],
+      });
+
+      const directCorrupt = await request(isolatedApp).get(
+        `/api/aoi/${corruptAoiId}/presentations`,
+      );
+      expect(directCorrupt.status).toBe(422);
+      expect(providerErrorSchema.parse(directCorrupt.body)).toMatchObject({
+        error: "invalid_request",
+        message: `Prepared snapshot '${corruptAoiId}' has a checksum mismatch for 'power'.`,
+      });
+
+      const directHealthy = await request(isolatedApp).get("/api/aoi/rybnik_35km/presentations");
+      expect(directHealthy.status).toBe(200);
+    } finally {
+      warnSpy.mockRestore();
+    }
   });
 
   if (process.env.MDQ_REJECT_MALFORMED_EXPORT_PROBE === "1") {

@@ -54,6 +54,7 @@ const packDirectoryName = "domain-pack-v2";
 const verifiedMapArchives = new Map<string, { size: number; modifiedAt: number; sha256: string }>();
 const execFileAsync = promisify(execFile);
 const circuitRecoveryByFeature = new Map<string, Promise<void>>();
+const circuitRecoveryByAoi = new Map<string, Promise<void>>();
 
 export type ProviderDataPaths = {
   cacheRoot?: string;
@@ -700,27 +701,37 @@ async function recoverPowerCircuitEvidence(
   if (existing) {
     return existing;
   }
-  const recovery = (async () => {
-    const aoi = await runtimeAoiForId(aoiId);
-    const script = [
-      "from pathlib import Path",
-      "import json, sys",
-      "from geo_pipeline.runtime_osm import backfill_power_circuit_evidence_for_member",
-      "result = backfill_power_circuit_evidence_for_member(aoi=json.loads(sys.argv[1]), source_id=sys.argv[2], root=Path(sys.argv[3]))",
-      "print(json.dumps({'availability': result.get('availability', 'available')}))",
-    ].join("\n");
-    const backendDirectory = process.env.MDQ_BACKEND_DIR ?? path.join(projectRoot, "backend");
-    await execFileAsync(
-      runtimePythonExecutable(backendDirectory),
-      ["-c", script, JSON.stringify(aoi), sourceId, defaultCacheRoot],
-      {
-        cwd: backendDirectory,
-        timeout: 90_000,
-        maxBuffer: 4 * 1024 * 1024,
-      },
-    );
-  })().finally(() => circuitRecoveryByFeature.delete(key));
+  const previousForAoi = circuitRecoveryByAoi.get(aoiId) ?? Promise.resolve();
+  const recovery = previousForAoi
+    .catch(() => undefined)
+    .then(async () => {
+      const aoi = await runtimeAoiForId(aoiId);
+      const script = [
+        "from pathlib import Path",
+        "import json, sys",
+        "from geo_pipeline.runtime_osm import backfill_power_circuit_evidence_for_member",
+        "result = backfill_power_circuit_evidence_for_member(aoi=json.loads(sys.argv[1]), source_id=sys.argv[2], root=Path(sys.argv[3]))",
+        "print(json.dumps({'availability': result.get('availability', 'available')}))",
+      ].join("\n");
+      const backendDirectory = process.env.MDQ_BACKEND_DIR ?? path.join(projectRoot, "backend");
+      await execFileAsync(
+        runtimePythonExecutable(backendDirectory),
+        ["-c", script, JSON.stringify(aoi), sourceId, defaultCacheRoot],
+        {
+          cwd: backendDirectory,
+          timeout: 90_000,
+          maxBuffer: 4 * 1024 * 1024,
+        },
+      );
+    })
+    .finally(() => {
+      circuitRecoveryByFeature.delete(key);
+      if (circuitRecoveryByAoi.get(aoiId) === recovery) {
+        circuitRecoveryByAoi.delete(aoiId);
+      }
+    });
   circuitRecoveryByFeature.set(key, recovery);
+  circuitRecoveryByAoi.set(aoiId, recovery);
   return recovery;
 }
 

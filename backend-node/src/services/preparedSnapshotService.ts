@@ -37,7 +37,22 @@ export async function listPreparedSnapshots(
   const snapshots = await Promise.all(
     entries
       .filter((entry) => entry.isDirectory() && identifier.test(entry.name))
-      .map(async (entry) => readPreparedSnapshot(path.join(root, entry.name))),
+      .map(async (entry) => {
+        try {
+          const snapshot = await readPreparedSnapshot(path.join(root, entry.name));
+          if (snapshot && snapshot.aoi_id !== entry.name) {
+            throw new ProviderDataError(
+              "invalid_request",
+              "Prepared snapshot identity does not match its path.",
+            );
+          }
+          return snapshot;
+        } catch (error) {
+          const detail = error instanceof Error ? error.message : String(error);
+          console.warn(`Skipping invalid prepared snapshot '${entry.name}': ${detail}`);
+          return null;
+        }
+      }),
   );
   return snapshots.filter((snapshot): snapshot is PreparedSnapshotManifest => snapshot !== null);
 }

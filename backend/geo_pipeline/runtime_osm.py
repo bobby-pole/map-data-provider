@@ -5,7 +5,9 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import shutil
 import time
+import uuid
 import xml.etree.ElementTree as ET
 from datetime import UTC, datetime
 from pathlib import Path
@@ -23,6 +25,7 @@ from geo_pipeline.district_heating import (
     category_for_osm_feature as district_heating_category_for_osm_feature,
 )
 from geo_pipeline.domain_pack import (
+    PACK_DIRNAME,
     build_map_presentation,
     domain_pack_root,
     read_domain_pack,
@@ -40,6 +43,10 @@ from geo_pipeline.industrial import (
     category_for_osm_feature as industrial_category_for_osm_feature,
 )
 from geo_pipeline.layers.power import _add_power_categories, _compact_power_properties
+from geo_pipeline.prepared_snapshot import (
+    prepare_snapshot_domain_manifest_checksum_update,
+    write_snapshot_manifest,
+)
 from geo_pipeline.public_services import (
     category_for_osm_feature as public_category_for_osm_feature,
 )
@@ -693,11 +700,37 @@ def backfill_power_circuit_evidence_for_member(
         }
     )
     refreshed_manifest = {**manifest, "artifacts": artifacts}
-    pack = write_domain_pack(
-        aoi["aoi_id"], "power", root=root, manifest=refreshed_manifest, files=files
-    )
-    build_map_presentation(pack_root=pack_root, manifest=pack)
-    read_domain_pack(aoi["aoi_id"], "power", root=root)
+    staging_root = root / f".backfill-stage-{uuid.uuid4().hex}"
+    backup = pack_root.parent / f".{PACK_DIRNAME}-backup-{uuid.uuid4().hex}"
+    moved_existing = False
+    try:
+        pack = write_domain_pack(
+            aoi["aoi_id"], "power", root=staging_root, manifest=refreshed_manifest, files=files
+        )
+        staged_pack_root = domain_pack_root(aoi["aoi_id"], "power", root=staging_root)
+        build_map_presentation(pack_root=staged_pack_root, manifest=pack)
+        read_domain_pack(aoi["aoi_id"], "power", root=staging_root)
+        updated_snapshot = prepare_snapshot_domain_manifest_checksum_update(
+            cache_root=root,
+            aoi_id=aoi["aoi_id"],
+            domain="power",
+            manifest_bytes=(staged_pack_root / "manifest.json").read_bytes(),
+        )
+        if pack_root.exists():
+            pack_root.replace(backup)
+            moved_existing = True
+        staged_pack_root.replace(pack_root)
+        if updated_snapshot is not None:
+            write_snapshot_manifest(root, aoi["aoi_id"], updated_snapshot)
+    except Exception:
+        if moved_existing and backup.exists():
+            if pack_root.exists():
+                shutil.rmtree(pack_root, ignore_errors=True)
+            backup.replace(pack_root)
+        raise
+    finally:
+        shutil.rmtree(staging_root, ignore_errors=True)
+        shutil.rmtree(backup, ignore_errors=True)
     return relation_evidence
 
 

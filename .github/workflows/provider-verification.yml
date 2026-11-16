@@ -9,6 +9,9 @@ on:
 permissions:
   contents: read
 
+env:
+  UV_MANAGED_PYTHON: "1"
+
 concurrency:
   group: unit-tests-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -47,19 +50,15 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v7
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version-file: backend/.python-version
-
       - name: Set up uv
         uses: astral-sh/setup-uv@v5
         with:
+          version: "0.13.8"
           enable-cache: true
 
-      - name: Install Python dependencies
+      - name: Install Python and dependencies
         working-directory: backend
-        run: uv sync
+        run: uv python install && uv sync --locked
 
       - name: Run pytest shard with duration report
         working-directory: backend
@@ -73,19 +72,15 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v7
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version-file: backend/.python-version
-
       - name: Set up uv
         uses: astral-sh/setup-uv@v5
         with:
+          version: "0.13.8"
           enable-cache: true
 
-      - name: Install Python dependencies
+      - name: Install Python and dependencies
         working-directory: backend
-        run: uv sync
+        run: uv python install && uv sync --locked
 
       - name: Run ruff and smoke check
         working-directory: backend
@@ -102,19 +97,15 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v7
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version-file: backend/.python-version
-
       - name: Set up uv
         uses: astral-sh/setup-uv@v5
         with:
+          version: "0.13.8"
           enable-cache: true
 
-      - name: Install Python dependencies
+      - name: Install Python and dependencies
         working-directory: backend
-        run: uv sync
+        run: uv python install && uv sync --locked
 
       - name: Set up Node
         uses: actions/setup-node@v7
@@ -140,19 +131,15 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v7
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version-file: backend/.python-version
-
       - name: Set up uv
         uses: astral-sh/setup-uv@v5
         with:
+          version: "0.13.8"
           enable-cache: true
 
-      - name: Install Python dependencies
+      - name: Install Python and dependencies
         working-directory: backend
-        run: uv sync
+        run: uv python install && uv sync --locked
 
       - name: Set up Node
         uses: actions/setup-node@v7

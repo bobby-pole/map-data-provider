@@ -126,7 +126,7 @@ OVERPASS_SERVERS = [
 ]
 
 HEADERS = {
-    "User-Agent": "MapDataProvider-FastDirectOverpass/1.0 (https://github.com/bobby-pole/map-data-provider)",
+    "User-Agent": "MapLab-FastDirectOverpass/1.0 (https://github.com/bobby-pole/map-data-provider)",
 }
 
 

@@ -105,7 +105,7 @@ wheels = [
 ]
 
 [[package]]
-name = "map-data-provider-backend"
+name = "map-lab-backend"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

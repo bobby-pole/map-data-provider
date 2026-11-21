@@ -1,7 +1,7 @@
 [project]
-name = "map-data-provider-backend"
+name = "map-lab-backend"
 version = "0.1.0"
-description = "Geospatial data processing worker for Map Data Provider."
+description = "Geospatial data processing worker for Map Lab."
 requires-python = ">=3.14,<3.15"
 dependencies = [
     "geopandas>=1.0.0",

@@ -8,7 +8,7 @@ uncertain source is not eligible for a public provider export.
 
 [PolyForm Strict 1.0.0](./LICENSE), including the
 [Portfolio Evaluation Exception](./PORTFOLIO_EVALUATION_EXCEPTION.md), applies
-to Map Data Provider's original software, documentation and project-authored
+to Map Lab's original software, documentation and project-authored
 review fixtures. It does **not** replace, narrow or relicense third-party data.
 Each third-party dataset keeps its own licence and attribution requirements.
 

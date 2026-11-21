@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const healthResponseSchema = z.object({
   status: z.literal("ok"),
-  service: z.literal("map-data-provider"),
+  service: z.literal("map-lab"),
   version: z.string().regex(/^\d+\.\d+\.\d+$/),
 });
 

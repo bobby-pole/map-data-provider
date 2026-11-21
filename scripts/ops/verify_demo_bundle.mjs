@@ -4,7 +4,7 @@ import path from "node:path";
 
 const bundleDirectory = process.argv[2];
 if (!bundleDirectory) {
-  throw new Error("Usage: node scripts/verify_demo_bundle.mjs <rybnik_35km-bundle-directory>");
+  throw new Error("Usage: node scripts/ops/verify_demo_bundle.mjs <rybnik_35km-bundle-directory>");
 }
 
 const root = fs.realpathSync(bundleDirectory);

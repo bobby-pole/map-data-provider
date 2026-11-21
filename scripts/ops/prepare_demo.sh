@@ -72,14 +72,14 @@ function walk(dir) {
 copyTree(sourceDir, outputDir);
 ' "${SOURCE_DIR}" "${OUTPUT_DIR}" "${BUNDLE_ID}"
 
-PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 if [[ -x "${PROJECT_ROOT}/backend/.venv/bin/python" ]]; then
-  "${PROJECT_ROOT}/backend/.venv/bin/python" "${PROJECT_ROOT}/scripts/publish_existing_snapshot.py" \
+  "${PROJECT_ROOT}/backend/.venv/bin/python" "${PROJECT_ROOT}/scripts/data/publish_existing_snapshot.py" \
     --prepared-root "${OUTPUT_ROOT}" --aoi-id rybnik_35km --version "${BUNDLE_ID}"
 else
   (
     cd "${PROJECT_ROOT}/backend"
-    uv run python ../scripts/publish_existing_snapshot.py \
+    uv run python ../scripts/data/publish_existing_snapshot.py \
       --prepared-root "${OUTPUT_ROOT}" --aoi-id rybnik_35km --version "${BUNDLE_ID}"
   )
 fi

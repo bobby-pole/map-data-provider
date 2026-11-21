@@ -48,7 +48,7 @@ benchmark.
 First prepare a current local copy of the immutable bundle and start the API:
 
 ```bash
-./scripts/pull_local_demo_bundle.sh \
+./scripts/ops/pull_local_demo_bundle.sh \
   <deploy-user>@<vps-host>:<deploy-dir>/data/bundle/rybnik_35km
 pnpm run demo:local
 ```

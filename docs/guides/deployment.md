@@ -128,7 +128,7 @@ for domain in power emergency public transport bridges water gas sewer industria
     --aoi rybnik_35km --domain "$domain" --input fixture)
 done
 
-./scripts/prepare_demo.sh /path/to/rybnik_35km /path/to/mdq-demo-bundle rybnik-35km-2026-08-24
+./scripts/ops/prepare_demo.sh /path/to/rybnik_35km /path/to/mdq-demo-bundle rybnik-35km-2026-08-24
 rsync -a --delete /path/to/mdq-demo-bundle/rybnik_35km/ <deploy-user>@<vps-host>:<deploy-dir>/data/bundle/rybnik_35km/
 ssh <deploy-user>@<vps-host> 'chown -R 1001:1001 <deploy-dir>/data/bundle/rybnik_35km && chmod -R a-w <deploy-dir>/data/bundle/rybnik_35km'
 ```
@@ -151,7 +151,7 @@ a persistent root outside Git:
 
 ```bash
 cd backend
-uv run python ../scripts/prepare_regional_snapshots.py rybnik_35km \
+uv run python ../scripts/data/prepare_regional_snapshots.py rybnik_35km \
   --prepared-root /srv/mdq/prepared
 ```
 

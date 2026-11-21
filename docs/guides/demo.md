@@ -11,7 +11,7 @@ Install dependencies and run the full quality gate once:
 ```bash
 (cd backend && uv sync --locked --dev)
 pnpm install
-./scripts/verify_provider.sh
+./scripts/ci/verify_provider.sh
 ```
 
 To run the data endpoint examples outside the production container, provide a prepared-root directory that contains `rybnik_35km/` (for example, an operator-prepared local snapshot). CI fixtures prove contracts but are deliberately not a full Rybnik dataset:
@@ -35,7 +35,7 @@ For the full local Rybnik demo, first copy the operator-provisioned verified
 bundle and run the API in local bounded-acquisition mode:
 
 ```bash
-./scripts/pull_local_demo_bundle.sh \
+./scripts/ops/pull_local_demo_bundle.sh \
   <deploy-user>@<vps-host>:<deploy-dir>/data/bundle/rybnik_35km
 pnpm run demo:local
 ```

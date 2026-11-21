@@ -16,4 +16,4 @@ available to an operator is an external deployment artifact, so a report must
 be generated from the exact bundle being presented rather than invented from a
 test fixture.
 
-See [the measurement procedure](../performance_baseline.md).
+See [the measurement procedure](../guides/performance_baseline.md).

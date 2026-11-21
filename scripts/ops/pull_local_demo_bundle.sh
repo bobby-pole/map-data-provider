@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 SOURCE_BUNDLE="${1:?Usage: $0 <local-or-remote-rybnik_35km-bundle-directory>}"
 LOCAL_BUNDLE_ROOT="${MDQ_LOCAL_BUNDLE_ROOT:-${PROJECT_ROOT}/.local-demo-bundle}"
 TARGET_BUNDLE="${LOCAL_BUNDLE_ROOT}/rybnik_35km"
@@ -22,7 +22,7 @@ fi
 
 rsync -a "${SOURCE_BUNDLE%/}/" "${STAGING_ROOT}/rybnik_35km/"
 
-node "${PROJECT_ROOT}/scripts/verify_demo_bundle.mjs" "${STAGING_ROOT}/rybnik_35km"
+node "${PROJECT_ROOT}/scripts/ops/verify_demo_bundle.mjs" "${STAGING_ROOT}/rybnik_35km"
 
 mv "${STAGING_ROOT}/rybnik_35km" "${TARGET_BUNDLE}"
 echo "Local demo bundle installed at ${TARGET_BUNDLE}"

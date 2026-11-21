@@ -121,7 +121,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run parallel failure probes
-        run: ./scripts/verify_contract_failure_probe.sh
+        run: ./scripts/ci/verify_contract_failure_probe.sh
 
   backend-node:
     name: verify-backend-node

@@ -7,7 +7,7 @@ change.
 
 The document is intentionally English and tracked: it is a shared product
 baseline, not private operating context. The public product and data boundaries
-in [`README.md`](./README.md) and [`docs/architecture.md`](./docs/architecture.md)
+in [`README.md`](./README.md) and [`docs/architecture/architecture.md`](./docs/architecture/architecture.md)
 remain authoritative when they conflict with a purely visual preference.
 
 ## Product role

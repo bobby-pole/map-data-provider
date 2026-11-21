@@ -1,8 +1,8 @@
-# Map Data Provider Architecture
+# Map Lab Architecture
 
 ## Decision
 
-Map Data Provider is developed as a consumer-neutral geospatial data provider.
+Map Lab is developed as a consumer-neutral geospatial data provider.
 
 The selected architecture is:
 

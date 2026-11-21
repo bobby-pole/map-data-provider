@@ -1,6 +1,6 @@
-# Map Data Provider - VPS Deployment Guide
+# Map Lab - VPS Deployment Guide
 
-This guide documents the production deployment architecture, reverse proxy and CDN/TLS provider configuration, operations workflow, data lifecycle, backups, retention, and maintenance for Map Data Provider hosted at **`maplab.robertlacheta.pl`**.
+This guide documents the production deployment architecture, reverse proxy and CDN/TLS provider configuration, operations workflow, data lifecycle, backups, retention, and maintenance for Map Lab hosted at **`maplab.robertlacheta.pl`**.
 
 ---
 
@@ -82,7 +82,7 @@ In NPM, import the origin TLS certificate as a **Custom** SSL
 certificate. Create a Proxy Host with domain `maplab.robertlacheta.pl`, scheme
 `http`, forward hostname `map-data-provider-prod` and port `3001`. Select
 the imported certificate, enable **Force SSL** and **HTTP/2 Support**, then
-save. NPM and Map Data Provider share the pre-existing external Docker network
+save. NPM and Map Lab share the pre-existing external Docker network
 `app_network`; the public proxy resolves the provider container by name without
 a public app port.
 

@@ -1,4 +1,4 @@
-# Map Data Provider
+# Map Lab
 
 Świadomy-źródeł dostawca danych geoprzestrzennych dla Steel Sentinel v2 i innych klientów GIS.
 
@@ -10,7 +10,7 @@ To repozytorium portfolio udostępnia kod źródłowy, lecz nie jest oprogramowa
 
 ## Czym jest ten projekt
 
-Map Data Provider przygotowuje analityczne warstwy mapowe z dostępnych źródeł publicznych dla obszaru zainteresowania i domeny infrastruktury. Normalizuje je do stabilnego kontraktu, buforuje migawki do odtwarzalnych dem, waliduje geometrię i atrybuty oraz eksponuje metadane gotowości dla odbiorców.
+Map Lab przygotowuje analityczne warstwy mapowe z dostępnych źródeł publicznych dla obszaru zainteresowania i domeny infrastruktury. Normalizuje je do stabilnego kontraktu, buforuje migawki do odtwarzalnych dem, waliduje geometrię i atrybuty oraz eksponuje metadane gotowości dla odbiorców.
 
 Repozytorium skupia się na warstwie dostawcy upstream: pobieraniu, buforowaniu, walidacji, ocenianiu i wyjaśnianiu warstw infrastruktury zanim użyje ich Steel Sentinel v2 lub inny klient GIS.
 
@@ -26,10 +26,10 @@ Główne odpowiedzialności:
 
 ## Główny konsument: Steel Sentinel v2
 
-Steel Sentinel v2 jest głównym konsumentem tego dostawcy. Map Data Provider przygotowuje i dokumentuje produkt danych; Steel Sentinel v2 konsumuje go w swoim własnym repozytorium aplikacji. Kontrakt dostawcy pozostaje reużywalny dla innych klientów GIS.
+Steel Sentinel v2 jest głównym konsumentem tego dostawcy. Map Lab przygotowuje i dokumentuje produkt danych; Steel Sentinel v2 konsumuje go w swoim własnym repozytorium aplikacji. Kontrakt dostawcy pozostaje reużywalny dla innych klientów GIS.
 
 ```text
-Map Data Provider
+Map Lab
   -> pobieranie i przetwarzanie AOI i domeny
   -> wektory oparte na OSM
   -> zbuforowane migawki
@@ -63,7 +63,7 @@ Scenariusz: Steel Sentinel v2 żąda świadomych-źródeł wielodomenowych warst
 Steel Sentinel v2 żąda dowolnego podzbioru dziewięciu wymaganych domen (power, emergency, public,
 transport, bridges, water, gas, sewer, industrial) i opcjonalnych domen telecom i district-heating
 dla AOI Rybnik.
-Map Data Provider zwraca zbuforowane, znormalizowane warstwy analityczne z ich metadanymi,
+Map Lab zwraca zbuforowane, znormalizowane warstwy analityczne z ich metadanymi,
 wynikami domeny i rekordami gotowości.
 Dostawca eksponuje atrybucję źródeł, liczby obiektów, status walidacji, wiarygodność i znane ograniczenia.
 Jego rejestr źródeł odróżnia dane manualne i referencje WMS KIUT/GESUT od wektorów analitycznych.
@@ -200,7 +200,7 @@ Dowody problemów są generowane przez wersjonowane reguły jakości i pozostaj�
 
 ## Wdrożenie produkcyjne i demo na żywo
 
-Map Data Provider jest wdrożony jako pojedynczy wieloetapowy kontener za instancją VPS reverse proxy pod adresem **`maplab.robertlacheta.pl`**.
+Map Lab jest wdrożony jako pojedynczy wieloetapowy kontener za instancją VPS reverse proxy pod adresem **`maplab.robertlacheta.pl`**.
 
 ### Polityka akwizycji runtime
 

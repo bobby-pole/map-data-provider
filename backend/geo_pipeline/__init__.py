@@ -1,1 +1,1 @@
-"""Geospatial data extraction pipeline for Map Data Provider."""
+"""Geospatial data extraction pipeline for Map Lab."""

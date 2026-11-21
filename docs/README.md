@@ -1,6 +1,6 @@
 # Documentation Index
 
-Core architecture, operator guides, and delivery measurements for Map Data Provider.
+Core architecture, operator guides, and delivery measurements for Map Lab.
 
 ## Architecture
 

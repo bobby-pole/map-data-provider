@@ -1,6 +1,6 @@
-# Map Data Provider Design Baseline
+# Map Lab Design Baseline
 
-This document is the canonical UI/UX baseline for the Map Data Provider
+This document is the canonical UI/UX baseline for the Map Lab
 dev-preview. Read it before making a visual or interaction change. If a change
 introduces a durable visual or UX decision, update this document in the same
 change.

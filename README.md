@@ -1,4 +1,4 @@
-# Map Data Provider
+# Map Lab
 
 A source-aware geospatial data provider for Steel Sentinel v2 and other GIS consumers.
 [🇵🇱 Polish / Polski](./README.pl.md)
@@ -19,7 +19,7 @@ project-authored review fixtures. Third-party data retains its own terms; see
 
 ## What this project is
 
-Map Data Provider prepares analytical map layers from available public sources for an area of interest and infrastructure domain. It normalizes them into a stable contract, caches snapshots for reproducible demos, validates geometry and attributes, and exposes readiness metadata for downstream use.
+Map Lab prepares analytical map layers from available public sources for an area of interest and infrastructure domain. It normalizes them into a stable contract, caches snapshots for reproducible demos, validates geometry and attributes, and exposes readiness metadata for downstream use.
 
 This repository focuses on the upstream provider layer: fetch, cache, validate, score and explain infrastructure layers before Steel Sentinel v2 or another GIS consumer uses them.
 
@@ -35,10 +35,10 @@ Primary responsibilities:
 
 ## Primary consumer: Steel Sentinel v2
 
-Steel Sentinel v2 is the primary consumer of this provider. Map Data Provider prepares and documents the data product; Steel Sentinel v2 consumes it in its own application repository. The provider contract remains reusable for other GIS clients.
+Steel Sentinel v2 is the primary consumer of this provider. Map Lab prepares and documents the data product; Steel Sentinel v2 consumes it in its own application repository. The provider contract remains reusable for other GIS clients.
 
 ```text
-Map Data Provider
+Map Lab
   -> AOI and domain ingestion
   -> OSM-derived vector layers
   -> cached snapshots
@@ -70,7 +70,7 @@ Follow the [3–5 minute provider demo](./docs/guides/demo.md) for exact command
 Scenario: Steel Sentinel v2 requests source-aware multi-domain infrastructure layers
 
 Steel Sentinel v2 requests any subset of the nine required domains (power, emergency, public, transport, bridges, water, gas, sewer, industrial) and the optional telecom and district-heating domains for the Rybnik AOI.
-Map Data Provider returns cached, normalized analytical layers with their metadata, domain outcomes, and readiness records.
+Map Lab returns cached, normalized analytical layers with their metadata, domain outcomes, and readiness records.
 The provider exposes source attribution, feature count, validation status, confidence and known limitations.
 Its source registry keeps manual inputs and KIUT/GESUT WMS references distinct from analytical vectors.
 The returned layer pack is ready for Steel Sentinel v2; consumer-side integration remains in that repository.
@@ -224,7 +224,7 @@ The Node runtime path accepts a `provider_aoi_request/v2` point/radius or admini
 
 ## Production deployment and live demo
 
-Map Data Provider is deployed as a single multi-stage container behind the VPS reverse proxy instance at **`maplab.robertlacheta.pl`**.
+Map Lab is deployed as a single multi-stage container behind the VPS reverse proxy instance at **`maplab.robertlacheta.pl`**.
 
 ### Runtime-acquisition policy
 

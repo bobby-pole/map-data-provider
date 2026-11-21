@@ -1,4 +1,4 @@
-# Map Data Provider — Reproducible delivery measurements
+# Map Lab — Reproducible delivery measurements
 
 **Measurement contract:** `mdq_demo_delivery_measurement/v1`
 **Scope:** the immutable, read-only `rybnik_35km` demo bundle

@@ -72,7 +72,7 @@ Expected shape:
 ```json
 {
   "status": "ok",
-  "service": "map-data-provider",
+  "service": "map-lab",
   "version": "0.1.0"
 }
 ```

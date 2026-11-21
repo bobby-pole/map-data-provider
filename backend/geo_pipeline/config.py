@@ -28,7 +28,6 @@ RAW_DIR = DATA_DIR / "raw"
 MANUAL_DIR = Path(os.getenv("MDQ_MANUAL_DIR", str(DATA_DIR / "manual")))
 PROCESSED_DIR = Path(os.getenv("MDQ_PROCESSED_DIR", str(DATA_DIR / "processed")))
 GEOJSON_DIR = DATA_DIR / "geojson"
-PREVIEWS_DIR = DATA_DIR / "previews"
 REPORTS_DIR = Path(os.getenv("MDQ_REPORTS_DIR", str(DATA_DIR / "reports")))
 CACHE_DIR = Path(
     os.getenv("MDQ_PREPARED_ROOT", os.getenv("MDQ_CACHE_ROOT", str(DATA_DIR / "cache")))
@@ -44,7 +43,6 @@ def ensure_data_dirs() -> None:
         MANUAL_DIR,
         PROCESSED_DIR,
         GEOJSON_DIR,
-        PREVIEWS_DIR,
         REPORTS_DIR,
         CACHE_DIR,
     ):

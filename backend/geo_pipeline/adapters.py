@@ -65,7 +65,7 @@ class DomainAdapter:
 def _power_live() -> None:
     from geo_pipeline.layers.power import extract_power_grid
 
-    extract_power_grid(write_preview=False)
+    extract_power_grid()
 
 
 POWER_ADAPTER = DomainAdapter(

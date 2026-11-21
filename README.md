@@ -62,7 +62,7 @@ The intended contract lets Steel Sentinel v2 request infrastructure layers for a
 5. Inspect generated issue evidence, human review state and feature metadata in the dev-preview.
 6. Export `provider_multi_domain_export/v2` for Steel Sentinel v2 and other GIS consumers.
 
-Follow the [3–5 minute provider demo](./docs/demo.md) for exact commands and representative output.
+Follow the [3–5 minute provider demo](./docs/guides/demo.md) for exact commands and representative output.
 
 ## Demo scenario
 
@@ -102,7 +102,7 @@ Python Geospatial Worker (OSMnx / GeoPandas / Shapely / PMTiles CLI)
 
 This split is intentional. Node/Express/TypeScript owns REST APIs, cache orchestration, request validation and TypeScript contracts. Python remains the processing layer because the OSM/geospatial ecosystem around OSMnx, GeoPandas and Shapely is stronger for extraction, clipping and geometry validation.
 
-See [the architecture documentation](./docs/architecture.md) for the current provider design, contracts and API boundaries.
+See [the architecture documentation](./docs/architecture/architecture.md) for the current provider design, contracts and API boundaries.
 
 ## Why this is not an OpenInfraMap clone
 
@@ -133,7 +133,7 @@ once into the ignored `.local-demo-bundle/` directory, then start the provider
 against that directory:
 
 ```bash
-./scripts/pull_local_demo_bundle.sh \
+./scripts/ops/pull_local_demo_bundle.sh \
   root@VPS:/home/deploy/map-data-provider/data/bundle/rybnik_35km
 pnpm run demo:local
 ```
@@ -151,7 +151,7 @@ mode on a public host. If only a partial cache is present, the preview
 explicitly names the missing primary domains rather than presenting it as a
 complete Rybnik demo.
 
-The bundle must be produced by the current `scripts/prepare_demo.sh`: it now
+The bundle must be produced by the current `scripts/ops/prepare_demo.sh`: it now
 includes a checksum-validated `snapshot_manifest.json` binding all published
 domain packs. Rebuild a pre-MDQ-057 bundle with that command before importing
 or deploying it; the API and container bootstrap deliberately reject a legacy
@@ -166,7 +166,7 @@ pnpm run measure:demo
 
 The report contains 100 requests per core endpoint, p50/p95/p99 latency,
 PMTiles range response sizes, ETag revalidation results and isolated fixture
-worker preparation metrics. See [delivery measurements](./docs/performance_baseline.md)
+worker preparation metrics. See [delivery measurements](./docs/guides/performance_baseline.md)
 for the exact method and interpretation boundaries. Once its dated JSON is
 committed and deployed with the matching external bundle, the preview exposes
 the compact result through its **Delivery evidence** rail icon and links to the
@@ -269,7 +269,7 @@ No endpoint is advertised as fastest without comparable source measurements.
 - **Geospatial Engine**: Python 3.14 + `uv` CLI worker handles offline data preparation and startup bootstrap.
 - **External snapshot**: The full Rybnik snapshot is an operator-provisioned, checksum-verified demo bundle, not data committed to Git. The container validates and atomically promotes it to prepared storage before serving requests.
 - **Runtime boundary**: The public demo can demonstrate one coalesced, cache-first bounded request. Local `local_bounded` and authenticated `trusted` modes allow up to 30 km or up to three adjacent PRG counties and may build PMTiles for Steel Sentinel. The VPS never becomes an open Overpass proxy.
-- **Deployment Guide**: See [docs/deployment.md](docs/deployment.md) for Nginx Proxy Manager/Cloudflare, directory setup, and rollback instructions.
+- **Deployment Guide**: See [docs/guides/deployment.md](docs/guides/deployment.md) for Nginx Proxy Manager/Cloudflare, directory setup, and rollback instructions.
 
 ## Verification
 
@@ -335,7 +335,7 @@ This makes public vector inspection available offline after a prepared snapshot 
 
 ## QGIS interoperability
 
-The generated GeoJSON artifacts in an operator-provisioned prepared snapshot (for production, `data/prepared/rybnik_35km/`) can be opened in QGIS for manual inspection of geometries, attributes, CRS behavior, and layer completeness. The large snapshot is intentionally outside Git; see the [deployment guide](docs/deployment.md) for bundle preparation and storage. QGIS is used as a GIS validation reference, while the product itself remains a web-based data tooling app.
+The generated GeoJSON artifacts in an operator-provisioned prepared snapshot (for production, `data/prepared/rybnik_35km/`) can be opened in QGIS for manual inspection of geometries, attributes, CRS behavior, and layer completeness. The large snapshot is intentionally outside Git; see the [deployment guide](docs/guides/deployment.md) for bundle preparation and storage. QGIS is used as a GIS validation reference, while the product itself remains a web-based data tooling app.
 
 ## Useful inspirations
 

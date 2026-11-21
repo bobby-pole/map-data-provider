@@ -72,7 +72,7 @@ COPY --from=build-backend-node /app/backend-node/node_modules ./node_modules
 
 # Copy entrypoint script
 WORKDIR /app
-COPY scripts/docker_entrypoint.sh /app/scripts/docker_entrypoint.sh
+COPY scripts/ops/docker_entrypoint.sh /app/scripts/docker_entrypoint.sh
 RUN chmod +x /app/scripts/docker_entrypoint.sh
 
 # Create persistent storage mount directories and set ownership

@@ -1,0 +1,42 @@
+# Local containerized run for development and demo verification.
+# Production VPS deployments use `docker-compose.prod.yml` instead.
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "127.0.0.1:${PORT:-3001}:3001"
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      STATIC_DIR: /app/static
+      MDQ_RUNTIME_MODE: ${MDQ_RUNTIME_MODE:-local_bounded}
+      MDQ_DEMO_AOI_TEMPLATE: ${MDQ_DEMO_AOI_TEMPLATE:-rybnik_gmina_demo}
+      MDQ_DEMO_AOI_ID: ${MDQ_DEMO_AOI_ID:-rybnik_35km}
+      MDQ_PREPARED_ROOT: /app/data/prepared
+      MDQ_REVIEW_ROOT: /app/data/reviews
+      MDQ_RUNTIME_ROOT: /app/data/runtime
+      MDQ_BUNDLE_SOURCE: /app/data/bundle/rybnik_35km
+      MDQ_REQUIRE_DEMO_BUNDLE: ${MDQ_REQUIRE_DEMO_BUNDLE:-false}
+      MDQ_DEMO_BUNDLE_ID: ${MDQ_DEMO_BUNDLE_ID:-}
+      MDQ_RATE_LIMIT_MAX_REQUESTS: ${MDQ_RATE_LIMIT_MAX_REQUESTS:-240}
+    volumes:
+      - mdq_prepared:/app/data/prepared
+      - mdq_reviews:/app/data/reviews
+      - mdq_runtime:/app/data/runtime
+      # Optional: mount a verified local bundle produced via scripts/ops/prepare_demo.sh
+      # and set MDQ_REQUIRE_DEMO_BUNDLE=true + MDQ_DEMO_BUNDLE_ID=<bundle-id>:
+      # - ./.local-demo-bundle/rybnik_35km:/app/data/bundle/rybnik_35km:ro
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://127.0.0.1:3001/api/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+volumes:
+  mdq_prepared:
+  mdq_reviews:
+  mdq_runtime:

@@ -27,7 +27,7 @@ backend/data/manual/
 backend/data/runtime/
 backend/data/reviews/
 backend/data/source-availability/aoi_*.json
-backend/data/previews/
+output/
 .mdq-demo-bundle/
 .local-demo-bundle/
 .local-demo-bundle-vps/

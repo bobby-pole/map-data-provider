@@ -17,7 +17,7 @@ import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 
 const execFileAsync = promisify(execFile);
-const projectRoot = path.resolve(fileURLToPath(new URL("..", import.meta.url)));
+const projectRoot = path.resolve(fileURLToPath(new URL("../..", import.meta.url)));
 const defaultBaseUrl = "http://127.0.0.1:3001";
 const aoiId = process.env.MDQ_MEASURE_AOI_ID ?? "rybnik_35km";
 const baseUrl = (process.env.MDQ_MEASURE_BASE_URL ?? defaultBaseUrl).replace(/\/$/, "");

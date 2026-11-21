@@ -14,7 +14,7 @@ import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
-BACKEND_ROOT = Path(__file__).resolve().parents[1] / "backend"
+BACKEND_ROOT = Path(__file__).resolve().parents[2] / "backend"
 if str(BACKEND_ROOT) not in sys.path:
     sys.path.insert(0, str(BACKEND_ROOT))
 

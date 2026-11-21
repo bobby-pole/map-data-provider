@@ -6,7 +6,6 @@ import geopandas as gpd
 from geo_pipeline.clip import clip_geojson_to_aoi, write_clip_report
 from geo_pipeline.config import (
     GEOJSON_DIR,
-    PREVIEWS_DIR,
     PROCESSED_DIR,
     RAW_DIR,
     REPORTS_DIR,
@@ -22,7 +21,6 @@ from geo_pipeline.extract import (
     write_geojson,
     write_metadata,
 )
-from geo_pipeline.preview import write_power_preview
 from geo_pipeline.query_catalog import POWER_OSM_QUERY
 from geo_pipeline.validate import validate_power_outputs, write_validation_report
 
@@ -97,7 +95,7 @@ POWER_PROPERTY_COLUMNS = [
 ]
 
 
-def extract_power_grid(write_preview: bool = True) -> None:
+def extract_power_grid() -> None:
     ensure_data_dirs()
     configure_osmnx()
 
@@ -189,13 +187,6 @@ def extract_power_grid(write_preview: bool = True) -> None:
         )
     clip_report_path = REPORTS_DIR / f"{RYBNIK_AOI.name}_power_clip_report.json"
     write_clip_report(clip_report_path, clip_reports)
-
-    if write_preview:
-        write_power_preview(
-            gpd.read_file(clipped_lines_path),
-            gpd.read_file(clipped_node_points_path),
-            PREVIEWS_DIR / f"{RYBNIK_AOI.name}_power_preview.png",
-        )
 
     extra_layers = {
         **{
@@ -432,14 +423,12 @@ def _processed_path(layer_name: str):
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
+    argparse.ArgumentParser(
         description="Extract OSM power infrastructure for Rybnik + 60 km."
-    )
-    parser.add_argument("--no-preview", action="store_true", help="Skip PNG preview generation.")
-    args = parser.parse_args()
+    ).parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-    extract_power_grid(write_preview=not args.no_preview)
+    extract_power_grid()
 
 
 if __name__ == "__main__":

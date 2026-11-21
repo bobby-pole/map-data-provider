@@ -53,7 +53,7 @@ Zamierzony kontrakt pozwala Steel Sentinel v2 żądać warstw infrastruktury dla
 5. Sprawdź wygenerowane dowody problemów, stan przeglądu ludzkiego i metadane obiektów w podglądzie deweloperskim.
 6. Wyeksportuj `provider_multi_domain_export/v2` dla Steel Sentinel v2 i innych klientów GIS.
 
-Śledź [3–5 minutowe demo dostawcy](./docs/demo.md) dla dokładnych komend i reprezentatywnych wyników.
+Śledź [3–5 minutowe demo dostawcy](./docs/guides/demo.md) dla dokładnych komend i reprezentatywnych wyników.
 
 ## Scenariusz demonstracyjny
 
@@ -96,7 +96,7 @@ Python Geospatial Worker (OSMnx / GeoPandas / Shapely / PMTiles CLI)
 
 Ten podział jest celowy. Node/Express/TypeScript odpowiada za REST API, orkiestrację cache, walidację żądań i kontrakty TypeScript. Python pozostaje warstwą przetwarzania, ponieważ ekosystem OSM/geoprzestrzenny wokół OSMnx, GeoPandas i Shapely jest mocniejszy do ekstrakcji, przycinania i walidacji geometrii.
 
-Zob. [dokumentację architektury](./docs/architecture.md) dla aktualnego projektu dostawcy, kontraktów i granic API.
+Zob. [dokumentację architektury](./docs/architecture/architecture.md) dla aktualnego projektu dostawcy, kontraktów i granic API.
 
 ## Dlaczego to nie jest klon OpenInfraMap
 
@@ -125,7 +125,7 @@ Podstawowe możliwości dostawcy:
 Pełna migawka Rybnik jest celowo poza Git. Skopiuj zweryfikowany bundle raz do ignorowanego katalogu `.local-demo-bundle/`, a następnie uruchom dostawcę względem tego katalogu:
 
 ```bash
-./scripts/pull_local_demo_bundle.sh \
+./scripts/ops/pull_local_demo_bundle.sh \
   root@VPS:/home/deploy/map-data-provider/data/bundle/rybnik_35km
 pnpm run demo:local
 ```
@@ -138,7 +138,7 @@ pnpm --dir frontend run dev
 
 `pnpm run demo:local` ustawia `MDQ_PREPARED_ROOT` na zweryfikowany lokalny bundle i uruchamia API w trybie `local_bounded`. Pozwala na istniejące ograniczone przepływy pracy punkt/promień i PRG do przygotowania przez operatora; nie wystawiaj tego trybu na publicznym hoście. Jeśli obecny jest tylko częściowy cache, podgląd jawnie wymienia brakujące podstawowe domeny zamiast prezentować to jako kompletne demo Rybnik.
 
-Bundle musi być wyprodukowany przez bieżący `scripts/prepare_demo.sh`: zawiera teraz checksum-walidowany `snapshot_manifest.json` wiążący wszystkie opublikowane pakiety domen. Zbuduj ponownie bundle sprzed MDQ-057 tym poleceniem przed importem lub wdrożeniem; API i bootstrap kontenera celowo odrzuca starszy bundle bez tego rekordu publikacji.
+Bundle musi być wyprodukowany przez bieżący `scripts/ops/prepare_demo.sh`: zawiera teraz checksum-walidowany `snapshot_manifest.json` wiążący wszystkie opublikowane pakiety domen. Zbuduj ponownie bundle sprzed MDQ-057 tym poleceniem przed importem lub wdrożeniem; API i bootstrap kontenera celowo odrzuca starszy bundle bez tego rekordu publikacji.
 
 Z uruchomionym API użyj drugiego terminala do wygenerowania reprodukowalnego, datowanego raportu pomiarowego API/PMTiles/worker:
 
@@ -146,7 +146,7 @@ Z uruchomionym API użyj drugiego terminala do wygenerowania reprodukowalnego, d
 pnpm run measure:demo
 ```
 
-Raport zawiera 100 żądań na każdy główny endpoint, opóźnienie p50/p95/p99, rozmiary odpowiedzi zakresu PMTiles, wyniki rewalidacji ETag i izolowane metryki przygotowania fixture workera. Zob. [pomiary dostawy](./docs/performance_baseline.md) dla dokładnej metody i granic interpretacji. Gdy jego datowany JSON jest zacommitowany i wdrożony z pasującym zewnętrznym bundle'm, podgląd eksponuje zwarty wynik przez ikonę szyny **Delivery evidence** i linkuje do surowego raportu.
+Raport zawiera 100 żądań na każdy główny endpoint, opóźnienie p50/p95/p99, rozmiary odpowiedzi zakresu PMTiles, wyniki rewalidacji ETag i izolowane metryki przygotowania fixture workera. Zob. [pomiary dostawy](./docs/guides/performance_baseline.md) dla dokładnej metody i granic interpretacji. Gdy jego datowany JSON jest zacommitowany i wdrożony z pasującym zewnętrznym bundle'm, podgląd eksponuje zwarty wynik przez ikonę szyny **Delivery evidence** i linkuje do surowego raportu.
 
 Serwis Node provider:
 
@@ -221,7 +221,7 @@ Wszystkie akwizycje pozostają cache-first, a kanoniczne równoważne joba są k
 - **Silnik geoprzestrzenny**: Python 3.14 + `uv` worker CLI obsługuje offline przygotowanie danych i bootstrap uruchamiania.
 - **Zewnętrzna migawka**: Pełna migawka Rybnik jest operatorsko-przygotowanym, checksum-zweryfikowanym bundle'm demo, nie danymi commitowanymi do Git. Kontener waliduje i atomowo promuje ją do przygotowanego magazynu przed obsługą żądań.
 - **Granica runtime**: Publiczne demo może zademonstrować jedno koalescowane, cache-first ograniczone żądanie. Tryby `local_bounded` i uwierzytelniony `trusted` pozwalają na 30 km lub do trzech sąsiadujących powiatów i mogą budować PMTiles dla Steel Sentinel. VPS nie staje się otwartym proxy Overpass.
-- **Przewodnik wdrożenia**: Zob. [docs/deployment.md](docs/deployment.md) dla Nginx Proxy Manager/Cloudflare, konfiguracji katalogów i instrukcji rollback.
+- **Przewodnik wdrożenia**: Zob. [docs/guides/deployment.md](docs/guides/deployment.md) dla Nginx Proxy Manager/Cloudflare, konfiguracji katalogów i instrukcji rollback.
 
 ## Weryfikacja
 
@@ -287,7 +287,7 @@ To umożliwia publiczną inspekcję wektorową offline po zamontowaniu przygotow
 
 ## Interoperacyjność QGIS
 
-Wygenerowane artefakty GeoJSON w operatorsko-przygotowanej migawce (dla produkcji `data/prepared/rybnik_35km/`) można otwierać w QGIS do ręcznej inspekcji geometrii, atrybutów, zachowania CRS i kompletności warstw. Duża migawka jest celowo poza Git; zob. [przewodnik wdrożenia](docs/deployment.md) dla przygotowania bundle'u i magazynowania. QGIS jest używany jako referencja walidacji GIS, podczas gdy sam produkt pozostaje webową aplikacją narzędzi danych.
+Wygenerowane artefakty GeoJSON w operatorsko-przygotowanej migawce (dla produkcji `data/prepared/rybnik_35km/`) można otwierać w QGIS do ręcznej inspekcji geometrii, atrybutów, zachowania CRS i kompletności warstw. Duża migawka jest celowo poza Git; zob. [przewodnik wdrożenia](docs/guides/deployment.md) dla przygotowania bundle'u i magazynowania. QGIS jest używany jako referencja walidacji GIS, podczas gdy sam produkt pozostaje webową aplikacją narzędzi danych.
 
 ## Użyteczne inspiracje
 

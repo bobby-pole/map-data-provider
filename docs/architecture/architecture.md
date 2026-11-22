@@ -55,6 +55,27 @@ Node/Express provider
   -> serves the generated artifacts to the consumer
 ```
 
+## Repository & Module Structure
+
+- [`backend/geo_pipeline/`](../../backend/geo_pipeline):
+  - `domains/`: domain OSM feature classifiers (`bridges.py`, `district_heating.py`, `emergency.py`, `gas.py`, `industrial.py`, `public_services.py`, `sewer.py`, `telecom.py`, `transport.py`, `water.py`).
+  - `layers/`: `power.py`, `hex_power.py`, `manual_seeds.py`.
+  - `packs/`: domain-pack store and Rybnik fixture builders (`store.py`, `representative_points.py`, `rybnik_builders.py`), exposed through the `domain_pack.py` compatibility facade.
+  - `runtime/`: on-demand OSM acquisition, categorization, `power=circuit` backfill, checkpoint state, and process/thread execution (`osm_categories.py`, `osm_publisher.py`, `power_circuits.py`, `state.py`, `executor.py`), exposed through `runtime_osm.py` and the `worker.py` CLI facade.
+  - `sources/` & `raster/`: official Polish source adapters (`prg.py`, `bdot10k.py`, `kiut.py`, `orthophoto.py`) and `nmt_nmpt.py`.
+- [`backend-node/src/`](../../backend-node/src):
+  - `routes/aoi/`: domain-grouped HTTP route registrars (`dataRoutes.ts`, `issueRoutes.ts`, `presentationRoutes.ts`, `runtimeRoutes.ts`, `shared.ts`) mounted by `routes/aoi.ts`.
+  - `services/`: request validation, runtime execution, snapshot publication, PMTiles presentation reads, source availability, issues, and delivery metrics.
+  - `types/`: modular API and contract schemas (`common.ts`, `domainPacks.ts`, `health.ts`, `issues.ts`, `presentations.ts`, `provider.ts`, `runtime.ts`, `sources.ts`).
+  - `utils/canonicalJson.ts` and `test/fixtures.ts`.
+- [`frontend/src/`](../../frontend/src):
+  - `components/map/`: MapLibre constants, style/layer specs, geometry helpers, and `FeaturePopupPanel.tsx`.
+  - `components/aoi/`: `AdministrativeTree.tsx`, pure `treeSelection.ts` tree-selection helpers, and `RuntimeOutcomeSummary.tsx`.
+  - `hooks/map/`: `useMapLayerSync.ts`, `useMapSelectionHighlight.ts`, and `usePowerCircuitPopup.ts`.
+  - `stores/`: Zustand AOI state (`aoiStore.ts`) and shared runtime preparation/polling helpers (`aoiStoreHelpers.ts`).
+  - `types/api/`: domain-split frontend API types (`layers.ts`, `packs.ts`, `issues.ts`, `runtime.ts`) re-exported through `types/api.ts`.
+- `scripts/`: `ci/` (verification gates, hooks, negative probes), `ops/` (container entrypoint, demo bundle tools, delivery measurements), and `data/` (catalog & regional snapshot preparation).
+
 ## Data Contract
 
 ### Provider GeoJSON Layer Contract v1
@@ -257,22 +278,36 @@ stale cache invokes the Python worker fixture path and returns whether the
 artifact came from cache or refresh. Live OSM/Overpass acquisition belongs to
 the separate `POST /api/aoi/runtime-requests` path.
 
-`GET /api/aoi/catalog` returns the bounded offline PRG administrative selection catalogue. `POST /api/aoi/runtime-requests` validates `provider_aoi_request/v2`, then calls the local runtime worker only after validation. A cache miss for any required profile or optional `telecom` makes a bounded live OSM/Overpass request, then publishes a validated local domain pack and PMTiles presentation; it makes no WMS or raster request. Telecom accepts only explicit OSM communication semantics and preserves an empty line layer as `needs_source`. Other profiles remain typed source gaps until their separately governed adapters are complete.
+`GET /api/aoi/catalog` returns the bounded offline PRG administrative selection catalogue. `POST /api/aoi/runtime-requests` validates `provider_aoi_request/v2`, then calls the local runtime worker only after validation. A cache miss for any required profile or optional `telecom` and `district_heating` profiles makes a bounded live OSM/Overpass request, then publishes a validated local domain pack and PMTiles presentation; it makes no WMS or raster request. Telecom and district heating accept only explicit OSM infrastructure semantics and preserve an empty line layer as `needs_source`. Other profiles remain typed source gaps until their separately governed adapters are complete.
 
 `GET /api/aoi/:aoiId/domain-packs` and `GET /api/aoi/:aoiId/domain-packs/:domain` provide read-only `provider_domain_pack_read/v2` responses from registered manifests. Node validates request and manifest identity, pack-relative paths, source provenance, SHA-256 checksums, feature counts and provider GeoJSON metadata before returning any layer. The response exposes only explicitly public processed, derived or representative-point GeoJSON vectors. Native artifacts, rasters, remote services and reference-only records remain inside the cache as provenance evidence and cannot enter an analytical endpoint.
 
 `GET /api/aoi/:aoiId/export` provides a consolidated multi-domain export payload conforming to `provider_multi_domain_export/v2`. The route accepts a mandatory `domains` parameter (e.g., `GET /api/aoi/:aoiId/export?domains=power,emergency,public,transport,bridges,water,gas,sewer,industrial`), validates requested domains against an allow-list of profiles, rejects empty domain segments with HTTP 422 `invalid_request`, deduplicates requested profiles, and attaches explicit per-domain outcomes (`ready` vs `needs_source`), public GeoJSON domain packs, and relevant reviewed issues filtered by requested domains.
 
-`GET /api/aoi/:aoiId/presentations` and `GET /api/aoi/:aoiId/presentations/:domain` provide compact `provider_map_presentation_read/v1` metadata without reading or serializing analytical GeoJSON collections. `GET /api/aoi/:aoiId/presentations/:domain/features/:sourceId` returns one validated source-detail feature and its allow-listed attributes; it validates an OSM `node`, `way` or `relation` ID and never returns an entire layer. `GET /api/aoi/:aoiId/presentations/:domain/archive` requires one satisfiable HTTP byte range and responds with checked PMTiles bytes, an ETag and `Content-Range`. Node validates presentation identity, parent-manifest digest, public-source provenance, archive size and SHA-256 before serving it. These routes are read-only and never invoke Python, Overpass, WMS or a tile generator.
+`GET /api/aoi/:aoiId/presentations` and `GET /api/aoi/:aoiId/presentations/:domain` provide compact `provider_map_presentation_read/v1` metadata without reading or serializing analytical GeoJSON collections. `GET /api/aoi/:aoiId/presentations/:domain/features/:sourceId` returns one validated source-detail feature and its allow-listed attributes; it validates an OSM `node`, `way` or `relation` ID and never returns an entire layer. `GET /api/aoi/:aoiId/presentations/:domain/features/:sourceId/circuits` and `GET /api/aoi/:aoiId/presentations/:domain/circuits/:circuitId` expose bounded `power=circuit` relation evidence without triggering broad Overpass scrapes. `GET /api/aoi/:aoiId/presentations/:domain/archive` requires one satisfiable HTTP byte range and responds with checked PMTiles bytes, an ETag and `Content-Range`. Node validates presentation identity, parent-manifest digest, public-source provenance, archive size and SHA-256 before serving it. These routes are read-only and never invoke Python, Overpass (except narrow single-member circuit evidence backfill when absent), WMS or a tile generator.
 
 Implemented Node/Express provider endpoints:
 
 - `GET /api/health`
+- `GET /api/metrics/delivery`
+- `GET /api/metrics/delivery/raw`
+- `GET /api/aoi/catalog`
+- `POST /api/aoi/catalog/boundary`
+- `POST /api/aoi/runtime-requests/preflight`
+- `POST /api/aoi/runtime-requests`
+- `POST /api/aoi/runtime-jobs`
+- `GET /api/aoi/runtime-jobs/:jobId`
+- `GET /api/aoi/runtime-capabilities`
+- `POST /api/aoi/demo-acquisitions/:templateId`
+- `GET /api/aoi/snapshots`
+- `POST /api/aoi/availability`
 - `POST /api/aoi/requests`
 - `GET /api/aoi/:aoiId/layers`
 - `GET /api/aoi/:aoiId/layers/:domain`
 - `GET /api/aoi/:aoiId/readiness`
 - `GET /api/aoi/:aoiId/sources`
+- `GET /api/aoi/:aoiId/source-availability`
+- `GET /api/aoi/:aoiId/metrics/acquisition`
 - `GET /api/aoi/:aoiId/issues`
 - `PATCH /api/aoi/:aoiId/issues/:issueId/review`
 - `GET /api/aoi/:aoiId/domain-packs`
@@ -281,6 +316,8 @@ Implemented Node/Express provider endpoints:
 - `GET /api/aoi/:aoiId/presentations`
 - `GET /api/aoi/:aoiId/presentations/:domain`
 - `GET /api/aoi/:aoiId/presentations/:domain/features/:sourceId`
+- `GET /api/aoi/:aoiId/presentations/:domain/features/:sourceId/circuits`
+- `GET /api/aoi/:aoiId/presentations/:domain/circuits/:circuitId`
 - `GET /api/aoi/:aoiId/presentations/:domain/archive` (HTTP range only)
 
 The first vertical slice is:

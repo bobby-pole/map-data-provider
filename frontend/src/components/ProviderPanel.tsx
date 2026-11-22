@@ -21,6 +21,7 @@ export function ProviderPanel({
   sourceAvailability,
   issues,
   updateReview,
+  readOnlyReview = false,
 }: {
   basemapMode: VisualBasemapMode;
   onBasemapMode: (mode: VisualBasemapMode) => void;
@@ -32,6 +33,7 @@ export function ProviderPanel({
   sourceAvailability: ReturnType<typeof useProviderPreview>["sourceAvailability"];
   issues: ReturnType<typeof useProviderPreview>["issues"];
   updateReview: ReturnType<typeof useProviderPreview>["updateReview"];
+  readOnlyReview?: boolean;
 }) {
   return (
     <section className="drawerSection">
@@ -97,7 +99,11 @@ export function ProviderPanel({
       <SourceAvailabilitySection sourceAvailability={sourceAvailability} />
       {issues.length > 0 && (
         <Suspense fallback={null}>
-          <IssueReviewDrawer issues={issues} updateReview={updateReview} />
+          <IssueReviewDrawer
+            issues={issues}
+            updateReview={updateReview}
+            readOnly={readOnlyReview}
+          />
         </Suspense>
       )}
     </section>

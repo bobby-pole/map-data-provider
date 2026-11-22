@@ -11,6 +11,7 @@ import type { IssueReviewStatus, ProviderIssue } from "../types/api";
 export function IssueReviewDrawer({
   issues,
   updateReview,
+  readOnly = false,
 }: {
   issues: ProviderIssue[];
   updateReview: (
@@ -18,6 +19,7 @@ export function IssueReviewDrawer({
     status: Exclude<IssueReviewStatus, "open">,
     note: string,
   ) => Promise<void>;
+  readOnly?: boolean;
 }) {
   const [filter, setFilter] = useState<IssueReviewStatus | "all">("all");
   const [draftStates, setDraftStates] = useState<
@@ -79,6 +81,11 @@ export function IssueReviewDrawer({
               {isFinalReviewState(issue.review.status) ? (
                 <p className="muted">
                   Final decision{issue.review.note ? `: ${issue.review.note}` : "."}
+                </p>
+              ) : readOnly ? (
+                <p className="muted">
+                  Review edits are disabled in public demo mode
+                  {issue.review.note ? `: ${issue.review.note}` : "."}
                 </p>
               ) : (
                 <>

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "express": "^5.1.0",
+    "helmet": "^8.3.0",
     "zod": "^4.1.12"
   },
   "devDependencies": {

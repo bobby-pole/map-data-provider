@@ -96,7 +96,16 @@ Python Geospatial Worker (OSMnx / GeoPandas / Shapely / PMTiles CLI)
 
 Ten podział jest celowy. Node/Express/TypeScript odpowiada za REST API, orkiestrację cache, walidację żądań i kontrakty TypeScript. Python pozostaje warstwą przetwarzania, ponieważ ekosystem OSM/geoprzestrzenny wokół OSMnx, GeoPandas i Shapely jest mocniejszy do ekstrakcji, przycinania i walidacji geometrii.
 
-Zob. [dokumentację architektury](./docs/architecture/architecture.md) dla aktualnego projektu dostawcy, kontraktów i granic API.
+Zob. [dokumentację architektury](./docs/architecture/architecture.md) dla aktualnego projektu dostawcy, struktury modułów, kontraktów i granic API.
+
+## Struktura repozytorium
+
+- `backend/geo_pipeline/`: worker geoprzestrzenny Python 3.14 — klasyfikatory domenowe (`domains/`), magazyn pakietów domen i buildery fixture'ów (`packs/` z fasadą `domain_pack.py`), akwizycja runtime OSM i wykonawca (`runtime/` z fasadami `runtime_osm.py` i `worker.py`), adaptery źródeł publicznych (`sources/`, `raster/`) oraz `layers/`.
+- `backend-node/src/`: API Node/Express/TypeScript — routery pogrupowane domenowo (`routes/aoi/`), serwisy (`services/`), kontrakty typów (`types/`), `utils/canonicalJson.ts` oraz `test/fixtures.ts`.
+- `frontend/src/`: podgląd React + MapLibre — moduły mapowe i popup (`components/map/`, `hooks/map/`), komponenty wyboru AOI (`components/aoi/`), stan Zustand (`stores/aoiStore.ts` i `aoiStoreHelpers.ts`) oraz podzielone typy API (`types/api/` z fasadą `types/api.ts`).
+- `scripts/`: automatyzacja podzielona na `ci/`, `ops/` i `data/`.
+- `docs/`: [spis dokumentacji](./docs/README.md), opis architektury, przewodniki operacyjne i bazowe pomiary wydajności.
+- Pliki DX w root: [`.env.example`](./.env.example), [`docker-compose.yml`](./docker-compose.yml) (lokalne uruchomienie w kontenerze) oraz [`CONTRIBUTING.md`](./CONTRIBUTING.md) (konfiguracja i bramki weryfikacyjne).
 
 ## Dlaczego to nie jest klon OpenInfraMap
 

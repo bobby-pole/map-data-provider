@@ -70,6 +70,10 @@ If you are working offline with a warm `uv` cache, set `MDQ_OFFLINE=1` when runn
 ## Repository Conventions
 
 - **Wire & Environment Compatibility**: Do not break `provider_*` response/artifact contracts or existing `MDQ_*` environment variable names without explicit migration notes.
+- **Modular Package Structure & Facades**:
+  - `backend/geo_pipeline/`: Keep public entrypoints and monkeypatch-compatible facades (`domain_pack.py`, `runtime_osm.py`, `worker.py`) stable when refactoring internal submodules (`domains/`, `packs/`, `runtime/`, `sources/`, `raster/`).
+  - `backend-node/src/`: Group AOI endpoints under `routes/aoi/`, keep API contracts modular under `types/`, and place shared test fixtures in `test/` rather than `routes/`. Note `.js` import extensions per `NodeNext` module resolution.
+  - `frontend/src/`: Keep pure TypeScript helpers, constants, and stores in `.ts` files separate from `.tsx` React component modules to satisfy `react-refresh`, keep API types split under `types/api/` with a `types/api.ts` re-export facade, and avoid sibling filenames that differ only by letter case on case-insensitive filesystems such as macOS (for example, `treeSelection.ts` alongside `AdministrativeTree.tsx`).
 - **No Runtime Artifacts in Git**: Generated caches, demo bundles, `output/`, `backend/cache/`, and `docs/local/` are ignored and must not be committed.
 - **Script Layout**:
   - `scripts/ci/`: CI verification, git hooks, and negative failure probes.

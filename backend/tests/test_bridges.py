@@ -1,9 +1,9 @@
 import json
 from pathlib import Path
 
-from geo_pipeline.bridges import category_for_osm_feature
 from geo_pipeline.cache import build_rybnik_bridges_cache
 from geo_pipeline.domain_pack import build_rybnik_bridges_domain_pack, read_domain_pack
+from geo_pipeline.domains.bridges import category_for_osm_feature
 
 
 def test_category_for_osm_feature_normalizes_bridge_tags_and_rejects_unmapped() -> None:

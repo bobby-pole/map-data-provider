@@ -44,50 +44,50 @@ from geo_pipeline.adapters import (
 from geo_pipeline.config import CACHE_DIR
 
 try:
-    from geo_pipeline.water import category_for_osm_feature as water_category
+    from geo_pipeline.domains.water import category_for_osm_feature as water_category
 except ImportError:
     from geo_pipeline.water_network import category_for_osm_feature as water_category
 
 try:
-    from geo_pipeline.gas import category_for_osm_feature as gas_category
+    from geo_pipeline.domains.gas import category_for_osm_feature as gas_category
 except ImportError:
     from geo_pipeline.gas_network import category_for_osm_feature as gas_category
 
 try:
-    from geo_pipeline.telecom import category_for_osm_feature as telecom_category
+    from geo_pipeline.domains.telecom import category_for_osm_feature as telecom_category
 except ImportError:
     from geo_pipeline.telecom_network import (
         category_for_osm_feature as telecom_category,
     )
 
 try:
-    from geo_pipeline.district_heating import (
+    from geo_pipeline.domains.district_heating import (
         category_for_osm_feature as heating_category,
     )
 except ImportError:
     from geo_pipeline.heating import category_for_osm_feature as heating_category
 
 try:
-    from geo_pipeline.sewer import category_for_osm_feature as sewer_category
+    from geo_pipeline.domains.sewer import category_for_osm_feature as sewer_category
 except ImportError:
     from geo_pipeline.sewer_network import category_for_osm_feature as sewer_category
 
 try:
-    from geo_pipeline.bridges import category_for_osm_feature as bridges_category
+    from geo_pipeline.domains.bridges import category_for_osm_feature as bridges_category
 except ImportError:
     from geo_pipeline.bridges_network import (
         category_for_osm_feature as bridges_category,
     )
 
 try:
-    from geo_pipeline.transport import category_for_osm_feature as transport_category
+    from geo_pipeline.domains.transport import category_for_osm_feature as transport_category
 except ImportError:
     from geo_pipeline.transport_network import (
         category_for_osm_feature as transport_category,
     )
 
 try:
-    from geo_pipeline.emergency import category_for_osm_feature as emergency_category
+    from geo_pipeline.domains.emergency import category_for_osm_feature as emergency_category
 except ImportError:
     from geo_pipeline.emergency_facilities import (
         category_for_osm_feature as emergency_category,
@@ -96,10 +96,10 @@ except ImportError:
 try:
     from geo_pipeline.public import category_for_osm_feature as public_category
 except ImportError:
-    from geo_pipeline.public_services import category_for_osm_feature as public_category
+    from geo_pipeline.domains.public_services import category_for_osm_feature as public_category
 
 try:
-    from geo_pipeline.industrial import category_for_osm_feature as industrial_category
+    from geo_pipeline.domains.industrial import category_for_osm_feature as industrial_category
 except ImportError:
     from geo_pipeline.industrial_facilities import (
         category_for_osm_feature as industrial_category,

@@ -2,11 +2,11 @@ import json
 from pathlib import Path
 
 from geo_pipeline.cache import build_rybnik_district_heating_cache
-from geo_pipeline.district_heating import category_for_osm_feature
 from geo_pipeline.domain_pack import (
     build_rybnik_district_heating_domain_pack,
     read_domain_pack,
 )
+from geo_pipeline.domains.district_heating import category_for_osm_feature
 from geo_pipeline.query_catalog import DISTRICT_HEATING_OSM_QUERY
 
 

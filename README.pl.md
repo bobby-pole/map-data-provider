@@ -209,7 +209,7 @@ Dowody problemów są generowane przez wersjonowane reguły jakości i pozostaj�
 
 ## Wdrożenie produkcyjne i demo na żywo
 
-Map Lab jest wdrożony jako pojedynczy wieloetapowy kontener za instancją VPS reverse proxy pod adresem **`maplab.robertlacheta.pl`**.
+Map Lab jest wdrożony jako pojedynczy wieloetapowy kontener za reverse proxy pod adresem **`https://maplab.robertlacheta.pl`**.
 
 ### Polityka akwizycji runtime
 
@@ -230,7 +230,7 @@ Wszystkie akwizycje pozostają cache-first, a kanoniczne równoważne joba są k
 - **Silnik geoprzestrzenny**: Python 3.14 + `uv` worker CLI obsługuje offline przygotowanie danych i bootstrap uruchamiania.
 - **Zewnętrzna migawka**: Pełna migawka Rybnik jest operatorsko-przygotowanym, checksum-zweryfikowanym bundle'm demo, nie danymi commitowanymi do Git. Kontener waliduje i atomowo promuje ją do przygotowanego magazynu przed obsługą żądań.
 - **Granica runtime**: Publiczne demo może zademonstrować jedno koalescowane, cache-first ograniczone żądanie. Tryby `local_bounded` i uwierzytelniony `trusted` pozwalają na 30 km lub do trzech sąsiadujących powiatów i mogą budować PMTiles dla Steel Sentinel. VPS nie staje się otwartym proxy Overpass.
-- **Przewodnik wdrożenia**: Zob. [docs/guides/deployment.md](docs/guides/deployment.md) dla reverse proxy/CDN/TLS provider, konfiguracji katalogów i instrukcji rollback.
+- **Przewodnik wdrożenia**: Zob. [docs/guides/deployment.md](docs/guides/deployment.md) dla konfiguracji reverse proxy/TLS, katalogów i instrukcji rollback.
 
 ## Weryfikacja
 

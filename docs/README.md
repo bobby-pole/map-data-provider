@@ -10,7 +10,7 @@ Core architecture, operator guides, and delivery measurements for Map Lab.
 ## Guides
 
 - [3–5 Minute Provider Demo](./guides/demo.md) — local demo walkthrough using verified demo bundles, `curl`/`jq` checks, and the React/MapLibre dev-preview.
-- [VPS Deployment Guide](./guides/deployment.md) — reverse proxy + CDN/TLS provider setup, Docker Compose production deployment, bundle preparation, backups, and rollback.
+- [VPS Deployment Guide](./guides/deployment.md) — reverse proxy + TLS termination setup, Docker Compose production deployment, bundle preparation, backups, and rollback.
 - [Delivery Measurement Procedure](./guides/performance_baseline.md) — reproducible API latency, PMTiles ETag revalidation, and fixture-worker timing procedure.
 - [Contributing Guide](../CONTRIBUTING.md) — local environment setup, verification gates (`verify:pre-push` and `verify:provider`), and repository conventions.
 

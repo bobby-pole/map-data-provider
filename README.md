@@ -233,7 +233,7 @@ The Node runtime path accepts a `provider_aoi_request/v2` point/radius or admini
 
 ## Production deployment and live demo
 
-Map Lab is deployed as a single multi-stage container behind the VPS reverse proxy instance at **`maplab.robertlacheta.pl`**.
+Map Lab is deployed as a single multi-stage container behind a reverse proxy at **`https://maplab.robertlacheta.pl`**.
 
 ### Runtime-acquisition policy
 
@@ -278,7 +278,7 @@ No endpoint is advertised as fastest without comparable source measurements.
 - **Geospatial Engine**: Python 3.14 + `uv` CLI worker handles offline data preparation and startup bootstrap.
 - **External snapshot**: The full Rybnik snapshot is an operator-provisioned, checksum-verified demo bundle, not data committed to Git. The container validates and atomically promotes it to prepared storage before serving requests.
 - **Runtime boundary**: The public demo can demonstrate one coalesced, cache-first bounded request. Local `local_bounded` and authenticated `trusted` modes allow up to 30 km or up to three adjacent PRG counties and may build PMTiles for Steel Sentinel. The VPS never becomes an open Overpass proxy.
-- **Deployment Guide**: See [docs/guides/deployment.md](docs/guides/deployment.md) for reverse proxy/CDN/TLS provider, directory setup, and rollback instructions.
+- **Deployment Guide**: See [docs/guides/deployment.md](docs/guides/deployment.md) for reverse-proxy/TLS termination, directory setup, and rollback instructions.
 
 ## Verification
 

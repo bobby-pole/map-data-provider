@@ -4,6 +4,7 @@ import path from "node:path";
 import express from "express";
 
 import { createRateLimiter, type RateLimitOptions } from "./middleware/rateLimit.js";
+import { createSecurityHeadersMiddleware } from "./middleware/securityHeaders.js";
 import { createAoiRouter } from "./routes/aoi.js";
 import { createDeliveryMetricsRouter } from "./routes/deliveryMetrics.js";
 import { healthRouter } from "./routes/health.js";
@@ -25,6 +26,8 @@ export function createApp(options?: {
   rateLimitOptions?: RateLimitOptions;
 }) {
   const app = express();
+  app.disable("x-powered-by");
+  app.use(createSecurityHeadersMiddleware());
   // Production receives requests only through the local Nginx Proxy Manager
   // network. Trust those private proxy hops so rate limiting distinguishes
   // actual clients instead of treating every request as the proxy container.

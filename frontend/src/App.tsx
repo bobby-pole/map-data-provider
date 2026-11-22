@@ -1,6 +1,6 @@
 import "./index.css";
 
-import { lazy, Suspense, useCallback, useMemo, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from "react";
 
 import { DEFAULT_AOI_OUTLINE, displayedAoiOutlines } from "./aoiSettings";
 import type { ActivityEvent } from "./components/ActivityWindow";
@@ -76,6 +76,12 @@ export default function App() {
   const pickingAoi = useAoiStore((s) => s.pickingAoi);
   const setPickingAoi = useAoiStore((s) => s.setPickingAoi);
   const pickPoint = useAoiStore((s) => s.pickPoint);
+  const runtimeCapability = useAoiStore((s) => s.runtimeCapability);
+  const loadRuntimeCapability = useAoiStore((s) => s.loadRuntimeCapability);
+
+  useEffect(() => {
+    void loadRuntimeCapability();
+  }, [loadRuntimeCapability]);
 
   const isDefaultAoiActive =
     !runtimeResult ||
@@ -327,6 +333,7 @@ export default function App() {
                   sourceAvailability={sourceAvailability}
                   issues={issues}
                   updateReview={updateReview}
+                  readOnlyReview={runtimeCapability?.mode === "demo_fixed_aoi"}
                 />
               )}
               {activePanel === "legend" && (

@@ -167,4 +167,35 @@ describe("AOI issue evidence and review routes", () => {
       .issues.find((item) => item.id === "DQ-MANUAL-SEEDS-NON-AUTHORITATIVE");
     expect(issue?.review.status).toBe("open");
   });
+
+  it("blocks issue review mutations in public demo mode and unauthenticated trusted mode", async () => {
+    const demoApp = createApp({
+      runtimePolicy: { mode: "demo_fixed_aoi" },
+      issueStorePaths: { reviewsPath: reviewStorePath },
+      providerDataPaths: { cacheRoot: fixtureCacheDir },
+    });
+    const demoResponse = await request(demoApp)
+      .patch("/api/aoi/rybnik_35km/issues/DQ-MANUAL-SEEDS-NON-AUTHORITATIVE/review")
+      .send({ status: "acknowledged", expected_updated_at: null });
+
+    expect(demoResponse.status).toBe(403);
+    expect(providerErrorSchema.parse(demoResponse.body).error).toBe("demo_aoi_restricted");
+
+    const trustedApp = createApp({
+      runtimePolicy: { mode: "trusted", trustedToken: "fixture-service-token" },
+      issueStorePaths: { reviewsPath: reviewStorePath },
+      providerDataPaths: { cacheRoot: fixtureCacheDir },
+    });
+    const unauth = await request(trustedApp)
+      .patch("/api/aoi/rybnik_35km/issues/DQ-MANUAL-SEEDS-NON-AUTHORITATIVE/review")
+      .send({ status: "acknowledged", expected_updated_at: null });
+    expect(unauth.status).toBe(401);
+    expect(providerErrorSchema.parse(unauth.body).error).toBe("runtime_unauthorized");
+
+    const auth = await request(trustedApp)
+      .patch("/api/aoi/rybnik_35km/issues/DQ-MANUAL-SEEDS-NON-AUTHORITATIVE/review")
+      .set("authorization", "Bearer fixture-service-token")
+      .send({ status: "acknowledged", expected_updated_at: null });
+    expect(auth.status).toBe(200);
+  });
 });

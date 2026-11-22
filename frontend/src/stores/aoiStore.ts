@@ -1,134 +1,24 @@
-import type { Geometry } from "geojson";
 import { create } from "zustand";
 
 import {
-  administrativeSelectionZoom,
-  buildRuntimeRequest,
-  isPointRadiusValid,
   MAX_CUSTOM_RADIUS_M,
   MAX_DEMO_RADIUS_M,
   parseCoordinate,
   pointRadiusOutline,
   pointRadiusZoom,
   providerResponseMessage,
-  runtimeRequestError,
 } from "../aoiSettings";
-import type { ActivityEvent } from "../components/ActivityWindow";
-import type {
-  AdministrativeBoundary,
-  AdministrativeCatalog,
-  ProviderRuntimeJob,
-  ProviderRuntimeResponse,
-  RuntimeCapability,
-  RuntimeCategory,
-  RuntimePreflight,
-} from "../types/api";
+import type { AdministrativeCatalog, RuntimeCapability } from "../types/api";
+import {
+  ALL_RUNTIME_CATEGORIES,
+  type AoiState,
+  executeRuntimePreparation,
+  pollRuntimeJob,
+  triggerBoundaryFetch,
+  updatePointRadiusDraft,
+} from "./aoiStoreHelpers";
 
-export const ALL_RUNTIME_CATEGORIES: RuntimeCategory[] = [
-  "power",
-  "emergency",
-  "public",
-  "transport",
-  "bridges",
-  "water",
-  "gas",
-  "sewer",
-  "industrial",
-  "telecom",
-  "district_heating",
-];
-
-export type AoiState = {
-  catalog: AdministrativeCatalog | null;
-  catalogLoading: boolean;
-  runtimeCapability: RuntimeCapability | null;
-  runtimeCapabilityLoading: boolean;
-  mode: "point_radius" | "administrative_selection";
-  longitude: string;
-  latitude: string;
-  radius: string;
-  unitIds: string[];
-  selectedCategories: RuntimeCategory[];
-  busy: boolean;
-  error: string | null;
-  preflight: RuntimePreflight | null;
-  boundaryMessage: string | null;
-  progress: ProviderRuntimeJob | null;
-  result: ProviderRuntimeResponse | null;
-  draftAoiOutline: Geometry | null;
-  aoiViewport: { geometry: Geometry; zoom: number } | null;
-  pickingAoi: boolean;
-  mapPoint: { longitude: number; latitude: number } | null;
-
-  // Actions
-  loadCatalog: (
-    onActivity: (event: Omit<ActivityEvent, "id" | "timestamp">) => void,
-  ) => Promise<void>;
-  loadRuntimeCapability: () => Promise<void>;
-  setMode: (mode: "point_radius" | "administrative_selection") => void;
-  setLongitude: (longitude: string) => void;
-  setLatitude: (latitude: string) => void;
-  setRadius: (radius: string) => void;
-  setUnitIds: (unitIds: string[]) => void;
-  toggleCategory: (category: RuntimeCategory, checked: boolean) => void;
-  toggleAllCategories: () => void;
-  setPickingAoi: (picking: boolean) => void;
-  pickPoint: (
-    point: { longitude: number; latitude: number },
-    onActivity: (event: Omit<ActivityEvent, "id" | "timestamp">) => void,
-  ) => void;
-  applyAoi: (
-    onActivity: (event: Omit<ActivityEvent, "id" | "timestamp">) => void,
-    onApplied: (result: ProviderRuntimeResponse) => void,
-  ) => Promise<void>;
-  applyDemoAoi: (
-    onActivity: (event: Omit<ActivityEvent, "id" | "timestamp">) => void,
-    onApplied: (result: ProviderRuntimeResponse) => void,
-  ) => Promise<void>;
-};
-
-let boundaryAbortController: AbortController | null = null;
-let boundaryDebounceTimer: ReturnType<typeof setTimeout> | null = null;
-
-function updatePointRadiusDraft(
-  set: (state: Partial<AoiState> | ((state: AoiState) => Partial<AoiState>)) => void,
-  get: () => AoiState,
-) {
-  const { longitude, latitude, radius } = get();
-  if (!radius.trim()) {
-    set({ draftAoiOutline: null, aoiViewport: null, mapPoint: null });
-    return;
-  }
-  const rad = parseCoordinate(radius);
-  const maxRadius =
-    get().runtimeCapability?.mode === "demo_fixed_aoi" ? MAX_DEMO_RADIUS_M : MAX_CUSTOM_RADIUS_M;
-  if (Number.isFinite(rad) && rad > maxRadius) {
-    set({
-      draftAoiOutline: null,
-      aoiViewport: null,
-      error: `Radius exceeds maximum allowed limit of ${maxRadius / 1000} km (${maxRadius} m).`,
-    });
-    return;
-  }
-  if (isPointRadiusValid(longitude, latitude, radius, maxRadius)) {
-    const lon = parseCoordinate(longitude);
-    const lat = parseCoordinate(latitude);
-    const outline = pointRadiusOutline(lon, lat, rad);
-    const zoom = pointRadiusZoom(rad);
-    set({
-      mapPoint: { longitude: lon, latitude: lat },
-      draftAoiOutline: outline,
-      aoiViewport: outline ? { geometry: outline, zoom } : null,
-      error: null,
-    });
-  } else {
-    set({
-      draftAoiOutline: null,
-      aoiViewport: null,
-      mapPoint: null,
-    });
-  }
-}
+export { ALL_RUNTIME_CATEGORIES, type AoiState, pollRuntimeJob };
 
 export const useAoiStore = create<AoiState>((set, get) => ({
   catalog: null,
@@ -216,7 +106,7 @@ export const useAoiStore = create<AoiState>((set, get) => ({
       set({ draftAoiOutline: null, aoiViewport: null, boundaryMessage: null, mapPoint: null });
       const { unitIds } = get();
       if (unitIds.length > 0) {
-        void triggerBoundaryFetch(unitIds, set, get);
+        triggerBoundaryFetch(unitIds, set, get);
       }
     }
   },
@@ -248,7 +138,7 @@ export const useAoiStore = create<AoiState>((set, get) => ({
       if (unitIds.length === 0) {
         set({ draftAoiOutline: null, aoiViewport: null, boundaryMessage: null });
       } else {
-        void triggerBoundaryFetch(unitIds, set, get);
+        triggerBoundaryFetch(unitIds, set, get);
       }
     }
   },
@@ -304,16 +194,7 @@ export const useAoiStore = create<AoiState>((set, get) => ({
   },
 
   applyAoi: async (onActivity, onApplied) => {
-    const {
-      mode,
-      longitude,
-      latitude,
-      radius,
-      unitIds,
-      selectedCategories,
-      busy,
-      runtimeCapability,
-    } = get();
+    const { busy, runtimeCapability } = get();
     if (busy) {
       return;
     }
@@ -321,268 +202,48 @@ export const useAoiStore = create<AoiState>((set, get) => ({
       await get().applyDemoAoi(onActivity, onApplied);
       return;
     }
-    set({ busy: true, error: null, preflight: null, progress: null, result: null });
-    try {
-      const runtimeRequest = buildRuntimeRequest(
-        mode,
-        { longitude, latitude, radius, unitIds },
-        selectedCategories,
-        undefined,
-        MAX_CUSTOM_RADIUS_M,
-      );
-      onActivity({
-        phase: "validation",
-        message: "Validating AOI geometry and provider limits before acquisition.",
-      });
-      const preflightResponse = await fetch("/api/aoi/runtime-requests/preflight", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(runtimeRequest),
-      });
-      if (!preflightResponse.ok) {
-        throw new Error(await runtimeRequestError(preflightResponse));
-      }
-      const nextPreflight = (await preflightResponse.json()) as RuntimePreflight;
-      set({ preflight: nextPreflight, draftAoiOutline: nextPreflight.aoi.geometry });
-      if (nextPreflight.status === "blocked") {
-        onActivity({ phase: "error", message: nextPreflight.message });
-        return;
-      }
-      onActivity({
-        phase: "cache",
-        message: "AOI passed preflight; queued a cache-first provider preparation job.",
-      });
-      const response = await fetch("/api/aoi/runtime-jobs", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(runtimeRequest),
-      });
-      if (!response.ok) {
-        throw new Error(await runtimeRequestError(response));
-      }
-      const initialJob = (await response.json()) as ProviderRuntimeJob;
-      set({ progress: initialJob });
-
-      const res = await pollRuntimeJob(
-        initialJob,
-        (job) => set({ progress: job }),
-        onActivity,
-        (partial) => {
-          set({ result: partial });
-          onApplied(partial);
-        },
-      );
-      set({ result: res });
-      const failed = res.outcomes.filter((outcome) => outcome.status === "failed");
-      onActivity({
-        phase: res.request_result === "cache" ? "cache" : "publication",
-        message: failed.length
-          ? `Published a partial AOI snapshot. ${failed.map((outcome) => `${outcome.domain}: ${outcome.detail}`).join(" ")}`
-          : res.request_result === "cache"
-            ? "Reused the verified local AOI snapshot."
-            : "Published a new bounded AOI snapshot.",
-      });
-      onApplied(res);
-    } catch (reason) {
-      const message = reason instanceof Error ? reason.message : String(reason);
-      const output = get().result
-        ? `AOI preparation stopped. Published domains remain available on the map. ${message}`
-        : message.startsWith("No new AOI snapshot was published;")
-          ? message
-          : `AOI preparation could not be completed. No new snapshot was published; the existing map was left unchanged. ${message}`;
-      set({ error: output });
-      onActivity({ phase: "error", message: output });
-    } finally {
-      set({ busy: false });
-    }
+    await executeRuntimePreparation({
+      set,
+      get,
+      onActivity,
+      onApplied,
+      catalogUnits: undefined,
+      maxRadiusM: MAX_CUSTOM_RADIUS_M,
+      validationMessage: "Validating AOI geometry and provider limits before acquisition.",
+      queuedMessage: "AOI passed preflight; queued a cache-first provider preparation job.",
+      jobEndpoint: "/api/aoi/runtime-jobs",
+      partialPrefix: "Published a partial AOI snapshot.",
+      cachedMessage: "Reused the verified local AOI snapshot.",
+      refreshedMessage: "Published a new bounded AOI snapshot.",
+      stoppedPrefix: "AOI preparation stopped. Published domains remain available on the map.",
+      failedPrefix:
+        "AOI preparation could not be completed. No new snapshot was published; the existing map was left unchanged.",
+      preserveNoSnapshotPrefix: true,
+    });
   },
 
   applyDemoAoi: async (onActivity, onApplied) => {
-    const {
-      busy,
-      runtimeCapability,
-      mode,
-      longitude,
-      latitude,
-      radius,
-      unitIds,
-      selectedCategories,
-      catalog,
-    } = get();
+    const { busy, runtimeCapability, selectedCategories, catalog } = get();
     const template = runtimeCapability?.demo_template;
     if (busy || !template) {
       return;
     }
-    set({ busy: true, error: null, preflight: null, progress: null, result: null });
-    try {
-      onActivity({
-        phase: "validation",
-        message: `Validating the Poland-bounded demo AOI before preparing ${selectedCategories.length} selected domain${selectedCategories.length === 1 ? "" : "s"}.`,
-      });
-      const runtimeRequest = buildRuntimeRequest(
-        mode,
-        { longitude, latitude, radius, unitIds },
-        selectedCategories,
-        catalog?.units,
-        template.max_radius_m,
-      );
-      const preflightResponse = await fetch("/api/aoi/runtime-requests/preflight", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(runtimeRequest),
-      });
-      if (!preflightResponse.ok) {
-        throw new Error(await runtimeRequestError(preflightResponse));
-      }
-      const nextPreflight = (await preflightResponse.json()) as RuntimePreflight;
-      set({ preflight: nextPreflight, draftAoiOutline: nextPreflight.aoi.geometry });
-      if (nextPreflight.status === "blocked") {
-        onActivity({ phase: "error", message: nextPreflight.message });
-        return;
-      }
-      const response = await fetch(`/api/aoi/demo-acquisitions/${template.id}`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(runtimeRequest),
-      });
-      if (!response.ok) {
-        throw new Error(await runtimeRequestError(response));
-      }
-      const initialJob = (await response.json()) as ProviderRuntimeJob;
-      set({ progress: initialJob });
-      const res = await pollRuntimeJob(
-        initialJob,
-        (job) => set({ progress: job }),
-        onActivity,
-        (partial) => {
-          set({ result: partial });
-          onApplied(partial);
-        },
-      );
-      set({ result: res });
-      const failed = res.outcomes.filter((outcome) => outcome.status === "failed");
-      onActivity({
-        phase: res.request_result === "cache" ? "cache" : "publication",
-        message: failed.length
-          ? `Published a partial demo snapshot. ${failed.map((outcome) => `${outcome.domain}: ${outcome.detail}`).join(" ")}`
-          : res.request_result === "cache"
-            ? "Reused the verified demo AOI snapshot."
-            : "Published a refreshed demo AOI snapshot.",
-      });
-      onApplied(res);
-    } catch (reason) {
-      const message = reason instanceof Error ? reason.message : String(reason);
-      const output = get().result
-        ? `Demo AOI preparation stopped. Published domains remain available on the map. ${message}`
-        : `Demo AOI preparation could not be completed. No new snapshot was published; the existing map was left unchanged. ${message}`;
-      set({ error: output });
-      onActivity({ phase: "error", message: output });
-    } finally {
-      set({ busy: false });
-    }
+    await executeRuntimePreparation({
+      set,
+      get,
+      onActivity,
+      onApplied,
+      catalogUnits: catalog?.units,
+      maxRadiusM: template.max_radius_m,
+      validationMessage: `Validating the Poland-bounded demo AOI before preparing ${selectedCategories.length} selected domain${selectedCategories.length === 1 ? "" : "s"}.`,
+      jobEndpoint: `/api/aoi/demo-acquisitions/${template.id}`,
+      partialPrefix: "Published a partial demo snapshot.",
+      cachedMessage: "Reused the verified demo AOI snapshot.",
+      refreshedMessage: "Published a refreshed demo AOI snapshot.",
+      stoppedPrefix: "Demo AOI preparation stopped. Published domains remain available on the map.",
+      failedPrefix:
+        "Demo AOI preparation could not be completed. No new snapshot was published; the existing map was left unchanged.",
+      preserveNoSnapshotPrefix: false,
+    });
   },
 }));
-
-function triggerBoundaryFetch(
-  unitIds: string[],
-  set: (partial: Partial<AoiState> | ((state: AoiState) => Partial<AoiState>)) => void,
-  get: () => AoiState,
-) {
-  if (boundaryDebounceTimer) {
-    clearTimeout(boundaryDebounceTimer);
-  }
-  if (boundaryAbortController) {
-    boundaryAbortController.abort();
-  }
-
-  const controller = new AbortController();
-  boundaryAbortController = controller;
-
-  boundaryDebounceTimer = setTimeout(() => {
-    void (async () => {
-      try {
-        const response = await fetch("/api/aoi/catalog/boundary", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ unit_ids: unitIds }),
-          signal: controller.signal,
-        });
-        if (!response.ok) {
-          throw new Error(
-            await providerResponseMessage(response, "Selected PRG boundary could not be resolved."),
-          );
-        }
-        const boundary = (await response.json()) as AdministrativeBoundary;
-        if (!controller.signal.aborted) {
-          const catalogUnits = get().catalog?.units ?? [];
-          set({
-            draftAoiOutline: boundary.aoi.geometry,
-            aoiViewport: {
-              geometry: boundary.aoi.geometry,
-              zoom: administrativeSelectionZoom(unitIds, catalogUnits),
-            },
-            boundaryMessage: boundary.message,
-          });
-        }
-      } catch (err: unknown) {
-        if (err instanceof DOMException && err.name === "AbortError") {
-          return;
-        }
-        console.warn("Could not fetch administrative boundary preview:", err);
-      }
-    })();
-  }, 350);
-}
-
-export async function pollRuntimeJob(
-  initial: ProviderRuntimeJob,
-  onProgress: (job: ProviderRuntimeJob) => void,
-  onActivity: (event: Omit<ActivityEvent, "id" | "timestamp">) => void,
-  onPublished?: (result: ProviderRuntimeResponse) => void,
-): Promise<ProviderRuntimeResponse> {
-  let job = initial;
-  let publishedAt = "";
-  const publishPartial = () => {
-    if (job.partial_result && job.partial_result.cached_at !== publishedAt) {
-      publishedAt = job.partial_result.cached_at;
-      onPublished?.(job.partial_result);
-    }
-  };
-  publishPartial();
-  let announced = "";
-  const deadline = Date.now() + 9 * 60 * 1000;
-  let delayMs = 1_000;
-  while (job.state !== "succeeded" && job.state !== "failed") {
-    if (Date.now() >= deadline) {
-      throw new Error(
-        "AOI status monitoring exceeded nine minutes. The server job may still be running; check its status before retrying.",
-      );
-    }
-    await new Promise((resolve) => setTimeout(resolve, delayMs));
-    delayMs = Math.min(delayMs * 1.5, 5_000);
-    const response = await fetch(`/api/aoi/runtime-jobs/${job.job_id}`, {
-      signal: AbortSignal.timeout(Math.min(15_000, Math.max(1, deadline - Date.now()))),
-    });
-    if (!response.ok) {
-      throw new Error(await runtimeRequestError(response));
-    }
-    job = (await response.json()) as ProviderRuntimeJob;
-    onProgress(job);
-    publishPartial();
-    const key = `${job.completed_domains}:${job.active_domain ?? ""}`;
-    if (job.active_domain && key !== announced) {
-      announced = key;
-      onActivity({
-        phase: "acquisition",
-        message: `Preparing ${job.active_domain}: ${job.completed_domains}/${job.total_domains} domains complete.`,
-      });
-    }
-  }
-  if (job.state === "failed") {
-    throw new Error(job.error ?? "AOI preparation job failed unexpectedly.");
-  }
-  if (!job.result) {
-    throw new Error("AOI preparation finished without a result payload.");
-  }
-  return job.result;
-}

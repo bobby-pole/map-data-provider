@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import {
-  administrativeSelectionRoots,
   MAX_CUSTOM_RADIUS_M,
   MAX_DEMO_RADIUS_M,
   parseCoordinate,
@@ -9,9 +8,40 @@ import {
   validatePointRadiusInput,
 } from "../aoiSettings";
 import { ALL_RUNTIME_CATEGORIES, useAoiStore } from "../stores/aoiStore";
-import type { AdministrativeUnit, ProviderRuntimeJob, ProviderRuntimeResponse } from "../types/api";
+import type { ProviderRuntimeResponse } from "../types/api";
 import type { ActivityEvent } from "./ActivityWindow";
+import { AdministrativeTree } from "./aoi/AdministrativeTree";
+import { RuntimeOutcomeSummary, RuntimeProgress } from "./aoi/RuntimeOutcomeSummary";
 import { RuntimeAcquisitionEvidencePanel } from "./RuntimeAcquisitionEvidencePanel";
+
+export { RuntimeOutcomeSummary };
+
+function useTimedBubble<T>(durationMs = 3500): [T | null, (value: T | null) => void] {
+  const [value, setValue] = useState<T | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const show = (next: T | null) => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+    setValue(next);
+    if (next !== null) {
+      timerRef.current = setTimeout(() => setValue(null), durationMs);
+    }
+  };
+
+  useEffect(
+    () => () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    },
+    [],
+  );
+
+  return [value, show];
+}
 
 type Props = {
   onActivity: (event: Omit<ActivityEvent, "id" | "timestamp">) => void;
@@ -56,31 +86,14 @@ export function AoiSettings({
   const result = useAoiStore((s) => s.result);
   const applyAoi = useAoiStore((s) => s.applyAoi);
 
-  const [latBubble, setLatBubble] = useState<string | null>(null);
-  const latTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const [lonBubble, setLonBubble] = useState<string | null>(null);
-  const lonTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const [radiusBubble, setRadiusBubble] = useState<string | null>(null);
-  const radiusTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
+  const [latBubble, setLatBubble] = useTimedBubble<string>();
+  const [lonBubble, setLonBubble] = useTimedBubble<string>();
+  const [radiusBubble, setRadiusBubble] = useTimedBubble<string>();
   const [lastClickedUnitId, setLastClickedUnitId] = useState<string | null>(null);
-  const [treeBubble, setTreeBubble] = useState<{ unitId: string; message: string } | null>(null);
-  const treeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [treeBubble, setTreeBubble] = useTimedBubble<{ unitId: string; message: string }>();
+  const [prepareBubble, setPrepareBubble] = useTimedBubble<string>();
 
-  const [prepareBubble, setPrepareBubble] = useState<string | null>(null);
-  const prepareTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const showTreeError = (unitId: string, message: string) => {
-    if (treeTimerRef.current) {
-      clearTimeout(treeTimerRef.current);
-    }
-    setTreeBubble({ unitId, message });
-    treeTimerRef.current = setTimeout(() => {
-      setTreeBubble(null);
-    }, 3500);
-  };
+  const showTreeError = (unitId: string, message: string) => setTreeBubble({ unitId, message });
 
   useEffect(() => {
     void loadRuntimeCapability();
@@ -147,15 +160,8 @@ export function AoiSettings({
   const onLatitudeChange = (val: string) => {
     setLatitude(val);
     const parsed = parseCoordinate(val);
-    if (latTimerRef.current) {
-      clearTimeout(latTimerRef.current);
-    }
-
     if (val.trim().length > 0 && (!Number.isFinite(parsed) || parsed < -90 || parsed > 90)) {
       setLatBubble("Enter a valid latitude between -90 and 90 (e.g. 50.102).");
-      latTimerRef.current = setTimeout(() => {
-        setLatBubble(null);
-      }, 3500);
     } else {
       setLatBubble(null);
     }
@@ -169,15 +175,8 @@ export function AoiSettings({
   const onLongitudeChange = (val: string) => {
     setLongitude(val);
     const parsed = parseCoordinate(val);
-    if (lonTimerRef.current) {
-      clearTimeout(lonTimerRef.current);
-    }
-
     if (val.trim().length > 0 && (!Number.isFinite(parsed) || parsed < -180 || parsed > 180)) {
       setLonBubble("Enter a valid longitude between -180 and 180 (e.g. 18.546).");
-      lonTimerRef.current = setTimeout(() => {
-        setLonBubble(null);
-      }, 3500);
     } else {
       setLonBubble(null);
     }
@@ -191,20 +190,10 @@ export function AoiSettings({
   const onRadiusChange = (val: string) => {
     setRadius(val);
     const parsed = parseCoordinate(val);
-    if (radiusTimerRef.current) {
-      clearTimeout(radiusTimerRef.current);
-    }
-
     if (val.trim().length > 0 && Number.isFinite(parsed) && parsed > maxRadiusM) {
       setRadiusBubble(`Radius exceeds maximum allowed limit of ${maxRadiusM / 1000} km.`);
-      radiusTimerRef.current = setTimeout(() => {
-        setRadiusBubble(null);
-      }, 3500);
     } else if (val.trim().length > 0 && (!Number.isFinite(parsed) || parsed <= 0)) {
       setRadiusBubble("Enter a valid positive radius in meters.");
-      radiusTimerRef.current = setTimeout(() => {
-        setRadiusBubble(null);
-      }, 3500);
     } else {
       setRadiusBubble(null);
     }
@@ -222,12 +211,6 @@ export function AoiSettings({
         showTreeError(lastClickedUnitId, validation.error);
       } else {
         setPrepareBubble(validation.error);
-        if (prepareTimerRef.current) {
-          clearTimeout(prepareTimerRef.current);
-        }
-        prepareTimerRef.current = setTimeout(() => {
-          setPrepareBubble(null);
-        }, 3500);
       }
       return;
     }
@@ -482,482 +465,5 @@ export function AoiSettings({
         refreshToken={result?.cached_at ?? null}
       />
     </section>
-  );
-}
-
-export function RuntimeOutcomeSummary({ result }: { result: ProviderRuntimeResponse }) {
-  const failed = result.outcomes.filter((outcome) => outcome.status === "failed");
-  const pending = result.outcomes.filter((outcome) => outcome.status === "pending_qualification");
-  if (pending.length) {
-    return (
-      <p className="muted runtimeOutcomeSummary">
-        Partial snapshot: completed domains are available on the map. {pending.length} domains are
-        still pending.
-      </p>
-    );
-  }
-  if (!failed.length) {
-    return (
-      <p className="muted runtimeOutcomeSummary">
-        All selected domains have a published provider outcome.
-      </p>
-    );
-  }
-  return (
-    <section className="runtimeOutcomeSummary partialSnapshot" aria-live="polite">
-      <strong>Partial snapshot published</strong>
-      <p>
-        The completed domains are available on the map. Retry only the domains below; their
-        completed neighbours will stay in this snapshot.
-      </p>
-      <ul>
-        {failed.map((outcome) => (
-          <li key={outcome.domain}>
-            <strong>{outcome.domain}</strong>
-            <span>
-              {outcome.failure_reason === "timeout" ? "Timed out" : "Acquisition failed"}:{" "}
-              {outcome.detail}
-            </span>
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
-}
-
-function RuntimeProgress({ job }: { job: ProviderRuntimeJob }) {
-  const percent = job.total_domains
-    ? Math.round((job.completed_domains / job.total_domains) * 100)
-    : 0;
-  const active = runtimeProgressMessage(job);
-  return (
-    <section className="runtimeProgress" aria-live="polite">
-      <div>
-        <strong>{active}</strong>
-        <span>
-          {job.completed_domains} / {job.total_domains} domains
-        </span>
-      </div>
-      <div
-        className="runtimeProgressTrack"
-        role="progressbar"
-        aria-valuemin={0}
-        aria-valuemax={job.total_domains}
-        aria-valuenow={job.completed_domains}
-      >
-        <i style={{ width: `${percent}%` }} />
-      </div>
-      <p>
-        {job.queried_feature_count.toLocaleString()} received ·{" "}
-        {job.accepted_feature_count.toLocaleString()} accepted
-      </p>
-    </section>
-  );
-}
-
-function runtimeProgressMessage(job: ProviderRuntimeJob): string {
-  switch (job.event) {
-    case "queued":
-      return "Waiting for worker…";
-    case "cache_hit":
-      return "Found a verified local snapshot…";
-    case "started":
-      return "Preparing the selected AOI…";
-    case "domain_started":
-      return job.active_domain ? `Preparing ${job.active_domain}…` : "Preparing a provider domain…";
-    case "domain_building":
-      return job.active_domain
-        ? `Building ${job.active_domain} map…`
-        : "Building map presentation…";
-    case "domain_completed":
-      return job.active_domain
-        ? `Preparing ${job.active_domain}…`
-        : `Completed ${job.completed_domains} of ${job.total_domains} domains…`;
-    case "published":
-      return "Published the AOI snapshot.";
-    case "failed":
-      return "AOI preparation failed.";
-  }
-}
-
-type AdministrativeBranch = {
-  unit: AdministrativeUnit;
-  counties: Array<{ unit: AdministrativeUnit; gminas: AdministrativeUnit[] }>;
-};
-
-function AdministrativeTree({
-  unitsByKind,
-  unitIds,
-  maxCounties = 3,
-  disabled = false,
-  treeBubble,
-  onShowTreeError,
-  onSelectUnit,
-  onChange,
-}: {
-  unitsByKind: {
-    voivodeship: AdministrativeUnit[];
-    county: AdministrativeUnit[];
-    gmina: AdministrativeUnit[];
-  };
-  unitIds: string[];
-  maxCounties?: number;
-  disabled?: boolean;
-  treeBubble?: { unitId: string; message: string } | null;
-  onShowTreeError: (unitId: string, message: string) => void;
-  onSelectUnit: (unitId: string) => void;
-  onChange: (value: string[]) => void;
-}) {
-  const [expandedVoivodeships, setExpandedVoivodeships] = useState<string[]>([]);
-  const [expandedCounties, setExpandedCounties] = useState<string[]>([]);
-  const branches = useMemo(() => buildAdministrativeBranches(unitsByKind), [unitsByKind]);
-  const allUnits = useMemo(
-    () => [...unitsByKind.voivodeship, ...unitsByKind.county, ...unitsByKind.gmina],
-    [unitsByKind],
-  );
-  const byId = useMemo(() => new Map(allUnits.map((u) => [u.id, u])), [allUnits]);
-
-  const selectedRoots = administrativeSelectionRoots(unitIds, allUnits);
-  const activeRoot = selectedRoots.length === 1 ? selectedRoots[0] : null;
-
-  const involvedCounties = useMemo(() => {
-    const set = new Set<string>();
-    for (const id of unitIds) {
-      const u = byId.get(id);
-      if (!u) {
-        continue;
-      }
-      if (u.kind === "county") {
-        set.add(id);
-      } else if (u.kind === "gmina" && u.parent_id) {
-        set.add(u.parent_id);
-      }
-    }
-    return set;
-  }, [unitIds, byId]);
-
-  const setExpanded = (
-    id: string,
-    open: boolean,
-    setter: (update: (current: string[]) => string[]) => void,
-  ) =>
-    setter((current) =>
-      open ? [...new Set([...current, id])] : current.filter((item) => item !== id),
-    );
-
-  const toggle = (
-    branch: AdministrativeBranch,
-    county: { unit: AdministrativeUnit; gminas: AdministrativeUnit[] } | null,
-    gmina: AdministrativeUnit | null,
-    checked: boolean,
-  ) => {
-    if (disabled) {
-      return;
-    }
-    const targetId = gmina ? gmina.id : county ? county.unit.id : branch.unit.id;
-    onSelectUnit(targetId);
-    onChange(nextTreeSelection(unitIds, allUnits, branch, county, gmina, checked));
-  };
-
-  return (
-    <section className="aoiUnits administrativeTree" aria-label="Administrative PRG tree">
-      <p className="muted">
-        Expand a voivodeship branch to select up to {maxCounties}{" "}
-        {maxCounties === 1 ? "county or its gminas." : "adjacent counties or their gminas."}
-      </p>
-      {branches.map((branch) => {
-        const rootDisabled = disabled || Boolean(activeRoot && activeRoot !== branch.unit.id);
-        return (
-          <details
-            className="administrativeBranch"
-            key={branch.unit.id}
-            open={expandedVoivodeships.includes(branch.unit.id)}
-            onToggle={(event) =>
-              setExpanded(branch.unit.id, event.currentTarget.open, setExpandedVoivodeships)
-            }
-          >
-            <summary>
-              <span>
-                <strong>{branch.unit.name}</strong>
-                <small>Voivodeship · PRG / TERYT {branch.unit.prg_id} (expand branch)</small>
-              </span>
-            </summary>
-            {expandedVoivodeships.includes(branch.unit.id) && (
-              <div className="treeChildren">
-                {branch.counties.map((county) => {
-                  const countyLeafIds = county.gminas.map((gmina) => gmina.id);
-                  const countySelected =
-                    unitIds.includes(county.unit.id) ||
-                    (countyLeafIds.length > 0 && countyLeafIds.every((id) => unitIds.includes(id)));
-                  const countyMixed =
-                    !countySelected && countyLeafIds.some((id) => unitIds.includes(id));
-
-                  const canSelectCounty =
-                    !rootDisabled &&
-                    (involvedCounties.size < maxCounties || involvedCounties.has(county.unit.id));
-                  const countyToggleDisabled = disabled || !canSelectCounty;
-
-                  const handleCountyClick = (e: React.MouseEvent) => {
-                    onSelectUnit(county.unit.id);
-                    if (countyToggleDisabled && !countySelected) {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      if (rootDisabled) {
-                        onShowTreeError(
-                          county.unit.id,
-                          "All selected units must belong to the same voivodeship.",
-                        );
-                      } else {
-                        onShowTreeError(
-                          county.unit.id,
-                          `Maximum ${maxCounties} ${maxCounties === 1 ? "county" : "adjacent counties"} can be selected.`,
-                        );
-                      }
-                    }
-                  };
-
-                  return (
-                    <details
-                      className="administrativeBranch countyBranch"
-                      key={county.unit.id}
-                      open={expandedCounties.includes(county.unit.id)}
-                      onToggle={(event) =>
-                        setExpanded(county.unit.id, event.currentTarget.open, setExpandedCounties)
-                      }
-                    >
-                      <summary className="contextualAnchor" onClick={handleCountyClick}>
-                        {treeBubble?.unitId === county.unit.id && (
-                          <div className="contextualBubble" role="alert">
-                            <span>⚠️</span>
-                            <span>{treeBubble.message}</span>
-                          </div>
-                        )}
-                        <TreeToggle
-                          label={`Select ${county.unit.name} county`}
-                          checked={countySelected}
-                          mixed={countyMixed}
-                          disabled={countyToggleDisabled}
-                          onChange={(checked) => toggle(branch, county, null, checked)}
-                          onClick={handleCountyClick}
-                        />
-                        <span>
-                          <strong>{county.unit.name}</strong>
-                          <small>County · PRG / TERYT {county.unit.prg_id}</small>
-                        </span>
-                      </summary>
-                      {expandedCounties.includes(county.unit.id) && (
-                        <div className="treeChildren gminaChildren">
-                          {county.gminas.map((gmina) => {
-                            const isGminaDirectlySelected = unitIds.includes(gmina.id);
-                            const isGminaSelected = countySelected || isGminaDirectlySelected;
-                            const canSelectGmina =
-                              !rootDisabled &&
-                              (involvedCounties.size < maxCounties ||
-                                involvedCounties.has(county.unit.id));
-                            const gminaDisabled = disabled || (!isGminaSelected && !canSelectGmina);
-
-                            const handleGminaClick = (e: React.MouseEvent) => {
-                              onSelectUnit(gmina.id);
-                              if (gminaDisabled && !isGminaSelected) {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                if (rootDisabled) {
-                                  onShowTreeError(
-                                    gmina.id,
-                                    "All selected units must belong to the same voivodeship.",
-                                  );
-                                } else {
-                                  onShowTreeError(
-                                    gmina.id,
-                                    `You can select units from at most ${maxCounties} ${maxCounties === 1 ? "county" : "adjacent counties"}.`,
-                                  );
-                                }
-                              }
-                            };
-
-                            return (
-                              <label
-                                className="treeLeaf contextualAnchor"
-                                key={gmina.id}
-                                onClick={handleGminaClick}
-                              >
-                                {treeBubble?.unitId === gmina.id && (
-                                  <div className="contextualBubble" role="alert">
-                                    <span>⚠️</span>
-                                    <span>{treeBubble.message}</span>
-                                  </div>
-                                )}
-                                <input
-                                  className="treeCheck"
-                                  type="checkbox"
-                                  checked={isGminaSelected}
-                                  disabled={gminaDisabled}
-                                  aria-label={`Select ${gmina.name} gmina`}
-                                  onChange={(event) =>
-                                    toggle(branch, county, gmina, event.target.checked)
-                                  }
-                                  onClick={handleGminaClick}
-                                />
-                                <span>
-                                  <strong>{gmina.name}</strong>
-                                  <small>Gmina · PRG / TERYT {gmina.prg_id}</small>
-                                </span>
-                              </label>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </details>
-                  );
-                })}
-              </div>
-            )}
-          </details>
-        );
-      })}
-    </section>
-  );
-}
-
-function buildAdministrativeBranches(unitsByKind: {
-  voivodeship: AdministrativeUnit[];
-  county: AdministrativeUnit[];
-  gmina: AdministrativeUnit[];
-}): AdministrativeBranch[] {
-  const gminasByCounty = new Map<string, AdministrativeUnit[]>();
-  unitsByKind.gmina.forEach((gmina) =>
-    gminasByCounty.set(gmina.parent_id ?? "", [
-      ...(gminasByCounty.get(gmina.parent_id ?? "") ?? []),
-      gmina,
-    ]),
-  );
-  const countiesByVoivodeship = new Map<string, AdministrativeUnit[]>();
-  unitsByKind.county.forEach((county) =>
-    countiesByVoivodeship.set(county.parent_id ?? "", [
-      ...(countiesByVoivodeship.get(county.parent_id ?? "") ?? []),
-      county,
-    ]),
-  );
-  return [...unitsByKind.voivodeship]
-    .sort((left, right) => left.name.localeCompare(right.name, "pl"))
-    .map((unit) => ({
-      unit,
-      counties: (countiesByVoivodeship.get(unit.id) ?? [])
-        .sort((left, right) => left.name.localeCompare(right.name, "pl"))
-        .map((county) => ({
-          unit: county,
-          gminas: [...(gminasByCounty.get(county.id) ?? [])].sort((left, right) =>
-            left.name.localeCompare(right.name, "pl"),
-          ),
-        })),
-    }));
-}
-
-function nextTreeSelection(
-  current: string[],
-  allUnits: AdministrativeUnit[],
-  branch: AdministrativeBranch,
-  county: { unit: AdministrativeUnit; gminas: AdministrativeUnit[] } | null,
-  gmina: AdministrativeUnit | null,
-  checked: boolean,
-): string[] {
-  const byId = new Map(allUnits.map((u) => [u.id, u]));
-  const countyLeaves = county?.gminas.map((item) => item.id) ?? [];
-
-  const currentRoots = administrativeSelectionRoots(current, allUnits);
-  const isDifferentRoot = currentRoots.length > 0 && !currentRoots.includes(branch.unit.id);
-  const base = isDifferentRoot ? [] : current;
-
-  const involvedCounties = new Set<string>();
-  for (const id of base) {
-    const u = byId.get(id);
-    if (!u) {
-      continue;
-    }
-    if (u.kind === "county") {
-      involvedCounties.add(id);
-    } else if (u.kind === "gmina" && u.parent_id) {
-      involvedCounties.add(u.parent_id);
-    }
-  }
-
-  if (checked) {
-    if (!county) {
-      return current; // Voivodeship selection blocked
-    }
-    if (!gmina) {
-      if (!involvedCounties.has(county.unit.id) && involvedCounties.size >= 3) {
-        return current;
-      }
-      const filtered = base.filter((id) => id !== county.unit.id && !countyLeaves.includes(id));
-      return normalizedSelection([...filtered, county.unit.id]);
-    }
-    if (!involvedCounties.has(county.unit.id) && involvedCounties.size >= 3) {
-      return current;
-    }
-    if (base.includes(county.unit.id)) {
-      return base;
-    }
-    return normalizedSelection([...base, gmina.id]);
-  }
-
-  // Unchecked
-  if (!county) {
-    return current;
-  }
-  if (!gmina) {
-    return normalizedSelection(
-      current.filter((id) => id !== county.unit.id && !countyLeaves.includes(id)),
-    );
-  }
-  if (current.includes(county.unit.id)) {
-    return normalizedSelection(
-      current
-        .filter((id) => id !== county.unit.id)
-        .concat(countyLeaves.filter((id) => id !== gmina.id)),
-    );
-  }
-  return normalizedSelection(current.filter((id) => id !== gmina.id));
-}
-
-function normalizedSelection(unitIds: string[]): string[] {
-  return [...new Set(unitIds)].sort();
-}
-
-function TreeToggle({
-  label,
-  checked,
-  mixed,
-  disabled,
-  onChange,
-  onClick,
-}: {
-  label: string;
-  checked: boolean;
-  mixed: boolean;
-  disabled: boolean;
-  onChange: (checked: boolean) => void;
-  onClick?: (event: React.MouseEvent) => void;
-}) {
-  const inputRef = useRef<HTMLInputElement | null>(null);
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.indeterminate = mixed;
-    }
-  }, [mixed]);
-  return (
-    <input
-      className="treeCheck"
-      ref={inputRef}
-      type="checkbox"
-      aria-label={label}
-      checked={checked}
-      disabled={disabled}
-      onClick={(event) => {
-        event.stopPropagation();
-        onClick?.(event);
-      }}
-      onChange={(event) => onChange(event.target.checked)}
-    />
   );
 }

@@ -23,7 +23,7 @@ from geo_pipeline.domain_pack import (
     read_domain_pack,
     validate_domain_pack,
 )
-from geo_pipeline.public_services import category_for_osm_feature
+from geo_pipeline.domains.public_services import category_for_osm_feature
 
 
 def _legacy_power(root: Path) -> None:

@@ -11,7 +11,7 @@ from geo_pipeline.contracts import normalize_analytical_vector_layer
 from geo_pipeline.source_registry import guard_source_access
 
 GAS_FIXTURE = (
-    Path(__file__).resolve().parents[1]
+    Path(__file__).resolve().parents[2]
     / "data"
     / "fixtures"
     / "rybnik_35km"

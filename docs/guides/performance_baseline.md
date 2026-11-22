@@ -49,7 +49,7 @@ First prepare a current local copy of the immutable bundle and start the API:
 
 ```bash
 ./scripts/ops/pull_local_demo_bundle.sh \
-  root@VPS:/home/deploy/map-data-provider/data/bundle/rybnik_35km
+  <deploy-user>@<vps-host>:<deploy-dir>/data/bundle/rybnik_35km
 pnpm run demo:local
 ```
 
@@ -95,12 +95,12 @@ from a previous snapshot being presented as evidence for newly deployed data.
 
 ```bash
 # Measure a different locally reachable deployment.
-MDQ_MEASURE_BASE_URL=https://maplab.robertlacheta.pl pnpm run measure:demo
+MDQ_MEASURE_BASE_URL=https://<public-demo-domain> pnpm run measure:demo
 
 # When measuring a remote deployment, explicitly select the exact local copy
 # of the bundle served there.
 MDQ_MEASURE_BUNDLE_MANIFEST=/absolute/path/to/rybnik_35km/demo_bundle_manifest.json \
-  MDQ_MEASURE_BASE_URL=https://maplab.robertlacheta.pl pnpm run measure:demo
+  MDQ_MEASURE_BASE_URL=https://<public-demo-domain> pnpm run measure:demo
 
 # Use a smaller diagnostic sample; this is not a portfolio baseline.
 MDQ_MEASURE_SAMPLES=10 pnpm run measure:demo

@@ -36,7 +36,7 @@ bundle and run the API in local bounded-acquisition mode:
 
 ```bash
 ./scripts/ops/pull_local_demo_bundle.sh \
-  root@VPS:/home/deploy/map-data-provider/data/bundle/rybnik_35km
+  <deploy-user>@<vps-host>:<deploy-dir>/data/bundle/rybnik_35km
 pnpm run demo:local
 ```
 

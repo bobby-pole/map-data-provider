@@ -1,10 +1,10 @@
-import { createHash } from "node:crypto";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+import { canonicalJson, sha256Hex } from "../utils/canonicalJson.js";
 import {
   availabilityForResolvedAoi,
   getPreparedSnapshot,
@@ -218,7 +218,7 @@ async function writeSnapshot(
         domain: "power",
         status: isReady ? "ready" : "failed",
         detail: "Fixture domain",
-        manifest_sha256: isReady ? createHash("sha256").update(domainManifest).digest("hex") : null,
+        manifest_sha256: isReady ? sha256Hex(domainManifest) : null,
         readiness: isReady ? "ready" : "not_usable",
         limitations: [],
       },
@@ -226,23 +226,6 @@ async function writeSnapshot(
   };
   await writeFile(
     path.join(snapshotRoot, "snapshot_manifest.json"),
-    JSON.stringify({ ...unsigned, checksum: digest(unsigned) }),
+    JSON.stringify({ ...unsigned, checksum: sha256Hex(canonicalJson(unsigned)) }),
   );
-}
-
-function digest(value: unknown): string {
-  return createHash("sha256").update(canonicalJson(value)).digest("hex");
-}
-function canonicalJson(value: unknown): string {
-  if (Array.isArray(value)) {
-    return `[${value.map(canonicalJson).join(",")}]`;
-  }
-  if (value && typeof value === "object") {
-    const record = value as Record<string, unknown>;
-    return `{${Object.keys(record)
-      .sort()
-      .map((key) => `${JSON.stringify(key)}:${canonicalJson(record[key])}`)
-      .join(",")}}`;
-  }
-  return JSON.stringify(value);
 }

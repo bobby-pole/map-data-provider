@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 import { type Dirent } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
@@ -11,6 +10,7 @@ import {
   type RuntimeAcquisitionEvidence,
   runtimeAcquisitionEvidenceSchema,
 } from "../types/provider.js";
+import { canonicalJson, sha256Hex } from "../utils/canonicalJson.js";
 import { ProviderDataError, type ProviderDataPaths } from "./providerDataService.js";
 
 /** Read-only access to operator-published snapshot metadata.
@@ -242,7 +242,7 @@ async function verifyPublishedDomainManifests(
       }
       throw error;
     }
-    if (createHash("sha256").update(bytes).digest("hex") !== outcome.manifest_sha256) {
+    if (sha256Hex(bytes) !== outcome.manifest_sha256) {
       throw new ProviderDataError(
         "invalid_request",
         `Prepared snapshot '${snapshot.snapshot_id}' has a checksum mismatch for '${outcome.domain}'.`,
@@ -261,21 +261,7 @@ function preparedRoot(paths?: ProviderDataPaths): string {
 }
 
 function digest(value: unknown): string {
-  return createHash("sha256").update(canonicalJson(value)).digest("hex");
-}
-
-function canonicalJson(value: unknown): string {
-  if (Array.isArray(value)) {
-    return `[${value.map(canonicalJson).join(",")}]`;
-  }
-  if (value && typeof value === "object") {
-    const record = value as Record<string, unknown>;
-    return `{${Object.keys(record)
-      .sort()
-      .map((key) => `${JSON.stringify(key)}:${canonicalJson(record[key])}`)
-      .join(",")}}`;
-  }
-  return JSON.stringify(value);
+  return sha256Hex(canonicalJson(value));
 }
 
 type Bounds = [number, number, number, number];

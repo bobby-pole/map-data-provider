@@ -3,8 +3,8 @@ from pathlib import Path
 
 from geo_pipeline.cache import build_rybnik_telecom_cache
 from geo_pipeline.domain_pack import build_rybnik_telecom_domain_pack, read_domain_pack
+from geo_pipeline.domains.telecom import category_for_osm_feature
 from geo_pipeline.query_catalog import TELECOM_OSM_QUERY
-from geo_pipeline.telecom import category_for_osm_feature
 
 
 def test_category_for_osm_feature_requires_explicit_telecom_semantics() -> None:

@@ -6,7 +6,7 @@ from geo_pipeline.domain_pack import (
     build_rybnik_transport_domain_pack,
     read_domain_pack,
 )
-from geo_pipeline.transport import category_for_osm_feature, road_class_for_osm_feature
+from geo_pipeline.domains.transport import category_for_osm_feature, road_class_for_osm_feature
 
 
 def test_category_for_osm_feature_normalizes_transport_tags_and_rejects_unmapped() -> None:

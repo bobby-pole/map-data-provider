@@ -3,8 +3,8 @@ from pathlib import Path
 
 from geo_pipeline.cache import build_rybnik_sewer_cache
 from geo_pipeline.domain_pack import build_rybnik_sewer_domain_pack, read_domain_pack
+from geo_pipeline.domains.sewer import category_for_osm_feature
 from geo_pipeline.query_catalog import SEWER_OSM_QUERY
-from geo_pipeline.sewer import category_for_osm_feature
 
 
 def test_category_for_osm_feature_normalizes_sewer_tags_and_rejects_unmapped() -> None:

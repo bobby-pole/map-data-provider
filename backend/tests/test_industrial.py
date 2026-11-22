@@ -1,4 +1,4 @@
-from geo_pipeline.industrial import (
+from geo_pipeline.domains.industrial import (
     build_osm_industrial_cache_layer,
     build_osm_industrial_layers,
     category_for_osm_feature,

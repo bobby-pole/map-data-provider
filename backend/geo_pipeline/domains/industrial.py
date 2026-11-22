@@ -16,7 +16,7 @@ from geo_pipeline.contracts import (
 INDUSTRIAL_LIMITATIONS = "OSM industrial facilities might lack complete boundary semantics. Fixture is bounded to Rybnik 35km."
 
 INDUSTRIAL_FIXTURE = (
-    Path(__file__).resolve().parents[1]
+    Path(__file__).resolve().parents[2]
     / "data"
     / "fixtures"
     / "rybnik_35km"

@@ -12,7 +12,7 @@ from geo_pipeline.query_catalog import DISTRICT_HEATING_OSM_QUERY
 from geo_pipeline.source_registry import guard_source_access
 
 DISTRICT_HEATING_FIXTURE = (
-    Path(__file__).resolve().parents[1]
+    Path(__file__).resolve().parents[2]
     / "data"
     / "fixtures"
     / "rybnik_35km"

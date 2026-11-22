@@ -1,13 +1,13 @@
 # Map Lab - VPS Deployment Guide
 
-This guide documents the production deployment architecture, Nginx Proxy Manager and Cloudflare configuration, operations workflow, data lifecycle, backups, retention, and maintenance for Map Lab hosted at **`maplab.robertlacheta.pl`**.
+This guide documents the production deployment architecture, reverse proxy and TLS termination setup, operations workflow, data lifecycle, backups, retention, and maintenance for Map Lab.
 
 ---
 
 ## 1. Architecture Overview
 
-- **Public Reverse Proxy**: The existing Dockerized Nginx Proxy Manager (NPM) owns VPS ports 80/443 and proxies `maplab.robertlacheta.pl` over the external Docker network `app_network` to `map-data-provider-prod:3001`. Cloudflare terminates visitor TLS and NPM uses a Cloudflare Origin Certificate for the encrypted origin connection.
-- **Application Container**: Single production Docker container (`map-data-provider-prod`) running as non-root user `appuser` (UID:GID `1001:1001`).
+- **Public Reverse Proxy**: A reverse proxy on the host owns public ports 80/443 and forwards `<public-demo-domain>` over an external Docker bridge network (`<proxy-network>`) to `<app-container>:3001`, using encrypted origin TLS (`Full (strict)`).
+- **Application Container**: Single production Docker container running as non-root user `appuser` (UID:GID `1001:1001`).
   - **Node.js 22 Express Provider**: Serves public REST API (`/api/*`), PMTiles archive streaming, in-memory rate limiting / concurrency protection, and static SPA frontend.
   - **Python 3.14 + uv**: Geospatial processing CLI engine used during bootstrap and offline data preparation.
 - **Controlled Demo Acquisition**: Compose sets `MDQ_RUNTIME_MODE=demo_fixed_aoi` and `MDQ_DEMO_AOI_TEMPLATE=rybnik_gmina_demo`. The public write path accepts a server-validated point/radius (at most 10 km and wholly inside Poland) or one-county PRG selection, always runs all 11 domains, and builds PMTiles for the new map presentation. Generic runtime endpoints, force refresh and out-of-policy requests return `demo_aoi_restricted` (HTTP 403), so the VPS is not an unauthenticated Overpass proxy.
@@ -21,35 +21,19 @@ This guide documents the production deployment architecture, Nginx Proxy Manager
 
 ## 2. Initial VPS Setup
 
-### Step 0: Migrate an already provisioned bundle
-
-If the Rybnik bundle was uploaded under the former repository name but no MDQ
-container has been deployed yet, rename the parent directory once before the
-first deployment:
-
-```bash
-test -d /home/deploy/map-data-quality-lab
-test ! -e /home/deploy/map-data-provider
-mv /home/deploy/map-data-quality-lab /home/deploy/map-data-provider
-```
-
-This preserves the immutable bundle and its `bundle_id`; it only changes the
-host directory that Compose mounts. Do not run the command after a production
-container has been deployed without first stopping and assessing that service.
-
 ### Step 1: Prepare directory structure
 
-On the VPS as `root` (the GitHub deployment identity):
+On the VPS with appropriate host permissions (matching UID/GID `1001:1001` for container volumes):
 
 ```bash
-mkdir -p /home/deploy/map-data-provider/data/{bundle/rybnik_35km,prepared,reviews,runtime}
-chown -R 1001:1001 /home/deploy/map-data-provider/data/{prepared,reviews,runtime}
-chmod -R u=rwX,g=rX,o= /home/deploy/map-data-provider/data/{prepared,reviews,runtime}
+mkdir -p <deploy-dir>/data/{bundle/rybnik_35km,prepared,reviews,runtime}
+chown -R 1001:1001 <deploy-dir>/data/{prepared,reviews,runtime}
+chmod -R u=rwX,g=rX,o= <deploy-dir>/data/{prepared,reviews,runtime}
 
 # Copy a prepared bundle, including demo_bundle_manifest.json, into
 # data/bundle/rybnik_35km. Its bundle_id must match MDQ_DEMO_BUNDLE_ID.
-chown -R 1001:1001 /home/deploy/map-data-provider/data/bundle/rybnik_35km
-chmod -R a-w /home/deploy/map-data-provider/data/bundle/rybnik_35km
+chown -R 1001:1001 <deploy-dir>/data/bundle/rybnik_35km
+chmod -R a-w <deploy-dir>/data/bundle/rybnik_35km
 ```
 
 The GitHub deployment job never changes ownership or permissions of the bundle.
@@ -57,45 +41,34 @@ To replace it, temporarily allow a privileged upload, validate its manifest and
 then make it immutable again:
 
 ```bash
-ssh root@VPS 'chmod -R u+w /home/deploy/map-data-provider/data/bundle/rybnik_35km'
+ssh <deploy-user>@<vps-host> 'chmod -R u+w <deploy-dir>/data/bundle/rybnik_35km'
 rsync -a --delete /local/new-bundle/rybnik_35km/ \
-  root@VPS:/home/deploy/map-data-provider/data/bundle/rybnik_35km/
-ssh root@VPS 'chown -R 1001:1001 /home/deploy/map-data-provider/data/bundle/rybnik_35km && chmod -R a-w /home/deploy/map-data-provider/data/bundle/rybnik_35km'
+  <deploy-user>@<vps-host>:<deploy-dir>/data/bundle/rybnik_35km/
+ssh <deploy-user>@<vps-host> 'chown -R 1001:1001 <deploy-dir>/data/bundle/rybnik_35km && chmod -R a-w <deploy-dir>/data/bundle/rybnik_35km'
 ```
 
-### Step 2: Configure Cloudflare and Nginx Proxy Manager
+### Step 2: Configure DNS, Origin TLS and Reverse Proxy
 
-In Cloudflare DNS, create a proxied (orange-cloud) `A` record for
-`maplab.robertlacheta.pl` pointing to the VPS IPv4 address. Set SSL/TLS
-encryption mode to **Full (strict)**; never use `Flexible` for this origin.
+Point your DNS `A` record for `<public-demo-domain>` to the VPS IPv4 address with strict origin TLS enabled (`Full (strict)`; never use `Flexible` for this origin).
 
-Create a Cloudflare Origin Certificate for `maplab.robertlacheta.pl` and place
-the certificate and private key on the VPS:
+Install an origin certificate and private key on the VPS host for your reverse proxy:
 
 ```bash
-sudo install -d -o root -g root -m 0700 /etc/ssl/cloudflare
-sudo install -o root -g root -m 0600 maplab-origin.key /etc/ssl/cloudflare/maplab.robertlacheta.pl.key
-sudo install -o root -g root -m 0644 maplab-origin.pem /etc/ssl/cloudflare/maplab.robertlacheta.pl.pem
+sudo install -d -o root -g root -m 0700 /etc/ssl/origin
+sudo install -o root -g root -m 0600 origin.key /etc/ssl/origin/<public-demo-domain>.key
+sudo install -o root -g root -m 0644 origin.pem /etc/ssl/origin/<public-demo-domain>.pem
 ```
 
-In NPM, import the Cloudflare Origin Certificate as a **Custom** SSL
-certificate. Create a Proxy Host with domain `maplab.robertlacheta.pl`, scheme
-`http`, forward hostname `map-data-provider-prod` and port `3001`. Select
-the imported certificate, enable **Force SSL** and **HTTP/2 Support**, then
-save. NPM and Map Lab share the pre-existing external Docker network
-`app_network`; the public proxy resolves the provider container by name without
-a public app port.
+Configure the reverse proxy host for `<public-demo-domain>` to forward `http://<app-container>:3001` over `<proxy-network>`, with forced HTTPS and HTTP/2 enabled. Because the reverse proxy and Map Lab share the external Docker network, the proxy resolves the application container internally without exposing port `3001` publicly.
 
-Keep ports 80 and 443 open to Cloudflare. Docker publishes only
-`127.0.0.1:3001`; do not expose port 3001 in a firewall or public security
-group.
+Keep only public HTTP/HTTPS ports (80 and 443) open to visitors/CDN. Docker binds application port `3001` to loopback only (`127.0.0.1:3001`); do not open port `3001` in the host firewall or cloud security group.
 
 ### Step 3: Configure GitHub Repository Secrets
 
 In GitHub repo settings (_Settings -> Secrets and variables -> Actions_):
 
 - `VPS_HOST`: VPS IP address or host.
-- `VPS_USER`: `root`.
+- `VPS_USER`: dedicated SSH deployment user.
 - `VPS_SSH_KEY`: SSH private key.
 - `VPS_DEMO_BUNDLE_ID`: immutable ID of the bundle already provisioned under `data/bundle/rybnik_35km`.
 
@@ -106,8 +79,8 @@ In GitHub repo settings (_Settings -> Secrets and variables -> Actions_):
 Pushes to the `main` branch automatically trigger `.github/workflows/deploy.yml`:
 
 1. **Verification Gate**: Runs `pnpm run verify:provider` ensuring all tests, negative probes, linter, formatting, and builds pass.
-2. **Build & Push**: Builds multi-stage Docker image and pushes immutable tag `ghcr.io/bobby-pole/map-data-provider:${GITHUB_SHA}` and `latest`.
-3. **Deploy**: Requires the external bundle and its ID, copies `docker-compose.prod.yml` to `/home/deploy/map-data-provider/`, removes only older unused MDQ images while retaining the running image and two newest rollback candidates, prunes stale runtime/build cache, refuses the pull when less than 2 GiB remains, writes immutable image/bundle IDs to `.env`, pulls the image, starts the container on `app_network` and verifies health via `http://127.0.0.1:3001/api/health`. NPM Proxy Host configuration is durable host state and is not rewritten by CI.
+2. **Build & Push**: Builds multi-stage Docker image and pushes immutable tag `ghcr.io/<owner>/<repo>:${GITHUB_SHA}` and `latest`.
+3. **Deploy**: Requires the external bundle and its ID, copies `docker-compose.prod.yml` to the deploy directory, removes only older unused Map Lab images while retaining the running image and two newest rollback candidates, prunes stale runtime/build cache, refuses the pull when less than 2 GiB remains, writes immutable image/bundle IDs to `.env`, pulls the image, starts the container and verifies health via `http://127.0.0.1:3001/api/health`. Reverse-proxy host configuration is durable state and is not rewritten by CI.
 
 ### Publish delivery evidence
 
@@ -129,8 +102,8 @@ for domain in power emergency public transport bridges water gas sewer industria
 done
 
 ./scripts/ops/prepare_demo.sh /path/to/rybnik_35km /path/to/mdq-demo-bundle rybnik-35km-2026-08-24
-rsync -a --delete /path/to/mdq-demo-bundle/rybnik_35km/ root@VPS:/home/deploy/map-data-provider/data/bundle/rybnik_35km/
-ssh root@VPS 'chown -R 1001:1001 /home/deploy/map-data-provider/data/bundle/rybnik_35km && chmod -R a-w /home/deploy/map-data-provider/data/bundle/rybnik_35km'
+rsync -a --delete /path/to/mdq-demo-bundle/rybnik_35km/ <deploy-user>@<vps-host>:<deploy-dir>/data/bundle/rybnik_35km/
+ssh <deploy-user>@<vps-host> 'chown -R 1001:1001 <deploy-dir>/data/bundle/rybnik_35km && chmod -R a-w <deploy-dir>/data/bundle/rybnik_35km'
 ```
 
 `prepare_demo.sh` now verifies source eligibility and data-licence notices as
@@ -170,12 +143,12 @@ snapshot in place without retaining its source-dated evidence.
 To create a timestamped backup of review state and prepared artifacts on the VPS:
 
 ```bash
-BACKUP_DIR="/home/deploy/backups"
+BACKUP_DIR="<backup-dir>"
 mkdir -p "${BACKUP_DIR}"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 
 tar -czf "${BACKUP_DIR}/mdq_data_backup_${TIMESTAMP}.tar.gz" \
-  -C /home/deploy/map-data-provider/data reviews prepared bundle
+  -C <deploy-dir>/data reviews prepared bundle
 ```
 
 ### Retention & Pruning
@@ -185,16 +158,16 @@ tar -czf "${BACKUP_DIR}/mdq_data_backup_${TIMESTAMP}.tar.gz" \
 - **Runtime cache (`data/runtime`)**: Ephemeral 24-hour cache. To prune runtime cache older than 7 days:
 
 ```bash
-find /home/deploy/map-data-provider/data/runtime -type f -mtime +7 -delete
-find /home/deploy/map-data-provider/data/runtime -type d -empty -delete
+find <deploy-dir>/data/runtime -type f -mtime +7 -delete
+find <deploy-dir>/data/runtime -type d -empty -delete
 ```
 
 - **Application images**: CI retains the running image and the two newest rollback
-  candidates for `ghcr.io/bobby-pole/map-data-provider`; older images are removed
-  before each pull. This is deliberately scoped to MDQ and does not prune the
-  images used by Nginx Proxy Manager, AdGuard, WireGuard or other applications.
+  candidates for the application image; older tags are removed before each pull.
+  This is strictly scoped to Map Lab and does not prune images used by other
+  applications on the host.
 - **Container logs**: The Compose service uses Docker's `json-file` driver with
-  a 10 MiB maximum per file and three rotated files (30 MiB maximum for MDQ).
+  a 10 MiB maximum per file and three rotated files (30 MiB maximum for Map Lab).
 - **Build cache**: Unused BuildKit cache older than seven days is pruned before
   each deployment. Prepared snapshots, the immutable bundle and review state
   are never part of this cleanup.
@@ -216,7 +189,7 @@ docker ps -a --format '{{.Names}} {{.Image}} {{.Status}}'
 To safely reset the environment to a clean initial state:
 
 ```bash
-cd /home/deploy/map-data-provider
+cd <deploy-dir>
 docker compose -f docker-compose.prod.yml down
 rm -rf data/runtime/* data/prepared/*
 # Recreate empty review store if desired:
@@ -233,7 +206,7 @@ docker compose -f docker-compose.prod.yml up -d
 To roll back to a known previous deployment SHA without rebuilding:
 
 ```bash
-cd /home/deploy/map-data-provider
+cd <deploy-dir>
 echo "MDQ_IMAGE_TAG=<PREVIOUS_GITHUB_SHA>" > .env
 docker compose -f docker-compose.prod.yml up -d
 ```
@@ -241,7 +214,7 @@ docker compose -f docker-compose.prod.yml up -d
 ### Manual Restart & Logs
 
 ```bash
-cd /home/deploy/map-data-provider
+cd <deploy-dir>
 docker compose -f docker-compose.prod.yml logs -f --tail 50
 docker compose -f docker-compose.prod.yml restart
 ```

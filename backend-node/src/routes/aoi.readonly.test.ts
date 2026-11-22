@@ -7,8 +7,8 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { createApp } from "../app.js";
 import { DEMO_AOI_TEMPLATE } from "../services/runtimeAcquisitionPolicy.js";
+import { seedCompactRybnikCache } from "../test/fixtures.js";
 import { providerErrorSchema, type ProviderRuntimeRequest } from "../types/provider.js";
-import { seedCompactRybnikCache } from "./testFixtures.js";
 
 describe("runtime acquisition policy", () => {
   let fixtureCacheDir: string;

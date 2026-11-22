@@ -14,6 +14,7 @@ import {
   type ProviderRuntimeResponse,
   providerRuntimeResponseSchema,
 } from "../types/provider.js";
+import { canonicalJsonSortedArrays } from "../utils/canonicalJson.js";
 import { ProviderDataError } from "./providerDataService.js";
 import { runtimePythonExecutable } from "./runtimePython.js";
 import { armRuntimeWorkerTimeout } from "./runtimeWorkerTimeout.js";
@@ -30,7 +31,7 @@ export function createRuntimeRequestCoordinator(
   const inProgress = new Map<string, Promise<ProviderRuntimeResponse>>();
   return {
     submit(request: ProviderRuntimeRequest): Promise<ProviderRuntimeResponse> {
-      const key = canonicalJson(request);
+      const key = canonicalJsonSortedArrays(request);
       const existing = inProgress.get(key);
       if (existing) {
         return existing;
@@ -69,12 +70,14 @@ export function createRuntimeJobCoordinator(runner: RuntimeJobRunner = runRuntim
       request: ProviderRuntimeRequest,
       options?: { reuseSucceededWithinMs?: number; now?: number; skipPmtiles?: boolean },
     ): ProviderRuntimeJob {
-      const requestKey = canonicalJson(request);
+      const requestKey = canonicalJsonSortedArrays(request);
       const cooldownMs = options?.reuseSucceededWithinMs ?? 0;
       if (cooldownMs > 0) {
         const now = options?.now ?? Date.now();
         const reusable = [...requestByJob.entries()]
-          .filter(([, existingRequest]) => canonicalJson(existingRequest) === requestKey)
+          .filter(
+            ([, existingRequest]) => canonicalJsonSortedArrays(existingRequest) === requestKey,
+          )
           .map(([jobId]) => jobs.get(jobId))
           .filter((job): job is ProviderRuntimeJob => job?.state === "succeeded")
           // A job can finish with a published partial snapshot while one or
@@ -175,9 +178,9 @@ export function createRuntimeJobCoordinator(runner: RuntimeJobRunner = runRuntim
       return jobs.get(jobId);
     },
     getForAoi(aoi: ProviderRuntimeRequest["aoi"]): ProviderRuntimeJob | undefined {
-      const aoiKey = canonicalJson(aoi);
+      const aoiKey = canonicalJsonSortedArrays(aoi);
       for (const [jobId, request] of requestByJob) {
-        if (canonicalJson(request.aoi) === aoiKey) {
+        if (canonicalJsonSortedArrays(request.aoi) === aoiKey) {
           const job = jobs.get(jobId);
           if (job && (job.state === "queued" || job.state === "running")) {
             return job;
@@ -495,17 +498,4 @@ export function workerFailureMessage(error: unknown, fallback: string): string {
     return `worker_failed: AOI preparation worker exited with code ${exitCode} before publishing a snapshot.`;
   }
   return fallback;
-}
-
-function canonicalJson(value: unknown): string {
-  if (Array.isArray(value)) {
-    return `[${value.map(canonicalJson).sort().join(",")}]`;
-  }
-  if (value && typeof value === "object") {
-    return `{${Object.entries(value as Record<string, unknown>)
-      .sort(([left], [right]) => left.localeCompare(right))
-      .map(([key, item]) => `${JSON.stringify(key)}:${canonicalJson(item)}`)
-      .join(",")}}`;
-  }
-  return JSON.stringify(value);
 }

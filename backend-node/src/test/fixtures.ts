@@ -1,24 +1,8 @@
-import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-function canonicalJson(value: unknown): string {
-  if (Array.isArray(value)) {
-    return `[${value.map(canonicalJson).join(",")}]`;
-  }
-  if (value && typeof value === "object") {
-    const record = value as Record<string, unknown>;
-    return `{${Object.keys(record)
-      .sort()
-      .map((key) => `${JSON.stringify(key)}:${canonicalJson(record[key])}`)
-      .join(",")}}`;
-  }
-  return JSON.stringify(value);
-}
-
-function sha256(buf: Buffer | string): string {
-  return createHash("sha256").update(buf).digest("hex");
-}
+import { createApp } from "../app.js";
+import { canonicalJson, sha256Hex } from "../utils/canonicalJson.js";
 
 type GeoJsonFeature = {
   type: "Feature";
@@ -514,7 +498,7 @@ export async function seedCompactRybnikCache(cacheRoot: string): Promise<void> {
         kind: "processed_vector",
         format: "geojson",
         path: `layers/${layerFilename}`,
-        sha256: sha256(layerPayload),
+        sha256: sha256Hex(layerPayload),
         feature_count: spec.features.length,
         source_provenance: prov,
         public_export: spec.public_export,
@@ -567,7 +551,7 @@ export async function seedCompactRybnikCache(cacheRoot: string): Promise<void> {
         kind: "native_vector",
         format: "json",
         path: "native/osm-power-circuit-evidence.json",
-        sha256: sha256(circuitBytes),
+        sha256: sha256Hex(circuitBytes),
         source_provenance: defaultSourceProvenance,
         public_export: false,
       });
@@ -588,7 +572,7 @@ export async function seedCompactRybnikCache(cacheRoot: string): Promise<void> {
 
     // PMTiles presentation archive
     const pmtilesBuffer = Buffer.alloc(1024, 0x4d);
-    const pmtilesSha256 = sha256(pmtilesBuffer);
+    const pmtilesSha256 = sha256Hex(pmtilesBuffer);
     await writeFile(path.join(packRoot, "presentation", `${domain}.pmtiles`), pmtilesBuffer);
 
     const domainManifest = {
@@ -611,7 +595,7 @@ export async function seedCompactRybnikCache(cacheRoot: string): Promise<void> {
       readiness: { path: "readiness/readiness.json" },
     };
 
-    const manifestSha256 = sha256(Buffer.from(canonicalJson(domainManifest)));
+    const manifestSha256 = sha256Hex(Buffer.from(canonicalJson(domainManifest)));
 
     const presentationManifest = {
       presentation_version: "provider_map_presentation/v1" as const,
@@ -661,7 +645,7 @@ export async function seedCompactRybnikCache(cacheRoot: string): Promise<void> {
       domain,
       status: "ready" as const,
       detail: "Checksum-validated fixture domain pack is published.",
-      manifest_sha256: sha256(
+      manifest_sha256: sha256Hex(
         await readFile(path.join(cacheRoot, aoiId, domain, "domain-pack-v2", "manifest.json")),
       ),
       readiness: "usable_with_limitations" as const,
@@ -698,6 +682,199 @@ export async function seedCompactRybnikCache(cacheRoot: string): Promise<void> {
   };
   await writeFile(
     path.join(cacheRoot, aoiId, "snapshot_manifest.json"),
-    JSON.stringify({ ...unsignedSnapshot, checksum: sha256(canonicalJson(unsignedSnapshot)) }),
+    JSON.stringify({ ...unsignedSnapshot, checksum: sha256Hex(canonicalJson(unsignedSnapshot)) }),
   );
+}
+
+export async function writeFixtureDomainPack(
+  cacheRoot: string,
+  options?: {
+    sourceId?: string;
+    publicExport?: boolean;
+    snapshotState?: "ready" | "partial";
+  },
+) {
+  const aoiId = "fixture_aoi";
+  const domain = "water";
+  const artifactId = "water.main";
+  const packRoot = path.join(cacheRoot, aoiId, domain, "domain-pack-v2");
+  await mkdir(path.join(packRoot, "layers"), { recursive: true });
+  await mkdir(path.join(packRoot, "validation"), { recursive: true });
+  await mkdir(path.join(packRoot, "readiness"), { recursive: true });
+  await mkdir(path.join(packRoot, "licenses"), { recursive: true });
+  const metadata = {
+    cache_layout_version: "provider_cache/v1",
+    geojson_contract_version: "provider_geojson/v1",
+    contract_version: "provider_geojson/v1",
+    aoi_id: aoiId,
+    domain,
+    layer_id: artifactId,
+    source: "Fixture source",
+    source_type: "analytical_vector",
+    source_query: "fixture query",
+    snapshot_at: "2026-08-01T00:00:00Z",
+    validation_status_raw: "pass",
+    quality_status: "passed",
+    confidence: "medium",
+    limitations: ["Fixture limitations are visible in the preview."],
+    eligible_for_analysis: true,
+    readiness: "usable_with_limitations",
+    feature_count: 1,
+  };
+  const layer = {
+    type: "FeatureCollection",
+    metadata,
+    features: [
+      {
+        type: "Feature",
+        properties: {
+          asset_type: "fixture main",
+          source: "Fixture source",
+          confidence: "medium",
+          limitations: ["Fixture limitations are visible in the preview."],
+        },
+        geometry: { type: "Point", coordinates: [18.5, 50.1] },
+      },
+    ],
+  };
+  const layerPayload = Buffer.from(JSON.stringify(layer));
+  const sourceId = options?.sourceId ?? "openstreetmap";
+  const publicExport = options?.publicExport ?? true;
+  const sourceProvenance = [{ source_id: sourceId, contribution_role: "primary" }];
+  const cacheMetadata = { ...metadata };
+  delete (cacheMetadata as Record<string, unknown>).contract_version;
+  const validation = {
+    ...cacheMetadata,
+    source_registry_id: sourceId,
+    source_url: "https://example.test/source",
+    pipeline_version: "fixture/v1",
+    query_version: "fixture-query/v1",
+  };
+  await writeFile(path.join(packRoot, "layers", "water.main.geojson"), layerPayload);
+  await writeFile(path.join(packRoot, "validation", "metadata.json"), JSON.stringify(validation));
+  await writeFile(
+    path.join(packRoot, "readiness", "readiness.json"),
+    JSON.stringify({
+      cache_layout_version: "provider_cache/v1",
+      aoi_id: aoiId,
+      domain,
+      layer_id: artifactId,
+      readiness: "usable_with_limitations",
+      quality_status: "passed",
+      highest_issue_severity: null,
+      feature_count: 1,
+      evaluated_at: "2026-08-01T00:00:00Z",
+    }),
+  );
+  if (options?.publicExport ?? true) {
+    await writeFile(
+      path.join(packRoot, "licenses", "openstreetmap-odbl.md"),
+      "https://www.openstreetmap.org/copyright\nhttps://opendatacommons.org/licenses/odbl/1-0/\n",
+    );
+  }
+  await writeFile(
+    path.join(packRoot, "manifest.json"),
+    JSON.stringify({
+      domain_pack_version: "provider_domain_pack/v2",
+      aoi_id: aoiId,
+      domain,
+      source_provenance: sourceProvenance,
+      artifacts: [
+        {
+          id: artifactId,
+          kind: "processed_vector",
+          format: "geojson",
+          path: "layers/water.main.geojson",
+          sha256: sha256Hex(layerPayload),
+          feature_count: 1,
+          source_provenance: sourceProvenance,
+          public_export: publicExport,
+        },
+        {
+          id: "water.reference",
+          kind: "remote_service",
+          format: "wms",
+          source_provenance: [
+            { source_id: "kiut_gesut_wms", contribution_role: "validation_reference" },
+          ],
+          public_export: false,
+        },
+      ],
+      data_license_notices: publicExport
+        ? [
+            {
+              source_id: "openstreetmap",
+              license: "ODbL-1.0",
+              license_url: "https://opendatacommons.org/licenses/odbl/1-0/",
+              attribution: "© OpenStreetMap contributors",
+              attribution_url: "https://www.openstreetmap.org/copyright",
+              notice_path: "licenses/openstreetmap-odbl.md",
+            },
+          ]
+        : undefined,
+      validation: { path: "validation/metadata.json" },
+      readiness: { path: "readiness/readiness.json" },
+    }),
+  );
+  const snapshotUnsigned = {
+    snapshot_version: "provider_prepared_snapshot/v1",
+    snapshot_id: aoiId,
+    aoi_id: aoiId,
+    version: "fixture-v1",
+    state: options?.snapshotState ?? "ready",
+    published_at: "2026-08-01T00:00:00Z",
+    source_observed_at: "2026-08-01T00:00:00Z",
+    pipeline_version: "fixture/v1",
+    coverage: {
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [18.4, 50.0],
+            [18.6, 50.0],
+            [18.6, 50.2],
+            [18.4, 50.0],
+          ],
+        ],
+      },
+      geometry_crs: "EPSG:4326",
+      input_type: "circle",
+      source_label: "Fixture AOI",
+      limitations: ["Fixture-only source evidence."],
+    },
+    domain_outcomes: [
+      {
+        domain,
+        status: "ready",
+        detail: "Fixture domain pack is published.",
+        manifest_sha256: sha256Hex(await readFile(path.join(packRoot, "manifest.json"))),
+        readiness: "usable_with_limitations",
+        limitations: ["Fixture-only source evidence."],
+      },
+      ...(options?.snapshotState === "partial"
+        ? [
+            {
+              domain: "power" as const,
+              status: "failed" as const,
+              detail: "Fixture domain timed out.",
+              manifest_sha256: null,
+              readiness: "not_usable" as const,
+              limitations: ["Fixture-only source evidence."],
+            },
+          ]
+        : []),
+    ],
+  };
+  await writeFile(
+    path.join(cacheRoot, aoiId, "snapshot_manifest.json"),
+    JSON.stringify({
+      ...snapshotUnsigned,
+      checksum: sha256Hex(canonicalJson(snapshotUnsigned)),
+    }),
+  );
+  return {
+    aoiId,
+    domain,
+    app: createApp({ providerDataPaths: { cacheRoot } }),
+  };
 }

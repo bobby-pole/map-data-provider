@@ -93,7 +93,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           source: "docker-compose.prod.yml"
-          target: "<deploy-dir>/"
+          target: "${{ secrets.VPS_DEPLOY_DIR }}"
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.2.1
@@ -101,18 +101,20 @@ jobs:
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_SHA: ${{ github.sha }}
           DEMO_BUNDLE_ID: ${{ secrets.VPS_DEMO_BUNDLE_ID }}
+          DEPLOY_DIR: ${{ secrets.VPS_DEPLOY_DIR }}
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          envs: GHCR_TOKEN,GITHUB_SHA,DEMO_BUNDLE_ID
+          envs: GHCR_TOKEN,GITHUB_SHA,DEMO_BUNDLE_ID,DEPLOY_DIR
           script: |
             set -e
 
             # Login to GHCR to pull image
             echo "$GHCR_TOKEN" | docker login ghcr.io -u bobby-pole --password-stdin
 
-            cd <deploy-dir>
+            test -n "$DEPLOY_DIR"
+            cd "$DEPLOY_DIR"
             mkdir -p data/prepared data/reviews data/runtime data/bundle/rybnik_35km
 
             # Keep the running image and the two newest rollback candidates, then
@@ -141,8 +143,8 @@ jobs:
 
             # Prepare only mutable state directories. The externally uploaded
             # bundle is intentionally not chowned or chmodded during deploy.
-            chown -R 1001:1001 <deploy-dir>/data/prepared <deploy-dir>/data/reviews <deploy-dir>/data/runtime
-            chmod -R u=rwX,g=rX,o= <deploy-dir>/data/prepared <deploy-dir>/data/reviews <deploy-dir>/data/runtime
+            chown -R 1001:1001 "$DEPLOY_DIR/data/prepared" "$DEPLOY_DIR/data/reviews" "$DEPLOY_DIR/data/runtime"
+            chmod -R u=rwX,g=rX,o= "$DEPLOY_DIR/data/prepared" "$DEPLOY_DIR/data/reviews" "$DEPLOY_DIR/data/runtime"
             test -n "$DEMO_BUNDLE_ID"
             test -f data/bundle/rybnik_35km/demo_bundle_manifest.json
 

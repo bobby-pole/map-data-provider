@@ -70,6 +70,7 @@ In GitHub repo settings (_Settings -> Secrets and variables -> Actions_):
 - `VPS_HOST`: VPS IP address or host.
 - `VPS_USER`: dedicated SSH deployment user.
 - `VPS_SSH_KEY`: SSH private key.
+- `VPS_DEPLOY_DIR`: absolute deployment directory on the VPS (for example, `/path/to/map-data-provider`).
 - `VPS_DEMO_BUNDLE_ID`: immutable ID of the bundle already provisioned under `data/bundle/rybnik_35km`.
 
 ---

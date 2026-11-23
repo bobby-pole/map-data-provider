@@ -12,7 +12,7 @@ describe("security headers middleware", () => {
     expect(response.headers["x-powered-by"]).toBeUndefined();
     expect(response.headers["x-content-type-options"]).toBe("nosniff");
     expect(response.headers["x-frame-options"]).toBe("DENY");
-    expect(response.headers["referrer-policy"]).toBe("no-referrer");
+    expect(response.headers["referrer-policy"]).toBe("strict-origin-when-cross-origin");
     expect(response.headers["strict-transport-security"]).toBeUndefined();
 
     const csp = response.headers["content-security-policy"];

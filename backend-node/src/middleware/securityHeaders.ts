@@ -35,7 +35,7 @@ export function createSecurityHeadersMiddleware() {
     },
     crossOriginEmbedderPolicy: false,
     frameguard: { action: "deny" },
-    referrerPolicy: { policy: "no-referrer" },
+    referrerPolicy: { policy: "strict-origin-when-cross-origin" },
     // Edge reverse proxy / CDN terminates TLS and manages HSTS.
     strictTransportSecurity: false,
   });
